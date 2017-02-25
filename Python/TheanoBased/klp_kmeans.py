@@ -2,12 +2,10 @@ import numpy as np
 import theano
 import theano.tensor as T
 from theano import function, config, shared, sandbox
-from theano import ProfileMode
 import warnings
 warnings.filterwarnings("ignore")
 
 # Dummy Data
-
 def create_dummy_data( N=4000, feats=784):
 	rng = np.random
 	DATA = rng.randn(N, feats)
@@ -70,10 +68,10 @@ def klp_kmeans(data, cluster_num, alpha, epochs = -1, batch = 1, verbose = False
 
 	if any([x.op.__class__.__name__ in ['Gemv', 'CGemv', 'Gemm', 'CGemm'] for x in
 			update.maker.fgraph.toposort()]):
-		print('Used the cpu')
+		print('Used the cpu: number of clusters = ', cluster_num)
 	elif any([x.op.__class__.__name__ in ['GpuGemm', 'GpuGemv'] for x in
 			update.maker.fgraph.toposort()]):
-		print('Used the gpu')
+		print('Used the gpu: number of clusters = ', cluster_num)
 	else:
 		print('ERROR, not able to tell if theano used the cpu or the gpu')
 		print(update.maker.fgraph.toposort())
@@ -129,161 +127,113 @@ if __name__ == '__main__':
 	import matplotlib.pyplot as plt
 	import time
 
-	# Epoch Comparison 
-	# print 'Epoch length Comparison ----'
-	# blobs = datasets.make_blobs(n_samples=4000, random_state=8)
-	# noisy_moons = datasets.make_moons(n_samples=4000, noise=.05)
-	# noisy_circles = datasets.make_circles(n_samples=2000, factor=.5, noise=.05)
-	# DATA = noisy_circles[0].astype(theano.config.floatX)
+	samples_number = 1000
+	cluster_number = 100
+	epochs_number = 1000
 
-	# klp_kmeans_times = []
-	# klp_kmeans_times_gpu = []
-	# kmeans_times = []
-	# for i in range(10, 1000, 20):
-	#	 t1 = time.time()
-	#	 W = klp_kmeans(DATA ,1000,alpha = 0.001, epochs=i, batch=10, verbose=False)
-	#	 t2 = time.time()
-
-	#	 t5 = time.time()
-	#	 W3 = klp_kmeans(DATA ,1000,alpha = 0.001, epochs=i, batch=10, verbose=False, use_gpu=True)
-	#	 t6 = time.time()
-		
-	#	 t3 = time.time()
-	#	 W2 = kmeans(DATA,1000, numepochs = i, batchsize=10, learningrate=0.001, verbose=False)
-	#	 t4 = time.time()
-		
-	#	 klp_kmeans_times.append(t2-t1)
-	#	 klp_kmeans_times_gpu.append(t6-t5)
-	#	 kmeans_times.append(t4-t3)
-
-
-	# plt.scatter(DATA[:,0], DATA[:,1], color='red')
-	# plt.scatter(W[:,0],W[:,1],color='blue',s=20,edgecolor='none')
-	# plt.scatter(W3[:,0],W3[:,1],color='green',s=20,edgecolor='none')
-	# plt.scatter(W2[:,0],W2[:,1],color='yellow',s=20,edgecolor='none')
-
-	# plt.scatter(10+(arange(len(klp_kmeans_times))*20), klp_kmeans_times, color='blue')
-	# plt.scatter(10+(arange(len(klp_kmeans_times_gpu))*20), klp_kmeans_times_gpu, color='green')
-	# plt.scatter(10+(arange(len(kmeans_times))*20), kmeans_times, color='yellow')
-
-
-	#Cluster size test
-
-
+	# cluster size test
 	print('Cluster number comparison ----')
-	blobs = datasets.make_blobs(n_samples=4000, random_state=8)
-	noisy_moons = datasets.make_moons(n_samples=4000, noise=.05)
-	noisy_circles = datasets.make_circles(n_samples=2000, factor=.5,
-										  noise=.05)
+	noisy_circles = datasets.make_circles(n_samples=samples_number, factor=.5, noise=.05)
 	DATA = noisy_circles[0]
+	
 	klp_kmeans_times2 = []
 	klp_kmeans_times2_gpu = []
 	kmeans_times2 = []
-	for i in range(10, 1000, 20):
+	for i in range(10, cluster_number, 20):
 		t1 = time.time()
-		W = klp_kmeans(DATA ,i,alpha = 0.001, epochs=1000, batch=10, verbose=False)
+		W = klp_kmeans(DATA ,i,alpha = 0.001, epochs=epochs_number, batch=10, verbose=False)
 		t2 = time.time()
 
 		t5 = time.time()
-		W3 = klp_kmeans(DATA ,i,alpha = 0.001, epochs=1000, batch=10, verbose=False, use_gpu=True)
+		W3 = klp_kmeans(DATA ,i,alpha = 0.001, epochs=epochs_number, batch=10, verbose=False, use_gpu=True)
 		t6 = time.time()
 		
 		t3 = time.time()
-		W2 = kmeans(DATA, i , numepochs = 1000, batchsize=10, learningrate=0.001, verbose=False)
+		W2 = kmeans(DATA, i , numepochs = epochs_number, batchsize=10, learningrate=0.001, verbose=False)
 		t4 = time.time()
 		
 		klp_kmeans_times2.append(t2-t1)
 		klp_kmeans_times2_gpu.append(t6-t5)
 		kmeans_times2.append(t4-t3)
+		print("theano: cpu = ", t2-t1, ' gpu = ', t6-t5, '; lib = ', t4-t3)
 
 	plt.title('Cluster Num vs Time')
 	plt.xlabel('Num Clusters')
 	plt.ylabel('time')
-	plt.plot(range(10, 1000, 20), klp_kmeans_times2, '-o', color='blue')
+	plt.plot(range(10, cluster_number, 20), klp_kmeans_times2, '-o', color='blue')
+	plt.plot(range(10, cluster_number, 20), klp_kmeans_times2_gpu, '-o', color='green')
+	plt.plot(range(10, cluster_number, 20), kmeans_times2, '-o', color='yellow')
 	plt.show()
-	plt.plot(range(10, 1000, 20), klp_kmeans_times2_gpu, '-o', color='green')
-	plt.show()
-	plt.plot(range(10, 1000, 20), kmeans_times2, '-o', color='yellow')
-	plt.show()
-
 
 	#DATA size test
-	print('DATA size comparison ----')
-	blobs = datasets.make_blobs(n_samples=4000, random_state=8)
-	noisy_moons = datasets.make_moons(n_samples=4000, noise=.05)
-	noisy_circles = datasets.make_circles(n_samples=2000, factor=.5,
-										  noise=.05)
-	DATA = noisy_circles[0]
+	print('DATA size comparison (number of samples) ----')
 	klp_kmeans_times3 = []
 	klp_kmeans_times3_gpu = []
 	kmeans_times3 = []
-	for i in range(10, 2001, 100):
+	for i in range(10, samples_number+1, 100):
 		noisy_circles = datasets.make_circles(n_samples=i, factor=.5, noise=.05)
 		DATA = noisy_circles[0]
 
 		t1 = time.time()
-		W = klp_kmeans(DATA , 1000, alpha = 0.001, epochs=1000, batch=10, verbose=False)
+		W = klp_kmeans(DATA, cluster_number, alpha = 0.001, epochs=epochs_number, batch=10, verbose=False)
 		t2 = time.time()
 
 		t5 = time.time()
-		W = klp_kmeans(DATA , 1000, alpha = 0.001, epochs=1000, batch=10, verbose=False, use_gpu=True)
+		W = klp_kmeans(DATA, cluster_number, alpha = 0.001, epochs=epochs_number, batch=10, verbose=False, use_gpu=True)
 		t6 = time.time()
 		
 		t3 = time.time()
-		W2 = kmeans(DATA, 1000, numepochs = 1000, batchsize=10, learningrate=0.001, verbose=False)
+		W2 = kmeans(DATA, cluster_number, numepochs = epochs_number, batchsize=10, learningrate=0.001, verbose=False)
 		t4 = time.time()
 		
 		klp_kmeans_times3.append(t2-t1)
 		klp_kmeans_times3_gpu.append(t6-t5)
 		kmeans_times3.append(t4-t3)
+		print("theano: cpu = ", t2-t1, ' gpu = ', t6-t5, '; lib = ', t4-t3)
 
 	plt.title('Data Size vs Time')
-	plt.plot(range(10, 2001, 100), klp_kmeans_times3, '-o', color='blue')
 	plt.xlabel('data_size')
 	plt.ylabel('time')
+	plt.plot(range(10, samples_number+1, 100), klp_kmeans_times3, '-o', color='blue')
+	plt.plot(range(10, samples_number+1, 100), klp_kmeans_times3_gpu, '-o', color='green')
+	plt.plot(range(10, samples_number+1, 100), kmeans_times3, '-o', color='red')
 	plt.show()
-
-	plt.plot(range(10, 2001, 100), klp_kmeans_times3_gpu, '-o', color='green')
-	plt.show()
-	
-	plt.plot(range(10, 2001, 100), kmeans_times3, '-o', color='red')
-	plt.show()
-
 
 	#DATA size test
-	print('DATA dim comparison ----')
+	print('DATA dim comparison (number of features) ----')
 	klp_kmeans_times3 = []
 	klp_kmeans_times3_gpu = []
 	kmeans_times3 = []
-	for i in range(100, 4001, 50):
-		blobs = datasets.make_blobs(n_samples=4000, random_state=8, n_features = i, centers = 10)
+	for i in range(100, samples_number+1, 50):
+		blobs = datasets.make_blobs(n_samples=samples_number, random_state=8, n_features = i, centers = 10)
 		DATA = blobs[0]
 
 		t1 = time.time()
-		W = klp_kmeans(DATA , 1000, alpha = 0.001, epochs=1000, batch=10, verbose=False)
+		W = klp_kmeans(DATA, cluster_number, alpha = 0.001, epochs=epochs_number, batch=10, verbose=False)
 		t2 = time.time()
 
 		t5 = time.time()
-		W = klp_kmeans(DATA , 1000, alpha = 0.001, epochs=1000, batch=10, verbose=False, use_gpu=True)
+		W = klp_kmeans(DATA, cluster_number, alpha = 0.001, epochs=epochs_number, batch=10, verbose=False, use_gpu=True)
 		t6 = time.time()
 		
 		t3 = time.time()
-		W2 = kmeans(DATA, 1000, numepochs = 1000, batchsize=10, learningrate=0.001, verbose=False)
+		W2 = kmeans(DATA, cluster_number, numepochs = epochs_number, batchsize=10, learningrate=0.001, verbose=False)
 		t4 = time.time()
 		
 		klp_kmeans_times3.append(t2-t1)
 		klp_kmeans_times3_gpu.append(t6-t5)
 		kmeans_times3.append(t4-t3)
+		print("theano: cpu = ", t2-t1, ' gpu = ', t6-t5, '; lib = ', t4-t3)
 
 	plt.title('Data Dim vs Time')
-	plt.plot(range(100, 4001, 50), klp_kmeans_times3, '-o', color='blue')
+	plt.plot(range(100, samples_number+1, 50), klp_kmeans_times3, '-o', color='blue')
 	plt.xlabel('dims')
 	plt.ylabel('time')
 	plt.show()
 	
-	plt.plot(range(100, 4001, 50), klp_kmeans_times3_gpu, '-o',color='green')
+	plt.plot(range(100, samples_number+1, 50), klp_kmeans_times3_gpu, '-o',color='green')
 	plt.show()
 
-	plt.plot(range(100, 4001, 50), kmeans_times3,'-o',color='red')
+	plt.plot(range(100, samples_number+1, 50), kmeans_times3,'-o',color='red')
 	plt.show()
 
