@@ -1,4 +1,4 @@
-package by.bsuir.evm;
+package evm.dmc;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;

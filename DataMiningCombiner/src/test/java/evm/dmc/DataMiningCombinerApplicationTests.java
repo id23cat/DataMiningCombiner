@@ -1,4 +1,4 @@
-package by.bsuir.evm;
+package evm.dmc;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
