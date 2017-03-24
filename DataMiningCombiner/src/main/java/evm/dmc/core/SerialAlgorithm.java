@@ -9,14 +9,14 @@ import java.util.List;
  * execution of contained commands
  */
 public class SerialAlgorithm implements Algorithm {
-	protected List<Command> algChain = new LinkedList<>();
+	protected List<Function> algChain = new LinkedList<>();
 
 	/* (non-Javadoc)
 	 * @see evm.dmc.core.Algorithm#addCommand(evm.dmc.core.Command)
 	 */
 	@Override
-	public void addCommand(Command command) {
-		algChain.add(command);
+	public void addCommand(Function function) {
+		algChain.add(function);
 		
 	}
 
@@ -24,8 +24,8 @@ public class SerialAlgorithm implements Algorithm {
 	 * @see evm.dmc.core.Algorithm#delCommand(evm.dmc.core.Command)
 	 */
 	@Override
-	public void delCommand(Command command) {
-		algChain.remove(command);
+	public void delCommand(Function function) {
+		algChain.remove(function);
 		
 	}
 

@@ -1,5 +1,6 @@
 package evm.dmc.core;
 
-public interface Data {
-
+public interface Data <T> {
+	T getData();
+	void setData(T data);
 }

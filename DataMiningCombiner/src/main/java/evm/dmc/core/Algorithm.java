@@ -9,17 +9,17 @@ public interface Algorithm {
 	/**
 	 * Adds the command to the chain of algorithm
 	 *
-	 * @param command the command
+	 * @param function the command
 	 */
-	void addCommand(Command command);
+	void addCommand(Function function);
 	
 	/**
 	 * Deletes command from chain of algorithm
 	 *
-	 * @param command the command
+	 * @param function the command
 	 */
 	
-	void delCommand(Command command);
+	void delCommand(Function function);
 	
 	/**
 	 * Execute chain of commands.
