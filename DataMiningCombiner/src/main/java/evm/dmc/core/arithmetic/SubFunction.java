@@ -1,31 +1,39 @@
 package evm.dmc.core.arithmetic;
 
-import evm.dmc.core.data.Data;
+import evm.dmc.core.data.IntegerData;
 import evm.dmc.core.function.AbstractDMCFunction;
 
+/**
+ * @author id23cat
+ * Offers biargument Substitution function
+ */
 public class SubFunction extends AbstractDMCFunction {
-	
-//	/* 
-//	 * Allows to set only 2 parameters
-//	 * @param paramCount doesn't influence anything
-//	 */
-//	@Override
-//	public
-//	final void setParamCount(Integer paramCount) {
-//		super.paramCount = 2; 	
-//	}
-	
+
+	IntegerData context = new IntegerData(100);
+
 	public SubFunction() {
 		super();
-		super.paramCount = 2;
+		super.setName("Sub function");
+		super.setArgsCount(2);
 	}
-
-	@Override
-	public void execute() {
-		// TODO Auto-generated method stub
-
-	}
-
 	
+	public SubFunction(IntegerData context) {
+		this();
+		this.context = context;
+	}
+	
+	/**
+	 * Execute substitution: {@code (a - b) * context}
+	 * @param a
+	 * @param b
+	 * @return
+	 */
+	public IntegerData sub(IntegerData a, IntegerData b) {
+		return new IntegerData((a.getData() - b.getData()) * context.getData());
+	}
+	
+	public Integer sub(Integer a, Integer b){
+		return ((a - b) * context.getData());
+	}
 
 }

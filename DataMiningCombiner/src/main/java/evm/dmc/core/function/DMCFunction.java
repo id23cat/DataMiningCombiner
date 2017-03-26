@@ -2,9 +2,9 @@ package evm.dmc.core.function;
 
 
 public interface DMCFunction {
-	void execute();
+//	void execute();
 
-	String getName();
+	default String getName() {return "Warning: No name specified";}
 
 	Integer getArgsCount();
 	

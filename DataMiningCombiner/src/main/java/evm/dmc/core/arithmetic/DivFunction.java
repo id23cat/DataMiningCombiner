@@ -1,33 +1,38 @@
 package evm.dmc.core.arithmetic;
 
-import evm.dmc.core.data.Data;
+import evm.dmc.core.data.IntegerData;
 import evm.dmc.core.function.AbstractDMCFunction;
-import evm.dmc.core.function.DMCFunction;
 
+/**
+ * @author id23cat
+ * Offers biargument Division function
+ */
 public class DivFunction extends AbstractDMCFunction {
 
-//	/* 
-//	 * Allows to set only 2 parameters
-//	 * @param paramCount doesn't influence anything
-//	 */
-//	@Override
-//	public
-//	final void setParamCount(Integer paramCount) {
-//		super.paramCount = 2; 	
-//	}
-	
+	IntegerData context = new IntegerData(50);
+
 	public DivFunction() {
 		super();
-		super.paramCount = 2;
+		super.setName("Div function");
+		super.setArgsCount(2);
 	}
-
-	@Override
-	public void execute() {
-		// TODO Auto-generated method stub
-
-	}
-
 	
+	public DivFunction(IntegerData context) {
+		this();
+		this.context = context;
+	}
 
-
+	/**
+	 * Execute division: {@code a / b + context}
+	 * @param a
+	 * @param b
+	 * @return 
+	 */
+	public IntegerData div(IntegerData a, IntegerData b) {
+		return new IntegerData((a.getData() / b.getData()) + context.getData());
+	}
+	
+	public Integer div(Integer a, Integer b){
+		return ((a / b) + context.getData());
+	}
 }

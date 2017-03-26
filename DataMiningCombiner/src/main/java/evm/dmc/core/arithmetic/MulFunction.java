@@ -1,31 +1,39 @@
 package evm.dmc.core.arithmetic;
 
-import evm.dmc.core.data.Data;
+import evm.dmc.core.data.IntegerData;
 import evm.dmc.core.function.AbstractDMCFunction;
-import evm.dmc.core.function.DMCFunction;
 
+/**
+ * @author id23cat
+ * Offers biargument Multiplication function
+ */
 public class MulFunction extends AbstractDMCFunction {
 
-//	/* 
-//	 * Allows to set only 2 parameters
-//	 * @param paramCount doesn't influence anything
-//	 */
-//	@Override
-//	public
-//	final void setParamCount(Integer paramCount) {
-//		super.paramCount = 2; 	
-//	}
+	IntegerData context = new IntegerData(2);
 	
 	public MulFunction() {
 		super();
-		super.paramCount = 2;
+		super.setName("Mul function");
+		super.setArgsCount(2);
 	}
-
-	@Override
-	public void execute() {
-		// TODO Auto-generated method stub
-
-	}
-
 	
+	public MulFunction(IntegerData context) {
+		this();
+		this.context = context;
+	}
+
+	/**
+	 * Execute multiplication: {@code (a * b) / context}
+	 * @param a
+	 * @param b
+	 * @return 
+	 */
+	public IntegerData mul(IntegerData a, IntegerData b){
+		return new IntegerData((a.getData() * b.getData()) / context.getData());
+	}
+	
+	public Integer mul(Integer a, Integer b){
+		return ((a * b) / context.getData());
+	}
+
 }

@@ -1,50 +1,39 @@
 package evm.dmc.core.arithmetic;
 
-import evm.dmc.core.data.Data;
-import evm.dmc.core.data.NumericData;
-import evm.dmc.core.function.AbstractDMCFunction;
+import evm.dmc.core.data.IntegerData;
+import evm.dmc.core.function.NumericDMCFunction;
 
-public class AddFunction extends AbstractDMCFunction{
-
-	public AddFunction() {
+/**
+ * @author id23cat
+ * Offers biargument Addition function
+ */
+public class AddFunction extends NumericDMCFunction /*implements DMC2ArgFunction*/<Integer>{
+	
+	IntegerData context = new IntegerData(4);	
+	
+	public AddFunction() {		
 		super();
-		super.paramCount = 2;
-		super.function = (x,y) -> x+y;
+		super.setName("Add function");
+		super.setArgsCount(2);
+	}
+	
+	public AddFunction(IntegerData context) {
+		this();
+		this.context = context;
 	}
 
-	@Override
-	public void execute() {
-
-	}
-
-	/* (non-Javadoc)
-	 * @see evm.dmc.core.Function#getResult()
+	/**
+	 * Execute addition: {@code (a + b) * context}
+	 * @param a
+	 * @param b
+	 * @return 
 	 */
-	@Override
-	public Data getResult() {
-		// TODO Auto-generated method stub
-		return null;
+	public IntegerData add(IntegerData a, IntegerData b){
+		return new IntegerData((a.getData() + b.getData()) * context.getData());
 	}
-
-	/* (non-Javadoc)
-	 * @see evm.dmc.core.Function#setSingleArgument(evm.dmc.core.data.Data)
-	 */
-	@Override
-	public void setSingleArgument(NumericData data) {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
-	public Integer getArgsCount() {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public void setArgsCount(Integer count) {
-		// TODO Auto-generated method stub
-		
+	
+	public Integer add(Integer a, Integer b){
+		return ((a + b) * context.getData());
 	}
 
 }

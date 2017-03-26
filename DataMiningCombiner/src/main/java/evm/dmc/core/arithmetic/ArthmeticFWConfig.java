@@ -20,11 +20,23 @@ public class ArthmeticFWConfig {
 		return new ArithmeticFramework();
 	}
 	
+	@Bean
 	public DMCFunction addFunction(){
 		return new AddFunction();
 	}
 	
-	public DMCFunction sunFunction(){
+	@Bean
+	public DMCFunction subFunction(){
 		return new SubFunction();
+	}
+	
+	@Bean
+	public DMCFunction divFunction(){
+		return new DivFunction();
+	}
+	
+	@Bean
+	public DMCFunction mulFunction(){
+		return new MulFunction();
 	}
 }

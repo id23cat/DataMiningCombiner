@@ -7,7 +7,7 @@ import evm.dmc.core.data.Data;
  * @author id23cat
  *
  */
-public abstract class AbstractDMCFunction<T,U> implements DMCFunction {
+public abstract class AbstractDMCFunction implements DMCFunction {
 
 	/**
 	 * Name of the function, is used as key in map of functions presented in
@@ -17,9 +17,7 @@ public abstract class AbstractDMCFunction<T,U> implements DMCFunction {
 	/**
 	 * Count of the parameters have to be setted as arguments
 	 */
-	protected Integer paramCount;
-	
-	protected Function<Data<T>,Data<U>> function;
+	protected Integer argsCount;
 	/**
 	 * @return the name
 	 */
@@ -35,25 +33,16 @@ public abstract class AbstractDMCFunction<T,U> implements DMCFunction {
 	/**
 	 * @return the paramCount
 	 */
-	public Integer getParamCount() {
-		return paramCount;
+	public Integer getArgsCount() {
+		return argsCount;
 	}
 	/**
 	 * @param paramCount the paramCount to set
 	 */
-	public void setParamCount(Integer paramCount) {
-		this.paramCount = paramCount;
+	public void setArgsCount(Integer paramCount) {
+		this.argsCount = paramCount;
 	}
-	
-//	public void setFunction(Function<Data<T>,Data<U>> func){
-//		this.function = func;
-//	}
-	
-//	public void execute(){
-//		this.function.apply(this.get)
-//		
-//	}
-	
+
 	
 
 }
