@@ -1,7 +1,7 @@
 package evm.dmc.core.arithmetic;
 
-import evm.dmc.core.Data;
 import evm.dmc.core.NumericData;
+import evm.dmc.core.data.Data;
 
 public class InMemoryNumData <T extends Number> implements NumericData<T> {
 	T data;

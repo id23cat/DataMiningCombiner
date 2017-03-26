@@ -1,10 +1,10 @@
 package evm.dmc.core.arithmetic;
 
-import evm.dmc.core.Function;
-import evm.dmc.core.AbstactFunction;
-import evm.dmc.core.Data;
+import evm.dmc.core.data.Data;
+import evm.dmc.core.function.AbstractDMCFunction;
+import evm.dmc.core.function.DMCFunction;
 
-public class MulFunction extends AbstactFunction {
+public class MulFunction extends AbstractDMCFunction {
 
 //	/* 
 //	 * Allows to set only 2 parameters

@@ -3,20 +3,22 @@ package evm.dmc.core;
 import java.util.LinkedList;
 import java.util.List;
 
+import evm.dmc.core.function.DMCFunction;
+
 /**
  * The Class SerialAlgorithm.
  * Serial Implementation of interface, means serial 
  * execution of contained commands
  */
 public class SerialAlgorithm implements Algorithm {
-	protected List<Function> algChain = new LinkedList<>();
+	protected List<DMCFunction> algChain = new LinkedList<>();
 
 	/* (non-Javadoc)
 	 * @see evm.dmc.core.Algorithm#addCommand(evm.dmc.core.Command)
 	 */
 	@Override
-	public void addCommand(Function function) {
-		algChain.add(function);
+	public void addCommand(DMCFunction dMCFunction) {
+		algChain.add(dMCFunction);
 		
 	}
 
@@ -24,8 +26,8 @@ public class SerialAlgorithm implements Algorithm {
 	 * @see evm.dmc.core.Algorithm#delCommand(evm.dmc.core.Command)
 	 */
 	@Override
-	public void delCommand(Function function) {
-		algChain.remove(function);
+	public void delCommand(DMCFunction dMCFunction) {
+		algChain.remove(dMCFunction);
 		
 	}
 

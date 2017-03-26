@@ -17,6 +17,8 @@ import org.mockito.MockitoAnnotations;
 import org.mockito.junit.MockitoJUnitRunner;
 import org.springframework.boot.test.mock.mockito.MockBean;
 
+import evm.dmc.core.function.DMCFunction;
+
 /**
  * @author id23cat
  *
@@ -25,7 +27,7 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 public class AlgorithmTest {
 	
 	@Mock private Algorithm mockedAlg;
-	@Mock private Function mockedCmd;
+	@Mock private DMCFunction mockedCmd;
 	
 	@BeforeClass
 	public static void setUpBeforeClass() throws Exception {
@@ -33,7 +35,7 @@ public class AlgorithmTest {
 	}
 
 	/**
-	 * Test method for {@link evm.dmc.core.Algorithm#addCommand(evm.dmc.core.Function)}.
+	 * Test method for {@link evm.dmc.core.Algorithm#addCommand(evm.dmc.core.function.DMCFunction)}.
 	 */
 	@Test
 	public final void testAddCommand() {		
@@ -43,7 +45,7 @@ public class AlgorithmTest {
 	}
 
 	/**
-	 * Test method for {@link evm.dmc.core.Algorithm#delCommand(evm.dmc.core.Function)}.
+	 * Test method for {@link evm.dmc.core.Algorithm#delCommand(evm.dmc.core.function.DMCFunction)}.
 	 */
 	@Test
 	public final void testDelCommand() {		

@@ -7,7 +7,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 import evm.dmc.core.Framework;
-import evm.dmc.core.Function;
+import evm.dmc.core.function.DMCFunction;
 
 /**
  * @author id23cat
@@ -20,11 +20,11 @@ public class ArthmeticFWConfig {
 		return new ArithmeticFramework();
 	}
 	
-	public Function addFunction(){
+	public DMCFunction addFunction(){
 		return new AddFunction();
 	}
 	
-	public Function sunFunction(){
+	public DMCFunction sunFunction(){
 		return new SubFunction();
 	}
 }
