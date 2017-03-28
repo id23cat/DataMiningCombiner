@@ -1,13 +1,13 @@
 package evm.dmc.core.arithmetic;
 
+import evm.dmc.core.data.Data;
 import evm.dmc.core.data.IntegerData;
-import evm.dmc.core.function.AbstractDMCFunction;
 
 /**
  * @author id23cat
  * Offers biargument Division function
  */
-public class DivFunction extends AbstractDMCFunction {
+public class DivFunction extends AbstractArithmeticFunction<Integer> {
 
 	IntegerData context = new IntegerData(50);
 
@@ -15,6 +15,7 @@ public class DivFunction extends AbstractDMCFunction {
 		super();
 		super.setName("Div function");
 		super.setArgsCount(2);
+		super.setFunction(this::div);
 	}
 	
 	public DivFunction(IntegerData context) {
@@ -28,11 +29,12 @@ public class DivFunction extends AbstractDMCFunction {
 	 * @param b
 	 * @return 
 	 */
-	public IntegerData div(IntegerData a, IntegerData b) {
-		return new IntegerData((a.getData() / b.getData()) + context.getData());
-	}
-	
 	public Integer div(Integer a, Integer b){
 		return ((a / b) + context.getData());
 	}
+	
+	public IntegerData div(Data<Integer> a, Data<Integer> b) {
+		return new IntegerData( div(a.getData(), b.getData()) );
+	}
+	
 }

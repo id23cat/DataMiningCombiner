@@ -1,13 +1,13 @@
 package evm.dmc.core.arithmetic;
 
+import evm.dmc.core.data.Data;
 import evm.dmc.core.data.IntegerData;
-import evm.dmc.core.function.NumericDMCFunction;
 
 /**
  * @author id23cat
  * Offers biargument Addition function
  */
-public class AddFunction extends NumericDMCFunction /*implements DMC2ArgFunction*/<Integer>{
+public class AddFunction extends AbstractArithmeticFunction<Integer>{
 	
 	IntegerData context = new IntegerData(4);	
 	
@@ -15,6 +15,7 @@ public class AddFunction extends NumericDMCFunction /*implements DMC2ArgFunction
 		super();
 		super.setName("Add function");
 		super.setArgsCount(2);
+		super.setFunction(this::add);
 	}
 	
 	public AddFunction(IntegerData context) {
@@ -28,12 +29,12 @@ public class AddFunction extends NumericDMCFunction /*implements DMC2ArgFunction
 	 * @param b
 	 * @return 
 	 */
-	public IntegerData add(IntegerData a, IntegerData b){
-		return new IntegerData((a.getData() + b.getData()) * context.getData());
-	}
-	
 	public Integer add(Integer a, Integer b){
 		return ((a + b) * context.getData());
+	}
+	
+	public IntegerData add(Data<Integer> a, Data<Integer> b) {
+		return new IntegerData( add((Integer)a.getData(), (Integer)b.getData()) );
 	}
 
 }

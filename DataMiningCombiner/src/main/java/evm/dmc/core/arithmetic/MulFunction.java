@@ -1,13 +1,13 @@
 package evm.dmc.core.arithmetic;
 
+import evm.dmc.core.data.Data;
 import evm.dmc.core.data.IntegerData;
-import evm.dmc.core.function.AbstractDMCFunction;
 
 /**
  * @author id23cat
  * Offers biargument Multiplication function
  */
-public class MulFunction extends AbstractDMCFunction {
+public class MulFunction extends AbstractArithmeticFunction<Integer> {
 
 	IntegerData context = new IntegerData(2);
 	
@@ -15,6 +15,7 @@ public class MulFunction extends AbstractDMCFunction {
 		super();
 		super.setName("Mul function");
 		super.setArgsCount(2);
+		super.setFunction(this::mul);
 	}
 	
 	public MulFunction(IntegerData context) {
@@ -27,13 +28,13 @@ public class MulFunction extends AbstractDMCFunction {
 	 * @param a
 	 * @param b
 	 * @return 
-	 */
-	public IntegerData mul(IntegerData a, IntegerData b){
-		return new IntegerData((a.getData() * b.getData()) / context.getData());
-	}
-	
+	 */	
 	public Integer mul(Integer a, Integer b){
 		return ((a * b) / context.getData());
 	}
+	
+	public IntegerData mul(Data<Integer> a, Data<Integer> b) {
+		return new IntegerData( mul(a.getData(), b.getData()) );
+	}	
 
 }

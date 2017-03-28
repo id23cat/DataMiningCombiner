@@ -1,8 +1,5 @@
 package evm.dmc.core.function;
 
-import java.util.function.Function;
-
-import evm.dmc.core.data.Data;
 /**
  * @author id23cat
  *
