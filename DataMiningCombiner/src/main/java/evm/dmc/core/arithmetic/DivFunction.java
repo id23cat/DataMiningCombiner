@@ -1,5 +1,7 @@
 package evm.dmc.core.arithmetic;
 
+import org.springframework.stereotype.Component;
+
 import evm.dmc.core.data.Data;
 import evm.dmc.core.data.IntegerData;
 
@@ -7,20 +9,16 @@ import evm.dmc.core.data.IntegerData;
  * @author id23cat
  * Offers biargument Division function
  */
+@Component
 public class DivFunction extends AbstractArithmeticFunction<Integer> {
-
-	IntegerData context = new IntegerData(50);
 
 	public DivFunction() {
 		super();
 		super.setName("Div function");
 		super.setArgsCount(2);
+		
+		// The most important setting
 		super.setFunction(this::div);
-	}
-	
-	public DivFunction(IntegerData context) {
-		this();
-		this.context = context;
 	}
 
 	/**
@@ -30,7 +28,7 @@ public class DivFunction extends AbstractArithmeticFunction<Integer> {
 	 * @return 
 	 */
 	public Integer div(Integer a, Integer b){
-		return ((a / b) + context.getData());
+		return a / b;
 	}
 	
 	public IntegerData div(Data<Integer> a, Data<Integer> b) {

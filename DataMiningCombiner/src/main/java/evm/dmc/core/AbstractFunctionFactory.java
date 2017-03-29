@@ -15,5 +15,18 @@ public abstract class  AbstractFunctionFactory {
 	public void setFrameworks(List<Framework> fwList){
 		this.frameworks	= fwList;
 	}
+	
+	public void addFramework(Framework framework){
+		this.frameworks.add(framework);
+	}
+	
+	protected void buildFunctionsMap(){
+		for(Framework fwk: frameworks){
+			List<String> functions = fwk.getFunctionDescriptors();
+			for(String descr: functions){
+				functionsMap.put(descr, fwk);
+			}
+		}
+	}
 
 }

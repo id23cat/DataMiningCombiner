@@ -1,5 +1,7 @@
 package evm.dmc.core.arithmetic;
 
+import org.springframework.stereotype.Component;
+
 import evm.dmc.core.data.Data;
 import evm.dmc.core.data.IntegerData;
 
@@ -7,22 +9,18 @@ import evm.dmc.core.data.IntegerData;
  * @author id23cat
  * Offers biargument Multiplication function
  */
+@Component
 public class MulFunction extends AbstractArithmeticFunction<Integer> {
 
-	IntegerData context = new IntegerData(2);
-	
 	public MulFunction() {
 		super();
 		super.setName("Mul function");
 		super.setArgsCount(2);
+		
+		// The most important setting
 		super.setFunction(this::mul);
 	}
 	
-	public MulFunction(IntegerData context) {
-		this();
-		this.context = context;
-	}
-
 	/**
 	 * Execute multiplication: {@code (a * b) / context}
 	 * @param a
@@ -30,7 +28,7 @@ public class MulFunction extends AbstractArithmeticFunction<Integer> {
 	 * @return 
 	 */	
 	public Integer mul(Integer a, Integer b){
-		return ((a * b) / context.getData());
+		return a * b;
 	}
 	
 	public IntegerData mul(Data<Integer> a, Data<Integer> b) {

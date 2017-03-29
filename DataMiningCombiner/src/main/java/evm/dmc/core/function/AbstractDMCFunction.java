@@ -4,7 +4,7 @@ package evm.dmc.core.function;
  * @author id23cat
  *
  */
-public abstract class AbstractDMCFunction implements DMCFunction {
+public abstract class AbstractDMCFunction<T> implements DMCFunction<T> {
 
 	/**
 	 * Name of the function, is used as key in map of functions presented in

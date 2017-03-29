@@ -6,29 +6,60 @@ import java.util.function.BiFunction;
 
 import org.junit.BeforeClass;
 import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.test.context.ContextConfiguration;
+import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
+import evm.dmc.core.arithmetic.AbstractArithmeticFunction.ArithmeticContext;
+import evm.dmc.core.data.Data;
 import evm.dmc.core.data.IntegerData;
+import evm.dmc.core.function.DMCFunction;
 
+@RunWith(SpringJUnit4ClassRunner.class)
+@ContextConfiguration(classes=ArithmeticPackageConfig.class)
 public class SubFunctionTest {
 
-	SubFunction subF = new SubFunction(new IntegerData(10));
+	@Autowired
+	SubFunction subF;
+	
+	IntegerData x5 = new IntegerData(5);
+	IntegerData y2 = new IntegerData(2);
 	
 	@BeforeClass
 	public static void setUpBeforeClass() throws Exception {
+	}
+	
+	@Test
+	public final void testAutowiredObject(){
+		assertNotNull(subF);
 	}
 
 	@Test
 	public final void testSubIntegerDataIntegerData() {
 		BiFunction<IntegerData, IntegerData, IntegerData> func;
 		
-		// (a - b) * context
+		// a - b
 		func = subF::sub;
+				
+		IntegerData r3 = new IntegerData(3);
+		// 5 - 2 = 3
+		assertEquals(func.apply(x5, y2), r3);
+	}
+	
+	@Test
+	public final void testBaseMethodExecute() {
+		ArithmeticContext context = (ArithmeticContext) subF.getContext();
+		DMCFunction<Integer> funcInterface = subF;
+		context.setMultiplier(10);
 		
-		IntegerData x5 = new IntegerData(5);
-		IntegerData y2 = new IntegerData(2);
-		IntegerData r30 = new IntegerData(30);
+		funcInterface.addArgument(x5);
+		funcInterface.addArgument(y2);
+		Data<Integer> r30 = new IntegerData(30);
 		// (5 - 2) * 10 = 30
-		assertEquals(func.apply(x5, y2), r30);
+		funcInterface.execute();
+		Data<Integer> result = funcInterface.getResult();
+		assertEquals(result, r30);
 	}
 
 	@Test
