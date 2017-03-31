@@ -1,12 +1,13 @@
 package evm.dmc.core.arithmetic;
 
-import java.util.List;
-
 import evm.dmc.core.AbstractFunctionFactory;
-import evm.dmc.core.Framework;
 
+/**
+ * A factory for creating SimpleFunction objects. Default implementation of the
+ * AbstractFunctionFactory
+ * 
+ * @author id23cat
+ */
 public class SimpleFunctionFactory extends AbstractFunctionFactory {
-
-	
 
 }

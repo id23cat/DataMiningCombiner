@@ -1,13 +1,22 @@
 package evm.dmc.core.data;
 
+import org.springframework.context.annotation.Scope;
+import org.springframework.stereotype.Service;
+
+@Service
+@Scope("prototype")
 public abstract class InMemoryData<T> implements Data<T> {
 	T data;
+
+	public InMemoryData() {
+
+	}
 
 	public InMemoryData(T data) {
 		super();
 		this.data = data;
 	}
-	
+
 	public InMemoryData(Data<T> data) {
 		super();
 		this.data = data.getData();
@@ -16,18 +25,23 @@ public abstract class InMemoryData<T> implements Data<T> {
 	/**
 	 * @return the data
 	 */
+	@Override
 	public T getData() {
 		return data;
 	}
 
 	/**
-	 * @param data the data to set
+	 * @param data
+	 *            the data to set
 	 */
+	@Override
 	public void setData(T data) {
 		this.data = data;
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see java.lang.Object#hashCode()
 	 */
 	@Override
@@ -38,7 +52,9 @@ public abstract class InMemoryData<T> implements Data<T> {
 		return result;
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see java.lang.Object#equals(java.lang.Object)
 	 */
 	@Override
@@ -57,6 +73,5 @@ public abstract class InMemoryData<T> implements Data<T> {
 			return false;
 		return true;
 	}
-
 
 }

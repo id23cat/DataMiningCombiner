@@ -1,8 +1,7 @@
 package evm.dmc.core.arithmetic;
 
-import static org.junit.Assert.*;
-
-import java.util.function.BiFunction;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
 
 import org.junit.BeforeClass;
 import org.junit.Test;
@@ -11,6 +10,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
+import java.util.function.BiFunction;
+
 import evm.dmc.core.arithmetic.AbstractArithmeticFunction.ArithmeticContext;
 //import evm.dmc.core.arithmetic.DivFunction;
 import evm.dmc.core.data.Data;
@@ -18,7 +19,7 @@ import evm.dmc.core.data.IntegerData;
 import evm.dmc.core.function.DMCFunction;
 
 @RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration(classes=ArithmeticPackageConfig.class)
+@ContextConfiguration(classes = ArithmeticPackageConfig.class)
 public class DivFunctionTest {
 
 	@Autowired
@@ -26,13 +27,13 @@ public class DivFunctionTest {
 
 	Data<Integer> x15 = new IntegerData(15);
 	Data<Integer> y5 = new IntegerData(5);
-	
+
 	@BeforeClass
 	public static void setUpBeforeClass() throws Exception {
 	}
-	
+
 	@Test
-	public final void testAutowiredObject(){
+	public final void testAutowiredObject() {
 		assertNotNull(divF);
 	}
 
@@ -57,7 +58,7 @@ public class DivFunctionTest {
 		ArithmeticContext context = (ArithmeticContext) divF.getContext();
 		DMCFunction<Integer> funcInterface = divF;
 		context.setMultiplier(10);
-		
+
 		funcInterface.addArgument(x15);
 		funcInterface.addArgument(y5);
 		// (15 / 5) * 10 = 30

@@ -59,6 +59,13 @@
 			<groupId>junit</groupId>
 			<artifactId>junit</artifactId>
 		</dependency>
+		<!-- https://mvnrepository.com/artifact/com.github.stefanbirkner/system-rules -->
+		<dependency>
+			<groupId>com.github.stefanbirkner</groupId>
+			<artifactId>system-rules</artifactId>
+			<version>1.16.1</version>
+		</dependency>
+
 	</dependencies>
 
 	<build>

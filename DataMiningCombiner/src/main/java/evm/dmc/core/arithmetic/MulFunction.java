@@ -1,15 +1,20 @@
 package evm.dmc.core.arithmetic;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import evm.dmc.core.Framework;
 import evm.dmc.core.data.Data;
 import evm.dmc.core.data.IntegerData;
 
 /**
  * @author id23cat Offers biargument Multiplication function
  */
-@Service
+@Service("Arithmetic_Mul")
 public class MulFunction extends AbstractArithmeticFunction<Integer> {
+	@Autowired
+	@ArithmeticFW
+	Framework fw;
 
 	public MulFunction() {
 		super();
@@ -32,7 +37,7 @@ public class MulFunction extends AbstractArithmeticFunction<Integer> {
 	}
 
 	public IntegerData mul(Data<Integer> a, Data<Integer> b) {
-		return new IntegerData(mul(a.getData(), b.getData()));
+		return (IntegerData) fw.getData(mul(a.getData(), b.getData()));
 	}
 
 }

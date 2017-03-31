@@ -3,16 +3,18 @@
  */
 package evm.dmc.core.arithmetic;
 
-import static org.junit.Assert.*;
-
-import java.util.function.BiFunction;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
 
 import org.junit.BeforeClass;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ContextConfiguration;
-import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
+import org.springframework.test.context.junit4.SpringRunner;
+
+import java.util.function.BiFunction;
 
 import evm.dmc.core.arithmetic.AbstractArithmeticFunction.ArithmeticContext;
 import evm.dmc.core.data.Data;
@@ -23,8 +25,10 @@ import evm.dmc.core.function.DMCFunction;
  * @author id23cat
  *
  */
-@RunWith(SpringJUnit4ClassRunner.class)
+
+@RunWith(SpringRunner.class)
 @ContextConfiguration(classes = ArithmeticPackageConfig.class)
+@SpringBootTest
 public class AddFunctionTest {
 
 	@Autowired
@@ -57,21 +61,21 @@ public class AddFunctionTest {
 		// 3+5 = 8
 		assertEquals(func.apply(x3, y5), r8);
 	}
-	
+
 	@Test
 	public final void testBaseMethodExecute() {
 		ArithmeticContext context = (ArithmeticContext) addF.getContext();
 		context.setMultiplier(10);
-		
+
 		DMCFunction<Integer> funcInterface = addF;
-		
+
 		funcInterface.addArgument(x3);
 		funcInterface.addArgument(y5);
 		IntegerData r80 = new IntegerData(80);
 		// (3+5) * 10 = 80
 		funcInterface.execute();
 		Data<Integer> result = funcInterface.getResult();
-		assertEquals(result, r80);
+		assertEquals(r80.getData(), result.getData());
 	}
 
 	/**

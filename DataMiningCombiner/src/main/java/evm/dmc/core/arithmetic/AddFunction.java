@@ -1,15 +1,20 @@
 package evm.dmc.core.arithmetic;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import evm.dmc.core.Framework;
 import evm.dmc.core.data.Data;
 import evm.dmc.core.data.IntegerData;
 
 /**
  * @author id23cat Offers biargument Addition function
  */
-@Service
+@Service("Arithmetic_Add")
 public class AddFunction extends AbstractArithmeticFunction<Integer> {
+	@Autowired
+	@ArithmeticFW
+	Framework fw;
 
 	public AddFunction() {
 		super();
@@ -32,7 +37,7 @@ public class AddFunction extends AbstractArithmeticFunction<Integer> {
 	}
 
 	public IntegerData add(Data<Integer> a, Data<Integer> b) {
-		return new IntegerData(add(a.getData(), b.getData()));
+		return (IntegerData) fw.getData(add(a.getData(), b.getData()));
 	}
 
 }

@@ -1,11 +1,13 @@
 package evm.dmc.core.function;
 
+import org.springframework.context.annotation.Lazy;
 import org.springframework.context.annotation.Scope;
 
 import evm.dmc.core.FrameworkContext;
 import evm.dmc.core.data.Data;
 
 @Scope("prototype")
+@Lazy
 public interface DMCFunction<T> {
 	void execute();
 
