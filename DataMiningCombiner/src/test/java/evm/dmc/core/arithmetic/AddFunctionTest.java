@@ -62,6 +62,7 @@ public class AddFunctionTest {
 		assertEquals(func.apply(x3, y5), r8);
 	}
 
+	@SuppressWarnings("unchecked")
 	@Test
 	public final void testBaseMethodExecute() {
 		ArithmeticContext context = (ArithmeticContext) addF.getContext();
@@ -69,8 +70,10 @@ public class AddFunctionTest {
 
 		DMCFunction<Integer> funcInterface = addF;
 
-		funcInterface.addArgument(x3);
-		funcInterface.addArgument(y5);
+		// funcInterface.addArgument(x3);
+		// funcInterface.addArgument(y5);
+
+		funcInterface.setArgs(x3, y5);
 		IntegerData r80 = new IntegerData(80);
 		// (3+5) * 10 = 80
 		funcInterface.execute();

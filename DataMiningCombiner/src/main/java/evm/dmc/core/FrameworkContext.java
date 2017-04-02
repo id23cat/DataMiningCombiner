@@ -2,7 +2,6 @@ package evm.dmc.core;
 
 import org.springframework.context.annotation.Scope;
 
-import evm.dmc.core.data.Data;
 import evm.dmc.core.function.DMCFunction;
 
 @Scope("singleton")
@@ -20,5 +19,5 @@ public interface FrameworkContext {
 	 */
 	void executeInContext(DMCFunction function);
 
-	Data getNewData();
+	// Data getNewData();
 }

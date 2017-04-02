@@ -3,6 +3,8 @@ package evm.dmc.core.function;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.context.annotation.Scope;
 
+import java.util.List;
+
 import evm.dmc.core.FrameworkContext;
 import evm.dmc.core.data.Data;
 
@@ -19,9 +21,15 @@ public interface DMCFunction<T> {
 
 	void setName(String name);
 
-	void setArgsCount(Integer count);
+	// void setArgsCount(Integer count);
 
-	void addArgument(Data<T> arg);
+	// @Deprecated
+	// void addArgument(Data<T> arg);
+
+	@SuppressWarnings("unchecked")
+	void setArgs(Data<T>... datas);
+
+	void setArgs(List<Data<T>> largs);
 
 	Data<T> getResult();
 
@@ -47,20 +55,5 @@ public interface DMCFunction<T> {
 	 * @author id23cat Interface describes requirements to the context of
 	 *         execution for concrete function
 	 */
-	// @Component
-	// public interface FrameworkContext<T> {
-	// /**
-	// * Method is used for first initialization of function context or
-	// resetting settings to default
-	// */
-	// void initContext();
-	//
-	// /**
-	// * Execute concrete function in context
-	// * @param function
-	// */
-	// void executeFunction(DMCFunction<T> function);
-	//
-	// }
 
 }

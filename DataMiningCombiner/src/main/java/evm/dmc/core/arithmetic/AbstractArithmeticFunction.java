@@ -31,7 +31,7 @@ public abstract class AbstractArithmeticFunction<T/* extends Number */> extends 
 
 		@Autowired
 		public ArithmeticContext() {
-			this.multiplier = this.defaultMultyplyer;
+			initContext();
 		}
 
 		public ArithmeticContext(Integer multyplyer) {
@@ -64,16 +64,16 @@ public abstract class AbstractArithmeticFunction<T/* extends Number */> extends 
 		public void executeInContext(DMCFunction function) {
 			AbstractArithmeticFunction func = (AbstractArithmeticFunction) function;
 			// func.execute();
-			func.result = (Data) func.function.apply(func.arg1, func.arg2);
+			func.result = (Data) func.function.apply(func.arguments.get(0), func.arguments.get(1));
 			mutipyOn(func, multiplier);
 
 		}
 
-		@Override
-		public Data getNewData() {
-			Data data = framework.getData(0);
-			return data;
-		}
+		// @Override
+		// public Data getNewData() {
+		// Data data = framework.getData(0);
+		// return data;
+		// }
 
 		@SuppressWarnings("unchecked")
 		private <U extends Number> void mutipyOn(AbstractArithmeticFunction<U> func, Integer mul) {
@@ -85,8 +85,8 @@ public abstract class AbstractArithmeticFunction<T/* extends Number */> extends 
 
 	}
 
-	private Data<T> arg1 = null;
-	private Data<T> arg2 = null;
+	// private Data<T> arg1 = null;
+	// private Data<T> arg2 = null;
 	private Data<T> result = null;
 
 	private BiFunction<Data<T>, Data<T>, Data<T>> function = null;
@@ -108,20 +108,17 @@ public abstract class AbstractArithmeticFunction<T/* extends Number */> extends 
 
 	public AbstractArithmeticFunction(Data<T> arg1, Data<T> arg2) {
 		super();
-		this.arg1 = arg1;
-		this.arg2 = arg2;
+		this.setArgs(arg1, arg2);
 	}
 
 	public AbstractArithmeticFunction(Data<T> arg1, Data<T> arg2, BiFunction<Data<T>, Data<T>, Data<T>> function) {
 		super();
 		setFunction(function);
-		this.arg1 = arg1;
-		this.arg2 = arg2;
+		this.setArgs(arg1, arg2);
 	}
 
 	public void setArgs(Data<T> arg1, Data<T> arg2) {
-		this.arg1 = arg1;
-		this.arg2 = arg2;
+		this.setArgs(arg1, arg2);
 	}
 
 	/*
@@ -130,48 +127,51 @@ public abstract class AbstractArithmeticFunction<T/* extends Number */> extends 
 	 * @see
 	 * evm.dmc.core.function.DMCFunction#addArgument(evm.dmc.core.data.Data)
 	 */
-	@Override
-	public void addArgument(Data<T> arg) {
-		if (arg1 == null)
-			this.arg1 = arg;
-		else if (arg2 == null)
-			this.arg2 = arg;
+	// @Deprecated
+	// @Override
+	// public void addArgument(Data<T> arg) {
+	// if (arg1 == null)
+	// this.arg1 = arg;
+	// else if (arg2 == null)
+	// this.arg2 = arg;
+	//
+	// }
 
-	}
-
-	/**
-	 * @return the arg1
-	 */
-	public Data<T> getArg1() {
-		if (this.arg1 == null)
-			throw new NullPointerException("The argument1 of operation is undefined");
-		return this.arg1;
-	}
-
-	/**
-	 * @param arg1
-	 *            the arg1 to set
-	 */
-	public void setArg1(Data<T> arg1) {
-		this.arg1 = arg1;
-	}
-
-	/**
-	 * @return the arg2
-	 */
-	public Data<T> getArg2() {
-		if (this.arg2 == null)
-			throw new NullPointerException("The argument2 of operation is undefined");
-		return this.arg2;
-	}
-
-	/**
-	 * @param arg2
-	 *            the arg2 to set
-	 */
-	public void setArg2(Data<T> arg2) {
-		this.arg2 = arg2;
-	}
+	// /**
+	// * @return the arg1
+	// */
+	// public Data<T> getArg1() {
+	// if (this.arg1 == null)
+	// throw new NullPointerException("The argument1 of operation is
+	// undefined");
+	// return this.arg1;
+	// }
+	//
+	// /**
+	// * @param arg1
+	// * the arg1 to set
+	// */
+	// public void setArg1(Data<T> arg1) {
+	// this.arg1 = arg1;
+	// }
+	//
+	// /**
+	// * @return the arg2
+	// */
+	// public Data<T> getArg2() {
+	// if (this.arg2 == null)
+	// throw new NullPointerException("The argument2 of operation is
+	// undefined");
+	// return this.arg2;
+	// }
+	//
+	// /**
+	// * @param arg2
+	// * the arg2 to set
+	// */
+	// public void setArg2(Data<T> arg2) {
+	// this.arg2 = arg2;
+	// }
 
 	/**
 	 * @return the result

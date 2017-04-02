@@ -87,22 +87,22 @@ public class ArithmeticFrameworkTest implements ApplicationContextAware {
 	@SuppressWarnings("unchecked")
 	public final void testGetDMCFunctionAndContext() {
 		framework.initFramework();
+
 		DMCFunction<Integer> addF = framework.getDMCFunction("Arithmetic_Add");
-		addF.addArgument(framework.getData(12));
-		addF.addArgument(framework.getData(10));
-		addF.execute();
-		Data<Integer> result = addF.getResult();
-		assertNotNull(result);
-		assertEquals(Integer.valueOf(22), result.getData());
+		testFunction(addF, framework.getData(12), framework.getData(10), 22);
 
 		DMCFunction<Integer> subF = framework.getDMCFunction("Arithmetic_Sub");
 		assertNotEquals(addF, subF);
-		subF.addArgument(framework.getData(22));
-		subF.addArgument(framework.getData(12));
-		subF.execute();
-		result = subF.getResult();
-		assertNotNull(result);
-		assertEquals(Integer.valueOf(10), result.getData());
+		testFunction(subF, framework.getData(22), framework.getData(10), 12);
+
+	}
+
+	private void testFunction(DMCFunction<Integer> func, Data arg1, Data arg2, Integer expRes) {
+		func.setArgs(arg1, arg2);
+		func.execute();
+		Data<Integer> result = func.getResult();
+		assertNotNull(expRes);
+		assertEquals(expRes, result.getData());
 
 	}
 

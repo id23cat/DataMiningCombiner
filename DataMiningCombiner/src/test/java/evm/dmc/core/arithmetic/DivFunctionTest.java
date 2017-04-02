@@ -52,6 +52,7 @@ public class DivFunctionTest {
 		assertEquals(result, r3);
 	}
 
+	@SuppressWarnings("unchecked")
 	@Test
 	public final void testBaseMethodExecute() {
 		Data<Integer> r30 = new IntegerData(30);
@@ -59,8 +60,10 @@ public class DivFunctionTest {
 		DMCFunction<Integer> funcInterface = divF;
 		context.setMultiplier(10);
 
-		funcInterface.addArgument(x15);
-		funcInterface.addArgument(y5);
+		// funcInterface.addArgument(x15);
+		// funcInterface.addArgument(y5);
+
+		funcInterface.setArgs(x15, y5);
 		// (15 / 5) * 10 = 30
 		funcInterface.execute();
 		Data<Integer> result = funcInterface.getResult();
