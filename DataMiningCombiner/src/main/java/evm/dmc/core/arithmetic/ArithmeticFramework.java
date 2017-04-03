@@ -1,43 +1,31 @@
 package evm.dmc.core.arithmetic;
 
-import org.springframework.beans.BeansException;
+import javax.annotation.PostConstruct;
+
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.ApplicationContext;
 import org.springframework.stereotype.Service;
 
-import java.util.Arrays;
-import java.util.HashSet;
-import java.util.Set;
-
-import evm.dmc.core.Framework;
+import evm.dmc.core.AbstractFramework;
 import evm.dmc.core.FrameworkContext;
 import evm.dmc.core.data.Data;
 import evm.dmc.core.data.IntegerData;
 import evm.dmc.core.function.DMCFunction;
 
-/**
- * TODO Hard wired to Spring Have to be changed with consideration to:
- * 
- * @see https://spring.io/blog/2004/08/06/method-injection/
- * @see http://docs.spring.io/spring/docs/current/spring-framework-reference/html/beans.html#beans-java-method-injection
- * @see http://docs.spring.io/spring/docs/current/spring-framework-reference/html/beans.html#beans-factory-method-injection
- */
 @Service
 @ArithmeticFW
-public class ArithmeticFramework implements Framework {
-	private Set<String> funcDescriptors;
+public class ArithmeticFramework extends AbstractFramework {
 	@Autowired
 	@ArithmeticFWContext
 	private FrameworkContext frameworkContext;
 
-	private ApplicationContext applicationContext;
+	public ArithmeticFramework() {
+		super();
+	}
 
 	@Override
+	@PostConstruct
 	public void initFramework() {
-		// TODO
-		funcDescriptors = new HashSet<String>(
-				Arrays.asList(applicationContext.getBeanNamesForType(AbstractArithmeticFunction.class)));
-
+		super.initFrameworkForType(AbstractArithmeticFunction.class);
 	}
 
 	/**
@@ -48,34 +36,10 @@ public class ArithmeticFramework implements Framework {
 	}
 
 	@Override
-	public Set<String> getFunctionDescriptors() {
-		return funcDescriptors;
-	}
-
-	@Override
 	public DMCFunction getDMCFunction(String descriptor) {
-		// TODO
-		DMCFunction function = applicationContext.getBean(descriptor, AbstractArithmeticFunction.class);
+		DMCFunction function = super.getDMCFunction(descriptor, AbstractArithmeticFunction.class);
 		function.setContext(frameworkContext);
 		return function;
-	}
-
-	@Override
-	public void setApplicationContext(ApplicationContext applicationContext) throws BeansException {
-		// TODO
-		this.applicationContext = applicationContext;
-	}
-
-	@Override
-	public Data getData(String file) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public Data getData(Object rawData) {
-		// TODO Auto-generated method stub
-		return null;
 	}
 
 	@Override
@@ -94,7 +58,7 @@ public class ArithmeticFramework implements Framework {
 	}
 
 	private Data instantiateData() {
-		return applicationContext.getBean(IntegerData.class);
+		return super.instantiateData(IntegerData.class);
 	}
 
 }
