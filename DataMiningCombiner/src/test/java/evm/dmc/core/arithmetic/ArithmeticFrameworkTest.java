@@ -58,7 +58,7 @@ public class ArithmeticFrameworkTest implements ApplicationContextAware {
 
 	@Test
 	public final void testInitFrameworkAndGetFunctionDescriptors() {
-		framework.initFramework();
+		// framework.initFramework();
 		Set<String> descriptors = framework.getFunctionDescriptors();
 		assertNotNull(descriptors);
 		System.out.println(descriptors);
@@ -71,7 +71,7 @@ public class ArithmeticFrameworkTest implements ApplicationContextAware {
 
 	@Test
 	public final void testGetData() {
-		framework.initFramework();
+		// framework.initFramework();
 		@SuppressWarnings("unchecked")
 		Data<Integer> data1 = framework.getData(12);
 		@SuppressWarnings("unchecked")
@@ -86,7 +86,7 @@ public class ArithmeticFrameworkTest implements ApplicationContextAware {
 	@Test
 	@SuppressWarnings("unchecked")
 	public final void testGetDMCFunctionAndContext() {
-		framework.initFramework();
+		// framework.initFramework();
 
 		DMCFunction<Integer> addF = framework.getDMCFunction("Arithmetic_Add");
 		testFunction(addF, framework.getData(12), framework.getData(10), 22);
