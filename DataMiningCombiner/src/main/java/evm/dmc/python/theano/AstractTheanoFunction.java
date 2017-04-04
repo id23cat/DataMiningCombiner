@@ -2,6 +2,7 @@ package evm.dmc.python.theano;
 
 import javax.annotation.PostConstruct;
 
+import org.python.util.PythonInterpreter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -19,6 +20,8 @@ public class AstractTheanoFunction<T> extends AbstractDMCFunction<T> {
 	@ArithmeticFWContext
 	// @Scope("prototype")
 	public static class TheanoContext implements FrameworkContext {
+		@Autowired
+		PythonInterpreter python;
 
 		@Override
 		@PostConstruct
