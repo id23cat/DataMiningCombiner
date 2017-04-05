@@ -71,14 +71,14 @@
 			<artifactId>jython-standalone</artifactId>
 			<version>2.7.0</version>
 		</dependency>
-		<!-- https://github.com/mrj0/jep -->
 		<dependency>
 			<groupId>jep</groupId>
 			<artifactId>jep</artifactId>
-			<version>3.6.3</version>
-			<scope>system</scope>
-			<systemPath>${project.basedir}/src/main/resources/jep-3.6.3.jar</systemPath>
-		</dependency>	
+			<version>3.6.3</version>			
+			<!-- <scope>system</scope>
+			<systemPath>${project.basedir}/libs/jep/jep-3.6.3.jar</systemPath> -->
+			<!-- <systemPath>/home/id23cat/miniconda2/lib/python2.7/site-packages/jep/jep-3.6.3.jar</systemPath> -->
+		</dependency>
 
 
 	</dependencies>
@@ -88,6 +88,41 @@
 			<plugin>
 				<groupId>org.springframework.boot</groupId>
 				<artifactId>spring-boot-maven-plugin</artifactId>
+			</plugin>
+			<!-- To load JEP libraries -->
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-surefire-plugin</artifactId>
+				<configuration>
+					<!-- <systemPropertyVariables> <java.library.path>${project.basedir}/src/main/resources/jep</java.library.path> 
+						<buildDirectory>/usr/lib64/python3.4/site-packages/jep</buildDirectory> </systemPropertyVariables> -->
+					<forkMode>once</forkMode>
+					<argLine>-Djava.library.path=${project.basedir}/libs/jep</argLine>
+					<!-- <argLine>-Djava.library.path=/home/id23cat/miniconda2/lib/python2.7/site-packages/jep</argLine> -->
+				</configuration>
+			</plugin>
+			<!-- To push JEP jar to local maven repository -->
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-install-plugin</artifactId>				
+				<executions>
+					<execution>
+						<id>install-external</id>
+						<phase>clean</phase>
+						<configuration>
+							<file>${basedir}/libs/jep/jep-3.6.3.jar</file>
+							<repositoryLayout>default</repositoryLayout>
+							<groupId>jep</groupId>
+							<artifactId>jep</artifactId>
+							<version>3.6.3</version>
+							<packaging>jar</packaging>
+							<generatePom>true</generatePom>
+						</configuration>
+						<goals>
+							<goal>install-file</goal>
+						</goals>
+					</execution>
+				</executions>
 			</plugin>
 		</plugins>
 	</build>

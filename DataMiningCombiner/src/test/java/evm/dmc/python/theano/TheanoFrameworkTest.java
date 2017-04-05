@@ -15,8 +15,14 @@ import org.python.core.PyInteger;
 import org.python.core.PyObject;
 import org.python.util.PythonInterpreter;
 
+import jep.Jep;
+import jep.JepException;
+
+//@RunWith(SpringRunner.class)
+//@ContextConfiguration(classes = ArithmeticPackageConfig.class)
+//@SpringBootTest
 public class TheanoFrameworkTest {
-	String fileName = "data/test1.py";
+	String fileName = "Data/test1.py";
 
 	@BeforeClass
 	public static void setUpBeforeClass() throws Exception {
@@ -59,6 +65,20 @@ public class TheanoFrameworkTest {
 		python.exec("number3 = number1+number2");
 		PyObject number3 = python.get("number3");
 		System.out.println("val : " + number3.toString());
+	}
+
+	@Test
+	public final void testJep() throws JepException {
+		Jep jep = new Jep(false);
+		jep.eval("import numpy as np");
+		jep.eval("np.version");
+		jep.eval("import pandas as pd");
+		jep.eval("pd.__version__");
+		// jep.eval("df = pd.read_csv('Data/telecom_churn.csv')");
+		// jep.eval("import os");
+		// jep.eval("os.getcwd()");
+		jep.close();
+
 	}
 
 	void init(String file) throws IOException {
