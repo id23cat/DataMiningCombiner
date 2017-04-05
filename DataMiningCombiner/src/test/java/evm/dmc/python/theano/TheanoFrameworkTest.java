@@ -11,9 +11,6 @@ import java.io.InputStreamReader;
 
 import org.junit.BeforeClass;
 import org.junit.Test;
-import org.python.core.PyInteger;
-import org.python.core.PyObject;
-import org.python.util.PythonInterpreter;
 
 import jep.Jep;
 import jep.JepException;
@@ -53,22 +50,25 @@ public class TheanoFrameworkTest {
 		assertEquals(42, ret);
 	}
 
-	@Test
-	public final void testJython() {
-		PythonInterpreter python = new PythonInterpreter();
-
-		int number1 = 10;
-		int number2 = 32;
-
-		python.set("number1", new PyInteger(number1));
-		python.set("number2", new PyInteger(number2));
-		python.exec("number3 = number1+number2");
-		PyObject number3 = python.get("number3");
-		System.out.println("val : " + number3.toString());
-	}
+	// Too slow!!!
+	// @Test
+	// public final void testJython() {
+	// PythonInterpreter python = new PythonInterpreter();
+	//
+	// int number1 = 10;
+	// int number2 = 32;
+	//
+	// python.set("number1", new PyInteger(number1));
+	// python.set("number2", new PyInteger(number2));
+	// python.exec("number3 = number1+number2");
+	// PyObject number3 = python.get("number3");
+	// System.out.println("val : " + number3.toString());
+	// }
 
 	@Test
 	public final void testJep() throws JepException {
+		System.out.println(System.getProperty("java.library.path"));
+
 		Jep jep = new Jep(false);
 		jep.eval("import numpy as np");
 		jep.eval("np.version");
