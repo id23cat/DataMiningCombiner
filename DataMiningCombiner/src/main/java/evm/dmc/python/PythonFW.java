@@ -1,16 +1,15 @@
-package evm.dmc.core;
+package evm.dmc.python;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
-import org.springframework.beans.factory.annotation.Qualifier;
+import evm.dmc.core.FW;
 
 @Target({ ElementType.CONSTRUCTOR, ElementType.FIELD, ElementType.METHOD, ElementType.TYPE })
 @Retention(RetentionPolicy.RUNTIME)
-@Qualifier
-public @interface FWContext {
-	String value();
+@FW("PythonFramework")
+public @interface PythonFW {
 
 }

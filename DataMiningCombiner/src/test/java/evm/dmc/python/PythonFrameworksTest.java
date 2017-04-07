@@ -1,6 +1,7 @@
-package evm.dmc.python.theano;
+package evm.dmc.python;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
@@ -11,22 +12,39 @@ import java.io.InputStreamReader;
 
 import org.junit.BeforeClass;
 import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.PropertySource;
+import org.springframework.test.context.ContextConfiguration;
+import org.springframework.test.context.junit4.SpringRunner;
 
 import jep.Jep;
 import jep.JepException;
 
-//@RunWith(SpringRunner.class)
-//@ContextConfiguration(classes = ArithmeticPackageConfig.class)
-//@SpringBootTest
-public class TheanoFrameworkTest {
-	String fileName = "Data/test1.py";
+@RunWith(SpringRunner.class)
+@ContextConfiguration(classes = DMCPythonConfig.class)
+// @SpringBootTest
+@PropertySource("classpath:jep.properties")
+public class PythonFrameworksTest {
+	@Autowired
+	private Jep jep;
+
+	@Value("${jep.scriptsFolder}")
+	private String scriptsFolder;
+
+	@Value("${jep.execFile}")
+	private String execute;
 
 	@BeforeClass
 	public static void setUpBeforeClass() throws Exception {
+
 	}
 
 	@Test
 	public final void testUsingPythonInRuntime() throws IOException {
+		assertNotNull(scriptsFolder);
+		String fileName = scriptsFolder + "/test1.py";
 		init(fileName);
 
 		int number1 = 10;
@@ -39,6 +57,8 @@ public class TheanoFrameworkTest {
 
 	@Test
 	public final void testUsingPythonInProcessBuilder() throws IOException {
+		assertNotNull(scriptsFolder);
+		String fileName = scriptsFolder + "/test1.py";
 		init(fileName);
 
 		int number1 = 10;
@@ -68,15 +88,16 @@ public class TheanoFrameworkTest {
 	@Test
 	public final void testJep() throws JepException {
 		System.out.println(System.getProperty("java.library.path"));
+		assertNotNull(scriptsFolder);
 
-		Jep jep = new Jep(false);
-		jep.eval("import numpy as np");
-		jep.eval("np.version");
-		jep.eval("import pandas as pd");
-		jep.eval("pd.__version__");
-		// jep.eval("df = pd.read_csv('Data/telecom_churn.csv')");
+		jep.eval("import sys");
+		jep.eval("print sys.path");
+		System.out.println(jep.getValue("sys.path"));
+
 		// jep.eval("import os");
-		// jep.eval("os.getcwd()");
+		// execfile("script2.py 1")
+
+		jep.runScript(scriptsFolder + "/init.py");
 		jep.close();
 
 	}

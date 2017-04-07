@@ -9,7 +9,6 @@ import org.springframework.stereotype.Service;
 import java.util.function.BiFunction;
 
 import evm.dmc.core.FrameworkContext;
-import evm.dmc.core.arithmetic.ArithmeticFWContext;
 import evm.dmc.core.data.Data;
 import evm.dmc.core.function.AbstractDMCFunction;
 import evm.dmc.core.function.DMCFunction;
@@ -17,8 +16,7 @@ import evm.dmc.core.function.DMCFunction;
 public class AstractTheanoFunction<T> extends AbstractDMCFunction<T> {
 
 	@Service
-	@ArithmeticFWContext
-	// @Scope("prototype")
+	@TheanoFWContext
 	public static class TheanoContext implements FrameworkContext {
 		@Autowired
 		PythonInterpreter python;
@@ -44,6 +42,7 @@ public class AstractTheanoFunction<T> extends AbstractDMCFunction<T> {
 	private BiFunction<Data<T>, Data<T>, Data<T>> function = null;
 
 	@Autowired
+	@TheanoFWContext
 	FrameworkContext context;
 
 	@Override

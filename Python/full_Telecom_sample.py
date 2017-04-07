@@ -1,3 +1,4 @@
+# coding=UTF-8
 from __future__ import (absolute_import, division,
                         print_function, unicode_literals)
 
@@ -27,6 +28,7 @@ df = pd.read_csv('Data/telecom_churn.csv')
 # график 1: обычная гистограмма
 df['Churn'].value_counts().plot(kind='bar', label='Churn')
 plt.legend()
+#.decode('utf-8')) для корректного представления символов в интерпретаторе
 plt.title('Пример построения гистограммы (сумма по значению для некоторого столбца)')
 plt.savefig("telecom_churn_info.png")
 

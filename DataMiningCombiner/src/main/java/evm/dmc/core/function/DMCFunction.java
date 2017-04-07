@@ -33,8 +33,6 @@ public interface DMCFunction<T> {
 
 	Data<T> getResult();
 
-	// Data<T> getResult;
-
 	/**
 	 * Returns object that should be used in function object as context of
 	 * execution

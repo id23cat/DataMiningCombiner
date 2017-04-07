@@ -5,7 +5,6 @@ import org.springframework.stereotype.Service;
 
 import java.util.function.BiFunction;
 
-import evm.dmc.core.Framework;
 import evm.dmc.core.FrameworkContext;
 import evm.dmc.core.data.Data;
 import evm.dmc.core.function.AbstractDMCFunction;
@@ -23,9 +22,9 @@ public abstract class AbstractArithmeticFunction<T/* extends Number */> extends 
 	public static class ArithmeticContext implements FrameworkContext {
 		final private Integer defaultMultyplyer = 1;
 
-		@Autowired
-		@ArithmeticFW
-		private Framework framework;
+		// @Autowired
+		// @ArithmeticFW
+		// private Framework framework;
 
 		private Integer multiplier = defaultMultyplyer;
 
@@ -92,7 +91,8 @@ public abstract class AbstractArithmeticFunction<T/* extends Number */> extends 
 	private BiFunction<Data<T>, Data<T>, Data<T>> function = null;
 
 	@Autowired
-	ArithmeticContext context;
+	@ArithmeticFWContext
+	FrameworkContext context;
 
 	public AbstractArithmeticFunction() {
 	}
@@ -220,7 +220,7 @@ public abstract class AbstractArithmeticFunction<T/* extends Number */> extends 
 	 */
 	@Override
 	public void setContext(FrameworkContext context) {
-		this.context = (ArithmeticContext) context;
+		this.context = context;
 	}
 
 	// public FrameworkContext<T> getNewContext(){
@@ -229,11 +229,26 @@ public abstract class AbstractArithmeticFunction<T/* extends Number */> extends 
 
 	@Override
 	public void execute() {
-		if (this.function == null)
+		if (!check())
 			throw new NullPointerException("The operation is undefined");
 		// this.setResult( function.apply(arg1, arg2) );
 		context.executeInContext(this);
 
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see evm.dmc.core.function.AbstractDMCFunction#check()
+	 */
+	@Override
+	protected boolean check() {
+		if (context == null)
+			return false;
+		if (function == null)
+			return false;
+
+		return super.check();
 	}
 
 }

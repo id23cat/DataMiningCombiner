@@ -67,4 +67,19 @@ public abstract class AbstractDMCFunction<T> implements DMCFunction<T> {
 		this.arguments = args.subList(0, this.argsCount);
 	}
 
+	/**
+	 * Checks that all important properties filled correctly
+	 *
+	 * @return true, if successful
+	 */
+	protected boolean check() {
+		if (name == null || name.isEmpty())
+			return false;
+		if (argsCount == null || argsCount < 0)
+			return false;
+		if (arguments == null || arguments.size() != argsCount)
+			return false;
+		return true;
+	}
+
 }

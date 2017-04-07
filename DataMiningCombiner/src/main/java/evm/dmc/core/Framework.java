@@ -1,10 +1,11 @@
 package evm.dmc.core;
 
+import javax.annotation.PostConstruct;
+
 import org.springframework.context.ApplicationContextAware;
 
 import java.util.Set;
 
-import evm.dmc.core.data.Data;
 import evm.dmc.core.function.DMCFunction;
 
 /**
@@ -13,12 +14,13 @@ import evm.dmc.core.function.DMCFunction;
  *
  * @author id23cat
  */
-public interface Framework extends ApplicationContextAware {
+public interface Framework extends ApplicationContextAware, DataBuilder {
 
 	/**
 	 * Method is used for first initialization of framework or resetting
 	 * settings to default.
 	 */
+	@PostConstruct
 	void initFramework();
 
 	/**
@@ -37,13 +39,4 @@ public interface Framework extends ApplicationContextAware {
 	 * @return the DMC function
 	 */
 	DMCFunction getDMCFunction(String descriptor);
-
-	Data getData(String file);
-
-	Data getData(Object rawData);
-
-	Data getData(Number num);
-
-	Data getData(Data otherFormat);
-
 }

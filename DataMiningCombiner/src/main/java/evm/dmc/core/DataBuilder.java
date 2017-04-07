@@ -1,0 +1,27 @@
+package evm.dmc.core;
+
+import evm.dmc.core.data.Data;
+
+public interface DataBuilder {
+
+	default Data getData(String file) {
+		throw new UnsupportedOperationException("Loading from a file not supported");
+	};
+
+	default Data getData(Object rawData) {
+		throw new UnsupportedOperationException("Convertion from unknown type not supported");
+	}
+
+	default Data getData(Number num) {
+		throw new UnsupportedOperationException("Convertion from number type not supported");
+	}
+
+	default Data getData(Data otherFormat) {
+		throw new UnsupportedOperationException("Convertion from other Data type not supported");
+	}
+
+	default Data getData(Class type) {
+		throw new UnsupportedOperationException("Ctrating Data object for type" + type + "is not avaliable");
+	}
+
+}

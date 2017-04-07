@@ -1,4 +1,4 @@
-package evm.dmc.core.arithmetic;
+package evm.dmc.python;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
@@ -7,10 +7,10 @@ import java.lang.annotation.Target;
 
 import org.springframework.beans.factory.annotation.Qualifier;
 
-//@FWContext("ArithmeticContext")
+//@FWContext("PythonContext")
 @Target({ ElementType.FIELD, ElementType.PARAMETER, ElementType.METHOD, ElementType.TYPE })
 @Retention(RetentionPolicy.RUNTIME)
-@Qualifier("ArithmeticContext")
-public @interface ArithmeticFWContext {
+@Qualifier("PythonFWContext")
+public @interface PythonFWContext {
 
 }

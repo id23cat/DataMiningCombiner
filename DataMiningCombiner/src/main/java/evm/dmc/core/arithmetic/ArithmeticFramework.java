@@ -37,7 +37,7 @@ public class ArithmeticFramework extends AbstractFramework {
 
 	@Override
 	public DMCFunction getDMCFunction(String descriptor) {
-		DMCFunction function = super.getDMCFunction(descriptor, AbstractArithmeticFunction.class);
+		DMCFunction function = super.getDMCFunction(descriptor);
 		function.setContext(frameworkContext);
 		return function;
 	}

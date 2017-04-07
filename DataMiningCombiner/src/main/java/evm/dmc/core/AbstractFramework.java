@@ -21,6 +21,7 @@ public abstract class AbstractFramework implements Framework {
 
 	private ApplicationContext applicationContext;
 	private Set<String> funcDescriptors;
+	private Class abstractFunctionClass;
 
 	public AbstractFramework() {
 
@@ -33,9 +34,17 @@ public abstract class AbstractFramework implements Framework {
 		initFramework();
 	}
 
-	public void initFrameworkForType(Class type) {
+	/**
+	 * Initialize the framework for a function type. This type will be used as
+	 * main class type for instantiating functions by name in
+	 * {@link #getDMCFunction(String)}
+	 *
+	 * @param functionsClass
+	 *            the functions class
+	 */
+	public void initFrameworkForType(Class functionsClass) {
 		// TODO
-		funcDescriptors = new HashSet<String>(Arrays.asList(applicationContext.getBeanNamesForType(type)));
+		funcDescriptors = new HashSet<String>(Arrays.asList(applicationContext.getBeanNamesForType(functionsClass)));
 
 	}
 
@@ -44,35 +53,16 @@ public abstract class AbstractFramework implements Framework {
 		return funcDescriptors;
 	}
 
-	public DMCFunction getDMCFunction(String descriptor, Class type) {
+	@Override
+	public DMCFunction getDMCFunction(String descriptor) {
 		// TODO
 		@SuppressWarnings({ "unchecked", "rawtypes" })
-		DMCFunction function = (DMCFunction) applicationContext.getBean(descriptor, type);
+		DMCFunction function = (DMCFunction) applicationContext.getBean(descriptor, abstractFunctionClass);
 		return function;
 	}
 
-	@Override
-	public Data getData(String file) {
-		throw new UnsupportedOperationException("Loading from a file not supported");
-	}
-
-	@Override
-	public Data getData(Object rawData) {
-		throw new UnsupportedOperationException("Convertion from unknown type not supported");
-	}
-
-	@Override
-	public Data getData(Number num) {
-		throw new UnsupportedOperationException("Convertion from number type not supported");
-	}
-
-	@Override
-	public Data getData(Data otherFormat) {
-		throw new UnsupportedOperationException("Convertion from other Data type not supported");
-	}
-
-	protected Data instantiateData(Class type) {
-		return (Data) applicationContext.getBean(type);
+	protected Data instantiateData(Class dataType) {
+		return (Data) applicationContext.getBean(dataType);
 	}
 
 }
