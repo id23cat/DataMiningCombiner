@@ -10,6 +10,10 @@ import evm.dmc.core.data.Data;
 public class JepVariable implements Data<String> {
 	String variable;
 
+	public JepVariable() {
+
+	}
+
 	public JepVariable(String variable) {
 		super();
 		this.variable = variable;

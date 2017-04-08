@@ -61,6 +61,7 @@ public abstract class AbstractFramework implements Framework {
 		return function;
 	}
 
+	@SuppressWarnings({ "rawtypes", "unchecked" })
 	protected Data instantiateData(Class dataType) {
 		return (Data) applicationContext.getBean(dataType);
 	}

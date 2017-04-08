@@ -1,5 +1,7 @@
 package evm.dmc.python.function;
 
+import javax.annotation.PostConstruct;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.PropertySource;
@@ -26,6 +28,10 @@ public class PyReadFile extends AbstractPythonFunction {
 
 		super.setFunction(readCSV);
 
+	}
+
+	@PostConstruct
+	public void init() {
 		super.setResult((JepVariable) fw.getData(PandasDataFrame.class));
 	}
 
