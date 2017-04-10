@@ -22,6 +22,7 @@ import org.springframework.test.context.junit4.SpringRunner;
 
 import evm.dmc.core.Framework;
 import evm.dmc.core.data.Data;
+import evm.dmc.python.data.PyString;
 import jep.Jep;
 import jep.JepException;
 

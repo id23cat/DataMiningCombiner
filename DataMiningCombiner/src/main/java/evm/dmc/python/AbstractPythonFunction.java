@@ -11,6 +11,7 @@ import evm.dmc.core.FrameworkContext;
 import evm.dmc.core.data.Data;
 import evm.dmc.core.function.AbstractDMCFunction;
 import evm.dmc.core.function.DMCFunction;
+import evm.dmc.python.data.JepVariable;
 import jep.Jep;
 import jep.JepException;
 

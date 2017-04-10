@@ -1,4 +1,4 @@
-package evm.dmc.python;
+package evm.dmc.python.data;
 
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;

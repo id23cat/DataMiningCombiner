@@ -8,9 +8,9 @@ import org.springframework.context.annotation.PropertySource;
 import org.springframework.stereotype.Service;
 
 import evm.dmc.python.AbstractPythonFunction;
-import evm.dmc.python.JepVariable;
-import evm.dmc.python.PandasDataFrame;
 import evm.dmc.python.PythonFramework;
+import evm.dmc.python.data.JepVariable;
+import evm.dmc.python.data.PandasDataFrame;
 
 @Service("Python_ReadFile")
 @PropertySource("classpath:jep.properties")
