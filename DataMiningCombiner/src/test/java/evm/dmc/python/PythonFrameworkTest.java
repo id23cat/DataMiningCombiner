@@ -1,6 +1,7 @@
 package evm.dmc.python;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotEquals;
 import static org.junit.Assert.assertNotNull;
 
 import java.io.BufferedReader;
@@ -15,20 +16,24 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.context.annotation.PropertySource;
 import org.springframework.test.context.ContextConfiguration;
+import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.context.junit4.SpringRunner;
 
+import evm.dmc.core.Framework;
+import evm.dmc.core.data.Data;
 import jep.Jep;
 import jep.JepException;
 
 @RunWith(SpringRunner.class)
 @ContextConfiguration(classes = DMCPythonConfig.class)
-// @SpringBootTest
-@PropertySource("classpath:jep.properties")
-public class PythonFrameworksTest {
+@TestPropertySource("classpath:jeptest.properties")
+public class PythonFrameworkTest {
 	@Autowired
 	private Jep jep;
+	@Autowired
+	@PythonFW
+	private Framework framework;
 
 	@Value("${jep.scriptsFolder}")
 	private String scriptsFolder;
@@ -36,9 +41,36 @@ public class PythonFrameworksTest {
 	@Value("${jep.execFile}")
 	private String execute;
 
+	@Value("${jeptest.datafile}")
+	private String dataFile;
+
 	@BeforeClass
 	public static void setUpBeforeClass() throws Exception {
 
+	}
+
+	@Test
+	public final void testAutowiring() {
+		assertNotNull(jep);
+		assertNotNull(framework);
+
+		assertNotNull(scriptsFolder);
+		assertNotEquals("${jep.scriptsFolder}", scriptsFolder);
+		assertNotNull(execute);
+		assertNotEquals("${jep.execFile}", execute);
+		assertNotNull(dataFile);
+		assertNotEquals("${jeptest.datafile}", dataFile);
+	}
+
+	@Test
+	public final void testGetData() {
+
+		Data data = framework.getData(PyString.class);
+		assertNotNull(data);
+		data.setData(dataFile);
+		// PyString encapsulates contained data in quotes on returning by
+		// getData
+		assertEquals("\"" + dataFile + "\"", data.getData());
 	}
 
 	@Test
