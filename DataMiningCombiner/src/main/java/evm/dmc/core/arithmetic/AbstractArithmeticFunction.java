@@ -82,6 +82,13 @@ public abstract class AbstractArithmeticFunction<T/* extends Number */> extends 
 				func.result.setData((U) Integer.valueOf(func.result.getData().intValue() * mul.intValue()));
 		}
 
+		@Override
+		public void getValue(DMCFunction function) {
+			AbstractArithmeticFunction func = (AbstractArithmeticFunction) function;
+			func.getResult().setData(func.arguments.get(0));
+
+		}
+
 	}
 
 	// private Data<T> arg1 = null;
@@ -120,58 +127,6 @@ public abstract class AbstractArithmeticFunction<T/* extends Number */> extends 
 	public void setArgs(Data<T> arg1, Data<T> arg2) {
 		this.setArgs(arg1, arg2);
 	}
-
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see
-	 * evm.dmc.core.function.DMCFunction#addArgument(evm.dmc.core.data.Data)
-	 */
-	// @Deprecated
-	// @Override
-	// public void addArgument(Data<T> arg) {
-	// if (arg1 == null)
-	// this.arg1 = arg;
-	// else if (arg2 == null)
-	// this.arg2 = arg;
-	//
-	// }
-
-	// /**
-	// * @return the arg1
-	// */
-	// public Data<T> getArg1() {
-	// if (this.arg1 == null)
-	// throw new NullPointerException("The argument1 of operation is
-	// undefined");
-	// return this.arg1;
-	// }
-	//
-	// /**
-	// * @param arg1
-	// * the arg1 to set
-	// */
-	// public void setArg1(Data<T> arg1) {
-	// this.arg1 = arg1;
-	// }
-	//
-	// /**
-	// * @return the arg2
-	// */
-	// public Data<T> getArg2() {
-	// if (this.arg2 == null)
-	// throw new NullPointerException("The argument2 of operation is
-	// undefined");
-	// return this.arg2;
-	// }
-	//
-	// /**
-	// * @param arg2
-	// * the arg2 to set
-	// */
-	// public void setArg2(Data<T> arg2) {
-	// this.arg2 = arg2;
-	// }
 
 	/**
 	 * @return the result

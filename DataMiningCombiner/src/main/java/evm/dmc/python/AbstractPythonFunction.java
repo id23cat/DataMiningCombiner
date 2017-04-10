@@ -1,22 +1,24 @@
 package evm.dmc.python;
 
 import javax.annotation.PostConstruct;
+import javax.annotation.PreDestroy;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
 import org.springframework.stereotype.Service;
 
+import evm.dmc.core.DataConverter;
 import evm.dmc.core.FrameworkContext;
 import evm.dmc.core.data.Data;
+import evm.dmc.core.data.StringData;
 import evm.dmc.core.function.AbstractDMCFunction;
 import evm.dmc.core.function.DMCFunction;
-import evm.dmc.python.data.JepVariable;
 import jep.Jep;
 import jep.JepException;
 
 @Controller
-public abstract class AbstractPythonFunction extends AbstractDMCFunction<String> {
+public abstract class AbstractPythonFunction extends AbstractDMCFunction<String> implements DataConverter {
 
 	@Service
 	@PythonFWContext
@@ -42,6 +44,11 @@ public abstract class AbstractPythonFunction extends AbstractDMCFunction<String>
 			}
 		}
 
+		@PreDestroy
+		public void destroy() {
+			jep.close();
+		}
+
 		@SuppressWarnings({ "rawtypes", "unchecked" })
 		@Override
 		public void executeInContext(DMCFunction function) {
@@ -54,8 +61,9 @@ public abstract class AbstractPythonFunction extends AbstractDMCFunction<String>
 			command.append("=");
 			// set <functionName>
 			command.append(func.function);
+			command.append("(");
 			for (Data<String> arg : func.arguments) {
-				command.append(arg);
+				command.append(arg.getData());
 				command.append(",");
 			}
 			command.insert(command.lastIndexOf(","), ")");
@@ -67,6 +75,18 @@ public abstract class AbstractPythonFunction extends AbstractDMCFunction<String>
 
 		}
 
+		@Override
+		public void getValue(DMCFunction function) {
+			AbstractPythonFunction func = (AbstractPythonFunction) function;
+			try {
+				Object result = jep.getValue(func.arguments.get(0).getData());
+				func.getResult().setData(result.toString());
+			} catch (JepException e) {
+				throw new RuntimeException("Pulling data from Jep has failed", e);
+			}
+
+		}
+
 		private void execFunction(String command) throws JepException {
 			jep.eval(command);
 		}
@@ -74,16 +94,18 @@ public abstract class AbstractPythonFunction extends AbstractDMCFunction<String>
 		private void execScript(String script) throws JepException {
 			jep.runScript(scriptsFilder + script);
 		}
-
 	}
 
 	@Autowired
 	@PythonFWContext
 	private FrameworkContext context;
 
+	@Autowired
+	PythonFramework fw;
+
 	private String function = null;
 
-	private JepVariable result = null;
+	private Data result = null;
 
 	@Override
 	public FrameworkContext getContext() {
@@ -112,12 +134,21 @@ public abstract class AbstractPythonFunction extends AbstractDMCFunction<String>
 		return this.result;
 	}
 
-	public void setResult(JepVariable result) {
+	public void setResult(Data result) {
 		this.result = result;
 	}
 
 	public void setFunction(String function) {
 		this.function = function;
+	}
+
+	@Override
+	public StringData convert(Data data) {
+		super.setArgs(data);
+		setResult(fw.getData(StringData.class));
+		context.getValue(this);
+		return (StringData) result;
+
 	}
 
 	/*

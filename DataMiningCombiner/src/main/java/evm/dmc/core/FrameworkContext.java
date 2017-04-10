@@ -20,4 +20,12 @@ public interface FrameworkContext {
 	void executeInContext(DMCFunction function);
 
 	// Data getNewData();
+
+	/**
+	 * Pulls out value from possible environment or just copies from arg data to
+	 * result of function object.
+	 *
+	 * @return the value
+	 */
+	void getValue(DMCFunction function);
 }

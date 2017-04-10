@@ -20,7 +20,7 @@ public class PyString extends JepVariable {
 	@Override
 	public String getData() {
 		StringBuilder var = new StringBuilder("\"");
-		var.append(variable);
+		var.append(variableName);
 		var.append("\"");
 		return var.toString();
 	}

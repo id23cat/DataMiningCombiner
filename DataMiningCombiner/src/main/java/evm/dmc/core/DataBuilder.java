@@ -21,7 +21,7 @@ public interface DataBuilder {
 	}
 
 	default Data getData(Class type) {
-		throw new UnsupportedOperationException("Ctrating Data object for type" + type + "is not avaliable");
+		throw new UnsupportedOperationException("Creating Data object for type" + type + "is not avaliable");
 	}
 
 }

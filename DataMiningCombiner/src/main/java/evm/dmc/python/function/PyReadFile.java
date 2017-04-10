@@ -9,7 +9,6 @@ import org.springframework.stereotype.Service;
 
 import evm.dmc.python.AbstractPythonFunction;
 import evm.dmc.python.PythonFramework;
-import evm.dmc.python.data.JepVariable;
 import evm.dmc.python.data.PandasDataFrame;
 
 @Service("Python_ReadFile")
@@ -18,21 +17,25 @@ public class PyReadFile extends AbstractPythonFunction {
 	@Autowired
 	PythonFramework fw;
 
-	@Value("${jep.readFileCSV}")
+	@Value("${jep.readFileCSV:fileops.readCSV}")
 	String readCSV;
+
+	// @Value("#{pythonFramework.getData(Python_DataFrame.getClass())}")
+	@Autowired
+	private PandasDataFrame result;
 
 	public PyReadFile() {
 		super();
 		super.setName("Python read file");
 		super.setArgsCount(1);
 
-		super.setFunction(readCSV);
-
 	}
 
 	@PostConstruct
 	public void init() {
-		super.setResult((JepVariable) fw.getData(PandasDataFrame.class));
+		super.setFunction(readCSV);
+		super.setResult(result);
+		// super.setResult( fw.getData(PandasDataFrame.class));
 	}
 
 }

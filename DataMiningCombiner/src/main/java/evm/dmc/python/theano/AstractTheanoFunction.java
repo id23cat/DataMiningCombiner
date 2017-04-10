@@ -35,6 +35,12 @@ public class AstractTheanoFunction<T> extends AbstractDMCFunction<T> {
 
 		}
 
+		@Override
+		public void getValue(DMCFunction function) {
+			// TODO Auto-generated method stub
+
+		}
+
 	}
 
 	private Data<T> result = null;
