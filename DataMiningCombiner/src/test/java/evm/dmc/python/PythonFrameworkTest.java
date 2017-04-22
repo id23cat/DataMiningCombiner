@@ -20,6 +20,7 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.context.junit4.SpringRunner;
 
+import evm.dmc.core.DataBuilder;
 import evm.dmc.core.Framework;
 import evm.dmc.core.data.Data;
 import evm.dmc.python.data.PyString;
@@ -35,6 +36,10 @@ public class PythonFrameworkTest {
 	@Autowired
 	@PythonFW
 	private Framework framework;
+
+	@Autowired
+	@PythonFW
+	private DataBuilder dBuilder;
 
 	@Value("${jep.scriptsFolder}")
 	private String scriptsFolder;
@@ -66,7 +71,7 @@ public class PythonFrameworkTest {
 	@Test
 	public final void testGetData() {
 
-		Data data = framework.getData(PyString.class);
+		Data data = dBuilder.getData(PyString.class);
 		assertNotNull(data);
 		data.setData(dataFile);
 		// PyString encapsulates contained data in quotes on returning by

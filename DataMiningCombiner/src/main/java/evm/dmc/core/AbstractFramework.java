@@ -17,7 +17,7 @@ import evm.dmc.core.function.DMCFunction;
  * @see http://docs.spring.io/spring/docs/current/spring-framework-reference/html/beans.html#beans-java-method-injection
  * @see http://docs.spring.io/spring/docs/current/spring-framework-reference/html/beans.html#beans-factory-method-injection
  */
-public abstract class AbstractFramework implements Framework {
+public abstract class AbstractFramework implements Framework, DataBuilder {
 
 	private ApplicationContext applicationContext;
 	private Set<String> funcDescriptors;
@@ -59,6 +59,11 @@ public abstract class AbstractFramework implements Framework {
 		@SuppressWarnings({ "unchecked", "rawtypes" })
 		DMCFunction function = (DMCFunction) applicationContext.getBean(descriptor, abstractFunctionClass);
 		return function;
+	}
+
+	@Override
+	public Data getData(Class type) {
+		return this.instantiateData(type);
 	}
 
 	@SuppressWarnings({ "rawtypes", "unchecked" })

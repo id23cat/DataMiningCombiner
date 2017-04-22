@@ -26,3 +26,5 @@ nbdist/
 # Pythons
 *.pyc
 /.pydevproject
+
+/Data/result

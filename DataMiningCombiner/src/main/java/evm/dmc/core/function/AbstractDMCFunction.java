@@ -68,6 +68,13 @@ public abstract class AbstractDMCFunction<T> implements DMCFunction<T> {
 	}
 
 	/**
+	 * @return the arguments
+	 */
+	public List<Data<T>> getArguments() {
+		return arguments;
+	}
+
+	/**
 	 * Checks that all important properties filled correctly
 	 *
 	 * @return true, if successful

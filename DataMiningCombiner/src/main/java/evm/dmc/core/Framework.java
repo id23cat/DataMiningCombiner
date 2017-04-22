@@ -14,7 +14,7 @@ import evm.dmc.core.function.DMCFunction;
  *
  * @author id23cat
  */
-public interface Framework extends ApplicationContextAware, DataBuilder {
+public interface Framework extends ApplicationContextAware {
 
 	/**
 	 * Method is used for first initialization of framework or resetting

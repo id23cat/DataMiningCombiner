@@ -22,6 +22,7 @@ import org.springframework.test.context.junit4.SpringRunner;
 import java.util.Arrays;
 import java.util.Set;
 
+import evm.dmc.core.DataBuilder;
 import evm.dmc.core.Framework;
 import evm.dmc.core.FrameworkContext;
 import evm.dmc.core.data.Data;
@@ -32,7 +33,12 @@ import evm.dmc.core.function.DMCFunction;
 @SpringBootTest
 public class ArithmeticFrameworkTest implements ApplicationContextAware {
 	@Autowired
+	@ArithmeticFW
 	Framework framework;
+
+	@Autowired
+	@ArithmeticFW
+	DataBuilder dBuilder;
 
 	ApplicationContext appContext;
 
@@ -73,9 +79,9 @@ public class ArithmeticFrameworkTest implements ApplicationContextAware {
 	public final void testGetData() {
 		// framework.initFramework();
 		@SuppressWarnings("unchecked")
-		Data<Integer> data1 = framework.getData(12);
+		Data<Integer> data1 = dBuilder.getData(12);
 		@SuppressWarnings("unchecked")
-		Data<Integer> data2 = framework.getData(4);
+		Data<Integer> data2 = dBuilder.getData(4);
 		assertNotNull(data1);
 		assertNotNull(data2);
 		assertNotEquals(data1, data2);
@@ -89,11 +95,11 @@ public class ArithmeticFrameworkTest implements ApplicationContextAware {
 		// framework.initFramework();
 
 		DMCFunction<Integer> addF = framework.getDMCFunction("Arithmetic_Add");
-		testFunction(addF, framework.getData(12), framework.getData(10), 22);
+		testFunction(addF, dBuilder.getData(12), dBuilder.getData(10), 22);
 
 		DMCFunction<Integer> subF = framework.getDMCFunction("Arithmetic_Sub");
 		assertNotEquals(addF, subF);
-		testFunction(subF, framework.getData(22), framework.getData(10), 12);
+		testFunction(subF, dBuilder.getData(22), dBuilder.getData(10), 12);
 
 	}
 
