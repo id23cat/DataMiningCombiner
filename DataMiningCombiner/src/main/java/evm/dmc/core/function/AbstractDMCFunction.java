@@ -49,6 +49,9 @@ public abstract class AbstractDMCFunction<T> implements DMCFunction<T> {
 	}
 
 	/**
+	 * Each final implementation of AbstractDMCFunction must set count of
+	 * accepted arguments
+	 * 
 	 * @param paramCount
 	 *            the paramCount to set
 	 */
