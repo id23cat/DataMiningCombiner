@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 
 import evm.dmc.core.AbstractFramework;
 import evm.dmc.core.FrameworkContext;
+import evm.dmc.core.InContextExecutable;
 import evm.dmc.core.data.Data;
 import evm.dmc.core.data.IntegerData;
 import evm.dmc.core.function.DMCFunction;
@@ -38,7 +39,7 @@ public class ArithmeticFramework extends AbstractFramework {
 	@Override
 	public DMCFunction getDMCFunction(String descriptor) {
 		DMCFunction function = super.getDMCFunction(descriptor);
-		function.setContext(frameworkContext);
+		((InContextExecutable) function).setContext(frameworkContext);
 		return function;
 	}
 

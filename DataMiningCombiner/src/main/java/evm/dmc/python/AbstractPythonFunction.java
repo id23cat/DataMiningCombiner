@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 
 import evm.dmc.core.DataConverter;
 import evm.dmc.core.FrameworkContext;
+import evm.dmc.core.InContextExecutable;
 import evm.dmc.core.data.Data;
 import evm.dmc.core.data.StringData;
 import evm.dmc.core.function.AbstractDMCFunction;
@@ -18,7 +19,8 @@ import jep.Jep;
 import jep.JepException;
 
 @Controller
-public abstract class AbstractPythonFunction extends AbstractDMCFunction<String> implements DataConverter {
+public abstract class AbstractPythonFunction extends AbstractDMCFunction<String>
+		implements DataConverter, InContextExecutable {
 
 	@Service
 	@PythonFWContext

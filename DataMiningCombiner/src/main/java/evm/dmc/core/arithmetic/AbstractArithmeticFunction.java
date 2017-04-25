@@ -6,11 +6,13 @@ import org.springframework.stereotype.Service;
 import java.util.function.BiFunction;
 
 import evm.dmc.core.FrameworkContext;
+import evm.dmc.core.InContextExecutable;
 import evm.dmc.core.data.Data;
 import evm.dmc.core.function.AbstractDMCFunction;
 import evm.dmc.core.function.DMCFunction;
 
-public abstract class AbstractArithmeticFunction<T/* extends Number */> extends AbstractDMCFunction<T> {
+public abstract class AbstractArithmeticFunction<T/* extends Number */> extends AbstractDMCFunction<T>
+		implements InContextExecutable {
 
 	/**
 	 * @author id23cat Context provides multiplier option for each arithmetic

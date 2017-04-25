@@ -1,8 +1,6 @@
 package evm.dmc.core.data;
 
-import java.io.IOException;
-
 public interface FromFileLoadable {
-	Data load(String fileNmae) throws IOException;
+	Data load(String fileName) throws Exception;
 
 }

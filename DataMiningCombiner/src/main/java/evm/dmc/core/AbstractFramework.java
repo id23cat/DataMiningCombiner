@@ -11,6 +11,18 @@ import evm.dmc.core.data.Data;
 import evm.dmc.core.function.DMCFunction;
 
 /**
+ * Each final extender must implement initFramework method based on example:
+ * 
+ * <pre>
+ * <code> 
+ * &#64;Override
+ * &#64;PostConstruct
+ * public void initFramework() {
+ * 		super.initFrameworkForType(AbstractPythonFunction.class);
+ * }
+ * </code>
+ * </pre>
+ * 
  * TODO Hard wired to Spring Have to be changed with consideration to:
  * 
  * @see https://spring.io/blog/2004/08/06/method-injection/
