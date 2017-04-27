@@ -4,10 +4,14 @@ import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.not;
 import static org.hamcrest.CoreMatchers.sameInstance;
 import static org.hamcrest.MatcherAssert.assertThat;
+import static org.junit.Assert.assertArrayEquals;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotEquals;
 import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
 
+import java.awt.image.BufferedImage;
+import java.awt.image.DataBufferInt;
 import java.io.File;
 
 import org.jfree.chart.ChartFactory;
@@ -22,6 +26,7 @@ import org.junit.Test;
 
 import java.util.Random;
 
+import evm.dmc.core.chart.Histogram;
 import evm.dmc.core.data.Data;
 import weka.core.Instances;
 
@@ -120,12 +125,28 @@ public class WekaDataTest {
 	}
 
 	@Test
-	public final void testHistogram() throws Exception {
+	public final void testHistogramChart() throws Exception {
+		Histogram hist = Histogram.getPlotter();
+		// this gets the actual Raster data as a byte array
+		int[] byteArrayTest = ((DataBufferInt) this.testHistogram().getData().getDataBuffer()).getData();
+
+		// this gets the actual Raster data as a byte array
+		int[] byteArrayToCheck = ((DataBufferInt) hist.getBufferedImage(data).getData().getDataBuffer()).getData();
+		assertArrayEquals(byteArrayTest, byteArrayToCheck);
+
+		String fname = hist.saveToPng(data, "Data/test");
+		File file = new File(fname);
+		assertTrue(file.exists());
+
+		file.delete();
+	}
+
+	public final BufferedImage testHistogram() throws Exception {
 		double[] values = data.getAllValuesAsDoubleAt("Account length");
 		HistogramDataset dataset = new HistogramDataset();
 		dataset.setType(HistogramType.FREQUENCY);
 		dataset.addSeries("Histogram", values, 3333);
-		String plotTitle = "Histogram";
+		String plotTitle = "Account length";
 		String xaxis = "number";
 		String yaxis = "value";
 		PlotOrientation orientation = PlotOrientation.VERTICAL;
@@ -136,7 +157,8 @@ public class WekaDataTest {
 				urls);
 		int width = 1024;
 		int height = 768;
-		ChartUtilities.saveChartAsPNG(new File("histogram.PNG"), chart, width, height);
+		ChartUtilities.saveChartAsPNG(new File("Data/histogram.PNG"), chart, width, height);
+		return chart.createBufferedImage(width, height);
 	}
 
 	void printInstancesInfo(Instances inst) {
@@ -149,5 +171,4 @@ public class WekaDataTest {
 
 		}
 	}
-
 }

@@ -11,6 +11,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 import evm.dmc.core.DataFactory;
+import evm.dmc.core.chart.Plottable;
 import evm.dmc.core.data.Data;
 import evm.dmc.core.data.FromFileLoadable;
 import evm.dmc.core.data.HasMultiAttributes;
@@ -35,7 +36,7 @@ import weka.core.converters.ConverterUtils.DataSource;
 @Service
 @Scope(ConfigurableBeanFactory.SCOPE_PROTOTYPE)
 public class WekaData extends InMemoryData<Instances>
-		implements FromFileLoadable, ToFileStorable, HasMultiAttributes<Instances> {
+		implements FromFileLoadable, ToFileStorable, HasMultiAttributes<Instances>, Plottable {
 	@WekaFW
 	@Autowired
 	DataFactory dataFactory;
@@ -138,6 +139,18 @@ public class WekaData extends InMemoryData<Instances>
 		data.setData(new Instances(this.getData()));
 		return data;
 
+	}
+
+	@Override
+	public double[] plot() {
+		// TODO
+		return this.getAllValuesAsDoubleAt("Account length");
+	}
+
+	@Override
+	public String title() {
+		// TODO
+		return "Account length";
 	}
 
 }

@@ -29,3 +29,5 @@ nbdist/
 
 /Data/result
 _*.csv
+*.png
+*.PNG
