@@ -1,4 +1,4 @@
-package evm.dmc.weka;
+package evm.dmc.weka.function;
 
 import evm.dmc.core.data.Data;
 import evm.dmc.core.function.AbstractDMCFunction;

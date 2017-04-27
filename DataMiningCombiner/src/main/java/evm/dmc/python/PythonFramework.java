@@ -13,7 +13,7 @@ import evm.dmc.core.function.DMCFunction;
 public class PythonFramework extends AbstractFramework {
 
 	public PythonFramework() {
-		super();
+		super(AbstractPythonFunction.class);
 	}
 
 	/*

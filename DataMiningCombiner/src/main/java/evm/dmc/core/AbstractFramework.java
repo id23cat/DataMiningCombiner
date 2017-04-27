@@ -35,7 +35,8 @@ public abstract class AbstractFramework implements Framework, DataFactory {
 	private Set<String> funcDescriptors;
 	private Class abstractFunctionClass;
 
-	public AbstractFramework() {
+	public AbstractFramework(Class abstractFunctionClass) {
+		initFrameworkForType(abstractFunctionClass);
 
 	}
 

@@ -20,7 +20,7 @@ public class ArithmeticFramework extends AbstractFramework {
 	private FrameworkContext frameworkContext;
 
 	public ArithmeticFramework() {
-		super();
+		super(AbstractArithmeticFunction.class);
 	}
 
 	@Override
