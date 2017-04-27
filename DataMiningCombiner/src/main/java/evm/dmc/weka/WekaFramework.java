@@ -14,7 +14,6 @@ public class WekaFramework extends AbstractFramework {
 	}
 
 	@Override
-	// @PostConstruct
 	public void initFramework() {
 		super.initFrameworkForType(AbstractWekaFunction.class);
 	}

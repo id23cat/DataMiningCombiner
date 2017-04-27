@@ -1,6 +1,5 @@
 package evm.dmc.weka.function;
 
-import evm.dmc.weka.AbstractWekaFunction;
 import weka.core.Instances;
 import weka.filters.Filter;
 

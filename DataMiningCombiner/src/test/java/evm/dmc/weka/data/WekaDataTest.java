@@ -102,7 +102,7 @@ public class WekaDataTest {
 	}
 
 	@Test
-	public final void testAttrDelition() throws Exception {
+	public final void testAny() throws Exception {
 		Instances inst = data.getData();
 		WekaData data2 = data.copyObject();
 		Instances instOrig = data2.getData();
