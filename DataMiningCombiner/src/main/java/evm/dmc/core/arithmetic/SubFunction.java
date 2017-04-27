@@ -3,7 +3,7 @@ package evm.dmc.core.arithmetic;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import evm.dmc.core.DataBuilder;
+import evm.dmc.core.DataFactory;
 import evm.dmc.core.Framework;
 import evm.dmc.core.data.Data;
 import evm.dmc.core.data.IntegerData;
@@ -19,7 +19,7 @@ public class SubFunction extends AbstractArithmeticFunction<Integer> {
 
 	@Autowired
 	@ArithmeticFW
-	DataBuilder dBuilder;
+	DataFactory dBuilder;
 
 	public SubFunction() {
 		super();

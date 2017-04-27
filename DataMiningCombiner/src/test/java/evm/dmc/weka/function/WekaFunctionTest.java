@@ -62,4 +62,20 @@ public class WekaFunctionTest {
 		data.store(dir + "/" + "_standartized.csv");
 	}
 
+	// @Test
+	// public final void testPlotting() throws Exception {
+	// data.load(souceFile);
+	// final JFrame jf = new JFrame("AttribVisualization");
+	// AttributeVisualizationPanel ap = new AttributeVisualizationPanel();
+	// ap.setInstances(data.getData());
+	// ap.setAttribute(1);
+	// jf.setSize(500, 300);
+	// jf.getContentPane().setLayout(new BorderLayout());
+	// jf.getContentPane().add(ap, BorderLayout.CENTER);
+	// jf.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+	// jf.setVisible(true);
+	// Thread.sleep(5000);
+	//
+	// }
+
 }

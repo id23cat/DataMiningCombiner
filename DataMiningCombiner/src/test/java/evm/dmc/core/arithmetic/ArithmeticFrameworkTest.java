@@ -22,7 +22,7 @@ import org.springframework.test.context.junit4.SpringRunner;
 import java.util.Arrays;
 import java.util.Set;
 
-import evm.dmc.core.DataBuilder;
+import evm.dmc.core.DataFactory;
 import evm.dmc.core.Framework;
 import evm.dmc.core.FrameworkContext;
 import evm.dmc.core.data.Data;
@@ -38,7 +38,7 @@ public class ArithmeticFrameworkTest implements ApplicationContextAware {
 
 	@Autowired
 	@ArithmeticFW
-	DataBuilder dBuilder;
+	DataFactory dBuilder;
 
 	ApplicationContext appContext;
 

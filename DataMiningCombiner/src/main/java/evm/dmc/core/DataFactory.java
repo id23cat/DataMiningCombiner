@@ -2,7 +2,7 @@ package evm.dmc.core;
 
 import evm.dmc.core.data.Data;
 
-public interface DataBuilder {
+public interface DataFactory {
 
 	default Data getData(String file) {
 		throw new UnsupportedOperationException("Loading from a file not supported");

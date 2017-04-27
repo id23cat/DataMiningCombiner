@@ -29,7 +29,7 @@ import evm.dmc.core.function.DMCFunction;
  * @see http://docs.spring.io/spring/docs/current/spring-framework-reference/html/beans.html#beans-java-method-injection
  * @see http://docs.spring.io/spring/docs/current/spring-framework-reference/html/beans.html#beans-factory-method-injection
  */
-public abstract class AbstractFramework implements Framework, DataBuilder {
+public abstract class AbstractFramework implements Framework, DataFactory {
 
 	private ApplicationContext applicationContext;
 	private Set<String> funcDescriptors;

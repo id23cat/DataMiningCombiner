@@ -14,4 +14,8 @@ public interface Data<T> {
 
 	void setData(T data);
 
+	default boolean isMultiAttribute() {
+		return false;
+	}
+
 }

@@ -20,7 +20,7 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.context.junit4.SpringRunner;
 
-import evm.dmc.core.DataBuilder;
+import evm.dmc.core.DataFactory;
 import evm.dmc.core.Framework;
 import evm.dmc.core.data.Data;
 import evm.dmc.python.data.PyString;
@@ -39,7 +39,7 @@ public class PythonFrameworkTest {
 
 	@Autowired
 	@PythonFW
-	private DataBuilder dBuilder;
+	private DataFactory dBuilder;
 
 	@Value("${jep.scriptsFolder}")
 	private String scriptsFolder;

@@ -5,7 +5,7 @@ import org.springframework.stereotype.Service;
 
 @Service
 @Scope("prototype")
-public abstract class InMemoryData<T> implements Data<T> {
+public abstract class InMemoryData<T> implements Data<T>, Cloneable {
 	T data;
 
 	public InMemoryData() {
