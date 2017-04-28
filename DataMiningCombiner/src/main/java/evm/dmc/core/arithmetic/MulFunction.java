@@ -21,10 +21,12 @@ public class MulFunction extends AbstractArithmeticFunction<Integer> {
 	@ArithmeticFW
 	DataFactory dBuilder;
 
+	static final Integer argCount = 2;
+
 	public MulFunction() {
 		super();
 		super.setName("Mul function");
-		super.setArgsCount(2);
+		super.setArgsCount(argCount);
 
 		// The most important setting
 		super.setFunction(this::mul);
@@ -43,6 +45,11 @@ public class MulFunction extends AbstractArithmeticFunction<Integer> {
 
 	public IntegerData mul(Data<Integer> a, Data<Integer> b) {
 		return (IntegerData) dBuilder.getData(mul(a.getData(), b.getData()));
+	}
+
+	@Override
+	public Integer getArgsCount() {
+		return argCount;
 	}
 
 }

@@ -21,10 +21,12 @@ public class SubFunction extends AbstractArithmeticFunction<Integer> {
 	@ArithmeticFW
 	DataFactory dBuilder;
 
+	static final Integer argCount = 2;
+
 	public SubFunction() {
 		super();
 		super.setName("Sub function");
-		super.setArgsCount(2);
+		super.setArgsCount(argCount);
 
 		// The most important setting
 		super.setFunction(this::sub);
@@ -43,6 +45,11 @@ public class SubFunction extends AbstractArithmeticFunction<Integer> {
 
 	public IntegerData sub(Data<Integer> a, Data<Integer> b) {
 		return (IntegerData) dBuilder.getData(sub(a.getData(), b.getData()));
+	}
+
+	@Override
+	public Integer getArgsCount() {
+		return argCount;
 	}
 
 }

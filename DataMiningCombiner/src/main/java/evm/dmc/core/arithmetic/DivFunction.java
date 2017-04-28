@@ -21,10 +21,12 @@ public class DivFunction extends AbstractArithmeticFunction<Integer> {
 	@ArithmeticFW
 	DataFactory dBuilder;
 
+	static final Integer argCount = 2;
+
 	public DivFunction() {
 		super();
 		super.setName("Div function");
-		super.setArgsCount(2);
+		super.setArgsCount(argCount);
 
 		// The most important setting
 		super.setFunction(this::div);
@@ -43,6 +45,11 @@ public class DivFunction extends AbstractArithmeticFunction<Integer> {
 
 	public IntegerData div(Data<Integer> a, Data<Integer> b) {
 		return (IntegerData) dBuilder.getData(div(a.getData(), b.getData()));
+	}
+
+	@Override
+	public Integer getArgsCount() {
+		return argCount;
 	}
 
 }

@@ -14,6 +14,7 @@ import evm.dmc.python.data.PandasDataFrame;
 @Service("Python_ReadFile")
 @PropertySource("classpath:jep.properties")
 public class PyReadFile extends AbstractPythonFunction {
+	static final Integer argCount = 1;
 	@Autowired
 	PythonFramework fw;
 
@@ -27,7 +28,7 @@ public class PyReadFile extends AbstractPythonFunction {
 	public PyReadFile() {
 		super();
 		super.setName("Python read file");
-		super.setArgsCount(1);
+		super.setArgsCount(argCount);
 
 	}
 
@@ -36,6 +37,11 @@ public class PyReadFile extends AbstractPythonFunction {
 		super.setFunction(readCSV);
 		super.setResult(result);
 		// super.setResult( fw.getData(PandasDataFrame.class));
+	}
+
+	@Override
+	public Integer getArgsCount() {
+		return argCount;
 	}
 
 }

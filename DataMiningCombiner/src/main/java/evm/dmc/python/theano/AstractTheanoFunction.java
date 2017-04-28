@@ -14,7 +14,7 @@ import evm.dmc.core.data.Data;
 import evm.dmc.core.function.AbstractDMCFunction;
 import evm.dmc.core.function.DMCFunction;
 
-public class AstractTheanoFunction<T> extends AbstractDMCFunction<T> implements InContextExecutable {
+public abstract class AstractTheanoFunction<T> extends AbstractDMCFunction<T> implements InContextExecutable {
 
 	@Service
 	@TheanoFWContext

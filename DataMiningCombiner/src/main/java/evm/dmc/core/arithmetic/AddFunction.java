@@ -13,6 +13,8 @@ import evm.dmc.core.data.IntegerData;
  */
 @Service("Arithmetic_Add")
 public class AddFunction extends AbstractArithmeticFunction<Integer> {
+	static final Integer argCount = 2;
+
 	@Autowired
 	@ArithmeticFW
 	Framework fw;
@@ -24,7 +26,7 @@ public class AddFunction extends AbstractArithmeticFunction<Integer> {
 	public AddFunction() {
 		super();
 		super.setName("Add function");
-		super.setArgsCount(2);
+		super.setArgsCount(argCount);
 
 		// The most important setting
 		super.setFunction(this::add);
@@ -43,6 +45,11 @@ public class AddFunction extends AbstractArithmeticFunction<Integer> {
 
 	public IntegerData add(Data<Integer> a, Data<Integer> b) {
 		return (IntegerData) dBuilder.getData(add(a.getData(), b.getData()));
+	}
+
+	@Override
+	public Integer getArgsCount() {
+		return argCount;
 	}
 
 }

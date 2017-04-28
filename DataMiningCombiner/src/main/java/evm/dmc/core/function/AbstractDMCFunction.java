@@ -23,6 +23,10 @@ public abstract class AbstractDMCFunction<T> implements DMCFunction<T> {
 
 	protected List<Data<T>> arguments;
 
+	public AbstractDMCFunction() {
+		setArgsCount(getArgsCount());
+	}
+
 	/**
 	 * @return the name
 	 */
@@ -44,9 +48,7 @@ public abstract class AbstractDMCFunction<T> implements DMCFunction<T> {
 	 * @return the paramCount
 	 */
 	@Override
-	public Integer getArgsCount() {
-		return argsCount;
-	}
+	abstract public Integer getArgsCount();
 
 	/**
 	 * Each final implementation of AbstractDMCFunction must set count of

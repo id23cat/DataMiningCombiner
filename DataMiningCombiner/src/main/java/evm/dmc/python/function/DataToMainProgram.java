@@ -17,13 +17,15 @@ public class DataToMainProgram extends AbstractPythonFunction {
 	// @Autowired
 	// PythonFramework fw;
 
+	static final Integer argCount = 1;
+
 	@Autowired
 	private StringData result;
 
 	public DataToMainProgram() {
 		super();
 		super.setName("Load data from Python to java environment");
-		super.setArgsCount(1);
+		super.setArgsCount(argCount);
 
 	}
 
@@ -37,5 +39,10 @@ public class DataToMainProgram extends AbstractPythonFunction {
 	public void execute() {
 		super.check();
 		result = super.convert(super.arguments.get(0));
+	}
+
+	@Override
+	public Integer getArgsCount() {
+		return argCount;
 	}
 }

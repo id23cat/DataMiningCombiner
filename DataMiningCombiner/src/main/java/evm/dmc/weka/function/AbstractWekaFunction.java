@@ -6,7 +6,7 @@ import weka.core.Instances;
 
 public abstract class AbstractWekaFunction extends AbstractDMCFunction<Instances> {
 
-	protected Data<Instances> result;
+	protected Data<Instances> result = null;
 
 	@Override
 	public Data<Instances> getResult() {
