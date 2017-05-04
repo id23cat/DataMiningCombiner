@@ -1,7 +1,5 @@
 package evm.dmc.python;
 
-import javax.annotation.PostConstruct;
-
 import org.springframework.stereotype.Service;
 
 import evm.dmc.core.AbstractFramework;
@@ -11,9 +9,10 @@ import evm.dmc.core.function.DMCFunction;
 @Service
 @PythonFW
 public class PythonFramework extends AbstractFramework {
+	private static Class CLASS = AbstractPythonFunction.class;
 
 	public PythonFramework() {
-		super(AbstractPythonFunction.class);
+		// super(AbstractPythonFunction.class);
 	}
 
 	/*
@@ -23,9 +22,9 @@ public class PythonFramework extends AbstractFramework {
 	 * function type as AbstractPythonFunction.class
 	 */
 	@Override
-	@PostConstruct
+	// @PostConstruct
 	public void initFramework() {
-		super.initFrameworkForType(AbstractPythonFunction.class);
+		super.initFrameworkForType(CLASS);
 
 	}
 
@@ -38,6 +37,11 @@ public class PythonFramework extends AbstractFramework {
 	@Override
 	public Data getData(Class type) {
 		return super.instantiateData(type);
+	}
+
+	@Override
+	protected Class getFunctionClass() {
+		return CLASS;
 	}
 
 }

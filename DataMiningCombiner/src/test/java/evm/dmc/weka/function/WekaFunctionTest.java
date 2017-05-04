@@ -1,5 +1,7 @@
 package evm.dmc.weka.function;
 
+import static org.junit.Assert.assertNotNull;
+
 import org.junit.BeforeClass;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -19,7 +21,8 @@ import weka.filters.unsupervised.attribute.Standardize;
 @ContextConfiguration(classes = DMCWekaConfig.class)
 @TestPropertySource("classpath:wekatest.properties")
 public class WekaFunctionTest {
-	WekaData data = new WekaData();
+	@Value("#{wekaFramework.getData(Weka_Instances.getClass())}")
+	WekaData data;
 	@Value("${wekatest.datasource}")
 	String souceFile;
 
@@ -36,6 +39,7 @@ public class WekaFunctionTest {
 	@Test
 	public final void testNormalize() throws Exception {
 		weka.filters.Filter filter;
+		assertNotNull(data);
 		data.load(souceFile);
 		Instances inst = data.getData();
 
@@ -51,6 +55,7 @@ public class WekaFunctionTest {
 	@Test
 	public final void testStandardize() throws Exception {
 		weka.filters.Filter filter;
+		assertNotNull(data);
 		data.load(souceFile);
 		Instances inst = data.getData();
 

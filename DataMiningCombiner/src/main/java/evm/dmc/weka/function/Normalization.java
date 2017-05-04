@@ -5,7 +5,7 @@ import org.springframework.stereotype.Service;
 import weka.filters.Filter;
 import weka.filters.unsupervised.attribute.Normalize;
 
-@Service("Meka_Normalize")
+@Service("Weka_Normalize")
 public class Normalization extends AbstaractWekaFilter {
 
 	public Normalization() {

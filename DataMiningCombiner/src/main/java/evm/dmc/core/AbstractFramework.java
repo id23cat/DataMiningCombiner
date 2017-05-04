@@ -1,5 +1,7 @@
 package evm.dmc.core;
 
+import javax.annotation.PostConstruct;
+
 import org.springframework.beans.BeansException;
 import org.springframework.context.ApplicationContext;
 
@@ -35,6 +37,9 @@ public abstract class AbstractFramework implements Framework, DataFactory {
 	private Set<String> funcDescriptors;
 	private Class abstractFunctionClass;
 
+	public AbstractFramework() {
+	}
+
 	public AbstractFramework(Class abstractFunctionClass) {
 		initFrameworkForType(abstractFunctionClass);
 
@@ -45,6 +50,14 @@ public abstract class AbstractFramework implements Framework, DataFactory {
 		// TODO
 		this.applicationContext = applicationContext;
 		initFramework();
+	}
+
+	protected abstract Class getFunctionClass();
+
+	@PostConstruct
+	protected void postInit() {
+		Class cls = getFunctionClass();
+		initFrameworkForType(cls);
 	}
 
 	/**

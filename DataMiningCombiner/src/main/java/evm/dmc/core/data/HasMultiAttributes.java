@@ -8,7 +8,7 @@ package evm.dmc.core.data;
  * 
  * @param <T>
  */
-public interface HasMultiAttributes<T> {
+public interface HasMultiAttributes {
 	/**
 	 * Returns new Data instance contained single attribute selected by index
 	 * from current multiAttribute dataset.
@@ -16,7 +16,7 @@ public interface HasMultiAttributes<T> {
 	 * @param index
 	 * @return
 	 */
-	Data<T> getAttribute(int index);
+	Data<?> getAttribute(int index);
 
 	/**
 	 * Returns new Data instance contained single attribute selected by set of
@@ -26,6 +26,6 @@ public interface HasMultiAttributes<T> {
 	 * @param indexes
 	 * @return
 	 */
-	Data<T> getAttributes(int... indexes);
+	Data<?> getAttributes(int... indexes);
 
 }

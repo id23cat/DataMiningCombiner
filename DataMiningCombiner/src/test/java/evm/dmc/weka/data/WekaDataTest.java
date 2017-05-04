@@ -23,15 +23,25 @@ import org.jfree.data.statistics.HistogramType;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.test.context.ContextConfiguration;
+import org.springframework.test.context.TestPropertySource;
+import org.springframework.test.context.junit4.SpringRunner;
 
 import java.util.Random;
 
 import evm.dmc.core.chart.Histogram;
 import evm.dmc.core.data.Data;
+import evm.dmc.weka.DMCWekaConfig;
 import weka.core.Instances;
 
+@RunWith(SpringRunner.class)
+@ContextConfiguration(classes = DMCWekaConfig.class)
+@TestPropertySource("classpath:wekatest.properties")
 public class WekaDataTest {
-	WekaData data = new WekaData();
+	@Value("#{wekaFramework.getData(Weka_Instances.getClass())}")
+	WekaData data;
 	String souceFile = "Data/telecom_churn.csv";
 
 	@BeforeClass

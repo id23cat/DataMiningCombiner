@@ -1,7 +1,5 @@
 package evm.dmc.core.arithmetic;
 
-import javax.annotation.PostConstruct;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -15,18 +13,19 @@ import evm.dmc.core.function.DMCFunction;
 @Service
 @ArithmeticFW
 public class ArithmeticFramework extends AbstractFramework {
+	private static Class CLASS = AbstractArithmeticFunction.class;
 	@Autowired
 	@ArithmeticFWContext
 	private FrameworkContext frameworkContext;
 
 	public ArithmeticFramework() {
-		super(AbstractArithmeticFunction.class);
+		// super(AbstractArithmeticFunction.class);
 	}
 
 	@Override
-	@PostConstruct
+	// @PostConstruct
 	public void initFramework() {
-		super.initFrameworkForType(AbstractArithmeticFunction.class);
+		super.initFrameworkForType(CLASS);
 	}
 
 	/**
@@ -60,6 +59,11 @@ public class ArithmeticFramework extends AbstractFramework {
 
 	private Data instantiateData() {
 		return super.instantiateData(IntegerData.class);
+	}
+
+	@Override
+	protected Class getFunctionClass() {
+		return CLASS;
 	}
 
 }

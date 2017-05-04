@@ -16,6 +16,7 @@ import evm.dmc.core.data.Data;
 import evm.dmc.core.data.FromFileLoadable;
 import evm.dmc.core.data.HasMultiAttributes;
 import evm.dmc.core.data.InMemoryData;
+import evm.dmc.core.data.MultyInstace;
 import evm.dmc.core.data.ToFileStorable;
 import evm.dmc.weka.WekaFW;
 import weka.core.Attribute;
@@ -33,13 +34,19 @@ import weka.core.converters.ConverterUtils.DataSource;
  * 
  * @author id23cat
  */
-@Service
+@Service("Weka_Instances")
 @Scope(ConfigurableBeanFactory.SCOPE_PROTOTYPE)
 public class WekaData extends InMemoryData<Instances>
-		implements FromFileLoadable, ToFileStorable, HasMultiAttributes<Instances>, Plottable {
-	@WekaFW
-	@Autowired
-	DataFactory dataFactory;
+		implements FromFileLoadable, ToFileStorable, HasMultiAttributes, MultyInstace, Plottable {
+
+	private DataFactory dataFactory;
+
+	// used for generating cross-validation sets
+	private static int FOLDS = 4;
+
+	public WekaData(@Autowired @WekaFW DataFactory df) {
+		this.dataFactory = df;
+	}
 
 	@Override
 	public Data load(String fileName) throws Exception {
@@ -135,7 +142,7 @@ public class WekaData extends InMemoryData<Instances>
 	}
 
 	WekaData copyObject() throws CloneNotSupportedException {
-		WekaData data = (WekaData) this.clone();
+		WekaData data = (WekaData) dataFactory.getData(WekaData.class);
 		data.setData(new Instances(this.getData()));
 		return data;
 
@@ -151,6 +158,37 @@ public class WekaData extends InMemoryData<Instances>
 	public String title() {
 		// TODO
 		return "Account length";
+	}
+
+	@Override
+	public Data<Instances> getSubset(int from, int to) {
+		WekaData newData = (WekaData) dataFactory.getData(WekaData.class);
+		newData.data.addAll(this.data.subList(from, to));
+		return newData;
+	}
+
+	@Override
+	public int getInstancesCount() {
+		return super.getData().numInstances();
+	}
+
+	@Override
+	public Data<?>[] getTrainTest(int numFold) {
+		if (numFold > 3)
+			numFold = 3;
+		if (numFold < 0)
+			numFold = 0;
+
+		// int seed = 514;
+		// Random rand = new Random(seed);
+		WekaData train = (WekaData) dataFactory.getData(WekaData.class);
+		WekaData test = (WekaData) dataFactory.getData(WekaData.class);
+
+		train.setData(this.data.trainCV(FOLDS, numFold));
+		test.setData(this.data.testCV(FOLDS, numFold));
+
+		WekaData[] traintest = new WekaData[] { train, test };
+		return traintest;
 	}
 
 }

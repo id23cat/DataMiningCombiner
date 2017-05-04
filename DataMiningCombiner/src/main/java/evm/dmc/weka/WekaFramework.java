@@ -12,14 +12,15 @@ import weka.core.Instances;
 @Service
 @WekaFW
 public class WekaFramework extends AbstractFramework {
+	static Class CLASS = AbstractWekaFunction.class;
 
 	public WekaFramework() {
-		super(AbstractWekaFunction.class);
+		// super(CLASS);
 	}
 
 	@Override
 	public void initFramework() {
-		super.initFrameworkForType(AbstractWekaFunction.class);
+		super.initFrameworkForType(CLASS);
 	}
 
 	public WekaData castToWekaData(Data data) throws ClusteringError {
@@ -32,6 +33,10 @@ public class WekaFramework extends AbstractFramework {
 			wekaData.setData(inst);
 		}
 		return wekaData;
+	}
+
+	protected Class getFunctionClass() {
+		return CLASS;
 	}
 
 }
