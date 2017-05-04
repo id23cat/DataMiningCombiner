@@ -33,7 +33,10 @@ def get_numerical_data(data):
     numerical_columns = [c for c in data.columns if data[c].dtype.name != 'object']
     return data[numerical_columns].values
 
-def get_scaled(df, attributes):        
+#def get_scaled(df, attributes):
+def get_scaled(df):
+    # only for beginning testing
+    attributes = ['Total day minutes'] + ['Total eve minutes'] + ['Total night minutes']        
     return scale(df[attributes])
 
 #       KMeans parameters:

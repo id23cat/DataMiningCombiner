@@ -63,7 +63,7 @@ public abstract class AbstractPythonFunction extends AbstractDMCFunction<String>
 			// <resutVar> = <functionName>(<args>...):
 
 			// set the <resultVar>
-			StringBuilder command = new StringBuilder((String) func.getResult().getData());
+			StringBuilder command = new StringBuilder((String) func.result.getData());
 			command.append("=");
 			// set <functionName>
 			command.append(func.function);
@@ -72,7 +72,9 @@ public abstract class AbstractPythonFunction extends AbstractDMCFunction<String>
 				command.append(arg.getData());
 				command.append(",");
 			}
-			command.insert(command.lastIndexOf(","), ")");
+			int idx = command.lastIndexOf(",");
+			command.replace(idx, idx + 1, ")");
+			System.out.println(command.toString());
 			try {
 				execFunction(command.toString());
 			} catch (JepException e) {
@@ -86,11 +88,23 @@ public abstract class AbstractPythonFunction extends AbstractDMCFunction<String>
 			AbstractPythonFunction func = (AbstractPythonFunction) function;
 			try {
 				Object result = jep.getValue(func.arguments.get(0).getData());
-				func.getResult().setData(result.toString());
+				func.result.setData(result.toString());
 			} catch (JepException e) {
 				throw new RuntimeException("Pulling data from Jep has failed", e);
 			}
 
+		}
+
+		public String getCurENV() {
+			String res;
+			try {
+				execFunction("env = dir()");
+				res = jep.getValue("env").toString();
+			} catch (JepException e) {
+				throw new RuntimeException("Getting environment from Jep has failed", e);
+			}
+
+			return res;
 		}
 
 		private void execFunction(String command) throws JepException {
@@ -134,9 +148,13 @@ public abstract class AbstractPythonFunction extends AbstractDMCFunction<String>
 	 * @return the result of operation
 	 */
 	@Override
-	public Data getResult() {
-		if (this.result == null)
-			throw new NullPointerException("The result is undefined");
+	public Data getResult() throws NullPointerException {
+		if (this.result == null || !getCurrentEnvironment().contains(this.result.getData().toString())) {
+			StringBuilder strb = new StringBuilder("The result is undefined (variable \'");
+			strb.append(this.result.getData().toString());
+			strb.append("\'). Perhaps reason: execute() method does not called");
+			throw new NullPointerException(strb.toString());
+		}
 		return this.result;
 	}
 
@@ -170,6 +188,10 @@ public abstract class AbstractPythonFunction extends AbstractDMCFunction<String>
 			throw new NullPointerException("Function not defined");
 
 		return super.check();
+	}
+
+	String getCurrentEnvironment() {
+		return ((JepPythonContext) context).getCurENV();
 	}
 
 }

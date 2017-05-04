@@ -8,9 +8,9 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.contrib.java.lang.system.SystemOutRule;
 import org.junit.runner.RunWith;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.test.context.ContextConfiguration;
-import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import evm.dmc.core.data.Data;
@@ -18,42 +18,46 @@ import evm.dmc.python.DMCPythonConfig;
 
 @RunWith(SpringRunner.class)
 @ContextConfiguration(classes = DMCPythonConfig.class)
-@TestPropertySource("classpath:jeptest.properties")
-public class PyReadFileTest {
+public class ScaleDatasetTest {
 
 	@Rule
 	public final SystemOutRule systemOutRule = new SystemOutRule().enableLog();
 
-	@Value("#{pythonFramework.getDMCFunction(\"Python_ReadFile\")}")
-	// private DMCFunction function;
-	private PyReadFile function;
+	@Value("#{pythonFramework.getDMCFunction(\"Python_ScaleDataset\")}")
+	private ScaleDataset scale;
 
-	@Value("${jeptest.datafile}")
-	private String dataFile;
-
-	@Value("#{pythonFramework.getData(Python_String.getClass())}")
-	private Data pyFileName;
+	@Autowired
+	DataLoader dataLoader;
 
 	@BeforeClass
 	public static void setUpBeforeClass() throws Exception {
+	}
 
+	@Test(expected = NullPointerException.class)
+	public final void testGettingResultWithoutExecution() {
+		scale.getResult();
 	}
 
 	@Test
-	public final void testPyReadFile() {
-		assertNotNull(function);
-		assertNotNull(pyFileName);
-		pyFileName.setData(dataFile);
-		function.setArgs(pyFileName);
+	public final void testExecute() {
+		assertNotNull(scale);
+		Data data = dataLoader.getData();
 
-		function.execute();
-		System.out.println(function.getCurrentEnvironment());
+		System.out.println(data.getData());
+		System.out.println(scale.getCurrentEnvironment());
+		// System.out.println(scale.convert(data));
 
-		Data result = function.getResult();
+		scale.setArgs(data);
+		scale.execute();
+		Data result = scale.getResult();
 		assertNotNull(result);
 		assertNotNull(result.getData());
 
-		Data str = function.convert(result);
+		System.out.println(result.getData());
+
+		System.out.println(scale.getCurrentEnvironment());
+
+		Data str = scale.convert(result);
 		System.out.println(str.getData());
 		assertFalse(systemOutRule.getLog().isEmpty());
 	}
