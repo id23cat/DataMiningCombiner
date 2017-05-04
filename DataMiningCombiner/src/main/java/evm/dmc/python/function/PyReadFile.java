@@ -17,7 +17,7 @@ public class PyReadFile extends AbstractPythonFunction {
 	@Autowired
 	PythonFramework fw;
 
-	@Value("${jep.readFileCSV:fileops.readCSV}")
+	@Value("${jep.readFileCSV ?: fileops.readCSV}")
 	String readCSV;
 
 	// @Value("#{pythonFramework.getData(Python_DataFrame.getClass())}")

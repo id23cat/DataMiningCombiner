@@ -49,6 +49,7 @@ public class PyReadFileTest {
 		function.execute();
 		Data result = function.getResult();
 		assertNotNull(result);
+		assertNotNull(result.getData());
 
 		Data str = function.convert(result);
 		System.out.println(str.getData());
