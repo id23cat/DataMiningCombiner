@@ -7,7 +7,6 @@ import org.springframework.context.annotation.PropertySource;
 import org.springframework.stereotype.Service;
 
 import evm.dmc.core.data.StringData;
-import evm.dmc.python.AbstractPythonFunction;
 
 @Service("Python_ToMainProgram")
 @PropertySource("classpath:jep.properties")

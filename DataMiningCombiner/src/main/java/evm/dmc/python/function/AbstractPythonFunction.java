@@ -1,10 +1,11 @@
-package evm.dmc.python;
+package evm.dmc.python.function;
 
 import javax.annotation.PostConstruct;
 import javax.annotation.PreDestroy;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.DependsOn;
 import org.springframework.stereotype.Controller;
 import org.springframework.stereotype.Service;
 
@@ -15,6 +16,8 @@ import evm.dmc.core.data.Data;
 import evm.dmc.core.data.StringData;
 import evm.dmc.core.function.AbstractDMCFunction;
 import evm.dmc.core.function.DMCFunction;
+import evm.dmc.python.PythonFWContext;
+import evm.dmc.python.PythonFramework;
 import jep.Jep;
 import jep.JepException;
 
@@ -24,6 +27,7 @@ public abstract class AbstractPythonFunction extends AbstractDMCFunction<String>
 
 	@Service
 	@PythonFWContext
+	@DependsOn("pythonFramework")
 	public static class JepPythonContext implements FrameworkContext {
 		@Autowired
 		private Jep jep;
