@@ -42,12 +42,18 @@ public abstract class AbstractPythonFunction extends AbstractDMCFunction<String>
 		@Override
 		@PostConstruct
 		public void initContext() {
+			// try {
+			// execScript(resetScript);
 			try {
-				execScript(resetScript);
 				execScript(initScript);
 			} catch (JepException e) {
-				throw new RuntimeException("Initialization of Jep has failed", e);
+				// TODO Auto-generated catch block
+				e.printStackTrace();
 			}
+			// } catch (JepException e) {
+			// throw new RuntimeException("Initialization of Jep has failed",
+			// e);
+			// }
 		}
 
 		@PreDestroy

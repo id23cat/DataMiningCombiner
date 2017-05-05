@@ -1,6 +1,8 @@
 package evm.dmc.core.arithmetic;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.PropertySource;
 import org.springframework.stereotype.Service;
 
 import evm.dmc.core.DataFactory;
@@ -11,6 +13,7 @@ import evm.dmc.core.data.IntegerData;
 /**
  * @author id23cat Offers biargument Multiplication function
  */
+@PropertySource("classpath:arithmetic.properties")
 @Service("Arithmetic_Mul")
 public class MulFunction extends AbstractArithmeticFunction<Integer> {
 	@Autowired
@@ -23,11 +26,14 @@ public class MulFunction extends AbstractArithmeticFunction<Integer> {
 
 	static final Integer argCount = 2;
 
+	@Value("${arith.mul_name}")
+	String name;
+
+	@Value("${arith.mul_desc}")
+	String description;
+
 	public MulFunction() {
 		super();
-		super.setName("Mul function");
-		super.setArgsCount(argCount);
-
 		// The most important setting
 		super.setFunction(this::mul);
 	}
@@ -50,6 +56,17 @@ public class MulFunction extends AbstractArithmeticFunction<Integer> {
 	@Override
 	public Integer getArgsCount() {
 		return argCount;
+	}
+
+	@Override
+	public String getName() {
+		return name;
+	}
+
+	@Override
+	public String getDescription() {
+
+		return description;
 	}
 
 }

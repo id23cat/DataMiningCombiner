@@ -1,6 +1,8 @@
 package evm.dmc.core.arithmetic;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.PropertySource;
 import org.springframework.stereotype.Service;
 
 import evm.dmc.core.DataFactory;
@@ -11,6 +13,7 @@ import evm.dmc.core.data.IntegerData;
 /**
  * @author id23cat Offers biargument Addition function
  */
+@PropertySource("classpath:arithmetic.properties")
 @Service("Arithmetic_Add")
 public class AddFunction extends AbstractArithmeticFunction<Integer> {
 	static final Integer argCount = 2;
@@ -23,10 +26,14 @@ public class AddFunction extends AbstractArithmeticFunction<Integer> {
 	@ArithmeticFW
 	DataFactory dBuilder;
 
+	@Value("${arith.add_name}")
+	String name;
+
+	@Value("${arith.add_desc}")
+	String description;
+
 	public AddFunction() {
 		super();
-		super.setName("Add function");
-		super.setArgsCount(argCount);
 
 		// The most important setting
 		super.setFunction(this::add);
@@ -50,6 +57,16 @@ public class AddFunction extends AbstractArithmeticFunction<Integer> {
 	@Override
 	public Integer getArgsCount() {
 		return argCount;
+	}
+
+	@Override
+	public String getName() {
+		return name;
+	}
+
+	@Override
+	public String getDescription() {
+		return description;
 	}
 
 }

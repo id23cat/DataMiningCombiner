@@ -12,13 +12,24 @@ import evm.dmc.core.data.Data;
 public interface DMCFunction<T> {
 	void execute();
 
-	default String getName() {
-		return "Warning: No name specified";
-	}
+	/**
+	 * Returns name of function that should match the pattern:
+	 * "frameworkName_functionName"
+	 * 
+	 * @return function name
+	 */
+	String getName();
+
+	/**
+	 * Returns detailed description of the function
+	 * 
+	 * @return description
+	 */
+	String getDescription();
 
 	Integer getArgsCount();
 
-	void setName(String name);
+	// void setName(String name);
 
 	// void setArgsCount(Integer count);
 

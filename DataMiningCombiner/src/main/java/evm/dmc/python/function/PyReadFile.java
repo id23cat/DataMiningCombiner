@@ -26,9 +26,6 @@ public class PyReadFile extends AbstractPythonFunction {
 
 	public PyReadFile() {
 		super();
-		super.setName("Python read file");
-		super.setArgsCount(argCount);
-
 	}
 
 	@PostConstruct
@@ -41,6 +38,16 @@ public class PyReadFile extends AbstractPythonFunction {
 	@Override
 	public Integer getArgsCount() {
 		return argCount;
+	}
+
+	@Override
+	public String getName() {
+		return "Python_ReadFile";
+	}
+
+	@Override
+	public String getDescription() {
+		return "Reads data from CSV file and returns dataset";
 	}
 
 }

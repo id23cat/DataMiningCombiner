@@ -7,7 +7,9 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.test.context.ContextConfiguration;
+import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import java.util.function.BiFunction;
@@ -20,6 +22,7 @@ import evm.dmc.core.function.DMCFunction;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(classes = ArithmeticPackageConfig.class)
+@TestPropertySource("classpath:arithmetic.properties")
 public class DivFunctionTest {
 
 	@Autowired
@@ -27,6 +30,12 @@ public class DivFunctionTest {
 
 	Data<Integer> x15 = new IntegerData(15);
 	Data<Integer> y5 = new IntegerData(5);
+
+	@Value("${arith.div_name}")
+	String name;
+
+	@Value("${arith.div_desc}")
+	String desc;
 
 	@BeforeClass
 	public static void setUpBeforeClass() throws Exception {
@@ -70,15 +79,14 @@ public class DivFunctionTest {
 		assertEquals(result, r30);
 	}
 
-	/**
-	 * Testing of function name
-	 */
 	@Test
 	public final void testGetName() {
-		String descr = "Div function";
-		assertEquals(descr, divF.getName(), descr);
-		divF.setName("Division arguments");
-		assertEquals(divF.getName(), "Division arguments");
+		assertEquals(name, divF.getName());
+	}
+
+	@Test
+	public final void testGetDescription() {
+		assertEquals(desc, divF.getDescription());
 	}
 
 	@Test

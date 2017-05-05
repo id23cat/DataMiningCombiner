@@ -19,10 +19,14 @@ import evm.dmc.python.function.AbstractPythonFunction;
 public class PythonFramework extends AbstractFramework {
 
 	/**
-	 * Normally sould be setted by Spring context from jep.properties
+	 * Normally should be setted by Spring context from jep.properties
 	 */
 	@Value("${jep.javalibpath}")
 	private String jepLibPath;
+
+	// @Autowired
+	// @PythonFWContext
+	// FrameworkContext context;
 
 	private static Class CLASS = AbstractPythonFunction.class;
 
@@ -81,7 +85,14 @@ public class PythonFramework extends AbstractFramework {
 	 */
 	@Override
 	public void initFramework() {
-		super.initFrameworkForType(CLASS);
+		// // super.initFrameworkForType(CLASS);
+		// context.initContext();
+		// try {
+		// addDirToJavaLibraryPath();
+		// } catch (IOException e) {
+		// // TODO Auto-generated catch block
+		// e.printStackTrace();
+		// }
 
 	}
 

@@ -7,7 +7,9 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.test.context.ContextConfiguration;
+import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import java.util.function.BiFunction;
@@ -19,6 +21,7 @@ import evm.dmc.core.function.DMCFunction;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(classes = ArithmeticPackageConfig.class)
+@TestPropertySource("classpath:arithmetic.properties")
 public class SubFunctionTest {
 
 	@Autowired
@@ -26,6 +29,12 @@ public class SubFunctionTest {
 
 	IntegerData x5 = new IntegerData(5);
 	IntegerData y2 = new IntegerData(2);
+
+	@Value("${arith.sub_name}")
+	String name;
+
+	@Value("${arith.sub_desc}")
+	String desc;
 
 	@BeforeClass
 	public static void setUpBeforeClass() throws Exception {
@@ -68,10 +77,12 @@ public class SubFunctionTest {
 
 	@Test
 	public final void testGetName() {
-		String descr = "Sub function";
-		assertEquals(descr, subF.getName(), descr);
-		subF.setName("Substitution arguments");
-		assertEquals(subF.getName(), "Substitution arguments");
+		assertEquals(name, subF.getName());
+	}
+
+	@Test
+	public final void testGetDescription() {
+		assertEquals(desc, subF.getDescription());
 	}
 
 	@Test

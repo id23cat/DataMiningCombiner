@@ -3,7 +3,7 @@ package evm.dmc.weka.function;
 import weka.core.Instances;
 import weka.filters.Filter;
 
-public class AbstaractWekaFilter extends AbstractWekaFunction {
+public abstract class AbstaractWekaFilter extends AbstractWekaFunction {
 	static final Integer argCount = 1;
 	protected Filter filter;
 

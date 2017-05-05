@@ -15,7 +15,7 @@ public abstract class AbstractDMCFunction<T> implements DMCFunction<T> {
 	 * Name of the function, is used as key in map of functions presented in
 	 * Framework collection
 	 */
-	protected String name;
+	// protected String description;
 	/**
 	 * Count of the parameters have to be setted as arguments
 	 */
@@ -25,30 +25,9 @@ public abstract class AbstractDMCFunction<T> implements DMCFunction<T> {
 
 	public AbstractDMCFunction() {
 		setArgsCount(getArgsCount());
-	}
+		// this.description = funcName();
 
-	/**
-	 * @return the name
-	 */
-	@Override
-	public String getName() {
-		return name;
 	}
-
-	/**
-	 * @param name
-	 *            the name to set
-	 */
-	@Override
-	public void setName(String name) {
-		this.name = name;
-	}
-
-	/**
-	 * @return the paramCount
-	 */
-	@Override
-	abstract public Integer getArgsCount();
 
 	/**
 	 * Each final implementation of AbstractDMCFunction must set count of
@@ -85,8 +64,7 @@ public abstract class AbstractDMCFunction<T> implements DMCFunction<T> {
 	 * @return true, if successful
 	 */
 	protected boolean check() {
-		if (name == null || name.isEmpty())
-			return false;
+
 		if (argsCount == null || argsCount < 0)
 			return false;
 		if (arguments == null || arguments.size() != argsCount)

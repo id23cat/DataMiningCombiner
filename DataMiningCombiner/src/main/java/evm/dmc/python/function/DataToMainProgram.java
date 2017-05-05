@@ -23,8 +23,6 @@ public class DataToMainProgram extends AbstractPythonFunction {
 
 	public DataToMainProgram() {
 		super();
-		super.setName("Load data from Python to java environment");
-		super.setArgsCount(argCount);
 
 	}
 
@@ -43,5 +41,15 @@ public class DataToMainProgram extends AbstractPythonFunction {
 	@Override
 	public Integer getArgsCount() {
 		return argCount;
+	}
+
+	@Override
+	public String getName() {
+		return "Python_ToMainProgram";
+	}
+
+	@Override
+	public String getDescription() {
+		return "Loads data from python environment to current JVM";
 	}
 }

@@ -10,7 +10,6 @@ public class Normalization extends AbstaractWekaFilter {
 
 	public Normalization() {
 		super();
-		super.setName("Meka Normalize");
 	}
 
 	@Override
@@ -20,6 +19,16 @@ public class Normalization extends AbstaractWekaFilter {
 
 		super.execute();
 
+	}
+
+	@Override
+	public String getName() {
+		return "Weka_Normalize";
+	}
+
+	@Override
+	public String getDescription() {
+		return "Executes normalization of dataset";
 	}
 
 }

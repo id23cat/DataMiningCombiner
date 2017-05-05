@@ -10,8 +10,10 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ContextConfiguration;
+import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import java.util.function.BiFunction;
@@ -29,6 +31,7 @@ import evm.dmc.core.function.DMCFunction;
 @RunWith(SpringRunner.class)
 @ContextConfiguration(classes = ArithmeticPackageConfig.class)
 @SpringBootTest
+@TestPropertySource("classpath:arithmetic.properties")
 public class AddFunctionTest {
 
 	@Autowired
@@ -36,6 +39,12 @@ public class AddFunctionTest {
 
 	IntegerData x3 = new IntegerData(3);
 	IntegerData y5 = new IntegerData(5);
+
+	@Value("${arith.add_name}")
+	String name;
+
+	@Value("${arith.add_desc}")
+	String desc;
 
 	@BeforeClass
 	public static void setUpBeforeClass() throws Exception {
@@ -83,14 +92,16 @@ public class AddFunctionTest {
 
 	/**
 	 * Test method for
-	 * {@link evm.dmc.core.function.AbstractDMCFunction#getName()}.
+	 * {@link evm.dmc.core.function.AbstractDMCFunction#getDescription()}.
 	 */
 	@Test
 	public final void testGetName() {
-		String descr = "Add function";
-		assertEquals(descr, addF.getName(), descr);
-		addF.setName("Addition arguments");
-		assertEquals(addF.getName(), "Addition arguments");
+		assertEquals(name, addF.getName());
+	}
+
+	@Test
+	public final void testGetDescription() {
+		assertEquals(desc, addF.getDescription());
 	}
 
 	@Test

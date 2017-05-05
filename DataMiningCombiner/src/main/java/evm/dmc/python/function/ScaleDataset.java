@@ -23,8 +23,6 @@ public class ScaleDataset extends AbstractPythonFunction {
 
 	public ScaleDataset() {
 		super();
-		super.setName("Python scale dataset");
-		// super.setArgsCount(ARGS_COUNT);
 	}
 
 	@PostConstruct
@@ -38,6 +36,16 @@ public class ScaleDataset extends AbstractPythonFunction {
 	public Integer getArgsCount() {
 
 		return ARGS_COUNT;
+	}
+
+	@Override
+	public String getName() {
+		return "Python_ScaleDataset";
+	}
+
+	@Override
+	public String getDescription() {
+		return "Function decreases attributes from incoming datatset, that does not match thouse which is setted as second argument";
 	}
 
 }

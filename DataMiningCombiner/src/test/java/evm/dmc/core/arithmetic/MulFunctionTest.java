@@ -7,7 +7,9 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.test.context.ContextConfiguration;
+import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import java.util.function.BiFunction;
@@ -19,6 +21,7 @@ import evm.dmc.core.function.DMCFunction;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(classes = ArithmeticPackageConfig.class)
+@TestPropertySource("classpath:arithmetic.properties")
 public class MulFunctionTest {
 
 	@Autowired
@@ -26,6 +29,12 @@ public class MulFunctionTest {
 
 	IntegerData x4 = new IntegerData(4);
 	IntegerData y5 = new IntegerData(5);
+
+	@Value("${arith.mul_name}")
+	String name;
+
+	@Value("${arith.mul_desc}")
+	String desc;
 
 	@BeforeClass
 	public static void setUpBeforeClass() throws Exception {
@@ -68,10 +77,12 @@ public class MulFunctionTest {
 
 	@Test
 	public final void testGetName() {
-		String descr = "Mul function";
-		assertEquals(descr, mulF.getName(), descr);
-		mulF.setName("Multiplication arguments");
-		assertEquals(mulF.getName(), "Multiplication arguments");
+		assertEquals(name, mulF.getName());
+	}
+
+	@Test
+	public final void testGetDescription() {
+		assertEquals(desc, mulF.getDescription());
 	}
 
 	@Test

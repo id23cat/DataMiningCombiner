@@ -9,7 +9,6 @@ public class Standartization extends AbstaractWekaFilter {
 
 	public Standartization() {
 		super();
-		super.setName("Meka Standartize");
 	}
 
 	@Override
@@ -19,6 +18,16 @@ public class Standartization extends AbstaractWekaFilter {
 
 		super.execute();
 
+	}
+
+	@Override
+	public String getName() {
+		return "Weka_Standartize";
+	}
+
+	@Override
+	public String getDescription() {
+		return "Executes standartization of dataset";
 	}
 
 }

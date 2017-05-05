@@ -111,4 +111,14 @@ public class ClusteringKMeans extends AbsttractClusterer {
 		out.println(eval.toString());
 	}
 
+	@Override
+	public String getName() {
+		return "Weka_KMeansClustering";
+	}
+
+	@Override
+	public String getDescription() {
+		return "Executes KMeans on dataset";
+	}
+
 }
