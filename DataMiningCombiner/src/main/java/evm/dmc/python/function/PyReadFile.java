@@ -20,6 +20,12 @@ public class PyReadFile extends AbstractPythonFunction {
 	@Value("${jep.readFileCSV ?: fileops.readCSV}")
 	String readCSV;
 
+	@Value("${jep.readFileCSV_name")
+	String name;
+
+	@Value("${jep.readFileCSV_desc")
+	String description;
+
 	// @Value("#{pythonFramework.getData(Python_DataFrame.getClass())}")
 	@Autowired
 	private PandasDataFrame result;
@@ -42,12 +48,12 @@ public class PyReadFile extends AbstractPythonFunction {
 
 	@Override
 	public String getName() {
-		return "Python_ReadFile";
+		return name;
 	}
 
 	@Override
 	public String getDescription() {
-		return "Reads data from CSV file and returns dataset";
+		return description;
 	}
 
 }

@@ -3,6 +3,7 @@ package evm.dmc.python.function;
 import javax.annotation.PostConstruct;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.stereotype.Service;
 
@@ -20,6 +21,12 @@ public class DataToMainProgram extends AbstractPythonFunction {
 
 	@Autowired
 	private StringData result;
+
+	@Value("${jep.DataToMainProg_name")
+	String name;
+
+	@Value("${jep.DataToMainProg_desc")
+	String description;
 
 	public DataToMainProgram() {
 		super();
@@ -45,11 +52,11 @@ public class DataToMainProgram extends AbstractPythonFunction {
 
 	@Override
 	public String getName() {
-		return "Python_ToMainProgram";
+		return name;
 	}
 
 	@Override
 	public String getDescription() {
-		return "Loads data from python environment to current JVM";
+		return description;
 	}
 }

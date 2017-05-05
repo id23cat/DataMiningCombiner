@@ -21,6 +21,12 @@ public class ScaleDataset extends AbstractPythonFunction {
 	@Value("${jep.dm_get_scaled}")
 	String scale;
 
+	@Value("${jep.dm_get_scaled_name")
+	String name;
+
+	@Value("${jep.dm_get_scaled_desc")
+	String description;
+
 	public ScaleDataset() {
 		super();
 	}
@@ -40,12 +46,12 @@ public class ScaleDataset extends AbstractPythonFunction {
 
 	@Override
 	public String getName() {
-		return "Python_ScaleDataset";
+		return name;
 	}
 
 	@Override
 	public String getDescription() {
-		return "Function decreases attributes from incoming datatset, that does not match thouse which is setted as second argument";
+		return description;
 	}
 
 }

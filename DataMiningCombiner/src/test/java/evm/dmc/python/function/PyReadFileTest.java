@@ -1,5 +1,6 @@
 package evm.dmc.python.function;
 
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
 
@@ -18,7 +19,7 @@ import evm.dmc.python.DMCPythonConfig;
 
 @RunWith(SpringRunner.class)
 @ContextConfiguration(classes = DMCPythonConfig.class)
-@TestPropertySource("classpath:jeptest.properties")
+@TestPropertySource({ "classpath:jeptest.properties", "classpath:jep.properties" })
 public class PyReadFileTest {
 
 	@Rule
@@ -33,6 +34,12 @@ public class PyReadFileTest {
 
 	@Value("#{pythonFramework.getData(Python_String.getClass())}")
 	private Data pyFileName;
+
+	@Value("${jep.readFileCSV_name")
+	String name;
+
+	@Value("${jep.readFileCSV_desc")
+	String desc;
 
 	@BeforeClass
 	public static void setUpBeforeClass() throws Exception {
@@ -56,6 +63,16 @@ public class PyReadFileTest {
 		Data str = function.convert(result);
 		System.out.println(str.getData());
 		assertFalse(systemOutRule.getLog().isEmpty());
+	}
+
+	@Test
+	public final void testGetName() {
+		assertEquals(name, function.getName());
+	}
+
+	@Test
+	public final void testGetDescription() {
+		assertEquals(desc, function.getDescription());
 	}
 
 }
