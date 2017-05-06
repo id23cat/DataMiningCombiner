@@ -34,7 +34,8 @@ import evm.dmc.core.function.DMCFunction;
 public abstract class AbstractFramework implements Framework, DataFactory {
 
 	private ApplicationContext applicationContext;
-	private Set<String> funcDescriptors;
+	private Set<String> funcIDs = new HashSet<String>();
+	// private Map<String, String> functionsMap = new ConcurrentHashMap<>();
 	private Class abstractFunctionClass;
 
 	public AbstractFramework() {
@@ -70,13 +71,17 @@ public abstract class AbstractFramework implements Framework, DataFactory {
 	 */
 	public void initFrameworkForType(Class functionsClass) {
 		// TODO
-		funcDescriptors = new HashSet<String>(Arrays.asList(applicationContext.getBeanNamesForType(functionsClass)));
+		funcIDs.addAll(Arrays.asList(applicationContext.getBeanNamesForType(functionsClass)));
+
+		// for (String name : funcIDs) {
+		//
+		// }
 
 	}
 
 	@Override
 	public Set<String> getFunctionDescriptors() {
-		return funcDescriptors;
+		return funcIDs;
 	}
 
 	@Override

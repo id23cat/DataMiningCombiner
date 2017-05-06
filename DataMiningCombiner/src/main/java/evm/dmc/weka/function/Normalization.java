@@ -10,11 +10,9 @@ import weka.filters.unsupervised.attribute.Normalize;
 @Service("Weka_Normalize")
 @PropertySource("classpath:weka.properties")
 public class Normalization extends AbstaractWekaFilter {
+	public static final String name = "Weka_Normalize";
 
-	@Value("${weka.kmeans_name}")
-	String name;
-
-	@Value("${weka.kmeans_desc}")
+	@Value("${weka.noraml_desc}")
 	String description;
 
 	public Normalization() {

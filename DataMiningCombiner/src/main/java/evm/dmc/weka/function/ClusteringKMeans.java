@@ -16,9 +16,17 @@ import weka.clusterers.ClusterEvaluation;
 import weka.clusterers.Clusterer;
 import weka.clusterers.SimpleKMeans;
 
+/**
+ * Service name MUST have the same name as described in _name parameter in
+ * .properites file
+ * 
+ * @author id23cat
+ *
+ */
 @Service("Weka_KMeansClustering")
 @PropertySource("classpath:weka.properties")
 public class ClusteringKMeans extends AbsttractClusterer {
+	public static final String name = "Weka_KMeansClustering";
 	@WekaFW
 	@Autowired
 	WekaFramework fw;
@@ -26,9 +34,6 @@ public class ClusteringKMeans extends AbsttractClusterer {
 	private int maxIterations = 100;
 	private int numClusters = 4;
 	private boolean useCanopiesReduce = true;
-
-	@Value("${weka.kmeans_name}")
-	String name;
 
 	@Value("${weka.kmeans_desc}")
 	String description;

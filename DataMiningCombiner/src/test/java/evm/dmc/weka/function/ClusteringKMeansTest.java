@@ -1,5 +1,6 @@
 package evm.dmc.weka.function;
 
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 
 import org.junit.BeforeClass;
@@ -29,6 +30,10 @@ public class ClusteringKMeansTest {
 	@Value("${wekatest.datasource}")
 	String souceFile;
 
+	// taking from weka.propeties
+	String name = "Weka_KMeansClustering";
+	String description = "Executes KMeans clustering on dataset";
+
 	@BeforeClass
 	public static void setUpBeforeClass() throws Exception {
 	}
@@ -50,6 +55,16 @@ public class ClusteringKMeansTest {
 
 		kms.evaluate(test);
 
+	}
+
+	@Test
+	public final void testGetName() {
+		assertEquals(name, kms.getName());
+	}
+
+	@Test
+	public final void testGetDescription() {
+		assertEquals(description, kms.getDescription());
 	}
 
 }
