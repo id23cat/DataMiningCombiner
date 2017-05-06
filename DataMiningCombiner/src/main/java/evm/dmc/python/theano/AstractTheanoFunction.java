@@ -9,12 +9,11 @@ import org.springframework.stereotype.Service;
 import java.util.function.BiFunction;
 
 import evm.dmc.core.FrameworkContext;
-import evm.dmc.core.InContextExecutable;
 import evm.dmc.core.data.Data;
 import evm.dmc.core.function.AbstractDMCFunction;
 import evm.dmc.core.function.DMCFunction;
 
-public abstract class AstractTheanoFunction<T> extends AbstractDMCFunction<T> implements InContextExecutable {
+public abstract class AstractTheanoFunction<T> extends AbstractDMCFunction<T> {
 
 	@Service
 	@TheanoFWContext

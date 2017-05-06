@@ -11,7 +11,6 @@ import org.springframework.stereotype.Service;
 
 import evm.dmc.core.DataConverter;
 import evm.dmc.core.FrameworkContext;
-import evm.dmc.core.InContextExecutable;
 import evm.dmc.core.data.Data;
 import evm.dmc.core.data.StringData;
 import evm.dmc.core.function.AbstractDMCFunction;
@@ -22,8 +21,7 @@ import jep.Jep;
 import jep.JepException;
 
 @Controller
-public abstract class AbstractPythonFunction extends AbstractDMCFunction<String>
-		implements DataConverter, InContextExecutable {
+public abstract class AbstractPythonFunction extends AbstractDMCFunction<String> implements DataConverter {
 
 	@Service
 	@PythonFWContext
@@ -42,18 +40,12 @@ public abstract class AbstractPythonFunction extends AbstractDMCFunction<String>
 		@Override
 		@PostConstruct
 		public void initContext() {
-			// try {
-			// execScript(resetScript);
+
 			try {
 				execScript(initScript);
 			} catch (JepException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
+				throw new RuntimeException("Initialization of Jep has failed", e);
 			}
-			// } catch (JepException e) {
-			// throw new RuntimeException("Initialization of Jep has failed",
-			// e);
-			// }
 		}
 
 		@PreDestroy
@@ -65,10 +57,7 @@ public abstract class AbstractPythonFunction extends AbstractDMCFunction<String>
 		@Override
 		public void executeInContext(DMCFunction function) {
 			AbstractPythonFunction func = (AbstractPythonFunction) function;
-			// concatenate construntion from parts:
-			// <resutVar> = <functionName>(<args>...):
 
-			// set the <resultVar>
 			StringBuilder command = new StringBuilder((String) func.result.getData());
 			command.append("=");
 			// set <functionName>
@@ -122,8 +111,6 @@ public abstract class AbstractPythonFunction extends AbstractDMCFunction<String>
 		}
 	}
 
-	@Autowired
-	@PythonFWContext
 	private FrameworkContext context;
 
 	@Autowired

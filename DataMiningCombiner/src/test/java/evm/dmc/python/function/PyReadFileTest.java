@@ -26,7 +26,6 @@ public class PyReadFileTest {
 	public final SystemOutRule systemOutRule = new SystemOutRule().enableLog();
 
 	@Value("#{pythonFramework.getDMCFunction(\"Python_ReadFile\")}")
-	// private DMCFunction function;
 	private PyReadFile function;
 
 	@Value("${jeptest.datafile}")

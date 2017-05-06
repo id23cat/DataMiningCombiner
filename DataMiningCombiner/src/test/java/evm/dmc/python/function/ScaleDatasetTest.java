@@ -11,8 +11,6 @@ import org.junit.contrib.java.lang.system.SystemOutRule;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.test.annotation.DirtiesContext;
-import org.springframework.test.annotation.DirtiesContext.ClassMode;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.context.junit4.SpringRunner;
@@ -22,7 +20,6 @@ import evm.dmc.python.DMCPythonConfig;
 
 @RunWith(SpringRunner.class)
 @ContextConfiguration(classes = DMCPythonConfig.class)
-@DirtiesContext(classMode = ClassMode.AFTER_EACH_TEST_METHOD)
 @TestPropertySource({ "classpath:jeptest.properties", "classpath:jep.properties" })
 public class ScaleDatasetTest {
 
@@ -43,11 +40,6 @@ public class ScaleDatasetTest {
 	@BeforeClass
 	public static void setUpBeforeClass() throws Exception {
 	}
-
-	// @Test(expected = NullPointerException.class)
-	// public final void testGettingResultWithoutExecution() {
-	// scale.getResult();
-	// }
 
 	@Test
 	public final void testExecute() {

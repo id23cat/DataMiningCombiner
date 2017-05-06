@@ -5,6 +5,7 @@ import org.springframework.context.annotation.Scope;
 
 import java.util.List;
 
+import evm.dmc.core.FrameworkContext;
 import evm.dmc.core.data.Data;
 
 @Scope("prototype")
@@ -42,5 +43,25 @@ public interface DMCFunction<T> {
 	void setArgs(List<Data<T>> largs);
 
 	Data<T> getResult();
+
+	/**
+	 * Returns object that should be used in function object as context of
+	 * execution
+	 * 
+	 * @return
+	 */
+	default FrameworkContext getContext() {
+		return null;
+	}
+
+	/**
+	 * Sets object that should be used in function object as context of
+	 * execution
+	 * 
+	 * @return
+	 */
+	default void setContext(FrameworkContext context) {
+
+	}
 
 }

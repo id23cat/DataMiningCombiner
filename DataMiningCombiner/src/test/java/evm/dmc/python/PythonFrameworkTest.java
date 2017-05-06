@@ -131,9 +131,6 @@ public class PythonFrameworkTest {
 		jep.eval("print sys.path");
 		System.out.println(jep.getValue("sys.path"));
 
-		// jep.eval("import os");
-		// execfile("script2.py 1")
-
 		jep.runScript(scriptsFolder + "/init.py");
 		jep.close();
 
