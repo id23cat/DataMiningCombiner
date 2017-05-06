@@ -12,7 +12,7 @@ import evm.dmc.python.data.PyVar;
 @Service("Python_ScaleDataset")
 @PropertySource("classpath:jep.properties")
 public class ScaleDataset extends AbstractPythonFunction {
-
+	private final static String name = "Python_ScaleDataset";
 	private final static Integer ARGS_COUNT = 1; // TODO must also accept
 													// attributes like list of
 													// attributes which need to
@@ -20,9 +20,6 @@ public class ScaleDataset extends AbstractPythonFunction {
 
 	@Value("${jep.dm_get_scaled}")
 	String scale;
-
-	@Value("${jep.dm_get_scaled_name}")
-	String name;
 
 	@Value("${jep.dm_get_scaled_desc}")
 	String description;

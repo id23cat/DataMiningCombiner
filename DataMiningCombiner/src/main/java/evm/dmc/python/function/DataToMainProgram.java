@@ -12,6 +12,7 @@ import evm.dmc.core.data.StringData;
 @Service("Python_ToMainProgram")
 @PropertySource("classpath:jep.properties")
 public class DataToMainProgram extends AbstractPythonFunction {
+	private final static String name = "Python_ToMainProgram";
 	String function = "getData"; // content doesn't matter, it needs only to be
 									// correctly checked
 	// @Autowired
@@ -22,10 +23,7 @@ public class DataToMainProgram extends AbstractPythonFunction {
 	@Autowired
 	private StringData result;
 
-	@Value("${jep.DataToMainProg_name}")
-	String name;
-
-	@Value("${jep.DataToMainProg_desc}")
+	@Value("${jep.dataToMainProg_desc}")
 	String description;
 
 	public DataToMainProgram() {

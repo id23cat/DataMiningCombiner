@@ -10,7 +10,7 @@ import weka.clusterers.Clusterer;
  *
  */
 public abstract class AbsttractClusterer extends AbstractWekaFunction implements Clusterizator {
-	final static Integer argCount = 2;
+	protected final static Integer argCount = 2;
 
 	protected Clusterer clusterer;
 

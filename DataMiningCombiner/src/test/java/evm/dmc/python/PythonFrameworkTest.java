@@ -1,11 +1,20 @@
 package evm.dmc.python;
 
+import static org.hamcrest.CoreMatchers.hasItem;
+import static org.hamcrest.Matchers.containsInAnyOrder;
+import static org.hamcrest.Matchers.empty;
+import static org.hamcrest.Matchers.not;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotEquals;
 import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertThat;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
@@ -20,9 +29,14 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.context.junit4.SpringRunner;
 
+import java.util.Arrays;
+import java.util.Properties;
+import java.util.Set;
+
 import evm.dmc.core.DataFactory;
 import evm.dmc.core.Framework;
 import evm.dmc.core.data.Data;
+import evm.dmc.core.function.DMCFunction;
 import evm.dmc.python.data.PyString;
 import jep.Jep;
 import jep.JepException;
@@ -137,6 +151,40 @@ public class PythonFrameworkTest {
 		int ret = new Integer(in.readLine()).intValue();
 		in.close();
 		return ret;
+	}
+
+	@Test
+	public final void testGettingFunctionsDescriptions() {
+		assertNotNull(framework);
+		Set<String> names = framework.getFunctionDescriptors();
+		assertThat(names, not(empty()));
+		System.out.println(Arrays.toString(names.toArray()));
+
+		assertThat(names, containsInAnyOrder("Python_ReadFile", "Python_ToMainProgram", "Python_ScaleDataset"));
+	}
+
+	@Test
+	public final void testGetFunction() throws FileNotFoundException, IOException {
+		Set<String> names = framework.getFunctionDescriptors();
+		assertThat(names, not(empty()));
+
+		Properties properties = new Properties();
+		ClassLoader classLoader = getClass().getClassLoader();
+		File file = new File(classLoader.getResource("jep.properties").getFile());
+
+		try (InputStream input = new FileInputStream(file)) {
+			properties.load(input);
+			assertFalse(properties.isEmpty());
+
+			System.out.println(Arrays.toString(properties.values().toArray()));
+
+			for (String nm : names) {
+				DMCFunction func = framework.getDMCFunction(nm);
+				assertEquals(nm, func.getName());
+				assertThat(properties.values(), hasItem(func.getDescription()));
+			}
+		}
+
 	}
 
 }

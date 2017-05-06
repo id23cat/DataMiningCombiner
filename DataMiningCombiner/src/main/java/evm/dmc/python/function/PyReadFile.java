@@ -13,15 +13,13 @@ import evm.dmc.python.data.PandasDataFrame;
 @Service("Python_ReadFile")
 @PropertySource("classpath:jep.properties")
 public class PyReadFile extends AbstractPythonFunction {
+	private final static String name = "Python_ReadFile";
 	static final Integer argCount = 1;
 	@Autowired
 	PythonFramework fw;
 
 	@Value("${jep.readFileCSV ?: fileops.readCSV}")
 	String readCSV;
-
-	@Value("${jep.readFileCSV_name}")
-	String name;
 
 	@Value("${jep.readFileCSV_desc}")
 	String description;

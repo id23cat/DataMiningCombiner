@@ -35,8 +35,7 @@ public class ScaleDatasetTest {
 	@Autowired
 	DataLoader dataLoader;
 
-	@Value("${jep.dm_get_scaled_name}")
-	String name;
+	String name = "Python_ScaleDataset";
 
 	@Value("${jep.dm_get_scaled_desc}")
 	String description;

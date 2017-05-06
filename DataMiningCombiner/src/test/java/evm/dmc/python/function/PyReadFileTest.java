@@ -35,8 +35,7 @@ public class PyReadFileTest {
 	@Value("#{pythonFramework.getData(Python_String.getClass())}")
 	private Data pyFileName;
 
-	@Value("${jep.readFileCSV_name}")
-	String name;
+	String name = "Python_ReadFile";
 
 	@Value("${jep.readFileCSV_desc}")
 	String desc;
