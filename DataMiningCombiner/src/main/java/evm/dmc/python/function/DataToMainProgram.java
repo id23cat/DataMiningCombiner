@@ -22,10 +22,10 @@ public class DataToMainProgram extends AbstractPythonFunction {
 	@Autowired
 	private StringData result;
 
-	@Value("${jep.DataToMainProg_name")
+	@Value("${jep.DataToMainProg_name}")
 	String name;
 
-	@Value("${jep.DataToMainProg_desc")
+	@Value("${jep.DataToMainProg_desc}")
 	String description;
 
 	public DataToMainProgram() {

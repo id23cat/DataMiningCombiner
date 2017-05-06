@@ -1,12 +1,21 @@
 package evm.dmc.weka.function;
 
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.PropertySource;
 import org.springframework.stereotype.Service;
 
 import weka.filters.Filter;
 import weka.filters.unsupervised.attribute.Normalize;
 
 @Service("Weka_Normalize")
+@PropertySource("classpath:weka.properties")
 public class Normalization extends AbstaractWekaFilter {
+
+	@Value("${weka.kmeans_name}")
+	String name;
+
+	@Value("${weka.kmeans_desc}")
+	String description;
 
 	public Normalization() {
 		super();
@@ -23,12 +32,12 @@ public class Normalization extends AbstaractWekaFilter {
 
 	@Override
 	public String getName() {
-		return "Weka_Normalize";
+		return name;
 	}
 
 	@Override
 	public String getDescription() {
-		return "Executes normalization of dataset";
+		return description;
 	}
 
 }

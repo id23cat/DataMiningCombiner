@@ -20,10 +20,10 @@ public class PyReadFile extends AbstractPythonFunction {
 	@Value("${jep.readFileCSV ?: fileops.readCSV}")
 	String readCSV;
 
-	@Value("${jep.readFileCSV_name")
+	@Value("${jep.readFileCSV_name}")
 	String name;
 
-	@Value("${jep.readFileCSV_desc")
+	@Value("${jep.readFileCSV_desc}")
 	String description;
 
 	// @Value("#{pythonFramework.getData(Python_DataFrame.getClass())}")

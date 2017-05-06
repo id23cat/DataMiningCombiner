@@ -3,6 +3,8 @@ package evm.dmc.weka.function;
 import java.io.PrintStream;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.PropertySource;
 import org.springframework.stereotype.Service;
 
 import evm.dmc.core.data.Data;
@@ -15,6 +17,7 @@ import weka.clusterers.Clusterer;
 import weka.clusterers.SimpleKMeans;
 
 @Service("Weka_KMeansClustering")
+@PropertySource("classpath:weka.properties")
 public class ClusteringKMeans extends AbsttractClusterer {
 	@WekaFW
 	@Autowired
@@ -23,6 +26,12 @@ public class ClusteringKMeans extends AbsttractClusterer {
 	private int maxIterations = 100;
 	private int numClusters = 4;
 	private boolean useCanopiesReduce = true;
+
+	@Value("${weka.kmeans_name}")
+	String name;
+
+	@Value("${weka.kmeans_desc}")
+	String description;
 
 	// get to run 75% of CPU cores
 	private int tasksToRun = (int) Math.floor(Runtime.getRuntime().availableProcessors() * 0.75);
@@ -113,12 +122,12 @@ public class ClusteringKMeans extends AbsttractClusterer {
 
 	@Override
 	public String getName() {
-		return "Weka_KMeansClustering";
+		return name;
 	}
 
 	@Override
 	public String getDescription() {
-		return "Executes KMeans on dataset";
+		return description;
 	}
 
 }

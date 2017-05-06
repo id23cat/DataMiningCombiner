@@ -21,10 +21,10 @@ public class ScaleDataset extends AbstractPythonFunction {
 	@Value("${jep.dm_get_scaled}")
 	String scale;
 
-	@Value("${jep.dm_get_scaled_name")
+	@Value("${jep.dm_get_scaled_name}")
 	String name;
 
-	@Value("${jep.dm_get_scaled_desc")
+	@Value("${jep.dm_get_scaled_desc}")
 	String description;
 
 	public ScaleDataset() {
