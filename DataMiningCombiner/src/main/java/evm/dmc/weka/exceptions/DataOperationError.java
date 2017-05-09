@@ -1,4 +1,4 @@
-package evm.dmc.weka.data;
+package evm.dmc.weka.exceptions;
 
 public class DataOperationError extends Error {
 

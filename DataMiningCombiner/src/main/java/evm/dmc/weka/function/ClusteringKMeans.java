@@ -12,6 +12,7 @@ import evm.dmc.weka.WekaFW;
 import evm.dmc.weka.WekaFramework;
 import evm.dmc.weka.data.ClusteringModel;
 import evm.dmc.weka.data.WekaData;
+import evm.dmc.weka.exceptions.ClusteringError;
 import weka.clusterers.ClusterEvaluation;
 import weka.clusterers.Clusterer;
 import weka.clusterers.SimpleKMeans;

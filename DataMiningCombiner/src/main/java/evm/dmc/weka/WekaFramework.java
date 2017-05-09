@@ -5,8 +5,8 @@ import org.springframework.stereotype.Service;
 import evm.dmc.core.AbstractFramework;
 import evm.dmc.core.data.Data;
 import evm.dmc.weka.data.WekaData;
+import evm.dmc.weka.exceptions.ClusteringError;
 import evm.dmc.weka.function.AbstractWekaFunction;
-import evm.dmc.weka.function.ClusteringError;
 import weka.core.Instances;
 
 @Service

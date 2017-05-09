@@ -1,4 +1,4 @@
-package evm.dmc.weka.function;
+package evm.dmc.weka.exceptions;
 
 public class ClusteringError extends Error {
 
@@ -7,7 +7,7 @@ public class ClusteringError extends Error {
 	 */
 	private static final long serialVersionUID = -6589657450650679421L;
 
-	ClusteringError(Throwable cause) {
+	public ClusteringError(Throwable cause) {
 		super(cause);
 	}
 

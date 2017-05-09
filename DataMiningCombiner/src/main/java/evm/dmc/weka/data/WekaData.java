@@ -19,6 +19,7 @@ import evm.dmc.core.data.InMemoryData;
 import evm.dmc.core.data.MultyInstace;
 import evm.dmc.core.data.ToFileStorable;
 import evm.dmc.weka.WekaFW;
+import evm.dmc.weka.exceptions.DataOperationError;
 import weka.core.Attribute;
 import weka.core.Instances;
 import weka.core.converters.AbstractSaver;
