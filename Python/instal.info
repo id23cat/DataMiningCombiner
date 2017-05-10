@@ -1,0 +1,18 @@
+1. Install Anaconda (URL: https://www.continuum.io/downloads)
+ - or
+	- Install Python (URL: https://www.python.org/downloads)
+
+2. Update PyPA
+	pip install --upgrade pip
+
+3. Install packages
+ - from Anaconda
+	conda install numpy scipy pandas matplotlib seaborn statsmodels scikit-learn pydot
+ - from PyPA
+	pip install numpy scipy pandas matplotlib seaborn statsmodels scikit-learn pydot
+
+4. Update packages
+ - from Anaconda
+	conda update numpy scipy pandas matplotlib seaborn statsmodels scikit-learn pydot
+ - from PyPA
+	pip install --upgrade numpy scipy pandas matplotlib seaborn statsmodels scikit-learn pydot
