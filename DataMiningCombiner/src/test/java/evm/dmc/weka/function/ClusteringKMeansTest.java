@@ -24,7 +24,10 @@ public class ClusteringKMeansTest {
 	@Autowired
 	ClusteringKMeans kms;
 
-	@Value("#{wekaFramework.getData(Weka_Instances.getClass())}")
+	@Autowired
+	WekaCSVLoad csv;
+
+	// @Value("#{wekaFramework.getData(Weka_Instances.getClass())}")
 	WekaData data;
 
 	@Value("${wekatest.datasource}")
@@ -41,8 +44,9 @@ public class ClusteringKMeansTest {
 	@Test
 	public final void testPrintInfo() throws Exception {
 		assertNotNull(kms);
+		csv.setSource(souceFile);
+		data = (WekaData) csv.get();
 		assertNotNull(data);
-		data.load(souceFile);
 		assertNotNull(data.getData());
 
 		Data train, test;

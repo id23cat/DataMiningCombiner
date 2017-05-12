@@ -13,18 +13,16 @@ import java.util.Set;
 import evm.dmc.core.DataFactory;
 import evm.dmc.core.chart.Plottable;
 import evm.dmc.core.data.Data;
-import evm.dmc.core.data.FromFileLoadable;
 import evm.dmc.core.data.HasMultiAttributes;
 import evm.dmc.core.data.InMemoryData;
 import evm.dmc.core.data.MultyInstace;
 import evm.dmc.core.data.ToFileStorable;
 import evm.dmc.weka.WekaFW;
-import evm.dmc.weka.exceptions.DataOperationError;
+import evm.dmc.weka.exceptions.DataOperationException;
 import weka.core.Attribute;
 import weka.core.Instances;
 import weka.core.converters.AbstractSaver;
 import weka.core.converters.CSVSaver;
-import weka.core.converters.ConverterUtils.DataSource;
 
 /**
  * Supported loading from all supported by weka files.
@@ -38,7 +36,7 @@ import weka.core.converters.ConverterUtils.DataSource;
 @Service("Weka_Instances")
 @Scope(ConfigurableBeanFactory.SCOPE_PROTOTYPE)
 public class WekaData extends InMemoryData<Instances>
-		implements FromFileLoadable, ToFileStorable, HasMultiAttributes, MultyInstace, Plottable {
+		implements /* FromFileLoadable, */ ToFileStorable, HasMultiAttributes, MultyInstace, Plottable {
 
 	private DataFactory dataFactory;
 
@@ -49,14 +47,14 @@ public class WekaData extends InMemoryData<Instances>
 		this.dataFactory = df;
 	}
 
-	@Override
-	public Data load(String fileName) throws Exception {
-		Instances data = DataSource.read(fileName);
-		// MLUtils.prepareData(data);
-		super.setData(data);
-		return this;
-	}
-
+	// @Override
+	// public Data load(String fileName) throws Exception {
+	// Instances data = DataSource.read(fileName);
+	// // MLUtils.prepareData(data);
+	// super.setData(data);
+	// return this;
+	// }
+	//
 	@Override
 	public void store(String fileName) throws Exception {
 		File file = new File(fileName);
@@ -91,7 +89,7 @@ public class WekaData extends InMemoryData<Instances>
 		try {
 			data = this.copyObject();
 		} catch (CloneNotSupportedException e) {
-			throw new DataOperationError(e);
+			throw new DataOperationException(e);
 		}
 
 		Instances inst = data.getData();
@@ -114,7 +112,7 @@ public class WekaData extends InMemoryData<Instances>
 		try {
 			data = this.copyObject();
 		} catch (CloneNotSupportedException e) {
-			throw new DataOperationError(e);
+			throw new DataOperationException(e);
 		}
 
 		Instances inst = data.getData();

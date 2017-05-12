@@ -12,7 +12,7 @@ import evm.dmc.weka.WekaFW;
 import evm.dmc.weka.WekaFramework;
 import evm.dmc.weka.data.ClusteringModel;
 import evm.dmc.weka.data.WekaData;
-import evm.dmc.weka.exceptions.ClusteringError;
+import evm.dmc.weka.exceptions.ClusteringException;
 import weka.clusterers.ClusterEvaluation;
 import weka.clusterers.Clusterer;
 import weka.clusterers.SimpleKMeans;
@@ -59,7 +59,7 @@ public class ClusteringKMeans extends AbsttractClusterer {
 															// the
 															// clusterer
 		} catch (Exception e) {
-			throw new ClusteringError(e);
+			throw new ClusteringException(e);
 		}
 		super.clusterer = skmClusterer;
 
@@ -90,7 +90,7 @@ public class ClusteringKMeans extends AbsttractClusterer {
 		try {
 			out.println(cl.numberOfClusters());
 		} catch (Exception e) {
-			throw new ClusteringError(e);
+			throw new ClusteringException(e);
 		}
 		out.println(">>>>> cl.toString():");
 		out.println(cl.toString());

@@ -5,7 +5,7 @@ import org.springframework.stereotype.Service;
 import evm.dmc.core.AbstractFramework;
 import evm.dmc.core.data.Data;
 import evm.dmc.weka.data.WekaData;
-import evm.dmc.weka.exceptions.ClusteringError;
+import evm.dmc.weka.exceptions.ClusteringException;
 import evm.dmc.weka.function.AbstractWekaFunction;
 import weka.core.Instances;
 
@@ -23,12 +23,12 @@ public class WekaFramework extends AbstractFramework {
 		super.initFrameworkForType(CLASS);
 	}
 
-	public WekaData castToWekaData(Data data) throws ClusteringError {
+	public WekaData castToWekaData(Data data) throws ClusteringException {
 		WekaData wekaData = data instanceof WekaData ? (WekaData) data : null;
 		if (wekaData == null) {
 			Instances inst = data.getData() instanceof Instances ? (Instances) data.getData() : null;
 			if (inst == null)
-				throw new ClusteringError("Unsupported data type");
+				throw new ClusteringException("Unsupported data type");
 			wekaData = (WekaData) super.getData(WekaData.class);
 			wekaData.setData(inst);
 		}

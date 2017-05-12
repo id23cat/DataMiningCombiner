@@ -3,10 +3,10 @@ package evm.dmc.weka.data;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.not;
 import static org.hamcrest.CoreMatchers.sameInstance;
+import static org.hamcrest.CoreMatchers.startsWith;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.junit.Assert.assertArrayEquals;
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
@@ -24,6 +24,7 @@ import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.TestPropertySource;
@@ -33,24 +34,37 @@ import java.util.Random;
 
 import evm.dmc.core.chart.Histogram;
 import evm.dmc.core.data.Data;
+import evm.dmc.core.function.CSVLoader;
 import evm.dmc.weka.DMCWekaConfig;
+import evm.dmc.weka.WekaFramework;
 import weka.core.Instances;
 
 @RunWith(SpringRunner.class)
 @ContextConfiguration(classes = DMCWekaConfig.class)
 @TestPropertySource("classpath:wekatest.properties")
 public class WekaDataTest {
-	@Value("#{wekaFramework.getData(Weka_Instances.getClass())}")
+	// @Value("#{wekaFramework.getData(Weka_Instances.getClass())}")
 	WekaData data;
-	String souceFile = "Data/telecom_churn.csv";
+
+	@Autowired
+	WekaFramework fw;
+
+	@Autowired
+	CSVLoader csv;
+	@Value("${wekatest.datasource}")
+	String sourceFile;
 
 	@BeforeClass
 	public static void setUpBeforeClass() throws Exception {
 	}
 
 	@Before
-	public void loadData() throws Exception {
-		data.load(souceFile);
+	public void loadData() {
+		assertNotNull(csv);
+		assertThat(sourceFile, startsWith("Data"));
+		csv.setSource(sourceFile);
+		data = fw.castToWekaData(csv.get());
+		// data.load(souceFile);
 	}
 
 	@Test
@@ -63,13 +77,13 @@ public class WekaDataTest {
 
 	}
 
-	@Test
-	public final void testStore() throws Exception {
-		data.store("Data/test.csv");
-		File file = new File("Data/test.csv");
-		assertNotEquals(0, file.length());
-
-	}
+	// @Test
+	// public final void testStore() throws Exception {
+	// data.store("Data/test.csv");
+	// File file = new File("Data/test.csv");
+	// assertNotEquals(0, file.length());
+	//
+	// }
 
 	@Test
 	public final void testInstances() throws Exception {

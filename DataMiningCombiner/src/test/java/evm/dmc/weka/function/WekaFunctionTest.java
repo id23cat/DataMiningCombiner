@@ -2,9 +2,11 @@ package evm.dmc.weka.function;
 
 import static org.junit.Assert.assertNotNull;
 
+import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.TestPropertySource;
@@ -21,7 +23,10 @@ import weka.filters.unsupervised.attribute.Standardize;
 @ContextConfiguration(classes = DMCWekaConfig.class)
 @TestPropertySource("classpath:wekatest.properties")
 public class WekaFunctionTest {
-	@Value("#{wekaFramework.getData(Weka_Instances.getClass())}")
+	@Autowired
+	WekaCSVLoad csv;
+
+	// @Value("#{wekaFramework.getData(Weka_Instances.getClass())}")
 	WekaData data;
 	@Value("${wekatest.datasource}")
 	String souceFile;
@@ -36,13 +41,18 @@ public class WekaFunctionTest {
 	public static void setUpBeforeClass() throws Exception {
 	}
 
+	@Before
+	public void init() {
+		csv.setSource(souceFile);
+		data = (WekaData) csv.get();
+		assertNotNull(data);
+	}
+
 	@Test
 	public final void testNormalize() throws Exception {
 		weka.filters.Filter filter;
-		assertNotNull(data);
-		data.load(souceFile);
-		Instances inst = data.getData();
 
+		Instances inst = data.getData();
 		filter = new Normalize();
 		((Normalize) filter).setIgnoreClass(true);
 		filter.setInputFormat(inst);
@@ -55,10 +65,8 @@ public class WekaFunctionTest {
 	@Test
 	public final void testStandardize() throws Exception {
 		weka.filters.Filter filter;
-		assertNotNull(data);
-		data.load(souceFile);
-		Instances inst = data.getData();
 
+		Instances inst = data.getData();
 		filter = new Standardize();
 		((Standardize) filter).setIgnoreClass(true);
 		filter.setInputFormat(inst);
