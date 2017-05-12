@@ -31,3 +31,6 @@ nbdist/
 _*.csv
 *.png
 *.PNG
+/hs_err_pid4423.log
+/log.log
+/libs/jep.old
