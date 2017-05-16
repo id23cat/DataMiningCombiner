@@ -21,7 +21,7 @@ public class Standartization extends AbstaractWekaFilter {
 	@Override
 	public void execute() {
 		super.filter = new Standardize();
-		((Standardize) filter).setIgnoreClass(true);
+		((Standardize) super.filter).setIgnoreClass(true);
 
 		super.execute();
 

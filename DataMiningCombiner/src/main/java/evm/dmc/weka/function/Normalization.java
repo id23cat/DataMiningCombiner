@@ -4,7 +4,6 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.stereotype.Service;
 
-import weka.filters.Filter;
 import weka.filters.unsupervised.attribute.Normalize;
 
 @Service("Weka_Normalize")
@@ -21,8 +20,8 @@ public class Normalization extends AbstaractWekaFilter {
 
 	@Override
 	public void execute() {
-		Filter filter = new Normalize();
-		((Normalize) filter).setIgnoreClass(true);
+		super.filter = new Normalize();
+		((Normalize) super.filter).setIgnoreClass(true);
 
 		super.execute();
 
