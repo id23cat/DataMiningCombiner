@@ -42,7 +42,7 @@ public class StandartizationTest {
 
 	@Test
 	public final void testExecute() {
-		DMCFunction normal = frmwk.getDMCFunction("Weka_Standartize");
+		DMCFunction normal = frmwk.getDMCFunction(WekaFunctions.STANDARDIZATION);
 		normal.setArgs(data);
 		normal.execute();
 

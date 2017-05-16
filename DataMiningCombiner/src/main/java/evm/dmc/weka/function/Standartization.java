@@ -6,10 +6,10 @@ import org.springframework.stereotype.Service;
 
 import weka.filters.unsupervised.attribute.Standardize;
 
-@Service("Weka_Standartize")
+@Service(WekaFunctions.STANDARDIZATION)
 @PropertySource("classpath:weka.properties")
 public class Standartization extends AbstaractWekaFilter {
-	public static final String name = "Weka_Standartize";
+	public static final String name = WekaFunctions.STANDARDIZATION;
 
 	@Value("${weka.standart_desc}")
 	String description;

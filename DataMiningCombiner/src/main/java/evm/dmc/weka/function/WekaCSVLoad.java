@@ -20,11 +20,11 @@ import evm.dmc.weka.data.WekaData;
 import evm.dmc.weka.exceptions.LoadDataException;
 import weka.core.Instances;
 
-@Service("Weka_CSVLoader")
+@Service(WekaFunctions.CSVLOADER)
 @PropertySource("classpath:weka.properties")
 @Scope(ConfigurableBeanFactory.SCOPE_PROTOTYPE)
 public class WekaCSVLoad implements CSVLoader, DMCFunction<Instances> {
-	private static final String NAME = "Weka_CSVLoader";
+	private static final String NAME = WekaFunctions.CSVLOADER;
 	private static final Integer ARGS_COUNT = 0;
 	private DataFactory dataFactory;
 
@@ -47,7 +47,7 @@ public class WekaCSVLoad implements CSVLoader, DMCFunction<Instances> {
 	}
 
 	@Override
-	public void setSource(String source) {
+	public CSVLoader setSource(String source) {
 		if (this.source == null)
 			this.source = source;
 		else if (!this.source.equals(source)) { // argument is not equal actual
@@ -55,6 +55,7 @@ public class WekaCSVLoad implements CSVLoader, DMCFunction<Instances> {
 			result = null;
 			this.source = source;
 		}
+		return this;
 	}
 
 	@SuppressWarnings("unchecked")

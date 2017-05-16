@@ -24,10 +24,10 @@ import weka.clusterers.SimpleKMeans;
  * @author id23cat
  *
  */
-@Service("Weka_KMeansClustering")
+@Service(WekaFunctions.KMEANS)
 @PropertySource("classpath:weka.properties")
 public class ClusteringKMeans extends AbsttractClusterer {
-	public static final String name = "Weka_KMeansClustering";
+	public static final String name = WekaFunctions.KMEANS;
 	@WekaFW
 	@Autowired
 	WekaFramework fw;

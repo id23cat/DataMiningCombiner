@@ -3,8 +3,8 @@ package evm.dmc.core.function;
 import java.io.File;
 
 public interface CSVSaver extends DMCDataSaver {
-	void setDestination(String filename);
+	CSVSaver setDestination(String filename);
 
-	void setDestination(File file);
+	CSVSaver setDestination(File file);
 
 }

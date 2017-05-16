@@ -33,8 +33,7 @@ public class ClusteringKMeansTest {
 	@Value("${wekatest.datasource}")
 	String souceFile;
 
-	// taking from weka.propeties
-	String name = "Weka_KMeansClustering";
+	String name = WekaFunctions.KMEANS;
 	String description = "Executes KMeans clustering on dataset";
 
 	@BeforeClass

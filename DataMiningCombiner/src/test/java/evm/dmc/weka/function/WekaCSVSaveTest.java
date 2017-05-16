@@ -52,7 +52,7 @@ public class WekaCSVSaveTest {
 
 	@Before
 	public void init() throws IOException {
-		csv = (WekaCSVSave) frmwk.getDMCFunction("Weka_CSVSaver");
+		csv = (WekaCSVSave) frmwk.getDMCFunction(WekaFunctions.CSVSAVER);
 		assertNotNull(csv);
 		tmpFile = folder.newFile(destFile);
 

@@ -52,7 +52,7 @@ public class WekaCSVLoadTest {
 	@Before
 	public void init() {
 		Object bck = csv;
-		csv = (WekaCSVLoad) frmwk.getDMCFunction("Weka_CSVLoader");
+		csv = (WekaCSVLoad) frmwk.getDMCFunction(WekaFunctions.CSVLOADER);
 		assertNotEquals(csv, bck);
 		assertNotNull(csv);
 		assertThat(sourceFile1, startsWith("Data"));

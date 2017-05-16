@@ -20,11 +20,11 @@ import evm.dmc.core.function.DMCFunction;
 import evm.dmc.weka.WekaFramework;
 import weka.core.converters.AbstractSaver;
 
-@Service("Weka_CSVSaver")
+@Service(WekaFunctions.CSVSAVER)
 @PropertySource("classpath:weka.properties")
 @Scope(ConfigurableBeanFactory.SCOPE_PROTOTYPE)
 public class WekaCSVSave implements CSVSaver, DMCFunction<String> {
-	private static final String NAME = "Weka_CSVSaver";
+	private static final String NAME = WekaFunctions.CSVSAVER;
 	private static final Integer ARGS_COUNT = 1;
 
 	private File destination = null;
@@ -47,13 +47,15 @@ public class WekaCSVSave implements CSVSaver, DMCFunction<String> {
 	}
 
 	@Override
-	public void setDestination(String filename) {
+	public CSVSaver setDestination(String filename) {
 		destination = new File(filename);
+		return this;
 	}
 
 	@Override
-	public void setDestination(File file) {
+	public CSVSaver setDestination(File file) {
 		this.destination = file;
+		return this;
 	}
 
 	@Override
