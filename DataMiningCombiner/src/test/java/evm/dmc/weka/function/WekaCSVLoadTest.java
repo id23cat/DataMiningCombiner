@@ -21,7 +21,6 @@ import org.springframework.test.context.junit4.SpringRunner;
 
 import evm.dmc.core.Framework;
 import evm.dmc.core.data.Data;
-import evm.dmc.core.function.CSVLoader;
 import evm.dmc.weka.DMCWekaConfig;
 import evm.dmc.weka.WekaFW;
 import evm.dmc.weka.exceptions.LoadDataException;
@@ -35,7 +34,7 @@ public class WekaCSVLoadTest {
 	@WekaFW
 	Framework frmwk;
 
-	CSVLoader csv;
+	WekaCSVLoad csv;
 
 	@Value("${wekatest.datasource1}")
 	String sourceFile1;
@@ -53,7 +52,7 @@ public class WekaCSVLoadTest {
 	@Before
 	public void init() {
 		Object bck = csv;
-		csv = (CSVLoader) frmwk.getDMCFunction("Weka_CSVLoader");
+		csv = (WekaCSVLoad) frmwk.getDMCFunction("Weka_CSVLoader");
 		assertNotEquals(csv, bck);
 		assertNotNull(csv);
 		assertThat(sourceFile1, startsWith("Data"));
