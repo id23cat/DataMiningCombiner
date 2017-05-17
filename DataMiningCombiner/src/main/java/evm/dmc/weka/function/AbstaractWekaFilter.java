@@ -13,6 +13,7 @@ public abstract class AbstaractWekaFilter extends AbstractWekaFunction {
 
 	@Override
 	public void execute() {
+		filter = getFilter();
 		Instances inst = super.arguments.get(0).getData();
 		try {
 			filter.setInputFormat(inst);
@@ -29,5 +30,7 @@ public abstract class AbstaractWekaFilter extends AbstractWekaFunction {
 	public Integer getArgsCount() {
 		return argCount;
 	}
+
+	abstract protected Filter getFilter();
 
 }
