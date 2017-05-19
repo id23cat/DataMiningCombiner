@@ -27,4 +27,6 @@ public interface DataFactory {
 	// type + "is not avaliable");
 	// }
 
+	Data castToNativeData(Data data) throws ClassCastException;
+
 }

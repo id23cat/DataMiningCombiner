@@ -65,4 +65,17 @@ public class ArithmeticFramework extends AbstractFramework {
 		return CLASS;
 	}
 
+	@Override
+	public IntegerData castToNativeData(Data data) throws ClassCastException {
+		return castToIntData(data);
+	}
+
+	public IntegerData castToIntData(Data data) {
+		IntegerData pyintData = data instanceof IntegerData ? (IntegerData) data : null;
+		if (pyintData == null) {
+			throw new ClassCastException("Unsupported data type");
+		}
+		return pyintData;
+	}
+
 }

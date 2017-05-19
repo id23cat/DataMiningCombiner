@@ -1,7 +1,5 @@
 package evm.dmc.weka.data;
 
-import java.io.File;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
@@ -16,13 +14,10 @@ import evm.dmc.core.data.Data;
 import evm.dmc.core.data.HasMultiAttributes;
 import evm.dmc.core.data.InMemoryData;
 import evm.dmc.core.data.MultyInstace;
-import evm.dmc.core.data.ToFileStorable;
 import evm.dmc.weka.WekaFW;
 import evm.dmc.weka.exceptions.DataOperationException;
 import weka.core.Attribute;
 import weka.core.Instances;
-import weka.core.converters.AbstractSaver;
-import weka.core.converters.CSVSaver;
 
 /**
  * Supported loading from all supported by weka files.
@@ -35,8 +30,9 @@ import weka.core.converters.CSVSaver;
  */
 @Service("Weka_Instances")
 @Scope(ConfigurableBeanFactory.SCOPE_PROTOTYPE)
+// TODO: too complicated class !!!
 public class WekaData extends InMemoryData<Instances>
-		implements /* FromFileLoadable, */ ToFileStorable, HasMultiAttributes, MultyInstace, Plottable {
+		implements Cloneable, HasMultiAttributes, MultyInstace, Plottable {
 
 	private DataFactory dataFactory;
 
@@ -45,24 +41,6 @@ public class WekaData extends InMemoryData<Instances>
 
 	public WekaData(@Autowired @WekaFW DataFactory df) {
 		this.dataFactory = df;
-	}
-
-	// @Override
-	// public Data load(String fileName) throws Exception {
-	// Instances data = DataSource.read(fileName);
-	// // MLUtils.prepareData(data);
-	// super.setData(data);
-	// return this;
-	// }
-	//
-	@Override
-	public void store(String fileName) throws Exception {
-		File file = new File(fileName);
-		AbstractSaver saver = new CSVSaver();
-		saver.setFile(file);
-		saver.setInstances(super.getData());
-		saver.writeBatch();
-
 	}
 
 	public double[] getAllValuesAsDoubleAt(int index) {
@@ -188,6 +166,14 @@ public class WekaData extends InMemoryData<Instances>
 
 		WekaData[] traintest = new WekaData[] { train, test };
 		return traintest;
+	}
+
+	@Override
+	public Object clone() {
+		WekaData newData = (WekaData) dataFactory.getData(WekaData.class);
+		newData.data = new Instances(this.data);
+		return newData;
+
 	}
 
 }

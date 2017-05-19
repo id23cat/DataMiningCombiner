@@ -5,7 +5,7 @@ import org.springframework.stereotype.Service;
 
 @Service
 @Scope("prototype")
-public interface Data<T> {
+public interface Data<T>{
 	default String getDescription() {
 		return "Unknown data";
 	}

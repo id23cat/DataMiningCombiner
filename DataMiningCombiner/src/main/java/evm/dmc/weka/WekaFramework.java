@@ -39,4 +39,10 @@ public class WekaFramework extends AbstractFramework {
 		return CLASS;
 	}
 
+	@Override
+	public WekaData castToNativeData(Data data) throws ClassCastException {
+		return castToWekaData(data);
+
+	}
+
 }

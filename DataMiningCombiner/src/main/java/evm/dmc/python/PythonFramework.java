@@ -7,6 +7,8 @@ import evm.dmc.core.AbstractFramework;
 import evm.dmc.core.FrameworkContext;
 import evm.dmc.core.data.Data;
 import evm.dmc.core.function.DMCFunction;
+import evm.dmc.python.data.PandasDataFrame;
+import evm.dmc.python.data.PyVar;
 import evm.dmc.python.function.AbstractPythonFunction;
 
 @Service
@@ -48,6 +50,27 @@ public class PythonFramework extends AbstractFramework {
 	@Override
 	protected Class getFunctionClass() {
 		return CLASS;
+	}
+
+	@Override
+	public PyVar castToNativeData(Data data) throws ClassCastException {
+		return castToPyVar(data);
+	}
+
+	public PandasDataFrame castToPandasData(Data data) {
+		PandasDataFrame pdsData = data instanceof PandasDataFrame ? (PandasDataFrame) data : null;
+		if (pdsData == null) {
+			throw new ClassCastException("Unsupported data type");
+		}
+		return pdsData;
+	}
+
+	public PyVar castToPyVar(Data data) {
+		PyVar pyVar = data instanceof PyVar ? (PyVar) data : null;
+		if (pyVar == null) {
+			throw new ClassCastException("Unsupported data type");
+		}
+		return pyVar;
 	}
 
 }

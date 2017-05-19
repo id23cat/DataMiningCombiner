@@ -10,7 +10,6 @@ import org.springframework.stereotype.Service;
 import evm.dmc.core.data.Data;
 import evm.dmc.weka.WekaFW;
 import evm.dmc.weka.WekaFramework;
-import evm.dmc.weka.data.ClusteringModel;
 import evm.dmc.weka.data.WekaData;
 import evm.dmc.weka.exceptions.ClusteringException;
 import weka.clusterers.ClusterEvaluation;
@@ -42,46 +41,51 @@ public class ClusteringKMeans extends AbsttractClusterer {
 	// get to run 75% of CPU cores
 	private int tasksToRun = (int) Math.floor(Runtime.getRuntime().availableProcessors() * 0.75);
 
-	@Override
-	public void setTrainSet(Data trainSet) {
-		SimpleKMeans skmClusterer = new SimpleKMeans(); // new instance of
-														// clusterer
-
-		WekaData wData = fw.castToWekaData(trainSet);
-
-		try {
-			skmClusterer.setMaxIterations(maxIterations);
-			skmClusterer.setNumClusters(numClusters);
-			skmClusterer.setNumExecutionSlots(tasksToRun);
-			skmClusterer.setReduceNumberOfDistanceCalcsViaCanopies(useCanopiesReduce);
-
-			skmClusterer.buildClusterer(wData.getData()); // build
-															// the
-															// clusterer
-		} catch (Exception e) {
-			throw new ClusteringException(e);
-		}
-		super.clusterer = skmClusterer;
+	public ClusteringKMeans() {
 
 	}
 
-	@Override
-	public void setTestSet(Data test) {
-		// TODO Auto-generated method stub
-
-	}
-
-	@Override
-	public ClusteringModel getModel() {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public int clusterInstance(Data inst) {
-		// TODO Auto-generated method stub
-		return 0;
-	}
+	// @Override
+	// public void setTrainSet(Data trainSet) {
+	// // SimpleKMeans skmClusterer = new SimpleKMeans(); // new instance of
+	// // // clusterer
+	//
+	// WekaData wData = fw.castToWekaData(trainSet);
+	//
+	// try {
+	// // skmClusterer.setMaxIterations(maxIterations);
+	// // skmClusterer.setNumClusters(numClusters);
+	// // skmClusterer.setNumExecutionSlots(tasksToRun);
+	// //
+	// skmClusterer.setReduceNumberOfDistanceCalcsViaCanopies(useCanopiesReduce);
+	//
+	// skmClusterer.buildClusterer(wData.getData()); // build
+	// // the
+	// // clusterer
+	// } catch (Exception e) {
+	// throw new ClusteringException(e);
+	// }
+	// super.clusterer = skmClusterer;
+	//
+	// }
+	//
+	// @Override
+	// public void setTestSet(Data test) {
+	// // TODO Auto-generated method stub
+	//
+	// }
+	//
+	// @Override
+	// public ClusteringModel getModel() {
+	// // TODO Auto-generated method stub
+	// return null;
+	// }
+	//
+	// @Override
+	// public int clusterInstance(Data inst) {
+	// // TODO Auto-generated method stub
+	// return 0;
+	// }
 
 	public void printInfo() {
 		PrintStream out = System.out;
@@ -134,6 +138,29 @@ public class ClusteringKMeans extends AbsttractClusterer {
 	@Override
 	public String getDescription() {
 		return description;
+	}
+
+	@Override
+	public Clusterizator train(Data trainSet) {
+		WekaData wData = fw.castToWekaData(trainSet);
+		try {
+			SimpleKMeans skmClusterer = new SimpleKMeans();
+			skmClusterer.setMaxIterations(maxIterations);
+			skmClusterer.setNumClusters(numClusters);
+			skmClusterer.setNumExecutionSlots(tasksToRun);
+			skmClusterer.setReduceNumberOfDistanceCalcsViaCanopies(useCanopiesReduce);
+
+			// ClusterEvaluation.crossValidateModel(skmClusterer,
+			// wData.getData(), 10, new Random(42));
+
+			skmClusterer.buildClusterer(wData.getData()); // build the clusterer
+
+			super.clusterer = skmClusterer;
+		} catch (Exception e) {
+			throw new ClusteringException(e);
+		}
+
+		return this;
 	}
 
 }
