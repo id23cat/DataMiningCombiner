@@ -1,12 +1,15 @@
 package evm.dmc.weka.data;
 
+import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.not;
 import static org.hamcrest.CoreMatchers.sameInstance;
 import static org.hamcrest.CoreMatchers.startsWith;
 import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.closeTo;
 import static org.junit.Assert.assertArrayEquals;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
@@ -76,14 +79,6 @@ public class WekaDataTest {
 		assertEquals(3333, length);
 
 	}
-
-	// @Test
-	// public final void testStore() throws Exception {
-	// data.store("Data/test.csv");
-	// File file = new File("Data/test.csv");
-	// assertNotEquals(0, file.length());
-	//
-	// }
 
 	@Test
 	public final void testInstances() throws Exception {
@@ -163,6 +158,80 @@ public class WekaDataTest {
 		assertTrue(file.exists());
 
 		file.delete();
+	}
+
+	@Test
+	public final void testGetSubset() {
+		WekaData subDat = data.getSubset(0, 1);
+		assertEquals(2, subDat.getData().size());
+		assertTrue(subDat.getData().get(0).attribute(1).isNumeric());
+		assertThat(subDat.getData().get(0).value(1), closeTo(128, 0.01));
+
+		assertTrue(subDat.getData().get(0).attribute(4).isNominal());
+		int nomIndex = (int) subDat.getData().get(0).value(4);
+		assertThat(subDat.getData().get(0).attribute(4).value(nomIndex), equalTo("Yes"));
+
+		assertTrue(subDat.getData().get(1).attribute(1).isNumeric());
+		assertThat(subDat.getData().get(1).value(1), closeTo(107, 0.01));
+
+		assertTrue(subDat.getData().get(1).attribute(4).isNominal());
+		int nomIndex2 = (int) subDat.getData().get(1).value(4);
+		assertThat(subDat.getData().get(1).attribute(4).value(nomIndex2), equalTo("Yes"));
+
+	}
+
+	@Test
+	public final void testGetInstance() {
+		WekaData subDat = data.getInstance(2);
+		assertEquals(1, subDat.getData().size());
+		assertTrue(subDat.getData().get(0).attribute(1).isNumeric());
+		assertThat(subDat.getData().get(0).value(1), closeTo(137, 0.01));
+
+		assertTrue(subDat.getData().get(0).attribute(4).isNominal());
+		int nomIndex = (int) subDat.getData().get(0).value(4);
+		assertThat(subDat.getData().get(0).attribute(4).value(nomIndex), equalTo("No"));
+
+	}
+
+	@Test(expected = evm.dmc.weka.exceptions.IndexOutOfRange.class)
+	public final void testGetInstanceWrongIndex() {
+		WekaData subDat = data.getInstance(3333);
+	}
+
+	@Test
+	public final void testClone() {
+		WekaData cln = data.clone();
+		assertNotEquals(data, cln);
+		assertEquals(data.getValue(1, 2), cln.getValue(1, 2), 0.0001);
+		assertEquals(data.getValueAsString(1, 3), cln.getValueAsString(1, 3));
+	}
+
+	@Test
+	public final void testGetValue() {
+		assertEquals(107, data.getValue(1, 1), 0.0001);
+		assertEquals(0.0, data.getValue(1, 3), 0.0001);
+	}
+
+	@Test
+	public final void testGetValueAsString() {
+		assertEquals("No", data.getValueAsString(1, 3));
+		assertEquals("OH", data.getValueAsString(3, 0));
+		assertEquals("415.0", data.getValueAsString(2, 2));
+	}
+
+	@Test(expected = evm.dmc.weka.exceptions.IndexOutOfRange.class)
+	public final void testUsingWrongIndex() {
+		data.isDate(3333);
+	}
+
+	@Test
+	public final void testTypes() {
+		assertTrue(data.isNumeric(1));
+		assertTrue(data.isNumeric(2));
+		assertTrue(data.isNumeric(5));
+
+		assertTrue(data.isNominal(0));
+		assertTrue(data.isNominal(3));
 	}
 
 	public final BufferedImage testHistogram() throws Exception {

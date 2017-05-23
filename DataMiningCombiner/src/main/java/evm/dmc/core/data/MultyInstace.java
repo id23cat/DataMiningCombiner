@@ -3,6 +3,8 @@ package evm.dmc.core.data;
 public interface MultyInstace {
 	int getInstancesCount();
 
+	Data<?> getInstance(int index);
+
 	Data<?> getSubset(int from, int to);
 
 	/**

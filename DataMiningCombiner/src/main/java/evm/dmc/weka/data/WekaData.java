@@ -16,6 +16,7 @@ import evm.dmc.core.data.InMemoryData;
 import evm.dmc.core.data.MultyInstace;
 import evm.dmc.weka.WekaFW;
 import evm.dmc.weka.exceptions.DataOperationException;
+import evm.dmc.weka.exceptions.IndexOutOfRange;
 import weka.core.Attribute;
 import weka.core.Instances;
 
@@ -85,7 +86,7 @@ public class WekaData extends InMemoryData<Instances>
 	}
 
 	@Override
-	public Data<Instances> getAttributes(int... indexes) {
+	public Data<Instances> getAttributes(int... indexes) throws IndexOutOfRange {
 		WekaData data;
 		try {
 			data = this.copyObject();
@@ -96,9 +97,13 @@ public class WekaData extends InMemoryData<Instances>
 		Instances inst = data.getData();
 		Set<Attribute> attrSaveFromDelSet = new HashSet<>();
 
-		for (int index : indexes) {
-			Attribute attrSaveFromDelete = inst.attribute(index);
-			attrSaveFromDelSet.add(attrSaveFromDelete);
+		try {
+			for (int index : indexes) {
+				Attribute attrSaveFromDelete = inst.attribute(index);
+				attrSaveFromDelSet.add(attrSaveFromDelete);
+			}
+		} catch (Exception exc) {
+			throw new IndexOutOfRange(exc);
 		}
 
 		int attrsCount = inst.numAttributes();
@@ -118,13 +123,6 @@ public class WekaData extends InMemoryData<Instances>
 		return true;
 	}
 
-	WekaData copyObject() throws CloneNotSupportedException {
-		WekaData data = (WekaData) dataFactory.getData(WekaData.class);
-		data.setData(new Instances(this.getData()));
-		return data;
-
-	}
-
 	@Override
 	public double[] plot() {
 		// TODO
@@ -138,15 +136,35 @@ public class WekaData extends InMemoryData<Instances>
 	}
 
 	@Override
-	public Data<Instances> getSubset(int from, int to) {
+	public WekaData getInstance(int index) throws IndexOutOfRange {
 		WekaData newData = (WekaData) dataFactory.getData(WekaData.class);
-		newData.data.addAll(this.data.subList(from, to));
+		try {
+			newData.data = new Instances(this.data, index, 1);
+		} catch (IllegalArgumentException exc) {
+			throw new IndexOutOfRange(exc);
+		}
+		return newData;
+	}
+
+	@Override
+	public WekaData getSubset(int from, int to) throws IndexOutOfRange {
+		WekaData newData = (WekaData) dataFactory.getData(WekaData.class);
+		try {
+			newData.data = new Instances(this.data, from, to - from + 1);
+		} catch (IllegalArgumentException exc) {
+			throw new IndexOutOfRange(exc);
+		}
 		return newData;
 	}
 
 	@Override
 	public int getInstancesCount() {
-		return super.getData().numInstances();
+		return data.numInstances();
+	}
+
+	@Override
+	public int getAttributesCount() {
+		return data.numAttributes();
 	}
 
 	@Override
@@ -169,10 +187,94 @@ public class WekaData extends InMemoryData<Instances>
 	}
 
 	@Override
-	public Object clone() {
+	public WekaData clone() {
 		WekaData newData = (WekaData) dataFactory.getData(WekaData.class);
 		newData.data = new Instances(this.data);
 		return newData;
+
+	}
+
+	@Override
+	public String getValueAsString(int row, int column) throws IndexOutOfRange {
+		if (!checkRowIndex(row) || !checkColIndex(column)) {
+			throw new IndexOutOfRange(exceptionMessage("Wrong index: ", row, column));
+		}
+		Attribute attr = this.data.get(row).attribute(column);
+		if (attr.isNominal() || attr.isString() || attr.isDate() || attr.isRelationValued())
+			return this.data.get(row).stringValue(column);
+		return String.valueOf(this.data.get(row).value(column));
+	}
+
+	@Override
+	public double getValue(int row, int column) throws IndexOutOfRange {
+		if (!checkRowIndex(row) || !checkColIndex(column)) {
+			throw new IndexOutOfRange(exceptionMessage("Wrong index: ", row, column));
+		}
+		return this.data.get(row).value(column);
+	}
+
+	@Override
+	public boolean isNominal(int column) throws IndexOutOfRange {
+		if (!checkColIndex(column)) {
+			throw new IndexOutOfRange(exceptionMessage("Wrong index: ", column));
+		}
+		return this.data.attribute(column).isNominal() || this.data.attribute(column).isString();
+	}
+
+	@Override
+	public boolean isString(int column) throws IndexOutOfRange {
+		if (!checkColIndex(column)) {
+			throw new IndexOutOfRange(exceptionMessage("Wrong index: ", column));
+		}
+		return this.data.attribute(column).isString();
+	}
+
+	@Override
+	public boolean isDate(int column) throws IndexOutOfRange {
+		if (!checkColIndex(column)) {
+			throw new IndexOutOfRange(exceptionMessage("Wrong index: ", column));
+		}
+		return this.data.attribute(column).isDate();
+	}
+
+	@Override
+	public boolean isNumeric(int column) throws IndexOutOfRange {
+		if (!checkColIndex(column)) {
+			throw new IndexOutOfRange(exceptionMessage("Wrong index: ", column));
+		}
+		return this.data.attribute(column).isNumeric();
+	}
+
+	public WekaData copyObject() throws CloneNotSupportedException {
+		WekaData data = (WekaData) dataFactory.getData(WekaData.class);
+		data.setData(new Instances(this.getData()));
+		return data;
+
+	}
+
+	private boolean checkRowIndex(int index) throws IndexOutOfRange {
+		if (index < 0 || index >= getInstancesCount())
+			return false;
+		return true;
+	}
+
+	private boolean checkColIndex(int index) throws IndexOutOfRange {
+		if (index < 0 || index >= getAttributesCount())
+			return false;
+		return true;
+	}
+
+	private String exceptionMessage(String msg, int... idx) {
+		StringBuilder strb = new StringBuilder(msg);
+		int i = 0;
+		while (i < idx.length) {
+			strb.append(idx[i]);
+			if (i < idx.length - 1)
+				strb.append(", ");
+			i++;
+		}
+
+		return strb.toString();
 
 	}
 
