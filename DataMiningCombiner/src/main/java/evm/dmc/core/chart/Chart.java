@@ -7,46 +7,76 @@ import java.io.IOException;
 import org.jfree.chart.ChartUtilities;
 import org.jfree.chart.JFreeChart;
 
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Random;
 import java.util.function.BiFunction;
 
 public abstract class Chart implements Plotter {
 	private static int WIDTH = 1024;
 	private static int HEIGHT = 768;
 
-	private BiFunction<String, Plottable, JFreeChart> chartKind;
+	private BiFunction<Integer, Plottable, JFreeChart> chartKind;
 
 	protected Chart() {
-		setChartKind();
+		this.chartKind = getChartKind();
 	}
 
-	Chart(BiFunction<String, Plottable, JFreeChart> chartKind) {
+	public Chart(BiFunction<Integer, Plottable, JFreeChart> chartKind) {
 		this.chartKind = chartKind;
 	}
 
 	// @PostConstruct
-	public final void setChartKind() {
-		this.chartKind = getChartKind();
+	public final void setChartKind(BiFunction<Integer, Plottable, JFreeChart> chartKind) {
+		this.chartKind = chartKind;
+
 	}
 
-	protected abstract BiFunction<String, Plottable, JFreeChart> getChartKind();
+	/**
+	 * Concrete implementation of Chart class must implemet this function to get
+	 * concrete type of chart that would be used to expose data
+	 * 
+	 * @return Bi-argument function that accepts title for cart and data , and
+	 *         returns JFreeChart object
+	 */
+	protected abstract BiFunction<Integer, Plottable, JFreeChart> getChartKind();
 
+	/*
+	 * Output file format: {prfix}_{data.title()}_{random value}.png
+	 * 
+	 * (non-Javadoc)
+	 * 
+	 * @see evm.dmc.core.chart.Plotter#saveToPng(evm.dmc.core.chart.Plottable,
+	 * java.lang.String)
+	 * 
+	 */
 	@Override
-	public String saveToPng(Plottable data, String prefix) throws IOException {
-		JFreeChart chart = chartKind.apply(data.title(), data);
-		StringBuilder fname = new StringBuilder(prefix);
-		fname.append("_");
-		fname.append(data.title());
-		fname.append("_");
-		fname.append(data.plot().length);
-		fname.append(".png");
-		ChartUtilities.saveChartAsPNG(new File(fname.toString()), chart, WIDTH, HEIGHT);
-		return fname.toString();
+	public List<String> saveToPng(Plottable data, String prefix) throws IOException {
+		List<String> files = new LinkedList<>();
+		Random rnd = new Random(42);
+		for (int index : data.getAttributesToPlot()) {
+			JFreeChart chart = chartKind.apply(index, data);
+			StringBuilder fname = new StringBuilder(prefix);
+			fname.append("_");
+			fname.append(data.getTitle(index));
+			fname.append("_");
+			fname.append(rnd.nextInt());
+			fname.append(".png");
+			ChartUtilities.saveChartAsPNG(new File(fname.toString()), chart, WIDTH, HEIGHT);
+			files.add(fname.toString());
+		}
+
+		return files;
 	}
 
 	@Override
-	public BufferedImage getBufferedImage(Plottable data) {
-		JFreeChart chart = chartKind.apply(data.title(), data);
-		return chart.createBufferedImage(WIDTH, HEIGHT);
+	public List<BufferedImage> getBufferedImage(Plottable data) {
+		List<BufferedImage> images = new LinkedList<>();
+		for (int index : data.getAttributesToPlot()) {
+			JFreeChart chart = chartKind.apply(index, data);
+			images.add(chart.createBufferedImage(WIDTH, HEIGHT));
+		}
+		return images;
 	}
 
 }

@@ -12,7 +12,6 @@ import org.springframework.stereotype.Service;
 import evm.dmc.core.DataConverter;
 import evm.dmc.core.FrameworkContext;
 import evm.dmc.core.data.Data;
-import evm.dmc.core.data.StringData;
 import evm.dmc.core.function.AbstractDMCFunction;
 import evm.dmc.core.function.DMCFunction;
 import evm.dmc.python.PythonFWContext;
@@ -159,14 +158,14 @@ public abstract class AbstractPythonFunction extends AbstractDMCFunction<String>
 		this.function = function;
 	}
 
-	@Override
-	public StringData convert(Data data) {
-		super.setArgs(data);
-		setResult(fw.getData(StringData.class));
-		context.getValue(this);
-		return (StringData) result;
-
-	}
+	// @Override
+	// public StringData convert(Data data) {
+	// super.setArgs(data);
+	// setResult(fw.getData(StringData.class));
+	// context.getValue(this);
+	// return (StringData) result;
+	//
+	// }
 
 	/*
 	 * (non-Javadoc)

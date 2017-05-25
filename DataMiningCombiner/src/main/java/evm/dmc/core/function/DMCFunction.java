@@ -6,27 +6,13 @@ import org.springframework.context.annotation.Scope;
 import java.util.List;
 
 import evm.dmc.core.FrameworkContext;
+import evm.dmc.core.HasNameAndDescription;
 import evm.dmc.core.data.Data;
 
 @Scope("prototype")
 @Lazy
-public interface DMCFunction<T> {
+public interface DMCFunction<T> extends HasNameAndDescription {
 	void execute();
-
-	/**
-	 * Returns name of function that should match the pattern:
-	 * "frameworkName_functionName"
-	 * 
-	 * @return function name
-	 */
-	String getName();
-
-	/**
-	 * Returns detailed description of the function
-	 * 
-	 * @return description
-	 */
-	String getDescription();
 
 	Integer getArgsCount();
 

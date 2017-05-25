@@ -7,7 +7,19 @@ package evm.dmc.core.chart;
  *
  */
 public interface Plottable {
-	double[] plot();
+	default double[] plot(int index) {
+		return null;
+	}
 
-	String title();
+	default String getTitle(int index) {
+		return null;
+	}
+
+	default void setAttributesToPlot(int... indexes) {
+
+	}
+
+	default int[] getAttributesToPlot() {
+		return null;
+	}
 }

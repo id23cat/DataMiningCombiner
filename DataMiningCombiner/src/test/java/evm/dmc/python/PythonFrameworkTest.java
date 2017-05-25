@@ -36,9 +36,7 @@ import java.util.Set;
 
 import evm.dmc.core.DataFactory;
 import evm.dmc.core.Framework;
-import evm.dmc.core.data.Data;
 import evm.dmc.core.function.DMCFunction;
-import evm.dmc.python.data.PyString;
 import jep.Jep;
 import jep.JepException;
 
@@ -84,16 +82,16 @@ public class PythonFrameworkTest {
 		assertNotEquals("${jeptest.datafile}", dataFile);
 	}
 
-	@Test
-	public final void testGetData() {
-
-		Data data = dBuilder.getData(PyString.class);
-		assertNotNull(data);
-		data.setData(dataFile);
-		// PyString encapsulates contained data in quotes on returning by
-		// getData
-		assertEquals("\"" + dataFile + "\"", data.getData());
-	}
+	// @Test
+	// public final void testGetData() {
+	//
+	// Data data = dBuilder.getData(PyString.class);
+	// assertNotNull(data);
+	// data.setData(dataFile);
+	// // PyString encapsulates contained data in quotes on returning by
+	// // getData
+	// assertEquals("\"" + dataFile + "\"", data.getData());
+	// }
 
 	@Test
 	public final void testUsingPythonInRuntime() throws IOException {

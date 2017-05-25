@@ -6,9 +6,6 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.stereotype.Service;
 
-import evm.dmc.core.data.Data;
-import evm.dmc.python.data.PyVar;
-
 @Service("Python_ScaleDataset")
 @PropertySource("classpath:jep.properties")
 public class ScaleDataset extends AbstractPythonFunction {
@@ -31,8 +28,9 @@ public class ScaleDataset extends AbstractPythonFunction {
 	@PostConstruct
 	public void init() {
 		super.setFunction(scale);
-		Data result = super.fw.getData(PyVar.class);
-		super.setResult(result);
+		// Data result = super.fw.getData(PyVar.class);
+		// super.setResult(result);
+		// TODO
 	}
 
 	@Override

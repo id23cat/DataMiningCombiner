@@ -2,10 +2,14 @@ package evm.dmc.core.chart;
 
 import java.io.IOException;
 
-public interface Plotter {
-	// void setChartKind(BiFunction<String, double[], JFreeChart> plot);
+import java.util.List;
 
+import evm.dmc.core.HasNameAndDescription;
+
+public interface Plotter extends HasNameAndDescription {
 	/**
+	 * Saves charts to files in PNG format
+	 * 
 	 * @param data
 	 *            to plot
 	 * @param prefix
@@ -13,8 +17,15 @@ public interface Plotter {
 	 * @return full file name
 	 * @throws IOException
 	 */
-	String saveToPng(Plottable data, String prefix) throws IOException;
+	List<String> saveToPng(Plottable data, String prefix) throws IOException;
 
-	java.awt.image.BufferedImage getBufferedImage(Plottable data);
+	/**
+	 * Get buffered image in memory
+	 * 
+	 * @param data
+	 *            to plot
+	 * @return object that contains chart image
+	 */
+	List<java.awt.image.BufferedImage> getBufferedImage(Plottable data);
 
 }

@@ -1,7 +1,6 @@
 package evm.dmc.python.function;
 
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
 
 import org.junit.BeforeClass;
@@ -62,9 +61,9 @@ public class ScaleDatasetTest {
 
 		System.out.println(scale.getCurrentEnvironment());
 
-		Data str = scale.convert(result);
-		System.out.println(str.getData());
-		assertFalse(systemOutRule.getLog().isEmpty());
+		// Data str = scale.convert(result);
+		// System.out.println(str.getData());
+		// assertFalse(systemOutRule.getLog().isEmpty());
 	}
 
 	@Test

@@ -10,7 +10,6 @@ import java.util.HashSet;
 import java.util.Set;
 
 import evm.dmc.core.DataFactory;
-import evm.dmc.core.chart.Plottable;
 import evm.dmc.core.data.Data;
 import evm.dmc.core.data.HasMultiAttributes;
 import evm.dmc.core.data.InMemoryData;
@@ -33,13 +32,13 @@ import weka.core.Instances;
 @Service("Weka_Instances")
 @Scope(ConfigurableBeanFactory.SCOPE_PROTOTYPE)
 // TODO: too complicated class !!!
-public class WekaData extends InMemoryData<Instances>
-		implements Cloneable, HasMultiAttributes, MultyInstace, Plottable {
+public class WekaData extends InMemoryData<Instances> implements Cloneable, HasMultiAttributes, MultyInstace {
 
 	private DataFactory dataFactory;
 
 	// used for generating cross-validation sets
 	private static int FOLDS = 4;
+	private int[] selectedAttributes;
 
 	public WekaData(@Autowired @WekaFW DataFactory df) {
 		this.dataFactory = df;
@@ -47,13 +46,6 @@ public class WekaData extends InMemoryData<Instances>
 
 	public double[] getAllValuesAsDoubleAt(int index) {
 		Instances inst = super.getData();
-		// // if (!inst.attribute(index).isNumeric())
-		// // return null;
-		// int length = inst.numInstances();
-		// double[] values = new double[length];
-		// for (int i = 0; i < length; i++) {
-		// values[i] = inst.instance(i).value(index);
-		// }
 		double[] values = inst.attributeToDoubleArray(index);
 		return values;
 
@@ -130,15 +122,13 @@ public class WekaData extends InMemoryData<Instances>
 	}
 
 	@Override
-	public double[] plot() {
-		// TODO
-		return this.getAllValuesAsDoubleAt("Account length");
+	public double[] plot(int index) {
+		return this.getAllValuesAsDoubleAt(index);
 	}
 
 	@Override
-	public String title() {
-		// TODO
-		return "Account length";
+	public String getTitle(int index) {
+		return getAttributeName(index);
 	}
 
 	@Override
@@ -320,6 +310,16 @@ public class WekaData extends InMemoryData<Instances>
 		strb.append(name);
 
 		return strb.toString();
+	}
+
+	@Override
+	public void setAttributesToPlot(int... indexes) {
+		selectedAttributes = indexes.clone();
+	}
+
+	@Override
+	public int[] getAttributesToPlot() {
+		return selectedAttributes;
 	}
 
 }

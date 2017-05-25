@@ -7,22 +7,11 @@ import static org.hamcrest.CoreMatchers.sameInstance;
 import static org.hamcrest.CoreMatchers.startsWith;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.closeTo;
-import static org.junit.Assert.assertArrayEquals;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
-import java.awt.image.BufferedImage;
-import java.awt.image.DataBufferInt;
-import java.io.File;
-
-import org.jfree.chart.ChartFactory;
-import org.jfree.chart.ChartUtilities;
-import org.jfree.chart.JFreeChart;
-import org.jfree.chart.plot.PlotOrientation;
-import org.jfree.data.statistics.HistogramDataset;
-import org.jfree.data.statistics.HistogramType;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
@@ -35,7 +24,6 @@ import org.springframework.test.context.junit4.SpringRunner;
 
 import java.util.Random;
 
-import evm.dmc.core.chart.Histogram;
 import evm.dmc.core.data.Data;
 import evm.dmc.core.function.CSVLoader;
 import evm.dmc.weka.DMCWekaConfig;
@@ -151,22 +139,24 @@ public class WekaDataTest {
 
 	}
 
-	@Test
-	public final void testHistogramChart() throws Exception {
-		Histogram hist = Histogram.getPlotter();
-		// this gets the actual Raster data as a byte array
-		int[] byteArrayTest = ((DataBufferInt) this.testHistogram().getData().getDataBuffer()).getData();
-
-		// this gets the actual Raster data as a byte array
-		int[] byteArrayToCheck = ((DataBufferInt) hist.getBufferedImage(data).getData().getDataBuffer()).getData();
-		assertArrayEquals(byteArrayTest, byteArrayToCheck);
-
-		String fname = hist.saveToPng(data, "Data/test");
-		File file = new File(fname);
-		assertTrue(file.exists());
-
-		file.delete();
-	}
+	// @Test
+	// public final void testHistogramChart() throws Exception {
+	// Histogram hist = Histogram.getPlotter();
+	// // this gets the actual Raster data as a byte array
+	// int[] byteArrayTest = ((DataBufferInt)
+	// this.testHistogram().getData().getDataBuffer()).getData();
+	//
+	// // this gets the actual Raster data as a byte array
+	// int[] byteArrayToCheck = ((DataBufferInt)
+	// hist.getBufferedImage(data).getData().getDataBuffer()).getData();
+	// assertArrayEquals(byteArrayTest, byteArrayToCheck);
+	//
+	// String fname = hist.saveToPng(data, "Data/test");
+	// File file = new File(fname);
+	// assertTrue(file.exists());
+	//
+	// file.delete();
+	// }
 
 	@Test
 	public final void testGetSubset() {
@@ -240,26 +230,6 @@ public class WekaDataTest {
 
 		assertTrue(data.isNominal(0));
 		assertTrue(data.isNominal(3));
-	}
-
-	public final BufferedImage testHistogram() throws Exception {
-		double[] values = data.getAllValuesAsDoubleAt("Account length");
-		HistogramDataset dataset = new HistogramDataset();
-		dataset.setType(HistogramType.FREQUENCY);
-		dataset.addSeries("Histogram", values, 3333);
-		String plotTitle = "Account length";
-		String xaxis = "number";
-		String yaxis = "value";
-		PlotOrientation orientation = PlotOrientation.VERTICAL;
-		boolean show = false;
-		boolean toolTips = false;
-		boolean urls = false;
-		JFreeChart chart = ChartFactory.createHistogram(plotTitle, xaxis, yaxis, dataset, orientation, show, toolTips,
-				urls);
-		int width = 1024;
-		int height = 768;
-		ChartUtilities.saveChartAsPNG(new File("Data/histogram.PNG"), chart, width, height);
-		return chart.createBufferedImage(width, height);
 	}
 
 	void printInstancesInfo(Instances inst) {
