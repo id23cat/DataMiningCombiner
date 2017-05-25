@@ -5,6 +5,7 @@ import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Service;
 
+import java.util.Enumeration;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -59,11 +60,11 @@ public class WekaData extends InMemoryData<Instances>
 	}
 
 	public double[] getAllValuesAsDoubleAt(String attrName) {
-		return this.getAllValuesAsDoubleAt(super.getData().attribute(attrName).index());
+		return this.getAllValuesAsDoubleAt(getIndexByName(attrName));
 	}
 
 	@Override
-	public Data<Instances> getAttribute(int index) {
+	public WekaData getAttribute(int index) throws IndexOutOfRange {
 		WekaData data;
 		try {
 			data = this.copyObject();
@@ -83,6 +84,11 @@ public class WekaData extends InMemoryData<Instances>
 		}
 
 		return data;
+	}
+
+	@Override
+	public WekaData getAttribute(String name) throws IndexOutOfRange {
+		return getAttribute(getIndexByName(name));
 	}
 
 	@Override
@@ -245,6 +251,37 @@ public class WekaData extends InMemoryData<Instances>
 		return this.data.attribute(column).isNumeric();
 	}
 
+	@Override
+	public Enumeration<Object> enumerateValues(int column) throws IndexOutOfRange {
+		if (!checkColIndex(column)) {
+			throw new IndexOutOfRange(exceptionMessage("Wrong index: ", column));
+		}
+		if (!isNominal(column))
+			return null;
+		return data.attribute(column).enumerateValues();
+	}
+
+	@Override
+	public int getIndexByName(String name) throws IndexOutOfRange {
+		if (data.attribute(name) == null) {
+			throw new IndexOutOfRange(exceptionMessage("Wrong attribute name: ", name));
+		}
+		return data.attribute(name).index();
+	}
+
+	@Override
+	public String getAttributeName(int column) throws IndexOutOfRange {
+		if (!checkColIndex(column)) {
+			throw new IndexOutOfRange(exceptionMessage("Wrong index: ", column));
+		}
+		return data.attribute(column).name();
+	}
+
+	@Override
+	public Enumeration<Object> enumerateValues(String name) throws IndexOutOfRange {
+		return enumerateValues(getIndexByName(name));
+	}
+
 	public WekaData copyObject() throws CloneNotSupportedException {
 		WekaData data = (WekaData) dataFactory.getData(WekaData.class);
 		data.setData(new Instances(this.getData()));
@@ -276,6 +313,13 @@ public class WekaData extends InMemoryData<Instances>
 
 		return strb.toString();
 
+	}
+
+	private String exceptionMessage(String msg, String name) {
+		StringBuilder strb = new StringBuilder(msg);
+		strb.append(name);
+
+		return strb.toString();
 	}
 
 }

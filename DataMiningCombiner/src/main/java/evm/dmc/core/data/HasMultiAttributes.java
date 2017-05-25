@@ -27,6 +27,8 @@ public interface HasMultiAttributes {
 	 */
 	Data<?> getAttribute(int index) throws IndexOutOfRange;
 
+	Data<?> getAttribute(String name) throws IndexOutOfRange;
+
 	/**
 	 * Returns new Data instance contained single attribute selected by set of
 	 * indexes
@@ -48,4 +50,20 @@ public interface HasMultiAttributes {
 	boolean isDate(int column) throws IndexOutOfRange;
 
 	boolean isNumeric(int column) throws IndexOutOfRange;
+
+	int getIndexByName(String name) throws IndexOutOfRange;
+
+	String getAttributeName(int column) throws IndexOutOfRange;
+
+	/**
+	 * Returns an enumeration of all the attribute's values if the attribute is
+	 * nominal, string, or relation-valued, null otherwise.
+	 * 
+	 * @param column
+	 *            index of attribute
+	 * @return enumeration of all the attribute's values
+	 */
+	java.util.Enumeration<java.lang.Object> enumerateValues(int column) throws IndexOutOfRange;
+
+	java.util.Enumeration<java.lang.Object> enumerateValues(String name) throws IndexOutOfRange;
 }

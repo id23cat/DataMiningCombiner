@@ -109,6 +109,14 @@ public class WekaDataTest {
 	}
 
 	@Test
+	public final void testGetAttributeByName() throws Exception {
+		WekaData attr = data.getAttribute("Voice mail plan");
+		assertNotNull(attr);
+		assertNotNull(attr.getData());
+		assertEquals("Yes", attr.getValueAsString(1, 0));
+	}
+
+	@Test
 	public final void testGetAttributes() throws Exception {
 		int[] attrNums = { 1, 3, 5 };
 		Data<Instances> attr = data.getAttributes(attrNums);
