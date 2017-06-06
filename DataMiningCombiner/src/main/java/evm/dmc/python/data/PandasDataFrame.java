@@ -7,6 +7,8 @@ import org.springframework.stereotype.Service;
 import java.util.Enumeration;
 
 import evm.dmc.core.data.Data;
+import evm.dmc.core.data.Statistics;
+import evm.dmc.weka.exceptions.DataOperationException;
 import evm.dmc.weka.exceptions.IndexOutOfRange;
 
 @Service("Python_DataFrame")
@@ -103,6 +105,36 @@ public class PandasDataFrame extends JepVariable {
 	public Enumeration<Object> enumerateValues(String name) throws IndexOutOfRange {
 		// TODO Auto-generated method stub
 		return null;
+	}
+
+	@Override
+	public Statistics getAttributeStatistics(int column) throws IndexOutOfRange {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public Statistics getAttributeStatistics(int column, int bins) throws IndexOutOfRange {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public void toNominal(int column) throws IndexOutOfRange, DataOperationException {
+		// TODO Auto-generated method stub
+
+	}
+
+	@Override
+	public void toDate(int column) throws IndexOutOfRange, DataOperationException {
+		// TODO Auto-generated method stub
+
+	}
+
+	@Override
+	public void toNumeric(int column) throws IndexOutOfRange, DataOperationException {
+		// TODO Auto-generated method stub
+
 	}
 
 }

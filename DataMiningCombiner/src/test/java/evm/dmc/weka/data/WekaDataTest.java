@@ -1,6 +1,7 @@
 package evm.dmc.weka.data;
 
 import static org.hamcrest.CoreMatchers.equalTo;
+import static org.hamcrest.CoreMatchers.hasItems;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.not;
 import static org.hamcrest.CoreMatchers.sameInstance;
@@ -24,7 +25,9 @@ import org.springframework.test.context.junit4.SpringRunner;
 
 import java.util.Random;
 
+import evm.dmc.core.data.AttributeType;
 import evm.dmc.core.data.Data;
+import evm.dmc.core.data.Statistics;
 import evm.dmc.core.function.CSVLoader;
 import evm.dmc.weka.DMCWekaConfig;
 import evm.dmc.weka.WekaFramework;
@@ -45,17 +48,25 @@ public class WekaDataTest {
 	@Value("${wekatest.datasource}")
 	String sourceFile;
 
+	@Value("${wekatest.datasourceDate}")
+	String sourceFileDate;
+
 	@BeforeClass
 	public static void setUpBeforeClass() throws Exception {
 	}
 
 	@Before
 	public void loadData() {
+
+		loadData(sourceFile, true);
+	}
+
+	private void loadData(String source, boolean hasHeader) {
+		csv.hasHeader(hasHeader);
 		assertNotNull(csv);
-		assertThat(sourceFile, startsWith("Data"));
-		csv.setSource(sourceFile);
+		assertThat(source, startsWith("Data"));
+		csv.setSource(source);
 		data = fw.castToWekaData(csv.get());
-		// data.load(souceFile);
 	}
 
 	@Test
@@ -139,25 +150,6 @@ public class WekaDataTest {
 
 	}
 
-	// @Test
-	// public final void testHistogramChart() throws Exception {
-	// Histogram hist = Histogram.getPlotter();
-	// // this gets the actual Raster data as a byte array
-	// int[] byteArrayTest = ((DataBufferInt)
-	// this.testHistogram().getData().getDataBuffer()).getData();
-	//
-	// // this gets the actual Raster data as a byte array
-	// int[] byteArrayToCheck = ((DataBufferInt)
-	// hist.getBufferedImage(data).getData().getDataBuffer()).getData();
-	// assertArrayEquals(byteArrayTest, byteArrayToCheck);
-	//
-	// String fname = hist.saveToPng(data, "Data/test");
-	// File file = new File(fname);
-	// assertTrue(file.exists());
-	//
-	// file.delete();
-	// }
-
 	@Test
 	public final void testGetSubset() {
 		WekaData subDat = data.getSubset(0, 1);
@@ -230,6 +222,107 @@ public class WekaDataTest {
 
 		assertTrue(data.isNominal(0));
 		assertTrue(data.isNominal(3));
+	}
+
+	@Test
+	public final void testGetAttributeStatisticsForNominalAttr() {
+		Statistics stat0 = data.getAttributeStatistics(0);
+		Statistics stat1 = data.getAttributeStatistics(1);
+
+		assertEquals(AttributeType.NOMINAL, stat0.getType());
+		assertEquals("State", stat0.getName());
+		assertThat(stat0.getMax(), closeTo(0, 0));
+		assertThat(stat0.getMin(), closeTo(0, 0));
+		assertEquals(3333, stat0.getCount());
+		assertThat(stat0.getElements(), hasItems("KS", "ID", "TX", "NY"));
+
+		assertEquals(AttributeType.NOMINAL, stat1.getType());
+		assertEquals("Account length", stat1.getName());
+		assertThat(stat1.getMax(), closeTo(0, 0));
+		assertThat(stat1.getMin(), closeTo(0, 0));
+		assertEquals(3333, stat1.getCount());
+		assertThat(stat1.getElements(), hasItems("117", "130", "75", "36"));
+
+	}
+
+	@Test
+	public final void testToNominal() {
+		loadData(sourceFileDate, false);
+		int column;
+
+		column = 0;
+		assertTrue(data.isNominal(column));
+		data.toNominal(column);
+		assertTrue(data.isNominal(column));
+		assertEquals("TT", data.getValueAsString(0, column));
+		for (int i = 0; i < data.getElementsCount(); i++)
+			System.out.println(data.getValue(i, column) + " -> " + data.getValueAsString(i, column));
+		data.printDebug();
+
+		column = 1;
+		assertTrue(data.isNumeric(column));
+		data.toNominal(column);
+		assertTrue(data.isNominal(column));
+		assertEquals("5.1", data.getValueAsString(0, column));
+		for (int i = 0; i < data.getElementsCount(); i++)
+			System.out.println(data.getValue(i, column) + " -> " + data.getValueAsString(i, column));
+		data.printDebug();
+
+		column = 2;
+		assertTrue(data.isNominal(column));
+		data.toNominal(column);
+		assertTrue(data.isNominal(column));
+		assertEquals("23.05.2017", data.getValueAsString(0, column));
+		for (int i = 0; i < data.getElementsCount(); i++)
+			System.out.println(data.getValue(i, column) + " -> " + data.getValueAsString(i, column));
+		data.printDebug();
+
+		column = 3;
+		assertTrue(data.isNumeric(column));
+		data.toNominal(column);
+		assertTrue(data.isNominal(column));
+		assertEquals("1", data.getValueAsString(0, column));
+		for (int i = 0; i < data.getElementsCount(); i++)
+			System.out.println(data.getValue(i, column) + " -> " + data.getValueAsString(i, column));
+		data.printDebug();
+	}
+
+	@Test
+	public final void testToNumeric() {
+		loadData(sourceFileDate, false);
+		int column;
+
+		column = 0;
+		assertTrue(data.isNominal(column));
+		data.toNumeric(column);
+		// assertTrue(data.isNumeric(column));
+		// assertThat(data.getValue(0, column), closeTo(0.0, 0.0));
+		for (int i = 0; i < data.getElementsCount(); i++)
+			System.out.println(data.getValue(i, column) + " -> " + data.getValueAsString(i, column));
+
+		// column = 1;
+		// assertTrue(data.isNumeric(column));
+		// data.toNumeric(column);
+		// assertTrue(data.isNumeric(column));
+		// for (int i = 0; i < data.getElementsCount(); i++)
+		// System.out.println(data.getValue(i, column) + " -> " +
+		// data.getValueAsString(i, column));
+
+		// column = 2;
+		// assertTrue(data.isNominal(column));
+		// data.toNumeric(column);
+		// assertTrue(data.isNumeric(column));
+		// for (int i = 0; i < data.getElementsCount(); i++)
+		// System.out.println(data.getValue(i, column) + " -> " +
+		// data.getValueAsString(i, column));
+		//
+		// column = 3;
+		// assertTrue(data.isNominal(column));
+		// data.toNumeric(column);
+		// assertTrue(data.isNumeric(column));
+		// for (int i = 0; i < data.getElementsCount(); i++)
+		// System.out.println(data.getValue(i, column) + " -> " +
+		// data.getValueAsString(i, column));
 	}
 
 	void printInstancesInfo(Instances inst) {

@@ -1,6 +1,6 @@
 package evm.dmc.core.data;
 
-public interface MultyInstace {
+public interface HasMultiInstaces {
 	int getInstancesCount();
 
 	Data<?> getInstance(int index);

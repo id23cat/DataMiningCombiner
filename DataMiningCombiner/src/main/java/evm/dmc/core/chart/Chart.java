@@ -12,22 +12,24 @@ import java.util.List;
 import java.util.Random;
 import java.util.function.BiFunction;
 
+import evm.dmc.core.data.Data;
+
 public abstract class Chart implements Plotter {
 	private static int WIDTH = 1024;
 	private static int HEIGHT = 768;
 
-	private BiFunction<Integer, Plottable, JFreeChart> chartKind;
+	private BiFunction<Integer, Data, JFreeChart> chartKind;
 
 	protected Chart() {
 		this.chartKind = getChartKind();
 	}
 
-	public Chart(BiFunction<Integer, Plottable, JFreeChart> chartKind) {
+	public Chart(BiFunction<Integer, Data, JFreeChart> chartKind) {
 		this.chartKind = chartKind;
 	}
 
 	// @PostConstruct
-	public final void setChartKind(BiFunction<Integer, Plottable, JFreeChart> chartKind) {
+	public final void setChartKind(BiFunction<Integer, Data, JFreeChart> chartKind) {
 		this.chartKind = chartKind;
 
 	}
@@ -39,7 +41,7 @@ public abstract class Chart implements Plotter {
 	 * @return Bi-argument function that accepts title for cart and data , and
 	 *         returns JFreeChart object
 	 */
-	protected abstract BiFunction<Integer, Plottable, JFreeChart> getChartKind();
+	protected abstract BiFunction<Integer, Data, JFreeChart> getChartKind();
 
 	/*
 	 * Output file format: {prfix}_{data.title()}_{random value}.png
@@ -51,7 +53,7 @@ public abstract class Chart implements Plotter {
 	 * 
 	 */
 	@Override
-	public List<String> saveToPng(Plottable data, String prefix) throws IOException {
+	public List<String> saveToPng(Data data, String prefix) throws IOException {
 		List<String> files = new LinkedList<>();
 		Random rnd = new Random(42);
 		for (int index : data.getAttributesToPlot()) {
@@ -70,7 +72,7 @@ public abstract class Chart implements Plotter {
 	}
 
 	@Override
-	public List<BufferedImage> getBufferedImage(Plottable data) {
+	public List<BufferedImage> getBufferedImage(Data data) {
 		List<BufferedImage> images = new LinkedList<>();
 		for (int index : data.getAttributesToPlot()) {
 			JFreeChart chart = chartKind.apply(index, data);

@@ -6,4 +6,8 @@ public class DataOperationException extends RuntimeException {
 		super(cause);
 	}
 
+	public DataOperationException(String message) {
+		super(message);
+	}
+
 }

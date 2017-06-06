@@ -11,6 +11,10 @@ public interface Plottable {
 		return null;
 	}
 
+	default int getElementsCount() {
+		return -1;
+	}
+
 	default String getTitle(int index) {
 		return null;
 	}

@@ -5,20 +5,32 @@ import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.Collections;
 import java.util.Enumeration;
+import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Map;
 import java.util.Set;
 
 import evm.dmc.core.DataFactory;
+import evm.dmc.core.data.AttributeType;
 import evm.dmc.core.data.Data;
 import evm.dmc.core.data.HasMultiAttributes;
+import evm.dmc.core.data.HasMultiInstaces;
 import evm.dmc.core.data.InMemoryData;
-import evm.dmc.core.data.MultyInstace;
+import evm.dmc.core.data.Statistics;
 import evm.dmc.weka.WekaFW;
 import evm.dmc.weka.exceptions.DataOperationException;
 import evm.dmc.weka.exceptions.IndexOutOfRange;
 import weka.core.Attribute;
+import weka.core.AttributeStats;
 import weka.core.Instances;
+import weka.filters.Filter;
+import weka.filters.unsupervised.attribute.NumericToNominal;
+import weka.filters.unsupervised.attribute.StringToNominal;
 
 /**
  * Supported loading from all supported by weka files.
@@ -32,16 +44,46 @@ import weka.core.Instances;
 @Service("Weka_Instances")
 @Scope(ConfigurableBeanFactory.SCOPE_PROTOTYPE)
 // TODO: too complicated class !!!
-public class WekaData extends InMemoryData<Instances> implements Cloneable, HasMultiAttributes, MultyInstace {
-
-	private DataFactory dataFactory;
+public class WekaData extends InMemoryData<Instances> implements Cloneable, HasMultiAttributes, HasMultiInstaces {
 
 	// used for generating cross-validation sets
 	private static int FOLDS = 4;
+
+	private DataFactory dataFactory;
 	private int[] selectedAttributes;
 
 	public WekaData(@Autowired @WekaFW DataFactory df) {
 		this.dataFactory = df;
+	}
+
+	@Override
+	public WekaData clone() {
+		WekaData newData = (WekaData) dataFactory.getData(WekaData.class);
+		newData.data = new Instances(this.data);
+		return newData;
+
+	}
+
+	public WekaData copyObject() throws CloneNotSupportedException {
+		WekaData data = (WekaData) dataFactory.getData(WekaData.class);
+		data.setData(new Instances(this.getData()));
+		return data;
+
+	}
+
+	@Override
+	public Enumeration<Object> enumerateValues(int column) throws IndexOutOfRange {
+		if (!checkColIndex(column)) {
+			throw new IndexOutOfRange(exceptionMessage("Wrong index: ", column));
+		}
+		if (!isNominal(column))
+			return null;
+		return data.attribute(column).enumerateValues();
+	}
+
+	@Override
+	public Enumeration<Object> enumerateValues(String name) throws IndexOutOfRange {
+		return enumerateValues(getIndexByName(name));
 	}
 
 	public double[] getAllValuesAsDoubleAt(int index) {
@@ -84,6 +126,14 @@ public class WekaData extends InMemoryData<Instances> implements Cloneable, HasM
 	}
 
 	@Override
+	public String getAttributeName(int column) throws IndexOutOfRange {
+		if (!checkColIndex(column)) {
+			throw new IndexOutOfRange(exceptionMessage("Wrong index: ", column));
+		}
+		return data.attribute(column).name();
+	}
+
+	@Override
 	public Data<Instances> getAttributes(int... indexes) throws IndexOutOfRange {
 		WekaData data;
 		try {
@@ -117,18 +167,63 @@ public class WekaData extends InMemoryData<Instances> implements Cloneable, HasM
 	}
 
 	@Override
-	public boolean isMultiAttribute() {
-		return true;
+	public int getAttributesCount() {
+		return data.numAttributes();
 	}
 
 	@Override
-	public double[] plot(int index) {
-		return this.getAllValuesAsDoubleAt(index);
+	public Statistics getAttributeStatistics(int column) throws IndexOutOfRange {
+
+		Statistics stat = new Statistics(getType(column), getAttributeName(column));
+		AttributeStats wekaStat = data.attributeStats(column);
+		if (isNumeric(column)) {
+			stat.setCount(wekaStat.intCount);
+			stat.setMax(wekaStat.numericStats.max);
+			stat.setMin(wekaStat.numericStats.min);
+			// stat.setBins(wekaStat.intCount);
+		} else {
+			stat.setCount(wekaStat.intCount);
+			ArrayList<?> list = Collections.list(data.attribute(column).enumerateValues());
+			stat.setElements(new HashSet<String>((Collection<? extends String>) list));
+		}
+
+		Map map = countElements(column, stat);
+		stat.setMapValCount(map);
+
+		return stat;
 	}
 
 	@Override
-	public String getTitle(int index) {
-		return getAttributeName(index);
+	public Statistics getAttributeStatistics(int column, int bins) throws IndexOutOfRange {
+		Statistics stat = new Statistics(getType(column), getAttributeName(column));
+		AttributeStats wekaStat = data.attributeStats(column);
+		if (isNumeric(column)) {
+			stat.setCount(wekaStat.intCount);
+			stat.setMax(wekaStat.numericStats.max);
+			stat.setMin(wekaStat.numericStats.min);
+			stat.setBins(bins);
+			Map map = countElements(column, stat);
+			stat.setMapValCount(map);
+		}
+		return stat;
+	}
+
+	@Override
+	public int[] getAttributesToPlot() {
+		return selectedAttributes;
+	}
+
+	@Override
+	public int getElementsCount() {
+		return getInstancesCount();
+	}
+
+	@Override
+	public int getIndexByName(String name) throws IndexOutOfRange {
+		if (data.attribute(name) == null) {
+			throw new IndexOutOfRange(exceptionMessage("Wrong attribute name: ", name));
+		}
+		return data.attribute(name).index();
 	}
 
 	@Override
@@ -143,6 +238,11 @@ public class WekaData extends InMemoryData<Instances> implements Cloneable, HasM
 	}
 
 	@Override
+	public int getInstancesCount() {
+		return data.numInstances();
+	}
+
+	@Override
 	public WekaData getSubset(int from, int to) throws IndexOutOfRange {
 		WekaData newData = (WekaData) dataFactory.getData(WekaData.class);
 		try {
@@ -154,13 +254,8 @@ public class WekaData extends InMemoryData<Instances> implements Cloneable, HasM
 	}
 
 	@Override
-	public int getInstancesCount() {
-		return data.numInstances();
-	}
-
-	@Override
-	public int getAttributesCount() {
-		return data.numAttributes();
+	public String getTitle(int index) {
+		return getAttributeName(index);
 	}
 
 	@Override
@@ -183,11 +278,11 @@ public class WekaData extends InMemoryData<Instances> implements Cloneable, HasM
 	}
 
 	@Override
-	public WekaData clone() {
-		WekaData newData = (WekaData) dataFactory.getData(WekaData.class);
-		newData.data = new Instances(this.data);
-		return newData;
-
+	public double getValue(int row, int column) throws IndexOutOfRange {
+		if (!checkRowIndex(row) || !checkColIndex(column)) {
+			throw new IndexOutOfRange(exceptionMessage("Wrong index: ", row, column));
+		}
+		return this.data.get(row).value(column);
 	}
 
 	@Override
@@ -202,27 +297,8 @@ public class WekaData extends InMemoryData<Instances> implements Cloneable, HasM
 	}
 
 	@Override
-	public double getValue(int row, int column) throws IndexOutOfRange {
-		if (!checkRowIndex(row) || !checkColIndex(column)) {
-			throw new IndexOutOfRange(exceptionMessage("Wrong index: ", row, column));
-		}
-		return this.data.get(row).value(column);
-	}
-
-	@Override
-	public boolean isNominal(int column) throws IndexOutOfRange {
-		if (!checkColIndex(column)) {
-			throw new IndexOutOfRange(exceptionMessage("Wrong index: ", column));
-		}
-		return this.data.attribute(column).isNominal() || this.data.attribute(column).isString();
-	}
-
-	@Override
-	public boolean isString(int column) throws IndexOutOfRange {
-		if (!checkColIndex(column)) {
-			throw new IndexOutOfRange(exceptionMessage("Wrong index: ", column));
-		}
-		return this.data.attribute(column).isString();
+	public boolean isMultiAttribute() {
+		return true;
 	}
 
 	@Override
@@ -234,6 +310,65 @@ public class WekaData extends InMemoryData<Instances> implements Cloneable, HasM
 	}
 
 	@Override
+	public void toDate(int column) throws IndexOutOfRange, DataOperationException {
+		Filter filter;
+		switch (getType(column)) {
+		case STRING:
+			// TODO
+			throw new DataOperationException("Convertion not implemented: Date to Numeric");
+		case NOMINAL:
+			// TODO
+			throw new DataOperationException("Convertion not implemented: Date to Numeric");
+		case NUMERIC:
+			// TODO
+			throw new DataOperationException("Convertion not implemented: Date to Numeric");
+		default:
+			return;
+		}
+		// try {
+		// filter.setInputFormat(data);
+		// } catch (Exception e) {
+		// throw new DataOperationException(e);
+		// }
+		// applyFilter(filter);
+	}
+
+	@Override
+	public boolean isNominal(int column) throws IndexOutOfRange {
+		if (!checkColIndex(column)) {
+			throw new IndexOutOfRange(exceptionMessage("Wrong index: ", column));
+		}
+		return this.data.attribute(column).isNominal() || this.data.attribute(column).isString();
+	}
+
+	@Override
+	public void toNominal(int column) throws IndexOutOfRange, DataOperationException {
+		Filter filter;
+		switch (getType(column)) {
+		case STRING:
+			StringToNominal str2nom = new StringToNominal();
+			str2nom.setAttributeRange(String.valueOf(column + 1));
+			filter = str2nom;
+			break;
+		case DATE:
+		case NUMERIC:
+			NumericToNominal num2nom = new NumericToNominal();
+			num2nom.setAttributeIndices(String.valueOf(column + 1));
+			filter = num2nom;
+			break;
+		default:
+			return;
+		}
+		try {
+			filter.setInputFormat(data);
+		} catch (Exception e) {
+			throw new DataOperationException(e);
+		}
+		applyFilter(filter);
+
+	}
+
+	@Override
 	public boolean isNumeric(int column) throws IndexOutOfRange {
 		if (!checkColIndex(column)) {
 			throw new IndexOutOfRange(exceptionMessage("Wrong index: ", column));
@@ -242,41 +377,109 @@ public class WekaData extends InMemoryData<Instances> implements Cloneable, HasM
 	}
 
 	@Override
-	public Enumeration<Object> enumerateValues(int column) throws IndexOutOfRange {
+	public void toNumeric(int column) throws IndexOutOfRange, DataOperationException {
+		Filter filter;
+		switch (getType(column)) {
+		case DATE:
+			// TODO
+			throw new DataOperationException("Convertion not implemented: Date to Numeric");
+		case STRING:
+			// TODO
+			throw new DataOperationException("Convertion not implemented: String to Numeric");
+		case NOMINAL:
+			throw new DataOperationException("Convertion not implemented: Nominal to Numeric");
+		default:
+			return;
+		}
+		// try {
+		// filter.setInputFormat(data);
+		// } catch (Exception e) {
+		// throw new DataOperationException(e);
+		// }
+		// applyFilter(filter);
+	}
+
+	@Override
+	public boolean isString(int column) throws IndexOutOfRange {
 		if (!checkColIndex(column)) {
 			throw new IndexOutOfRange(exceptionMessage("Wrong index: ", column));
 		}
-		if (!isNominal(column))
-			return null;
-		return data.attribute(column).enumerateValues();
+		return this.data.attribute(column).isString();
 	}
 
 	@Override
-	public int getIndexByName(String name) throws IndexOutOfRange {
-		if (data.attribute(name) == null) {
-			throw new IndexOutOfRange(exceptionMessage("Wrong attribute name: ", name));
+	public double[] plot(int index) {
+		return this.getAllValuesAsDoubleAt(index);
+	}
+
+	@Override
+	public void setAttributesToPlot(int... indexes) {
+		selectedAttributes = indexes.clone();
+	}
+
+	public String getAllAsString() {
+		StringBuilder strBuf = new StringBuilder();
+		int cols = this.getAttributesCount();
+		int rows = this.getElementsCount();
+		for (int j = 0; j < cols; j++) {
+			strBuf.append(this.getAttributeName(j) + "(");
+			strBuf.append(this.getType(j).name() + ")\t");
 		}
-		return data.attribute(name).index();
-	}
+		strBuf.append(System.lineSeparator());
 
-	@Override
-	public String getAttributeName(int column) throws IndexOutOfRange {
-		if (!checkColIndex(column)) {
-			throw new IndexOutOfRange(exceptionMessage("Wrong index: ", column));
+		for (int i = 0; i < rows; i++) {
+			for (int j = 0; j < cols; j++) {
+				strBuf.append(this.getValue(i, j) + " (");
+				strBuf.append(this.getValueAsString(i, j) + ")\t");
+			}
+			strBuf.append(System.lineSeparator());
 		}
-		return data.attribute(column).name();
+		return strBuf.toString();
 	}
 
-	@Override
-	public Enumeration<Object> enumerateValues(String name) throws IndexOutOfRange {
-		return enumerateValues(getIndexByName(name));
+	public void printDebug() {
+		// int cols = this.getAttributesCount();
+		// int rows = this.getElementsCount();
+		// for (int j = 0; j < cols; j++) {
+		// System.out.print(this.getAttributeName(j) + "(");
+		// System.out.print(this.getType(j).name() + ")\t");
+		// }
+		// System.out.println();
+		// for (int i = 0; i < rows; i++) {
+		// for (int j = 0; j < cols; j++) {
+		// System.out.print(this.getValue(i, j) + " (");
+		// System.out.print(this.getValueAsString(i, j) + ")\t");
+		// }
+		// System.out.println();
+		// }
+		System.out.println(getAllAsString());
 	}
 
-	public WekaData copyObject() throws CloneNotSupportedException {
-		WekaData data = (WekaData) dataFactory.getData(WekaData.class);
-		data.setData(new Instances(this.getData()));
-		return data;
+	private AttributeType getType(int index) {
+		AttributeType type;
+		if (isDate(index))
+			type = AttributeType.DATE;
+		else if (isString(index))
+			type = AttributeType.STRING;
+		else if (isNumeric(index))
+			type = AttributeType.NUMERIC;
+		else
+			type = AttributeType.NOMINAL;
+		return type;
+	}
 
+	private void applyFilter(Filter filter) throws DataOperationException {
+		try {
+			data = Filter.useFilter(data, filter);
+		} catch (Exception e) {
+			throw new DataOperationException(e);
+		}
+	}
+
+	private boolean checkColIndex(int index) throws IndexOutOfRange {
+		if (index < 0 || index >= getAttributesCount())
+			return false;
+		return true;
 	}
 
 	private boolean checkRowIndex(int index) throws IndexOutOfRange {
@@ -285,10 +488,68 @@ public class WekaData extends InMemoryData<Instances> implements Cloneable, HasM
 		return true;
 	}
 
-	private boolean checkColIndex(int index) throws IndexOutOfRange {
-		if (index < 0 || index >= getAttributesCount())
-			return false;
-		return true;
+	private Map<Object, Integer> countElements(int index, Statistics stat) {
+		Map<Object, Integer> mapRet;
+		switch (getType(index)) {
+		case DATE:
+		case NOMINAL:
+		case STRING:
+			Map<String, Integer> mapS = new HashMap<>();
+			countAsStrings(index, mapS);
+
+			mapRet = new HashMap<Object, Integer>(mapS);
+			countAsStrings(index, mapS);
+			break;
+		case NUMERIC:
+			Map<Double, Integer> mapD = new HashMap<>();
+			countAsDoubles(index, mapD, stat);
+
+			mapRet = new HashMap<Object, Integer>(mapD);
+			countAsDoubles(index, mapD, stat);
+			break;
+		default:
+			mapRet = null;
+		}
+
+		return mapRet;
+
+	}
+
+	private void countAsStrings(int index, Map<String, Integer> map) {
+		for (int i = 0; i < getInstancesCount(); i++) {
+			String key = getValueAsString(i, index);
+			if (map.containsKey(key)) {
+				int count = map.get(key);
+				map.put(key, count + 1);
+			} else {
+				map.put(key, 1);
+			}
+		}
+	}
+
+	private void countAsDoubles(int index, Map<Double, Integer> map, Statistics stat) {
+		double min = stat.getMin();
+		double max = stat.getMax();
+		int bins = stat.getBins();
+		double[] boundaries = new double[bins];
+		int[] counts = new int[bins];
+		double step = (max + 0.001 - min) / bins;
+		for (int i = 0; i < bins; i++) {
+			boundaries[i] = min;
+			min += step;
+		}
+		boundaries[bins] = max;
+		for (int i = 0; i < getInstancesCount(); i++) {
+			double key = getValue(i, index);
+			int counter = Arrays.binarySearch(boundaries, key);
+			if (index >= 0)
+				counts[counter]++;
+			else
+				counts[-counter + 1]++;
+		}
+		for (int i = 0; i < bins; i++) {
+			map.put(boundaries[i], counts[i]);
+		}
 	}
 
 	private String exceptionMessage(String msg, int... idx) {
@@ -310,16 +571,6 @@ public class WekaData extends InMemoryData<Instances> implements Cloneable, HasM
 		strb.append(name);
 
 		return strb.toString();
-	}
-
-	@Override
-	public void setAttributesToPlot(int... indexes) {
-		selectedAttributes = indexes.clone();
-	}
-
-	@Override
-	public int[] getAttributesToPlot() {
-		return selectedAttributes;
 	}
 
 }

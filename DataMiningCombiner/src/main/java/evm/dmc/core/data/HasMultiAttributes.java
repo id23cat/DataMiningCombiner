@@ -1,5 +1,6 @@
 package evm.dmc.core.data;
 
+import evm.dmc.weka.exceptions.DataOperationException;
 import evm.dmc.weka.exceptions.IndexOutOfRange;
 
 /**
@@ -45,15 +46,35 @@ public interface HasMultiAttributes {
 
 	boolean isNominal(int column) throws IndexOutOfRange;
 
+	void toNominal(int column) throws IndexOutOfRange, DataOperationException;
+
 	boolean isString(int column) throws IndexOutOfRange;
 
 	boolean isDate(int column) throws IndexOutOfRange;
 
+	void toDate(int column) throws IndexOutOfRange, DataOperationException;
+
 	boolean isNumeric(int column) throws IndexOutOfRange;
+
+	void toNumeric(int column) throws IndexOutOfRange, DataOperationException;
 
 	int getIndexByName(String name) throws IndexOutOfRange;
 
 	String getAttributeName(int column) throws IndexOutOfRange;
+
+	Statistics getAttributeStatistics(int column) throws IndexOutOfRange;
+
+	/**
+	 * Uses as alternative to default getAttributeStatistics(int column) when
+	 * need to set number of bins in elements frequency for numeric attribute
+	 * 
+	 * @param column
+	 * @param bins
+	 *            - the number of bins (must be at least 1)
+	 * @return
+	 * @throws IndexOutOfRange
+	 */
+	Statistics getAttributeStatistics(int column, int bins) throws IndexOutOfRange;
 
 	/**
 	 * Returns an enumeration of all the attribute's values if the attribute is
