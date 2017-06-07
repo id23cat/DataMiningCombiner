@@ -438,20 +438,6 @@ public class WekaData extends InMemoryData<Instances> implements Cloneable, HasM
 	}
 
 	public void printDebug() {
-		// int cols = this.getAttributesCount();
-		// int rows = this.getElementsCount();
-		// for (int j = 0; j < cols; j++) {
-		// System.out.print(this.getAttributeName(j) + "(");
-		// System.out.print(this.getType(j).name() + ")\t");
-		// }
-		// System.out.println();
-		// for (int i = 0; i < rows; i++) {
-		// for (int j = 0; j < cols; j++) {
-		// System.out.print(this.getValue(i, j) + " (");
-		// System.out.print(this.getValueAsString(i, j) + ")\t");
-		// }
-		// System.out.println();
-		// }
 		System.out.println(getAllAsString());
 	}
 

@@ -103,7 +103,7 @@ public class WekaCSVLoadTest {
 	}
 
 	@Test
-	public final void testGetDate() {
+	public final void testAsDate() {
 		csv.setSource(sourceFileDate);
 		csv.setDateFormat("dd.MM.yyyy");
 		WekaData data = getData(csv);
@@ -120,6 +120,46 @@ public class WekaCSVLoadTest {
 		data.printDebug();
 		assertTrue(data.isDate(2));
 		assertTrue(data.isDate(6));
+	}
+
+	@Test
+	public final void testAsNominal() {
+		csv.hasHeader(false);
+		csv.setSource(sourceFileDate);
+		WekaData data = getData(csv);
+		data.printDebug();
+		assertTrue(data.isNumeric(1));
+		assertTrue(data.isNumeric(3));
+
+		csv.restart();
+
+		csv.asNominal(1);
+		csv.asNominal(3);
+		data = getData(csv);
+
+		data.printDebug();
+		assertTrue(data.isNominal(1));
+		assertTrue(data.isNominal(3));
+	}
+
+	@Test
+	public final void testAsString() {
+		csv.hasHeader(false);
+		csv.setSource(sourceFileDate);
+		WekaData data = getData(csv);
+		data.printDebug();
+		assertTrue(data.isNumeric(1));
+		assertTrue(data.isNumeric(3));
+
+		csv.restart();
+
+		csv.asString(1);
+		csv.asString(3);
+		data = getData(csv);
+
+		data.printDebug();
+		assertTrue(data.isString(1));
+		assertTrue(data.isString(3));
 	}
 
 	private WekaData getData(WekaCSVLoad csv) {

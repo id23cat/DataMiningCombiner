@@ -34,6 +34,9 @@ public class WekaCSVLoad implements CSVLoader, DMCFunction<Instances> {
 	private Data result = null;
 
 	private StringBuilder dateAttributes = new StringBuilder();
+	private StringBuilder numericAttributes = new StringBuilder();
+	private StringBuilder nominalAttributes = new StringBuilder();
+	private StringBuilder stringAttributes = new StringBuilder();
 
 	private boolean hasHeader = true;
 
@@ -108,8 +111,8 @@ public class WekaCSVLoad implements CSVLoader, DMCFunction<Instances> {
 		try {
 			// weka.core.converters.CSVLoader loader = new
 			// weka.core.converters.CSVLoader();
-			loader.setDateAttributes(dateAttributes.toString());
-			loader.setSource(new File(this.source));
+			setAttributes();
+
 			Instances inst = loader.getStructure();
 			inst.add(loader.getNextInstance(inst));
 
@@ -132,8 +135,8 @@ public class WekaCSVLoad implements CSVLoader, DMCFunction<Instances> {
 			// weka.core.converters.CSVLoader loader = new
 			// weka.core.converters.CSVLoader();
 
-			loader.setDateAttributes(dateAttributes.toString());
-			loader.setSource(new File(this.source));
+			setAttributes();
+
 			inst = loader.getDataSet();
 		} catch (Throwable e) {
 			throw checkException(e);
@@ -195,19 +198,19 @@ public class WekaCSVLoad implements CSVLoader, DMCFunction<Instances> {
 
 	@Override
 	public CSVLoader asNumeric(int index) {
-		// TODO Auto-generated method stub
+		numericAttributes.append(index + 1 + ",");
 		return this;
 	}
 
 	@Override
 	public CSVLoader asNominal(int index) {
-		// TODO Auto-generated method stub
+		nominalAttributes.append(index + 1 + ",");
 		return this;
 	}
 
 	@Override
 	public CSVLoader asString(int index) {
-		// TODO Auto-generated method stub
+		stringAttributes.append(index + 1 + ",");
 		return this;
 	}
 
@@ -217,6 +220,14 @@ public class WekaCSVLoad implements CSVLoader, DMCFunction<Instances> {
 			return new LoadHeaderException("Probably file has no header: " + e.getMessage(), e);
 		} else
 			return new LoadDataException(e);
+	}
+
+	private void setAttributes() throws IOException {
+		loader.setDateAttributes(dateAttributes.toString());
+		loader.setNominalAttributes(nominalAttributes.toString());
+		loader.setNumericAttributes(numericAttributes.toString());
+		loader.setStringAttributes(stringAttributes.toString());
+		loader.setSource(new File(this.source));
 	}
 
 }
