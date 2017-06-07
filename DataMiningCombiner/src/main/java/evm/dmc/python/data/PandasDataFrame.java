@@ -125,16 +125,4 @@ public class PandasDataFrame extends JepVariable {
 
 	}
 
-	@Override
-	public void toDate(int column) throws IndexOutOfRange, DataOperationException {
-		// TODO Auto-generated method stub
-
-	}
-
-	@Override
-	public void toNumeric(int column) throws IndexOutOfRange, DataOperationException {
-		// TODO Auto-generated method stub
-
-	}
-
 }

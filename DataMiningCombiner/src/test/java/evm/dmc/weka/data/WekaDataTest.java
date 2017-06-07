@@ -227,6 +227,7 @@ public class WekaDataTest {
 	@Test
 	public final void testGetAttributeStatisticsForNominalAttr() {
 		Statistics stat0 = data.getAttributeStatistics(0);
+		data.toNominal(1);
 		Statistics stat1 = data.getAttributeStatistics(1);
 
 		assertEquals(AttributeType.NOMINAL, stat0.getType());
@@ -285,44 +286,6 @@ public class WekaDataTest {
 		for (int i = 0; i < data.getElementsCount(); i++)
 			System.out.println(data.getValue(i, column) + " -> " + data.getValueAsString(i, column));
 		data.printDebug();
-	}
-
-	@Test
-	public final void testToNumeric() {
-		loadData(sourceFileDate, false);
-		int column;
-
-		column = 0;
-		assertTrue(data.isNominal(column));
-		data.toNumeric(column);
-		// assertTrue(data.isNumeric(column));
-		// assertThat(data.getValue(0, column), closeTo(0.0, 0.0));
-		for (int i = 0; i < data.getElementsCount(); i++)
-			System.out.println(data.getValue(i, column) + " -> " + data.getValueAsString(i, column));
-
-		// column = 1;
-		// assertTrue(data.isNumeric(column));
-		// data.toNumeric(column);
-		// assertTrue(data.isNumeric(column));
-		// for (int i = 0; i < data.getElementsCount(); i++)
-		// System.out.println(data.getValue(i, column) + " -> " +
-		// data.getValueAsString(i, column));
-
-		// column = 2;
-		// assertTrue(data.isNominal(column));
-		// data.toNumeric(column);
-		// assertTrue(data.isNumeric(column));
-		// for (int i = 0; i < data.getElementsCount(); i++)
-		// System.out.println(data.getValue(i, column) + " -> " +
-		// data.getValueAsString(i, column));
-		//
-		// column = 3;
-		// assertTrue(data.isNominal(column));
-		// data.toNumeric(column);
-		// assertTrue(data.isNumeric(column));
-		// for (int i = 0; i < data.getElementsCount(); i++)
-		// System.out.println(data.getValue(i, column) + " -> " +
-		// data.getValueAsString(i, column));
 	}
 
 	void printInstancesInfo(Instances inst) {

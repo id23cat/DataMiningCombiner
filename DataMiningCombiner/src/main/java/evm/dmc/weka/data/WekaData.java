@@ -309,29 +309,33 @@ public class WekaData extends InMemoryData<Instances> implements Cloneable, HasM
 		return this.data.attribute(column).isDate();
 	}
 
-	@Override
-	public void toDate(int column) throws IndexOutOfRange, DataOperationException {
-		Filter filter;
-		switch (getType(column)) {
-		case STRING:
-			// TODO
-			throw new DataOperationException("Convertion not implemented: Date to Numeric");
-		case NOMINAL:
-			// TODO
-			throw new DataOperationException("Convertion not implemented: Date to Numeric");
-		case NUMERIC:
-			// TODO
-			throw new DataOperationException("Convertion not implemented: Date to Numeric");
-		default:
-			return;
-		}
-		// try {
-		// filter.setInputFormat(data);
-		// } catch (Exception e) {
-		// throw new DataOperationException(e);
-		// }
-		// applyFilter(filter);
-	}
+	// @Override
+	// public void toDate(int column) throws IndexOutOfRange,
+	// DataOperationException {
+	// Filter filter;
+	// switch (getType(column)) {
+	// case STRING:
+	// // TODO
+	// throw new DataOperationException("Convertion not implemented: Date to
+	// Numeric");
+	// case NOMINAL:
+	// // TODO
+	// throw new DataOperationException("Convertion not implemented: Date to
+	// Numeric");
+	// case NUMERIC:
+	// // TODO
+	// throw new DataOperationException("Convertion not implemented: Date to
+	// Numeric");
+	// default:
+	// return;
+	// }
+	// // try {
+	// // filter.setInputFormat(data);
+	// // } catch (Exception e) {
+	// // throw new DataOperationException(e);
+	// // }
+	// // applyFilter(filter);
+	// }
 
 	@Override
 	public boolean isNominal(int column) throws IndexOutOfRange {
@@ -376,28 +380,32 @@ public class WekaData extends InMemoryData<Instances> implements Cloneable, HasM
 		return this.data.attribute(column).isNumeric();
 	}
 
-	@Override
-	public void toNumeric(int column) throws IndexOutOfRange, DataOperationException {
-		Filter filter;
-		switch (getType(column)) {
-		case DATE:
-			// TODO
-			throw new DataOperationException("Convertion not implemented: Date to Numeric");
-		case STRING:
-			// TODO
-			throw new DataOperationException("Convertion not implemented: String to Numeric");
-		case NOMINAL:
-			throw new DataOperationException("Convertion not implemented: Nominal to Numeric");
-		default:
-			return;
-		}
-		// try {
-		// filter.setInputFormat(data);
-		// } catch (Exception e) {
-		// throw new DataOperationException(e);
-		// }
-		// applyFilter(filter);
-	}
+	// @Override
+	// public void toNumeric(int column) throws IndexOutOfRange,
+	// DataOperationException {
+	// Filter filter;
+	// switch (getType(column)) {
+	// case DATE:
+	// // TODO
+	// throw new DataOperationException("Convertion not implemented: Date to
+	// Numeric");
+	// case STRING:
+	// // TODO
+	// throw new DataOperationException("Convertion not implemented: String to
+	// Numeric");
+	// case NOMINAL:
+	// throw new DataOperationException("Convertion not implemented: Nominal to
+	// Numeric");
+	// default:
+	// return;
+	// }
+	// // try {
+	// // filter.setInputFormat(data);
+	// // } catch (Exception e) {
+	// // throw new DataOperationException(e);
+	// // }
+	// // applyFilter(filter);
+	// }
 
 	@Override
 	public boolean isString(int column) throws IndexOutOfRange {
@@ -517,9 +525,9 @@ public class WekaData extends InMemoryData<Instances> implements Cloneable, HasM
 		double min = stat.getMin();
 		double max = stat.getMax();
 		int bins = stat.getBins();
-		double[] boundaries = new double[bins];
-		int[] counts = new int[bins];
-		double step = (max + 0.001 - min) / bins;
+		double[] boundaries = new double[bins + 1];
+		int[] counts = new int[bins + 1];
+		double step = (max - min) / bins;
 		for (int i = 0; i < bins; i++) {
 			boundaries[i] = min;
 			min += step;
@@ -528,10 +536,19 @@ public class WekaData extends InMemoryData<Instances> implements Cloneable, HasM
 		for (int i = 0; i < getInstancesCount(); i++) {
 			double key = getValue(i, index);
 			int counter = Arrays.binarySearch(boundaries, key);
-			if (index >= 0)
-				counts[counter]++;
-			else
-				counts[-counter + 1]++;
+			try {
+
+				if (counter >= 0)
+					counts[counter]++;
+				else
+					counts[-counter - 1]++;
+			} catch (ArrayIndexOutOfBoundsException e) {
+				System.err.println(step);
+				System.err.println(Arrays.toString(boundaries));
+				System.err.println(i + ", " + key + ", " + counter);
+				e.printStackTrace();
+				throw e;
+			}
 		}
 		for (int i = 0; i < bins; i++) {
 			map.put(boundaries[i], counts[i]);

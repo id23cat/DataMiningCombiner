@@ -52,11 +52,12 @@ public interface HasMultiAttributes {
 
 	boolean isDate(int column) throws IndexOutOfRange;
 
-	void toDate(int column) throws IndexOutOfRange, DataOperationException;
+	// void toDate(int column) throws IndexOutOfRange, DataOperationException;
 
 	boolean isNumeric(int column) throws IndexOutOfRange;
 
-	void toNumeric(int column) throws IndexOutOfRange, DataOperationException;
+	// void toNumeric(int column) throws IndexOutOfRange,
+	// DataOperationException;
 
 	int getIndexByName(String name) throws IndexOutOfRange;
 
