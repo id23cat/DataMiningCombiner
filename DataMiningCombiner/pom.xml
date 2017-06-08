@@ -15,7 +15,7 @@
 		<groupId>org.springframework.boot</groupId>
 		<artifactId>spring-boot-starter-parent</artifactId>
 		<version>1.5.1.RELEASE</version>
-		<relativePath/> <!-- lookup parent from repository -->
+		<relativePath /> <!-- lookup parent from repository -->
 	</parent>
 
 	<properties>
@@ -48,6 +48,60 @@
 			<artifactId>spring-boot-starter-test</artifactId>
 			<scope>test</scope>
 		</dependency>
+
+		<!-- https://mvnrepository.com/artifact/org.mockito/mockito-core -->
+		<dependency>
+			<groupId>org.mockito</groupId>
+			<artifactId>mockito-core</artifactId>
+			<version>2.7.19</version>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>junit</groupId>
+			<artifactId>junit</artifactId>
+			<scope>test</scope>
+		</dependency>
+		<!-- https://mvnrepository.com/artifact/org.hamcrest/java-hamcrest -->
+		<dependency>
+			<groupId>org.hamcrest</groupId>
+			<artifactId>java-hamcrest</artifactId>
+			<version>2.0.0.0</version>
+			<scope>test</scope>
+		</dependency>
+
+		<!-- https://mvnrepository.com/artifact/com.github.stefanbirkner/system-rules -->
+		<dependency>
+			<groupId>com.github.stefanbirkner</groupId>
+			<artifactId>system-rules</artifactId>
+			<version>1.16.1</version>
+		</dependency>
+		<!-- https://mvnrepository.com/artifact/org.python/jython -->
+		<dependency>
+			<groupId>org.python</groupId>
+			<artifactId>jython-standalone</artifactId>
+			<version>2.7.0</version>
+		</dependency>
+		<dependency>
+			<groupId>jep</groupId>
+			<artifactId>jep</artifactId>
+			<version>3.6.3</version>
+			<!-- <scope>system</scope> <systemPath>${project.basedir}/libs/jep/jep-3.6.3.jar</systemPath> -->
+			<!-- <systemPath>/home/id23cat/miniconda2/lib/python2.7/site-packages/jep/jep-3.6.3.jar</systemPath> -->
+		</dependency>
+		<!-- https://mvnrepository.com/artifact/net.sf.meka/meka -->
+		<dependency>
+			<groupId>net.sf.meka</groupId>
+			<artifactId>meka</artifactId>
+			<version>1.9.1</version>
+		</dependency>
+		<!-- https://mvnrepository.com/artifact/org.jfree/jfreechart -->
+		<dependency>
+			<groupId>org.jfree</groupId>
+			<artifactId>jfreechart</artifactId>
+			<version>1.0.19</version>
+		</dependency>
+
+
 	</dependencies>
 
 	<build>
@@ -55,6 +109,41 @@
 			<plugin>
 				<groupId>org.springframework.boot</groupId>
 				<artifactId>spring-boot-maven-plugin</artifactId>
+			</plugin>
+			<!-- To load JEP libraries -->
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-surefire-plugin</artifactId>
+				<configuration>
+					<systemPropertyVariables>
+						<propertyName>java.library.path</propertyName>
+						<buildDirectory>${project.basedir}/libs/jep</buildDirectory>
+					</systemPropertyVariables>
+					<!-- <forkMode>once</forkMode> <argLine>-Djava.library.path=${project.basedir}/libs/jep</argLine> -->
+				</configuration>
+			</plugin>
+			<!-- To push JEP jar to local maven repository -->
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-install-plugin</artifactId>
+				<executions>
+					<execution>
+						<id>install-external</id>
+						<phase>clean</phase>
+						<configuration>
+							<file>${basedir}/libs/jep/jep-3.6.3.jar</file>
+							<repositoryLayout>default</repositoryLayout>
+							<groupId>jep</groupId>
+							<artifactId>jep</artifactId>
+							<version>3.6.3</version>
+							<packaging>jar</packaging>
+							<generatePom>true</generatePom>
+						</configuration>
+						<goals>
+							<goal>install-file</goal>
+						</goals>
+					</execution>
+				</executions>
 			</plugin>
 		</plugins>
 	</build>

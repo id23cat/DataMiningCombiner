@@ -1,6 +1,7 @@
 # Theano project checking
 
 import numpy
+import theano
 import theano.tensor as T
 import time
 from theano import function, config, shared, sandbox
