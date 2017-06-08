@@ -26,7 +26,7 @@ public class HistogramTest extends WekaTestBaseClass {
 
 	@Test
 	public final void testSaveToPng() throws IOException {
-		data.setAttributesToPlot(data.getIndexByName("Account length"));
+		histogram.setAttribIndexesToPlot(data.getIndexByName("Account length"));
 		List<String> list = histogram.saveToPng(data, "Data/test");
 		assertFalse(list.isEmpty());
 		assertEquals(1, list.size());
@@ -39,9 +39,12 @@ public class HistogramTest extends WekaTestBaseClass {
 
 	@Test
 	public final void testSaveToPngSeveralArgs() throws IOException {
-		data.setAttributesToPlot(data.getIndexByName("State"), data.getIndexByName("Account length"),
-				data.getIndexByName("Total day minutes"), data.getIndexByName("Total day calls"));
-		List<String> list = histogram.saveToPng(data, "Data/test");
+		histogram
+				.setAttribIndexesToPlot(data.getIndexByName("State"), data.getIndexByName("Account length"),
+						data.getIndexByName("Total day minutes"), data.getIndexByName("Total day calls"))
+				.setWidth(2048);
+
+		List<String> list = histogram.saveToPng(data, "Data/testSeveral");
 		assertFalse(list.isEmpty());
 		assertEquals(4, list.size());
 		for (String fname : list) {
@@ -55,7 +58,7 @@ public class HistogramTest extends WekaTestBaseClass {
 
 	@Test
 	public final void testGetBufferedImage() {
-		data.setAttributesToPlot(data.getIndexByName("Account length"));
+		histogram.setAttribIndexesToPlot(data.getIndexByName("Account length"));
 		List<BufferedImage> list = histogram.getBufferedImage(data);
 
 		assertFalse(list.isEmpty());
@@ -70,65 +73,5 @@ public class HistogramTest extends WekaTestBaseClass {
 
 		// assertArrayEquals(byteArrayTest, byteArrayToCheck);
 	}
-
-	// @Test
-	// public final void testHistogramChart() throws Exception {
-	// Histogram hist = Histogram.getPlotter();
-	//
-	// String fname = hist.saveToPng(data, "Data/test");
-	// File file = new File(fname);
-	// assertTrue(file.exists());
-	//
-	// file.delete();
-	// }
-	//
-	// public final List<BufferedImage> tstHistBuffered(int... indexes) throws
-	// Exception {
-	// List<BufferedImage> list = new ArrayList<>();
-	// for (int index : indexes) {
-	// String plotTitle = "Account length";
-	// double[] values = data.getAllValuesAsDoubleAt("Account length");
-	// HistogramDataset dataset = new HistogramDataset();
-	// dataset.setType(HistogramType.FREQUENCY);
-	// dataset.addSeries("Histogram", values, 3333);
-	//
-	// String xaxis = "number";
-	// String yaxis = "value";
-	// PlotOrientation orientation = PlotOrientation.VERTICAL;
-	// boolean show = false;
-	// boolean toolTips = false;
-	// boolean urls = false;
-	// JFreeChart chart = ChartFactory.createHistogram(plotTitle, xaxis, yaxis,
-	// dataset, orientation, show,
-	// toolTips, urls);
-	// int width = 1024;
-	// int height = 768;
-	// list.add(chart.createBufferedImage(width, height));
-	// }
-	// return list;
-	// }
-	//
-	// public final List<String> tstHistFile(int... indexes) throws Exception {
-	// String plotTitle = "Account length";
-	// double[] values = data.getAllValuesAsDoubleAt("Account length");
-	// HistogramDataset dataset = new HistogramDataset();
-	// dataset.setType(HistogramType.FREQUENCY);
-	// dataset.addSeries("Histogram", values, 3333);
-	// String plotTitle = "Account length";
-	// String xaxis = "number";
-	// String yaxis = "value";
-	// PlotOrientation orientation = PlotOrientation.VERTICAL;
-	// boolean show = false;
-	// boolean toolTips = false;
-	// boolean urls = false;
-	// JFreeChart chart = ChartFactory.createHistogram(plotTitle, xaxis, yaxis,
-	// dataset, orientation, show, toolTips,
-	// urls);
-	// int width = 1024;
-	// int height = 768;
-	// ChartUtilities.saveChartAsPNG(new File("Data/histogram.PNG"), chart,
-	// width, height);
-	// return chart.createBufferedImage(width, height);
-	// }
 
 }

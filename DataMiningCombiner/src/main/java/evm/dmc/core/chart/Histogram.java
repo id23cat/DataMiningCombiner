@@ -63,10 +63,9 @@ public class Histogram extends Chart {
 				// // for()
 				Statistics stat = data.getAttributeStatistics(index);
 				DefaultCategoryDataset dataset = new DefaultCategoryDataset();
-				stat.getMapValCount().forEach((key, value) -> dataset.addValue(value, "RowKey", (Comparable) key));
+				stat.getMapValuesCount().forEach((key, value) -> dataset.addValue(value, "Count", (Comparable) key));
 				return ChartFactory.createBarChart(stat.getName(), "Value", "Count", dataset, PlotOrientation.VERTICAL,
 						true, true, false);
-
 			}
 		};
 	}

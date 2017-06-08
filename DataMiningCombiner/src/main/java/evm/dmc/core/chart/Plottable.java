@@ -18,12 +18,4 @@ public interface Plottable {
 	default String getTitle(int index) {
 		return null;
 	}
-
-	default void setAttributesToPlot(int... indexes) {
-
-	}
-
-	default int[] getAttributesToPlot() {
-		return null;
-	}
 }

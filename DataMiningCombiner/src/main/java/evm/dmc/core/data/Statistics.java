@@ -6,7 +6,7 @@ import java.util.Set;
 public class Statistics {
 	AttributeType type;
 	String attrName;
-	Map<Object, Integer> mapValCount;
+	Map<Object, Integer> mapValuesCount;
 	double max = 0;
 	double min = 0;
 	int count = 0;
@@ -29,16 +29,16 @@ public class Statistics {
 	/**
 	 * @return the mapValCount
 	 */
-	public Map<Object, Integer> getMapValCount() {
-		return mapValCount;
+	public Map<Object, Integer> getMapValuesCount() {
+		return mapValuesCount;
 	}
 
 	/**
 	 * @param mapValCount
 	 *            the mapValCount to set
 	 */
-	public void setMapValCount(Map<Object, Integer> mapValCount) {
-		this.mapValCount = mapValCount;
+	public void setMapValuesCount(Map<Object, Integer> mapValCount) {
+		this.mapValuesCount = mapValCount;
 	}
 
 	/**

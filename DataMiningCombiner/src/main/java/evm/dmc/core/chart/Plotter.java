@@ -29,4 +29,14 @@ public interface Plotter extends HasNameAndDescription {
 	 */
 	List<java.awt.image.BufferedImage> getBufferedImage(Data data);
 
+	Plotter setAttribIndexesToPlot(int... indexes);
+
+	int getWidth();
+
+	void setWidth(int width);
+
+	int getHeight();
+
+	void setHeight(int height);
+
 }

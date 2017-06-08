@@ -15,8 +15,10 @@ import java.util.function.BiFunction;
 import evm.dmc.core.data.Data;
 
 public abstract class Chart implements Plotter {
-	private static int WIDTH = 1024;
-	private static int HEIGHT = 768;
+	private int width = 1024;
+	private int height = 768;
+
+	private int[] selectedAttributes;
 
 	private BiFunction<Integer, Data, JFreeChart> chartKind;
 
@@ -26,6 +28,40 @@ public abstract class Chart implements Plotter {
 
 	public Chart(BiFunction<Integer, Data, JFreeChart> chartKind) {
 		this.chartKind = chartKind;
+	}
+
+	/**
+	 * @return the width
+	 */
+	@Override
+	public int getWidth() {
+		return width;
+	}
+
+	/**
+	 * @param width
+	 *            the width to set
+	 */
+	@Override
+	public void setWidth(int width) {
+		this.width = width;
+	}
+
+	/**
+	 * @return the height
+	 */
+	@Override
+	public int getHeight() {
+		return height;
+	}
+
+	/**
+	 * @param height
+	 *            the height to set
+	 */
+	@Override
+	public void setHeight(int height) {
+		this.height = height;
 	}
 
 	// @PostConstruct
@@ -56,7 +92,7 @@ public abstract class Chart implements Plotter {
 	public List<String> saveToPng(Data data, String prefix) throws IOException {
 		List<String> files = new LinkedList<>();
 		Random rnd = new Random(42);
-		for (int index : data.getAttributesToPlot()) {
+		for (int index : selectedAttributes) {
 			JFreeChart chart = chartKind.apply(index, data);
 			StringBuilder fname = new StringBuilder(prefix);
 			fname.append("_");
@@ -64,7 +100,7 @@ public abstract class Chart implements Plotter {
 			fname.append("_");
 			fname.append(rnd.nextInt());
 			fname.append(".png");
-			ChartUtilities.saveChartAsPNG(new File(fname.toString()), chart, WIDTH, HEIGHT);
+			ChartUtilities.saveChartAsPNG(new File(fname.toString()), chart, width, height);
 			files.add(fname.toString());
 		}
 
@@ -74,11 +110,17 @@ public abstract class Chart implements Plotter {
 	@Override
 	public List<BufferedImage> getBufferedImage(Data data) {
 		List<BufferedImage> images = new LinkedList<>();
-		for (int index : data.getAttributesToPlot()) {
+		for (int index : selectedAttributes) {
 			JFreeChart chart = chartKind.apply(index, data);
-			images.add(chart.createBufferedImage(WIDTH, HEIGHT));
+			images.add(chart.createBufferedImage(width, height));
 		}
 		return images;
+	}
+
+	@Override
+	public Chart setAttribIndexesToPlot(int... indexes) {
+		selectedAttributes = indexes.clone();
+		return this;
 	}
 
 }

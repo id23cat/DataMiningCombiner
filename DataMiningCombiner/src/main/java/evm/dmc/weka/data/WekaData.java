@@ -50,7 +50,6 @@ public class WekaData extends InMemoryData<Instances> implements Cloneable, HasM
 	private static int FOLDS = 4;
 
 	private DataFactory dataFactory;
-	private int[] selectedAttributes;
 
 	public WekaData(@Autowired @WekaFW DataFactory df) {
 		this.dataFactory = df;
@@ -188,7 +187,7 @@ public class WekaData extends InMemoryData<Instances> implements Cloneable, HasM
 		}
 
 		Map map = countElements(column, stat);
-		stat.setMapValCount(map);
+		stat.setMapValuesCount(map);
 
 		return stat;
 	}
@@ -203,14 +202,9 @@ public class WekaData extends InMemoryData<Instances> implements Cloneable, HasM
 			stat.setMin(wekaStat.numericStats.min);
 			stat.setBins(bins);
 			Map map = countElements(column, stat);
-			stat.setMapValCount(map);
+			stat.setMapValuesCount(map);
 		}
 		return stat;
-	}
-
-	@Override
-	public int[] getAttributesToPlot() {
-		return selectedAttributes;
 	}
 
 	@Override
@@ -418,11 +412,6 @@ public class WekaData extends InMemoryData<Instances> implements Cloneable, HasM
 	@Override
 	public double[] plot(int index) {
 		return this.getAllValuesAsDoubleAt(index);
-	}
-
-	@Override
-	public void setAttributesToPlot(int... indexes) {
-		selectedAttributes = indexes.clone();
 	}
 
 	public String getAllAsString() {
