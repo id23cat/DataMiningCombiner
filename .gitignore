@@ -1,2 +1,4 @@
 Python/.idea/*
 Python/*.png
+.project
+.settings/
