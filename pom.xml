@@ -25,6 +25,7 @@
     <module>DataMiningCombiner</module>
     <module>DMCweb</module>
 <!--    <module>simple-persist</module> -->
+  	<module>DMC-api</module>
   </modules>
 
   <build>
