@@ -13,7 +13,8 @@ public class HwController {
 	private static final Logger logger = LoggerFactory.getLogger(HomeController.class);
 	
 	@RequestMapping("/hello")
-    public String greeting(@RequestParam(value="name", required=false, defaultValue="World") String name, Model model) {
+    public String greeting(@RequestParam(value="name", required=false, defaultValue="World") 
+    						String name, Model model) {
 		logger.info("HW: " +name);
         model.addAttribute("name", name);
         return "greeting";
