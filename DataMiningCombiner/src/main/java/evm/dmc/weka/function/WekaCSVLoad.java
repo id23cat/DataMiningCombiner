@@ -59,7 +59,7 @@ public class WekaCSVLoad implements CSVLoader, DMCFunction<Instances> {
 	@Override
 	public Data get() throws LoadDataException {
 		if (result == null)
-			execute();
+			this.execute();
 		return result;
 	}
 
@@ -135,7 +135,7 @@ public class WekaCSVLoad implements CSVLoader, DMCFunction<Instances> {
 			// weka.core.converters.CSVLoader loader = new
 			// weka.core.converters.CSVLoader();
 
-			setAttributes();
+			this.setAttributes();
 
 			inst = loader.getDataSet();
 		} catch (Throwable e) {
@@ -227,7 +227,7 @@ public class WekaCSVLoad implements CSVLoader, DMCFunction<Instances> {
 		loader.setNominalAttributes(nominalAttributes.toString());
 		loader.setNumericAttributes(numericAttributes.toString());
 		loader.setStringAttributes(stringAttributes.toString());
-		loader.setSource(new File(this.source));
+		loader.setSource(new File(this.source));	
 	}
 
 }

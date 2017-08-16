@@ -16,7 +16,7 @@ public class PrincipCompAnalysis extends AbstaractWekaFilter {
 	private int components = 2;
 
 	@Value("${weka.pca_desc}")
-	private static String description;
+	private String description;
 
 	@Override
 	public String getName() {

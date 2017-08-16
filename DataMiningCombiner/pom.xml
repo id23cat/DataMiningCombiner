@@ -80,7 +80,7 @@
 			<groupId>jep</groupId>
 			<artifactId>jep</artifactId>
 			<version>3.6.3</version>
-			<!-- <scope>system</scope> <systemPath>${project.basedir}/libs/jep/jep-3.6.3.jar</systemPath> -->
+			<scope>system</scope> <systemPath>${project.basedir}/libs/jep/jep-3.6.3.jar</systemPath>
 			<!-- <systemPath>/home/id23cat/miniconda2/lib/python2.7/site-packages/jep/jep-3.6.3.jar</systemPath> -->
 		</dependency>
 		<!-- https://mvnrepository.com/artifact/net.sf.meka/meka -->

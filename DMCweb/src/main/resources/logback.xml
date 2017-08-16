@@ -23,4 +23,8 @@ See here for more details: http://gordondickens.com/wordpress/2013/03/27/sawing-
     <root level="info">
         <appender-ref ref="console"/>
     </root>
+    
+    <logger name="evm.dmc.web">
+		<level value="debug" />
+	</logger>
 </configuration>
