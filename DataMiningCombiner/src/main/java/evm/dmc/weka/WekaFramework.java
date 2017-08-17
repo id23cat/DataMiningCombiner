@@ -13,7 +13,7 @@ import weka.core.Instances;
 @Service
 @WekaFW
 public class WekaFramework extends AbstractFramework {
-	static Class CLASS = AbstractWekaFunction.class;
+	static Class CLASS = WekaFunction.class;
 
 	public WekaFramework() {
 		// super(CLASS);

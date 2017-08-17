@@ -18,12 +18,13 @@ import evm.dmc.core.exceptions.UncheckedStoringException;
 import evm.dmc.core.function.CSVSaver;
 import evm.dmc.core.function.DMCFunction;
 import evm.dmc.weka.WekaFramework;
+import evm.dmc.weka.WekaFunction;
 import weka.core.converters.AbstractSaver;
 
 @Service(WekaFunctions.CSVSAVER)
 @PropertySource("classpath:weka.properties")
 @Scope(ConfigurableBeanFactory.SCOPE_PROTOTYPE)
-public class WekaCSVSave implements CSVSaver, DMCFunction<String>  {
+public class WekaCSVSave implements CSVSaver, DMCFunction<String>, WekaFunction  {
 	private static final String NAME = WekaFunctions.CSVSAVER;
 	private static final Integer ARGS_COUNT = 1;
 

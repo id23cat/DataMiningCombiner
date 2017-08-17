@@ -34,6 +34,7 @@ import java.util.Set;
 
 import evm.dmc.core.DataFactory;
 import evm.dmc.core.Framework;
+import evm.dmc.core.TestUtils;
 import evm.dmc.core.data.Data;
 import evm.dmc.core.function.DMCFunction;
 import evm.dmc.weka.data.WekaData;
@@ -113,22 +114,23 @@ public class WekaFrameworkTest {
 	@Test
 	public final void testGetSaverDescriptors() {
 		assertNotNull(wekaFW);
-		Map<String, Class> descMap = wekaFW.getSaverDescriptors();
-		Iterator<Entry<String, Class>> iter = descMap.entrySet().iterator();
-		while(iter.hasNext()){
-			Entry<String, Class> entr = iter.next();
-			System.out.println(entr.getKey() + " - " + entr.getValue());
-		}
+		Map<String, Class<?>> descMap = wekaFW.getSaverDescriptors();
+//		Iterator<Entry<String, Class<?>>> iter = descMap.entrySet().iterator();
+//		while(iter.hasNext()){
+//			Entry<String, Class<?>> entr = iter.next();
+//			System.out.println(entr.getKey() + " - " + entr.getValue());
+//		}
+		System.out.println(TestUtils.printMap(descMap));
 		assertThat(descMap, hasEntry("Weka_CSVSaver", WekaCSVSave.class));
 	}
 	
 	@Test
 	public final void testGetLoaderDescriptors() {
 		assertNotNull(wekaFW);
-		Map<String, Class> descMap = wekaFW.getLoaderDescriptors();
-		Iterator<Entry<String, Class>> iter = descMap.entrySet().iterator();
+		Map<String, Class<?>> descMap = wekaFW.getLoaderDescriptors();
+		Iterator<Entry<String, Class<?>>> iter = descMap.entrySet().iterator();
 		while(iter.hasNext()){
-			Entry<String, Class> entr = iter.next();
+			Entry<String, Class<?>> entr = iter.next();
 			System.out.println(entr.getKey() + " - " + entr.getValue());
 		}
 		assertThat(descMap, hasEntry("Weka_CSVLoader", WekaCSVLoad.class));

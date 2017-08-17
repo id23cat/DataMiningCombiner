@@ -1,4 +1,4 @@
-package evm.dmc.weka.function;
+package evm.dmc.weka.exceptions;
 
 public class FilterError extends Error {
 
@@ -7,7 +7,7 @@ public class FilterError extends Error {
 	 */
 	private static final long serialVersionUID = 1010853893097364732L;
 
-	FilterError(Throwable cause) {
+	public FilterError(Throwable cause) {
 		super(cause);
 	}
 }

@@ -34,9 +34,9 @@ public interface Framework extends ApplicationContextAware {
 	 */
 	Set<String> getFunctionDescriptors();
 
-	Map<String, Class> getSaverDescriptors();
+	Map<String, Class<?>> getSaverDescriptors();
 
-	Map<String, Class> getLoaderDescriptors();
+	Map<String, Class<?>> getLoaderDescriptors();
 
 	/**
 	 * Gets the DMC function.

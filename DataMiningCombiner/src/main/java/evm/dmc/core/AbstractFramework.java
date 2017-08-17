@@ -93,8 +93,8 @@ public abstract class AbstractFramework implements Framework, DataFactory {
 	}
 
 	@Override
-	public Map<String, Class> getSaverDescriptors() {
-		Map<String, Class> saveIDs = new HashMap<>();
+	public Map<String, Class<?>> getSaverDescriptors() {
+		Map<String, Class<?>> saveIDs = new HashMap<>();
 		for (String fnDescr : applicationContext.getBeanNamesForType(abstractSaverClass)) {
 			saveIDs.put(fnDescr, applicationContext.getType(fnDescr));
 		}
@@ -103,8 +103,8 @@ public abstract class AbstractFramework implements Framework, DataFactory {
 	}
 
 	@Override
-	public Map<String, Class> getLoaderDescriptors() {
-		Map<String, Class> loadIDs = new HashMap<>();
+	public Map<String, Class<?>> getLoaderDescriptors() {
+		Map<String, Class<?>> loadIDs = new HashMap<>();
 		for (String fnDescr : applicationContext.getBeanNamesForType(abstractLoaderClass)) {
 			loadIDs.put(fnDescr, applicationContext.getType(fnDescr));
 		}

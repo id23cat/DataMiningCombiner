@@ -17,6 +17,7 @@ import evm.dmc.core.data.Data;
 import evm.dmc.core.function.CSVLoader;
 import evm.dmc.core.function.DMCFunction;
 import evm.dmc.weka.WekaFW;
+import evm.dmc.weka.WekaFunction;
 import evm.dmc.weka.data.WekaData;
 import evm.dmc.weka.exceptions.LoadDataException;
 import evm.dmc.weka.exceptions.LoadHeaderException;
@@ -25,7 +26,7 @@ import weka.core.Instances;
 @Service(WekaFunctions.CSVLOADER)
 @PropertySource("classpath:weka.properties")
 @Scope(ConfigurableBeanFactory.SCOPE_PROTOTYPE)
-public class WekaCSVLoad implements CSVLoader, DMCFunction<Instances> {
+public class WekaCSVLoad implements CSVLoader, DMCFunction<Instances>, WekaFunction {
 	private static final String NAME = WekaFunctions.CSVLOADER;
 	private static final Integer ARGS_COUNT = 0;
 	private DataFactory dataFactory;

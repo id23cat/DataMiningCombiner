@@ -4,11 +4,12 @@ import org.springframework.stereotype.Service;
 
 import evm.dmc.core.data.Data;
 import evm.dmc.core.function.AbstractDMCFunction;
+import evm.dmc.weka.WekaFunction;
 import evm.dmc.weka.data.WekaData;
 import weka.core.Instances;
 
 @Service
-public abstract class AbstractWekaFunction extends AbstractDMCFunction<Instances> {
+public abstract class AbstractWekaFunction extends AbstractDMCFunction<Instances> implements WekaFunction {
 
 	protected Data<Instances> result = null;
 
