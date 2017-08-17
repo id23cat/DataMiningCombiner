@@ -119,17 +119,21 @@ public abstract class AbstractFramework implements Framework, DataFactory {
 		DMCFunction function = (DMCFunction) applicationContext.getBean(descriptor);
 		return function;
 	}
-
+	
 	@Override
-	public <T> T getDMCDataSaver(String descriptor, Class<T> type) {
+	public <T> T getDMCFunction(String descriptor, Class<T> type) {
 		T function = applicationContext.getBean(descriptor, type);
 		return function;
 	}
 
 	@Override
+	public <T> T getDMCDataSaver(String descriptor, Class<T> type) {
+		return getDMCFunction(descriptor, type);
+	}
+
+	@Override
 	public <T> T getDMCDataLoader(String descriptor, Class<T> type) {
-		T function = applicationContext.getBean(descriptor, type);
-		return function;
+		return getDMCFunction(descriptor, type);
 	}
 
 	@Override

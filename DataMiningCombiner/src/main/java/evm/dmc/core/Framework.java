@@ -46,6 +46,8 @@ public interface Framework extends ApplicationContextAware {
 	 * @return the DMC function
 	 */
 	DMCFunction getDMCFunction(String descriptor);
+	
+	<T> T getDMCFunction(String descriptor, Class<T> type);
 
 	<T> T getDMCDataSaver(String descriptor, Class<T> type);
 
