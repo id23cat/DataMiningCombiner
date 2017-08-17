@@ -1,6 +1,7 @@
 package evm.dmc.weka;
 
 import static org.hamcrest.CoreMatchers.hasItems;
+import static org.hamcrest.Matchers.hasEntry;
 import static org.hamcrest.Matchers.empty;
 import static org.hamcrest.Matchers.not;
 import static org.junit.Assert.assertEquals;
@@ -25,6 +26,9 @@ import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import java.util.Arrays;
+import java.util.Iterator;
+import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Properties;
 import java.util.Set;
 
@@ -33,6 +37,8 @@ import evm.dmc.core.Framework;
 import evm.dmc.core.data.Data;
 import evm.dmc.core.function.DMCFunction;
 import evm.dmc.weka.data.WekaData;
+import evm.dmc.weka.function.WekaCSVLoad;
+import evm.dmc.weka.function.WekaCSVSave;
 import evm.dmc.weka.function.WekaFunctions;
 
 @RunWith(SpringRunner.class)
@@ -102,6 +108,30 @@ public class WekaFrameworkTest {
 			}
 		}
 
+	}
+	
+	@Test
+	public final void testGetSaverDescriptors() {
+		assertNotNull(wekaFW);
+		Map<String, Class> descMap = wekaFW.getSaverDescriptors();
+		Iterator<Entry<String, Class>> iter = descMap.entrySet().iterator();
+		while(iter.hasNext()){
+			Entry<String, Class> entr = iter.next();
+			System.out.println(entr.getKey() + " - " + entr.getValue());
+		}
+		assertThat(descMap, hasEntry("Weka_CSVSaver", WekaCSVSave.class));
+	}
+	
+	@Test
+	public final void testGetLoaderDescriptors() {
+		assertNotNull(wekaFW);
+		Map<String, Class> descMap = wekaFW.getLoaderDescriptors();
+		Iterator<Entry<String, Class>> iter = descMap.entrySet().iterator();
+		while(iter.hasNext()){
+			Entry<String, Class> entr = iter.next();
+			System.out.println(entr.getKey() + " - " + entr.getValue());
+		}
+		assertThat(descMap, hasEntry("Weka_CSVLoader", WekaCSVLoad.class));
 	}
 
 }

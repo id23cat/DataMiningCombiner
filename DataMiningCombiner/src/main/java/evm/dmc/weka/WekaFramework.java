@@ -4,6 +4,8 @@ import org.springframework.stereotype.Service;
 
 import evm.dmc.core.AbstractFramework;
 import evm.dmc.core.data.Data;
+import evm.dmc.core.function.DMCDataLoader;
+import evm.dmc.core.function.DMCDataSaver;
 import evm.dmc.weka.data.WekaData;
 import evm.dmc.weka.function.AbstractWekaFunction;
 import weka.core.Instances;

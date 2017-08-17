@@ -4,8 +4,11 @@ import javax.annotation.PostConstruct;
 
 import org.springframework.context.ApplicationContextAware;
 
+import java.util.Map;
 import java.util.Set;
 
+import evm.dmc.core.function.DMCDataLoader;
+import evm.dmc.core.function.DMCDataSaver;
 import evm.dmc.core.function.DMCFunction;
 
 /**
@@ -31,6 +34,10 @@ public interface Framework extends ApplicationContextAware {
 	 */
 	Set<String> getFunctionDescriptors();
 
+	Map<String, Class> getSaverDescriptors();
+
+	Map<String, Class> getLoaderDescriptors();
+
 	/**
 	 * Gets the DMC function.
 	 *
@@ -39,4 +46,9 @@ public interface Framework extends ApplicationContextAware {
 	 * @return the DMC function
 	 */
 	DMCFunction getDMCFunction(String descriptor);
+
+	<T> T getDMCDataSaver(String descriptor, Class<T> type);
+
+	<T> T getDMCDataLoader(String descriptor, Class<T> type);
+
 }

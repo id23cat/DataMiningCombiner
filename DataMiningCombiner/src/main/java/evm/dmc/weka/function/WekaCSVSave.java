@@ -23,7 +23,7 @@ import weka.core.converters.AbstractSaver;
 @Service(WekaFunctions.CSVSAVER)
 @PropertySource("classpath:weka.properties")
 @Scope(ConfigurableBeanFactory.SCOPE_PROTOTYPE)
-public class WekaCSVSave implements CSVSaver, DMCFunction<String> {
+public class WekaCSVSave implements CSVSaver, DMCFunction<String>  {
 	private static final String NAME = WekaFunctions.CSVSAVER;
 	private static final Integer ARGS_COUNT = 1;
 

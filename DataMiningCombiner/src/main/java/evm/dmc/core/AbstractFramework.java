@@ -6,10 +6,14 @@ import org.springframework.beans.BeansException;
 import org.springframework.context.ApplicationContext;
 
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Map;
 import java.util.Set;
 
 import evm.dmc.core.data.Data;
+import evm.dmc.core.function.DMCDataLoader;
+import evm.dmc.core.function.DMCDataSaver;
 import evm.dmc.core.function.DMCFunction;
 
 /**
@@ -34,14 +38,18 @@ import evm.dmc.core.function.DMCFunction;
 public abstract class AbstractFramework implements Framework, DataFactory {
 
 	private ApplicationContext applicationContext;
-	private Set<String> funcIDs = new HashSet<String>();
-	// private Map<String, String> functionsMap = new ConcurrentHashMap<>();
+	// private Set<String> funcIDs = new HashSet<String>();
+
 	private Class abstractFunctionClass;
+
+	protected Class abstractSaverClass = DMCDataSaver.class;
+	protected Class abstractLoaderClass = DMCDataLoader.class;
 
 	public AbstractFramework() {
 	}
 
 	public AbstractFramework(Class abstractFunctionClass) {
+		this.abstractFunctionClass = abstractFunctionClass;
 		initFrameworkForType(abstractFunctionClass);
 
 	}
@@ -71,24 +79,56 @@ public abstract class AbstractFramework implements Framework, DataFactory {
 	 */
 	public void initFrameworkForType(Class functionsClass) {
 		// TODO
-		funcIDs.addAll(Arrays.asList(applicationContext.getBeanNamesForType(functionsClass)));
-
-		// for (String name : funcIDs) {
-		//
-		// }
+		this.abstractFunctionClass = functionsClass;
+		// funcIDs.addAll(Arrays.asList(applicationContext.getBeanNamesForType(functionsClass)));
 
 	}
 
 	@Override
 	public Set<String> getFunctionDescriptors() {
+		Set<String> funcIDs = new HashSet<>();
+		String[] ids = applicationContext.getBeanNamesForType(abstractFunctionClass);
+		funcIDs.addAll(Arrays.asList(ids));
 		return funcIDs;
+	}
+
+	@Override
+	public Map<String, Class> getSaverDescriptors() {
+		Map<String, Class> saveIDs = new HashMap<>();
+		for (String fnDescr : applicationContext.getBeanNamesForType(abstractSaverClass)) {
+			saveIDs.put(fnDescr, applicationContext.getType(fnDescr));
+		}
+
+		return saveIDs;
+	}
+
+	@Override
+	public Map<String, Class> getLoaderDescriptors() {
+		Map<String, Class> loadIDs = new HashMap<>();
+		for (String fnDescr : applicationContext.getBeanNamesForType(abstractLoaderClass)) {
+			loadIDs.put(fnDescr, applicationContext.getType(fnDescr));
+		}
+		return loadIDs;
 	}
 
 	@Override
 	public DMCFunction getDMCFunction(String descriptor) {
 		// TODO
 		@SuppressWarnings({ "unchecked", "rawtypes" })
-		DMCFunction function = (DMCFunction) applicationContext.getBean(descriptor, abstractFunctionClass);
+//		DMCFunction function = (DMCFunction) applicationContext.getBean(descriptor, abstractFunctionClass);
+		DMCFunction function = (DMCFunction) applicationContext.getBean(descriptor);
+		return function;
+	}
+
+	@Override
+	public <T> T getDMCDataSaver(String descriptor, Class<T> type) {
+		T function = applicationContext.getBean(descriptor, type);
+		return function;
+	}
+
+	@Override
+	public <T> T getDMCDataLoader(String descriptor, Class<T> type) {
+		T function = applicationContext.getBean(descriptor, type);
 		return function;
 	}
 
