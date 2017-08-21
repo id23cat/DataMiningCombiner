@@ -1,54 +1,63 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0" 
-         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 
                              http://maven.apache.org/maven-v4_0_0.xsd">
-  <modelVersion>4.0.0</modelVersion>
-  <groupId>by.bsuir.evm</groupId>
-  <artifactId>DMC</artifactId>
-  <version>0.0.1-SNAPSHOT</version>
-  <packaging>pom</packaging>
-  <name>Data Mining Combiner project</name>
-  
-  <parent>
+	<modelVersion>4.0.0</modelVersion>
+	<groupId>by.bsuir.evm</groupId>
+	<artifactId>DMC</artifactId>
+	<version>0.0.1-SNAPSHOT</version>
+	<packaging>pom</packaging>
+	<name>Data Mining Combiner project</name>
+
+	<parent>
 		<groupId>org.springframework.boot</groupId>
 		<artifactId>spring-boot-starter-parent</artifactId>
-		<version>1.5.4.RELEASE</version>
+		<version>1.5.6.RELEASE</version>
 		<relativePath /> <!-- lookup parent from repository -->
 	</parent>
-	
+
 	<properties>
 		<java.version>1.8</java.version>
+		<!-- Spring -->
+		<spring-framework.version>4.3.10.RELEASE</spring-framework.version>
 	</properties>
- 
-  <modules>
-    <module>DataMiningCombiner</module>
-    <module>DMCweb</module>
-<!--    <module>simple-persist</module> -->
-  	<module>DMC-api</module>
-  </modules>
 
-  <build>
-    <pluginManagement>
-    <plugins>
-      <plugin>
-        <groupId>org.apache.maven.plugins</groupId>
-        <artifactId>maven-compiler-plugin</artifactId>
-        <configuration>
-          <source>1.8</source>
-          <target>1.8</target>
-        </configuration>
-      </plugin>
-    </plugins>
-    </pluginManagement>
-  </build>
+	<modules>
+		<module>dmcombiner</module>
+		<module>DMCweb</module>
+		<!-- <module>simple-persist</module> -->
+		<module>DMC-api</module>
+	</modules>
 
-  <dependencies>
-    <dependency>
-      <groupId>junit</groupId>
-      <artifactId>junit</artifactId>
-      <version>4.12</version>
-      <scope>test</scope>
-    </dependency>
-  </dependencies>
+	<build>
+		<pluginManagement>
+			<plugins>
+				<plugin>
+					<groupId>org.apache.maven.plugins</groupId>
+					<artifactId>maven-compiler-plugin</artifactId>
+					<configuration>
+						<source>1.8</source>
+						<target>1.8</target>
+					</configuration>
+				</plugin>
+			</plugins>
+		</pluginManagement>
+	</build>
+
+	<dependencies>
+		<!-- <dependency> <groupId>org.springframework.session</groupId> <artifactId>spring-context</artifactId> 
+			</dependency> -->
+		<!-- https://mvnrepository.com/artifact/org.springframework/spring-core -->
+		<!-- <dependency>
+			<groupId>org.springframework</groupId>
+			<artifactId>spring-core</artifactId>
+			<version>4.3.10.RELEASE</version>
+		</dependency> -->
+		<dependency>
+			<groupId>junit</groupId>
+			<artifactId>junit</artifactId>
+			<version>4.12</version>
+			<scope>test</scope>
+		</dependency>
+	</dependencies>
 </project>

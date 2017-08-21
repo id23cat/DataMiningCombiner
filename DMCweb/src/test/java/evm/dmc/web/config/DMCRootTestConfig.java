@@ -6,7 +6,7 @@ import org.springframework.context.annotation.Import;
 
 @Configuration
 @ComponentScan({ "evm.dmc.core",  })
-@Import({evm.dmc.core.DMCCoreConfig.class })
+@Import({evm.dmc.core.api.DMCCoreApiConfig.class })
 public class DMCRootTestConfig {
 
 }

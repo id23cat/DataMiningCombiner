@@ -15,7 +15,7 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.context.junit4.SpringRunner;
 
-import evm.dmc.core.data.Data;
+import evm.dmc.core.api.Data;
 import evm.dmc.python.DMCPythonConfig;
 
 @RunWith(SpringRunner.class)

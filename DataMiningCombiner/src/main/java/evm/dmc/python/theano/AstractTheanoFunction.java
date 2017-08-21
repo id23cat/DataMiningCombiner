@@ -8,10 +8,10 @@ import org.springframework.stereotype.Service;
 
 import java.util.function.BiFunction;
 
-import evm.dmc.core.FrameworkContext;
-import evm.dmc.core.data.Data;
+import evm.dmc.core.api.DMCFunction;
+import evm.dmc.core.api.Data;
+import evm.dmc.core.api.back.FrameworkContext;
 import evm.dmc.core.function.AbstractDMCFunction;
-import evm.dmc.core.function.DMCFunction;
 
 public abstract class AstractTheanoFunction<T> extends AbstractDMCFunction<T> {
 

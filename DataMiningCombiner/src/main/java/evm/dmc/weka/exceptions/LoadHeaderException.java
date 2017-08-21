@@ -1,5 +1,7 @@
 package evm.dmc.weka.exceptions;
 
+import evm.dmc.core.api.exceptions.LoadDataException;
+
 public class LoadHeaderException extends LoadDataException {
 
 	public LoadHeaderException(String message, Throwable cause) {

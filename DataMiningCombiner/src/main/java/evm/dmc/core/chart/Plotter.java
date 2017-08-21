@@ -4,8 +4,8 @@ import java.io.IOException;
 
 import java.util.List;
 
-import evm.dmc.core.HasNameAndDescription;
-import evm.dmc.core.data.Data;
+import evm.dmc.core.api.Data;
+import evm.dmc.core.api.back.HasNameAndDescription;
 
 public interface Plotter extends HasNameAndDescription {
 	/**

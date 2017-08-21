@@ -16,15 +16,15 @@ import java.util.Map;
 import java.util.Set;
 
 import evm.dmc.core.DataFactory;
-import evm.dmc.core.data.AttributeType;
-import evm.dmc.core.data.Data;
-import evm.dmc.core.data.HasMultiAttributes;
+import evm.dmc.core.api.Data;
+import evm.dmc.core.api.Statistics;
+import evm.dmc.core.api.back.AttributeType;
+import evm.dmc.core.api.back.HasMultiAttributes;
+import evm.dmc.core.api.exceptions.DataOperationException;
+import evm.dmc.core.api.exceptions.IndexOutOfRange;
 import evm.dmc.core.data.HasMultiInstaces;
 import evm.dmc.core.data.InMemoryData;
-import evm.dmc.core.data.Statistics;
 import evm.dmc.weka.WekaFW;
-import evm.dmc.weka.exceptions.DataOperationException;
-import evm.dmc.weka.exceptions.IndexOutOfRange;
 import weka.core.Attribute;
 import weka.core.AttributeStats;
 import weka.core.Instances;
@@ -414,6 +414,7 @@ public class WekaData extends InMemoryData<Instances> implements Cloneable, HasM
 		return this.getAllValuesAsDoubleAt(index);
 	}
 
+	@Override
 	public String getAllAsString() {
 		StringBuilder strBuf = new StringBuilder();
 		int cols = this.getAttributesCount();

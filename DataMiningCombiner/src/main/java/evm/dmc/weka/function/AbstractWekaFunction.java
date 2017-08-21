@@ -2,7 +2,7 @@ package evm.dmc.weka.function;
 
 import org.springframework.stereotype.Service;
 
-import evm.dmc.core.data.Data;
+import evm.dmc.core.api.Data;
 import evm.dmc.core.function.AbstractDMCFunction;
 import evm.dmc.weka.WekaFunction;
 import evm.dmc.weka.data.WekaData;

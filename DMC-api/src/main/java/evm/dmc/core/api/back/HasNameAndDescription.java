@@ -1,4 +1,4 @@
-package evm.dmc.core;
+package evm.dmc.core.api.back;
 
 public interface HasNameAndDescription {
 	/**

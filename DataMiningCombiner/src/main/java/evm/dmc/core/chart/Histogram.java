@@ -14,8 +14,8 @@ import org.springframework.stereotype.Service;
 
 import java.util.function.BiFunction;
 
-import evm.dmc.core.data.Data;
-import evm.dmc.core.data.Statistics;
+import evm.dmc.core.api.Data;
+import evm.dmc.core.api.Statistics;
 
 @Service(ChartTypes.HISTOGRAM)
 @PropertySource("classpath:chart.properties")

@@ -7,7 +7,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.stereotype.Service;
 
-import evm.dmc.core.data.Data;
+import evm.dmc.core.api.Data;
 import evm.dmc.weka.WekaFW;
 import evm.dmc.weka.WekaFramework;
 import evm.dmc.weka.data.WekaData;

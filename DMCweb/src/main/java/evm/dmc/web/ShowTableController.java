@@ -1,42 +1,44 @@
 package evm.dmc.web;
 
+import java.util.Map;
 import java.util.Set;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 
-//import evm.dmc.core.Framework;
-//import evm.dmc.core.data.Data;
-import evm.dmc.core.function.CSVLoader;
-import evm.dmc.weka.WekaFW;
-import evm.dmc.weka.WekaFramework;
-import evm.dmc.weka.data.WekaData;
-import evm.dmc.weka.function.WekaFunctions;
+import evm.dmc.core.api.Data;
+import evm.dmc.core.api.Framework;
+import evm.dmc.core.api.FrameworksRepository;
+import evm.dmc.core.api.back.CSVLoader;
 
 @Controller
 // @RequestMapping("/user/{userId}/showtable")
 @RequestMapping("/showtable")
 public class ShowTableController {
 	private static final Logger logger = LoggerFactory.getLogger(ShowTableController.class);
-	WekaData data;
+	Data<?> data;
 
 	// @Value("${wekatest.datasource}")
 	String sourceFileName = "/home/id23cat/Workspaces/workspace/datamining/DMCweb/Data/telecom_churn.csv";
 
 	Set<String> names;
 
-	ShowTableController(@Autowired @WekaFW WekaFramework wekaFramework) {
-		CSVLoader loader = (CSVLoader) wekaFramework.getDMCFunction(WekaFunctions.CSVLOADER);
-		this.data = ((WekaData) loader.setSource(sourceFileName).get());
+	ShowTableController(@Autowired FrameworksRepository repository) {
+		Map<String, String> loaders = repository.findFunctionByWord("csv");
+		repository.filterFunction(loaders, "load");
+		CSVLoader loader = (CSVLoader) repository.getFunction(loaders.keySet().iterator().next());
+		this.data = loader.setSource(sourceFileName).get();
 
-		// wekaFramework.initFramework();
+		Set<String> frmwksDesc = repository.getFrameworksDescriptors();
+		assert(!frmwksDesc.isEmpty());
+		logger.debug(frmwksDesc.iterator().next());
+		Framework wekaFramework = repository.getFramework(frmwksDesc.iterator().next());
 		names = wekaFramework.getFunctionDescriptors();
 		logger.debug("Framework Ref {} ", wekaFramework.toString());
 		logger.debug("Avaliable beans{} ", this.names);

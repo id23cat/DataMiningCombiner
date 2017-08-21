@@ -13,7 +13,7 @@ import org.springframework.test.context.junit4.SpringRunner;
 
 import java.util.Arrays;
 
-import evm.dmc.core.function.DMCFunction;
+import evm.dmc.core.api.DMCFunction;
 import evm.dmc.weka.DMCWekaConfig;
 import evm.dmc.weka.WekaFramework;
 import evm.dmc.weka.data.WekaData;

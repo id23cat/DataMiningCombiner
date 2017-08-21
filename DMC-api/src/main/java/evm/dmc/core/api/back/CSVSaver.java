@@ -1,6 +1,8 @@
-package evm.dmc.core.function;
+package evm.dmc.core.api.back;
 
 import java.io.File;
+
+import evm.dmc.core.api.DMCDataSaver;
 
 public interface CSVSaver extends DMCDataSaver {
 	CSVSaver setDestination(String filename);

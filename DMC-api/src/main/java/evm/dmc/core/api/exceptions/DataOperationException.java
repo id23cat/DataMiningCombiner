@@ -1,4 +1,4 @@
-package evm.dmc.weka.exceptions;
+package evm.dmc.core.api.exceptions;
 
 public class DataOperationException extends RuntimeException {
 

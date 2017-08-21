@@ -12,11 +12,11 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 
-import evm.dmc.core.data.Data;
-import evm.dmc.core.exceptions.StoringException;
+import evm.dmc.core.api.DMCFunction;
+import evm.dmc.core.api.Data;
+import evm.dmc.core.api.back.CSVSaver;
+import evm.dmc.core.api.exceptions.StoreDataException;
 import evm.dmc.core.exceptions.UncheckedStoringException;
-import evm.dmc.core.function.CSVSaver;
-import evm.dmc.core.function.DMCFunction;
 import evm.dmc.weka.WekaFramework;
 import evm.dmc.weka.WekaFunction;
 import weka.core.converters.AbstractSaver;
@@ -38,12 +38,12 @@ public class WekaCSVSave implements CSVSaver, DMCFunction<String>, WekaFunction 
 	String description;
 
 	@Override
-	public void save(Data data) throws ClassCastException, StoringException {
+	public void save(Data data) throws ClassCastException, StoreDataException {
 		save = data;
 		try {
 			execute();
 		} catch (UncheckedStoringException e) {
-			throw new StoringException("Trying to save data to csv failed", e);
+			throw new StoreDataException("Trying to save data to csv failed", e);
 		}
 	}
 

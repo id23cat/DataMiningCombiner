@@ -33,10 +33,10 @@ import java.util.Properties;
 import java.util.Set;
 
 import evm.dmc.core.DataFactory;
-import evm.dmc.core.Framework;
 import evm.dmc.core.TestUtils;
-import evm.dmc.core.data.Data;
-import evm.dmc.core.function.DMCFunction;
+import evm.dmc.core.api.DMCFunction;
+import evm.dmc.core.api.Data;
+import evm.dmc.core.api.Framework;
 import evm.dmc.weka.data.WekaData;
 import evm.dmc.weka.function.WekaCSVLoad;
 import evm.dmc.weka.function.WekaCSVSave;

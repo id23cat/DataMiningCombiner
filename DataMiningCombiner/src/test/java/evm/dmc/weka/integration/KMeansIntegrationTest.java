@@ -14,10 +14,10 @@ import org.springframework.test.context.junit4.SpringRunner;
 import java.util.Arrays;
 
 import evm.dmc.core.DataFactory;
-import evm.dmc.core.Framework;
-import evm.dmc.core.data.Data;
-import evm.dmc.core.function.CSVLoader;
-import evm.dmc.core.function.DMCFunction;
+import evm.dmc.core.api.DMCFunction;
+import evm.dmc.core.api.Data;
+import evm.dmc.core.api.Framework;
+import evm.dmc.core.api.back.CSVLoader;
 import evm.dmc.weka.DMCWekaConfig;
 import evm.dmc.weka.WekaFW;
 import evm.dmc.weka.data.WekaData;

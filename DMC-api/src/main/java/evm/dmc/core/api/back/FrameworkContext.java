@@ -1,8 +1,8 @@
-package evm.dmc.core;
+package evm.dmc.core.api.back;
 
 import org.springframework.context.annotation.Scope;
 
-import evm.dmc.core.function.DMCFunction;
+import evm.dmc.core.api.DMCFunction;
 
 @Scope("singleton")
 public interface FrameworkContext {

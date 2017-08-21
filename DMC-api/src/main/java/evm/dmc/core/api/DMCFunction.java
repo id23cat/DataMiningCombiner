@@ -1,13 +1,13 @@
-package evm.dmc.core.function;
+package evm.dmc.core.api;
 
 import org.springframework.context.annotation.Lazy;
 import org.springframework.context.annotation.Scope;
 
 import java.util.List;
 
-import evm.dmc.core.FrameworkContext;
-import evm.dmc.core.HasNameAndDescription;
-import evm.dmc.core.data.Data;
+import evm.dmc.core.api.Data;
+import evm.dmc.core.api.back.FrameworkContext;
+import evm.dmc.core.api.back.HasNameAndDescription;
 
 @Scope("prototype")
 @Lazy

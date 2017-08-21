@@ -13,13 +13,13 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 
 import evm.dmc.core.DataFactory;
-import evm.dmc.core.data.Data;
-import evm.dmc.core.function.CSVLoader;
-import evm.dmc.core.function.DMCFunction;
+import evm.dmc.core.api.DMCFunction;
+import evm.dmc.core.api.Data;
+import evm.dmc.core.api.back.CSVLoader;
+import evm.dmc.core.api.exceptions.LoadDataException;
 import evm.dmc.weka.WekaFW;
 import evm.dmc.weka.WekaFunction;
 import evm.dmc.weka.data.WekaData;
-import evm.dmc.weka.exceptions.LoadDataException;
 import evm.dmc.weka.exceptions.LoadHeaderException;
 import weka.core.Instances;
 

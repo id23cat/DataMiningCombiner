@@ -25,10 +25,10 @@ import org.springframework.test.context.junit4.SpringRunner;
 
 import java.util.Random;
 
-import evm.dmc.core.data.AttributeType;
-import evm.dmc.core.data.Data;
-import evm.dmc.core.data.Statistics;
-import evm.dmc.core.function.CSVLoader;
+import evm.dmc.core.api.Data;
+import evm.dmc.core.api.Statistics;
+import evm.dmc.core.api.back.AttributeType;
+import evm.dmc.core.api.back.CSVLoader;
 import evm.dmc.weka.DMCWekaConfig;
 import evm.dmc.weka.WekaFramework;
 import weka.core.Instances;
@@ -183,7 +183,7 @@ public class WekaDataTest {
 
 	}
 
-	@Test(expected = evm.dmc.weka.exceptions.IndexOutOfRange.class)
+	@Test(expected = evm.dmc.core.api.exceptions.IndexOutOfRange.class)
 	public final void testGetInstanceWrongIndex() {
 		WekaData subDat = data.getInstance(3333);
 	}
@@ -209,7 +209,7 @@ public class WekaDataTest {
 		assertEquals("415.0", data.getValueAsString(2, 2));
 	}
 
-	@Test(expected = evm.dmc.weka.exceptions.IndexOutOfRange.class)
+	@Test(expected = evm.dmc.core.api.exceptions.IndexOutOfRange.class)
 	public final void testUsingWrongIndex() {
 		data.isDate(3333);
 	}

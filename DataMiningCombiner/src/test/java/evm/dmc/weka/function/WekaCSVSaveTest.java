@@ -18,9 +18,9 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.context.junit4.SpringRunner;
 
-import evm.dmc.core.data.Data;
-import evm.dmc.core.exceptions.StoringException;
-import evm.dmc.core.function.CSVLoader;
+import evm.dmc.core.api.Data;
+import evm.dmc.core.api.back.CSVLoader;
+import evm.dmc.core.api.exceptions.StoreDataException;
 import evm.dmc.weka.DMCWekaConfig;
 import evm.dmc.weka.WekaFW;
 import evm.dmc.weka.WekaFramework;
@@ -67,15 +67,15 @@ public class WekaCSVSaveTest {
 	}
 
 	@Test
-	public final void testSave() throws ClassCastException, StoringException {
+	public final void testSave() throws ClassCastException, StoreDataException {
 		csv.setDestination(tmpFile);
 		csv.save(data);
 		assertTrue(tmpFile.length() != 0);
 
 	}
 
-	@Test(expected = StoringException.class)
-	public final void testSavigWithoutDestination() throws StoringException {
+	@Test(expected = StoreDataException.class)
+	public final void testSavigWithoutDestination() throws StoreDataException {
 		csv.save(data);
 
 	}

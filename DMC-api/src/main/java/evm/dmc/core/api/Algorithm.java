@@ -1,6 +1,6 @@
-package evm.dmc.core;
+package evm.dmc.core.api;
 
-import evm.dmc.core.function.DMCFunction;
+import evm.dmc.core.api.DMCFunction;
 
 /**
  * The Interface Algorithm.

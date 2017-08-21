@@ -7,12 +7,12 @@ import java.io.IOException;
 import org.jfree.chart.ChartUtilities;
 import org.jfree.chart.JFreeChart;
 
+import evm.dmc.core.api.Data;
+
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Random;
 import java.util.function.BiFunction;
-
-import evm.dmc.core.data.Data;
 
 public abstract class Chart implements Plotter {
 	private int width = 1024;

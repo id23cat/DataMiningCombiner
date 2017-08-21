@@ -10,7 +10,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.TestPropertySource;
 
-import evm.dmc.core.function.CSVLoader;
+import evm.dmc.core.api.back.CSVLoader;
 import evm.dmc.weka.data.WekaData;
 
 @ContextConfiguration(classes = DMCWekaConfig.class)

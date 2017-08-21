@@ -4,7 +4,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.stereotype.Service;
 
-import evm.dmc.core.data.Data;
+import evm.dmc.core.api.Data;
 
 /**
  * Methos in this auxiliary class must be tested in PyReadFileTest

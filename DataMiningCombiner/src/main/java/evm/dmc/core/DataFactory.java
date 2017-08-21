@@ -1,6 +1,6 @@
 package evm.dmc.core;
 
-import evm.dmc.core.data.Data;
+import evm.dmc.core.api.Data;
 
 public interface DataFactory {
 

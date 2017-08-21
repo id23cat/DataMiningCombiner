@@ -1,7 +1,6 @@
-package evm.dmc.core.function;
+package evm.dmc.core.api;
 
-import evm.dmc.core.data.Data;
-import evm.dmc.weka.exceptions.LoadDataException;
+import evm.dmc.core.api.exceptions.LoadDataException;
 
 public interface DMCDataLoader /* extends Supplier<Data> */ {
 	/**

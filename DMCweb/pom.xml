@@ -28,7 +28,7 @@
 
 
 		<!-- Spring -->
-		<spring-framework.version>4.3.9.RELEASE</spring-framework.version>
+		<!-- <spring-framework.version>4.3.9.RELEASE</spring-framework.version> -->
 
 		<!-- Hibernate / JPA -->
 		<!-- <hibernate.version>5.2.10.Final</hibernate.version> -->
@@ -46,6 +46,11 @@
 		<dependency>
 			<groupId>by.bsuir.evm</groupId>
 			<artifactId>dmcombiner</artifactId>
+			<version>0.0.1-SNAPSHOT</version>
+		</dependency>
+		<dependency>
+			<groupId>by.bsuir.evm</groupId>
+			<artifactId>DMC-api</artifactId>
 			<version>0.0.1-SNAPSHOT</version>
 		</dependency>
 

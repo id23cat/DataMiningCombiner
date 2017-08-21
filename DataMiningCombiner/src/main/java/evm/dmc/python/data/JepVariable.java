@@ -2,7 +2,7 @@ package evm.dmc.python.data;
 
 import java.util.Random;
 
-import evm.dmc.core.data.Data;
+import evm.dmc.core.api.Data;
 
 // TODO: Auto-generated Javadoc
 /**

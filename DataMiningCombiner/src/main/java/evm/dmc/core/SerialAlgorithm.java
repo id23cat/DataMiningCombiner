@@ -3,7 +3,8 @@ package evm.dmc.core;
 import java.util.LinkedList;
 import java.util.List;
 
-import evm.dmc.core.function.DMCFunction;
+import evm.dmc.core.api.Algorithm;
+import evm.dmc.core.api.DMCFunction;
 
 /**
  * The Class SerialAlgorithm.
@@ -16,7 +17,6 @@ public class SerialAlgorithm implements Algorithm {
 	/* (non-Javadoc)
 	 * @see evm.dmc.core.Algorithm#addCommand(evm.dmc.core.Command)
 	 */
-	@Override
 	public void addCommand(DMCFunction dMCFunction) {
 		algChain.add(dMCFunction);
 		
@@ -25,7 +25,6 @@ public class SerialAlgorithm implements Algorithm {
 	/* (non-Javadoc)
 	 * @see evm.dmc.core.Algorithm#delCommand(evm.dmc.core.Command)
 	 */
-	@Override
 	public void delCommand(DMCFunction dMCFunction) {
 		algChain.remove(dMCFunction);
 		
@@ -34,7 +33,6 @@ public class SerialAlgorithm implements Algorithm {
 	/* (non-Javadoc)
 	 * @see evm.dmc.core.Algorithm#execute()
 	 */
-	@Override
 	public void execute() {
 		// TODO Auto-generated method stub
 		

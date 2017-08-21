@@ -6,7 +6,8 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 
-import evm.dmc.core.function.DMCFunction;
+import evm.dmc.core.api.DMCFunction;
+import evm.dmc.core.api.Framework;
 
 public abstract class AbstractFunctionFactory implements DMCFunctionFactory {
 	protected Map<String, Framework> functionsMap = new HashMap<>();

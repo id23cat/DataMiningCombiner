@@ -6,10 +6,10 @@ import org.springframework.stereotype.Service;
 
 import java.util.Enumeration;
 
-import evm.dmc.core.data.Data;
-import evm.dmc.core.data.Statistics;
-import evm.dmc.weka.exceptions.DataOperationException;
-import evm.dmc.weka.exceptions.IndexOutOfRange;
+import evm.dmc.core.api.Data;
+import evm.dmc.core.api.Statistics;
+import evm.dmc.core.api.exceptions.DataOperationException;
+import evm.dmc.core.api.exceptions.IndexOutOfRange;
 
 @Service("Python_DataFrame")
 @Scope(ConfigurableBeanFactory.SCOPE_PROTOTYPE)
@@ -123,6 +123,12 @@ public class PandasDataFrame extends JepVariable {
 	public void toNominal(int column) throws IndexOutOfRange, DataOperationException {
 		// TODO Auto-generated method stub
 
+	}
+
+	@Override
+	public String getAllAsString() {
+		// TODO Auto-generated method stub
+		return null;
 	}
 
 }

@@ -3,7 +3,8 @@ package evm.dmc.core.function;
 import java.util.Arrays;
 import java.util.List;
 
-import evm.dmc.core.data.Data;
+import evm.dmc.core.api.DMCFunction;
+import evm.dmc.core.api.Data;
 
 /**
  * @author id23cat
@@ -40,7 +41,6 @@ public abstract class AbstractDMCFunction<T> implements DMCFunction<T> {
 		this.argsCount = paramCount;
 	}
 
-	@Override
 	@SafeVarargs
 	final public void setArgs(Data<T>... datas) {
 		this.arguments = Arrays.asList(datas).subList(0, this.argsCount);

@@ -35,8 +35,8 @@ import java.util.Properties;
 import java.util.Set;
 
 import evm.dmc.core.DataFactory;
-import evm.dmc.core.Framework;
-import evm.dmc.core.function.DMCFunction;
+import evm.dmc.core.api.DMCFunction;
+import evm.dmc.core.api.Framework;
 import jep.Jep;
 import jep.JepException;
 

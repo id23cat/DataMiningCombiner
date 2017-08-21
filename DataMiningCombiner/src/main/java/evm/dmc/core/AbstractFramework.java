@@ -11,10 +11,11 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
-import evm.dmc.core.data.Data;
-import evm.dmc.core.function.DMCDataLoader;
-import evm.dmc.core.function.DMCDataSaver;
-import evm.dmc.core.function.DMCFunction;
+import evm.dmc.core.api.DMCDataLoader;
+import evm.dmc.core.api.DMCDataSaver;
+import evm.dmc.core.api.DMCFunction;
+import evm.dmc.core.api.Data;
+import evm.dmc.core.api.Framework;
 
 /**
  * Each final extender must implement initFramework method based on example:

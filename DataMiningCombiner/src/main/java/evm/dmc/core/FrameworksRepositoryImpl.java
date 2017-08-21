@@ -9,18 +9,19 @@ import java.util.Set;
 
 import javax.annotation.PostConstruct;
 
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.BeansException;
 import org.springframework.context.ApplicationContext;
-import org.springframework.context.ApplicationContextAware;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.stereotype.Service;
 
-import evm.dmc.core.function.DMCFunction;
-import evm.dmc.weka.function.WekaFunctions;
+import evm.dmc.core.api.DMCFunction;
+import evm.dmc.core.api.Framework;
+import evm.dmc.core.api.FrameworksRepository;
 
 @Service
 @PropertySource("classpath:fwrepo.properties")
-public class FrameworksRepository implements ApplicationContextAware {
+public class FrameworksRepositoryImpl implements FrameworksRepository {
 	private ApplicationContext applicationContext;
 	private static Class<AbstractFramework> frameworkClass = AbstractFramework.class;
 
@@ -48,10 +49,11 @@ public class FrameworksRepository implements ApplicationContextAware {
 	/**
 	 * @return Map<Framework_descriptor, Set<Framework's_functions>>
 	 */
-	public Map<String, Set<String>> getFunctionsDescriptors() {
-		Map<String, Set<String>> functions = new HashMap<>();
+	public Map<String, String> getFunctionsDescriptors() {
+		Map<String, String> functions = new HashMap<>();
 		for (String framework : getFrameworksDescriptors()) {
-			functions.put(framework, getFramework(framework).getFunctionDescriptors());
+			for(String function : getFramework(framework).getFunctionDescriptors())
+				functions.put(function, framework);
 		}
 		return functions;
 	}
@@ -59,10 +61,11 @@ public class FrameworksRepository implements ApplicationContextAware {
 	/**
 	 * @return Map<Framework_descriptor, Set<Framework's_DataLoaders>>
 	 */
-	public Map<String, Set<String>> getDataLoaderssDescriptors() {
-		Map<String, Set<String>> functions = new HashMap<>();
+	public Map<String, String> getDataLoadersDescriptors() {
+		Map<String, String> functions = new HashMap<>();
 		for (String framework : getFrameworksDescriptors()) {
-			functions.put(framework, getFramework(framework).getLoaderDescriptors().keySet());
+			for(String function : getFramework(framework).getLoaderDescriptors().keySet())
+				functions.put(function, framework);
 		}
 		return functions;
 	}
@@ -70,10 +73,11 @@ public class FrameworksRepository implements ApplicationContextAware {
 	/**
 	 * @return Map<Framework_descriptor, Set<Framework's_DataSavers>>
 	 */
-	public Map<String, Set<String>> getDataSaversDescriptors() {
-		Map<String, Set<String>> functions = new HashMap<>();
+	public Map<String, String> getDataSaversDescriptors() {
+		Map<String, String> functions = new HashMap<>();
 		for (String framework : getFrameworksDescriptors()) {
-			functions.put(framework, getFramework(framework).getSaverDescriptors().keySet());
+			for(String function : getFramework(framework).getSaverDescriptors().keySet())
+				functions.put(function, framework);
 		}
 		return functions;
 	}
@@ -92,6 +96,39 @@ public class FrameworksRepository implements ApplicationContextAware {
 		if(iter.hasNext())
 			description = getFramework(frmwkIDs.iterator().next()).getDMCFunction(function).getDescription();
 		return description;
+	}
+
+	@Override
+	public Map<String, String> findFunctionByWord(String word) {
+		Map<String, String> functions = getFunctionsDescriptors();
+		
+		return filterFunction(functions, word);
+	}
+
+	@Override
+	public Map<String, String> filterFunction(Map<String, String> funDesc, String word) {
+		Set<String> keys = funDesc.keySet();
+		keys.removeIf(p -> !StringUtils.containsIgnoreCase(p, word));
+//		for(String key:keys)
+//			funDesc.remove(key);
+		return funDesc;
+	}
+
+	@Override
+	public DMCFunction getFunction(String descriptor) {
+		Map<String, String> funcMap = getFunctionsDescriptors();
+		
+		return getFunction(descriptor, funcMap.get(descriptor));
+	}
+
+	@Override
+	public DMCFunction getFunction(String descriptor, String framework) {
+		return getFunction(descriptor, getFramework(framework));
+	}
+
+	@Override
+	public DMCFunction getFunction(String descriptor, Framework framework) {
+		return framework.getDMCFunction(descriptor);
 	}
 
 }

@@ -1,7 +1,9 @@
-package evm.dmc.core.data;
+package evm.dmc.core.api.back;
 
-import evm.dmc.weka.exceptions.DataOperationException;
-import evm.dmc.weka.exceptions.IndexOutOfRange;
+import evm.dmc.core.api.exceptions.DataOperationException;
+import evm.dmc.core.api.exceptions.IndexOutOfRange;
+import evm.dmc.core.api.Data;
+import evm.dmc.core.api.Statistics;
 
 /**
  * Indicates that implementation contains multiple attributes, such as

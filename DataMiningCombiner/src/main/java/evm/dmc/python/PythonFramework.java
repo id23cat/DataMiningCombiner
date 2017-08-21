@@ -4,9 +4,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import evm.dmc.core.AbstractFramework;
-import evm.dmc.core.FrameworkContext;
-import evm.dmc.core.data.Data;
-import evm.dmc.core.function.DMCFunction;
+import evm.dmc.core.api.DMCFunction;
+import evm.dmc.core.api.Data;
+import evm.dmc.core.api.back.FrameworkContext;
 import evm.dmc.python.data.PandasDataFrame;
 import evm.dmc.python.function.AbstractPythonFunction;
 

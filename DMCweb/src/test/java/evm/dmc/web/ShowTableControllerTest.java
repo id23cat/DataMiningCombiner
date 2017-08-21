@@ -18,12 +18,11 @@ import org.springframework.http.MediaType;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
-import evm.dmc.weka.DMCWekaConfig;
 
 @RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration(classes = DMCWekaConfig.class)
-@ComponentScan({ "evm.dmc.core", "evm.dmc.web", "evm.dmc.web.config"  })
-@Import({evm.dmc.core.DMCCoreConfig.class })
+//@ContextConfiguration(classes = DMCWekaConfig.class)
+@ComponentScan({ "evm.dmc.core", "evm.dmc.web.config"  })
+@Import({evm.dmc.web.config.DMCRootConfig.class })
 @WebMvcTest
 public class ShowTableControllerTest {
 	@Autowired
