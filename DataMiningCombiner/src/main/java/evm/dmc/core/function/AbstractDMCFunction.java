@@ -2,7 +2,13 @@ package evm.dmc.core.function;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.Properties;
 
+import javax.annotation.PostConstruct;
+
+import evm.dmc.api.model.FunctionModel;
+import evm.dmc.api.model.FunctionType;
+import evm.dmc.core.Function;
 import evm.dmc.core.api.DMCFunction;
 import evm.dmc.core.api.Data;
 
@@ -24,10 +30,25 @@ public abstract class AbstractDMCFunction<T> implements DMCFunction<T> {
 
 	protected List<Data<T>> arguments;
 
+	protected FunctionModel functionModel = new FunctionModel();
+
 	public AbstractDMCFunction() {
 		setArgsCount(getArgsCount());
 		// this.description = funcName();
 
+	}
+	
+	// TODO: replace with static functions to avoid creating exemplar for getting FunctionModel
+	protected abstract FunctionType getFunctionType();
+	protected abstract Properties getProperties();
+	protected abstract void setFunctionProperties(Properties funProperties);
+	
+
+	@PostConstruct
+	protected void initFunction() {
+		functionModel.setName(getName());
+		functionModel.setType(getFunctionType());
+		functionModel.setProperties(getProperties());
 	}
 
 	/**
@@ -41,8 +62,7 @@ public abstract class AbstractDMCFunction<T> implements DMCFunction<T> {
 		this.argsCount = paramCount;
 	}
 
-	@SafeVarargs
-	final public void setArgs(Data<T>... datas) {
+	public void setArgs(Data<T>... datas) {
 		this.arguments = Arrays.asList(datas).subList(0, this.argsCount);
 	}
 
@@ -56,6 +76,15 @@ public abstract class AbstractDMCFunction<T> implements DMCFunction<T> {
 	 */
 	public List<Data<T>> getArguments() {
 		return arguments;
+	}
+
+	public void setFunctionModel(FunctionModel model) {
+		this.functionModel = model;
+		setFunctionProperties(this.functionModel.getProperties());
+	}
+
+	public FunctionModel getFunctionModel() {
+		return this.functionModel;
 	}
 
 	/**

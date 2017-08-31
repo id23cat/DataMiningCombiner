@@ -1,14 +1,14 @@
-package evm.dmc.api.front;
+package evm.dmc.api.model;
 
 import java.util.List;
 
-public class Algorithm {
+public class AlgorithmModel {
 	String name;
-	DataSrcDst dataSource;
-	List<Function> functions;
-	DataSrcDst dataDestination;
+	DataSrcDstModel dataSource;
+	List<FunctionModel> functions;
+	DataSrcDstModel dataDestination;
 	
-	public Algorithm () {}
+	public AlgorithmModel () {}
 
 	/**
 	 * @return the name
@@ -27,50 +27,50 @@ public class Algorithm {
 	/**
 	 * @return the dataSource
 	 */
-	public DataSrcDst getDataSource() {
+	public DataSrcDstModel getDataSource() {
 		return dataSource;
 	}
 
 	/**
 	 * @param dataSource the dataSource to set
 	 */
-	public void setDataSource(DataSrcDst dataSource) {
+	public void setDataSource(DataSrcDstModel dataSource) {
 		this.dataSource = dataSource;
 	}
 
 	/**
 	 * @return the functions
 	 */
-	public List<Function> getFunctions() {
+	public List<FunctionModel> getFunctions() {
 		return functions;
 	}
 
 	/**
 	 * @param functions the functions to set
 	 */
-	public void setFunctions(List<Function> functions) {
+	public void setFunctions(List<FunctionModel> functions) {
 		this.functions = functions;
 	}
 	
-	public void addFunction(Function func) {
+	public void addFunction(FunctionModel func) {
 		this.functions.add(func);
 	}
 	
-	public void delFunction(Function func) {
+	public void delFunction(FunctionModel func) {
 		this.functions.remove(func);
 	}
 
 	/**
 	 * @return the dataDestination
 	 */
-	public DataSrcDst getDataDestination() {
+	public DataSrcDstModel getDataDestination() {
 		return dataDestination;
 	}
 
 	/**
 	 * @param dataDestination the dataDestination to set
 	 */
-	public void setDataDestination(DataSrcDst dataDestination) {
+	public void setDataDestination(DataSrcDstModel dataDestination) {
 		this.dataDestination = dataDestination;
 	};
 	

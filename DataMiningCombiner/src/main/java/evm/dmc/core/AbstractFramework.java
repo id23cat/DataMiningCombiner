@@ -2,15 +2,22 @@ package evm.dmc.core;
 
 import javax.annotation.PostConstruct;
 
+import org.python.google.common.collect.Lists;
 import org.springframework.beans.BeansException;
 import org.springframework.context.ApplicationContext;
 
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import evm.dmc.api.model.FrameworkModel;
+import evm.dmc.api.model.FrameworkType;
+import evm.dmc.api.model.FunctionModel;
 import evm.dmc.core.api.DMCDataLoader;
 import evm.dmc.core.api.DMCDataSaver;
 import evm.dmc.core.api.DMCFunction;
@@ -46,6 +53,8 @@ public abstract class AbstractFramework implements Framework, DataFactory {
 	protected Class abstractSaverClass = DMCDataSaver.class;
 	protected Class abstractLoaderClass = DMCDataLoader.class;
 
+	protected FrameworkModel frameworkModel = new FrameworkModel();
+
 	public AbstractFramework() {
 	}
 
@@ -64,10 +73,19 @@ public abstract class AbstractFramework implements Framework, DataFactory {
 
 	protected abstract Class getFunctionClass();
 
+	protected abstract String getFrameworkName();
+
+	protected abstract FrameworkType getFrameworkType();
+
 	@PostConstruct
 	protected void postInit() {
 		Class cls = getFunctionClass();
 		initFrameworkForType(cls);
+		frameworkModel.setName(getFrameworkName());
+		frameworkModel.setType(getFrameworkType());
+		for (String funcDesc : getFunctionDescriptors()) {
+			frameworkModel.getFunctions().add(getDMCFunction(funcDesc).getFunctionModel());
+		}
 	}
 
 	/**
@@ -82,7 +100,6 @@ public abstract class AbstractFramework implements Framework, DataFactory {
 		// TODO
 		this.abstractFunctionClass = functionsClass;
 		// funcIDs.addAll(Arrays.asList(applicationContext.getBeanNamesForType(functionsClass)));
-
 	}
 
 	@Override
@@ -116,14 +133,17 @@ public abstract class AbstractFramework implements Framework, DataFactory {
 	public DMCFunction getDMCFunction(String descriptor) {
 		// TODO
 		@SuppressWarnings({ "unchecked", "rawtypes" })
-//		DMCFunction function = (DMCFunction) applicationContext.getBean(descriptor, abstractFunctionClass);
+		// DMCFunction function = (DMCFunction)
+		// applicationContext.getBean(descriptor, abstractFunctionClass);
 		DMCFunction function = (DMCFunction) applicationContext.getBean(descriptor);
+		function.getFunctionModel().setFramework(frameworkModel);
 		return function;
 	}
-	
+
 	@Override
 	public <T> T getDMCFunction(String descriptor, Class<T> type) {
 		T function = applicationContext.getBean(descriptor, type);
+		((DMCFunction)function).getFunctionModel().setFramework(frameworkModel);
 		return function;
 	}
 
@@ -145,6 +165,16 @@ public abstract class AbstractFramework implements Framework, DataFactory {
 	@SuppressWarnings({ "rawtypes", "unchecked" })
 	protected Data instantiateData(Class dataType) {
 		return (Data) applicationContext.getBean(dataType);
+	}
+
+	@Override
+	public void setFrameworkModel(FrameworkModel frameworkModel) {
+		this.frameworkModel = frameworkModel;
+	}
+
+	@Override
+	public FrameworkModel getFrameworkModel() {
+		return this.frameworkModel;
 	}
 
 }

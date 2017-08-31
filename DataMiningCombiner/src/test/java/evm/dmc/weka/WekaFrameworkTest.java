@@ -1,6 +1,8 @@
 package evm.dmc.weka;
 
+import static org.junit.Assert.assertThat;
 import static org.hamcrest.CoreMatchers.hasItems;
+import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.Matchers.hasEntry;
 import static org.hamcrest.Matchers.empty;
 import static org.hamcrest.Matchers.not;
@@ -8,7 +10,6 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
-import static org.junit.Assert.assertThat;
 import static org.junit.Assert.assertTrue;
 
 import java.io.File;
@@ -26,12 +27,14 @@ import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Properties;
 import java.util.Set;
 
+import evm.dmc.api.model.FrameworkModel;
 import evm.dmc.core.DataFactory;
 import evm.dmc.core.TestUtils;
 import evm.dmc.core.api.DMCFunction;
@@ -44,7 +47,7 @@ import evm.dmc.weka.function.WekaFunctions;
 
 @RunWith(SpringRunner.class)
 @ContextConfiguration(classes = DMCWekaConfig.class)
-@TestPropertySource("classpath:wekatest.properties")
+//@TestPropertySource("classpath:wekatest.properties")
 public class WekaFrameworkTest {
 	@WekaFW
 	@Autowired
@@ -134,6 +137,17 @@ public class WekaFrameworkTest {
 			System.out.println(entr.getKey() + " - " + entr.getValue());
 		}
 		assertThat(descMap, hasEntry("Weka_CSVLoader", WekaCSVLoad.class));
+	}
+	
+	@Test
+	public final void testGetFrameworkModel() {
+		assertNotNull(wekaFW);
+		FrameworkModel model = wekaFW.getFrameworkModel();
+		assertNotNull(model);
+		assertFalse(model.getFunctions().isEmpty());
+		System.out.println(model.getName());
+		assertEquals("wekaFramework", model.getName());
+		System.out.println(model.getFunctions().get(0).getName());
 	}
 
 }

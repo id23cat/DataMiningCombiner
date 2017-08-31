@@ -1,7 +1,7 @@
 package evm.dmc.weka.function;
 
 import static org.hamcrest.Matchers.closeTo;
-import static org.junit.Assert.assertThat;
+import static org.junit.Assert.*;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -14,6 +14,7 @@ import org.springframework.test.context.junit4.SpringRunner;
 
 import java.util.Arrays;
 
+import evm.dmc.api.model.FunctionModel;
 import evm.dmc.core.api.DMCFunction;
 import evm.dmc.weka.DMCWekaConfig;
 import evm.dmc.weka.WekaFramework;
@@ -22,7 +23,7 @@ import evm.dmc.weka.data.WekaData;
 @RunWith(SpringRunner.class)
 @ContextConfiguration(classes = DMCWekaConfig.class)
 @TestPropertySource("classpath:wekatest.properties")
-public class StandartizationTest {
+public class StandardizationTest {
 
 	@Autowired
 	WekaCSVLoad loader;
@@ -60,6 +61,24 @@ public class StandartizationTest {
 
 		assertThat(min0, closeTo(-1.465, 0.01));
 		assertThat(min1, closeTo(-1.223, 0.01));
+	}
+	
+	@Test
+	public final void testGettingModel() {
+		DMCFunction stand1 = frmwk.getDMCFunction(WekaFunctions.STANDARDIZATION);
+		FunctionModel model1 = stand1.getFunctionModel();
+		assertNotNull(model1);
+		assertTrue(model1.getProperties().isEmpty());
+		
+		// assert that different exemplars has different model exemplars		
+		DMCFunction stand2 = frmwk.getDMCFunction(WekaFunctions.STANDARDIZATION);
+		FunctionModel model2 = stand2.getFunctionModel();
+		model1.getProperties().put("key", "value");
+		assertFalse(stand1 == stand2);
+		assertFalse(model1.getProperties().isEmpty());
+		assertTrue(model2.getProperties().isEmpty());
+		assertTrue(model1.getFramework().equals(model2.getFramework()));
+		assertEquals(model2.getName(), WekaFunctions.STANDARDIZATION);
 	}
 
 }

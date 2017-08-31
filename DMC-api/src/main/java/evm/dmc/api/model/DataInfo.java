@@ -1,21 +1,21 @@
-package evm.dmc.api.front;
+package evm.dmc.api.model;
 
 public class DataInfo {
-	private Data data;
+	private DataModel data;
 	
 	DataInfo() {}
 
 	/**
 	 * @return the data
 	 */
-	public Data getData() {
+	public DataModel getData() {
 		return data;
 	}
 
 	/**
 	 * @param data the data to set
 	 */
-	public void setData(Data data) {
+	public void setData(DataModel data) {
 		this.data = data;
 	}
 

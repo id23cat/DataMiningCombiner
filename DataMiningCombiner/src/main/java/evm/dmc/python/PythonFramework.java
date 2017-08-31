@@ -1,8 +1,11 @@
 package evm.dmc.python;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.PropertySource;
 import org.springframework.stereotype.Service;
 
+import evm.dmc.api.model.FrameworkType;
 import evm.dmc.core.AbstractFramework;
 import evm.dmc.core.api.DMCFunction;
 import evm.dmc.core.api.Data;
@@ -12,11 +15,16 @@ import evm.dmc.python.function.AbstractPythonFunction;
 
 @Service
 @PythonFW
+//@PropertySource("classpath:frameworkrepo.properties")
 public class PythonFramework extends AbstractFramework {
 
 	@Autowired
 	@PythonFWContext
 	FrameworkContext context;
+	
+//	@Value("${frameworkrepo.python_name}")
+	private static final String FRAMEWORK_NAME = "pythonFramework";
+	private static final FrameworkType FRAMEWORK_TYPE = FrameworkType.LOCAL;
 
 	private static Class CLASS = AbstractPythonFunction.class;
 
@@ -64,6 +72,16 @@ public class PythonFramework extends AbstractFramework {
 			throw new ClassCastException("Unsupported data type");
 		}
 		return pdsData;
+	}
+
+	@Override
+	protected String getFrameworkName() {
+		return FRAMEWORK_NAME;
+	}
+
+	@Override
+	protected FrameworkType getFrameworkType() {
+		return FRAMEWORK_TYPE;
 	}
 
 	// public PyVar castToPyVar(Data data) {

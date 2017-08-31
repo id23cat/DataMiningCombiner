@@ -1,14 +1,22 @@
-package evm.dmc.api.front;
+package evm.dmc.api.model;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Properties;
 
-public class Function {
+public class FrameworkModel {
 	private String name;
-	private Framework framework;
-	private FunctionType type;
-	private Properties properties;
+	private List<FunctionModel> functions = new ArrayList<>();;
+	private FrameworkType type;
+	private Properties properties = new Properties();
 	
-	public Function(){}
+	public FrameworkModel() {}
+	
+	public FrameworkModel(String name, FrameworkType type) {
+		super();
+		this.name = name;
+		this.type = type;
+	}
 
 	/**
 	 * @return the name
@@ -25,30 +33,30 @@ public class Function {
 	}
 
 	/**
-	 * @return the framework
+	 * @return the functions
 	 */
-	public Framework getFramework() {
-		return framework;
+	public List<FunctionModel> getFunctions() {
+		return functions;
 	}
 
 	/**
-	 * @param framework the framework to set
+	 * @param functions the functions to set
 	 */
-	public void setFramework(Framework framework) {
-		this.framework = framework;
+	public void setFunctions(List<FunctionModel> functions) {
+		this.functions = functions;
 	}
 
 	/**
 	 * @return the type
 	 */
-	public FunctionType getType() {
+	public FrameworkType getType() {
 		return type;
 	}
 
 	/**
 	 * @param type the type to set
 	 */
-	public void setType(FunctionType type) {
+	public void setType(FrameworkType type) {
 		this.type = type;
 	}
 
@@ -73,7 +81,7 @@ public class Function {
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
-		result = prime * result + ((framework == null) ? 0 : framework.hashCode());
+		result = prime * result + ((functions == null) ? 0 : functions.hashCode());
 		result = prime * result + ((name == null) ? 0 : name.hashCode());
 		result = prime * result + ((properties == null) ? 0 : properties.hashCode());
 		result = prime * result + ((type == null) ? 0 : type.hashCode());
@@ -91,11 +99,11 @@ public class Function {
 			return false;
 		if (getClass() != obj.getClass())
 			return false;
-		Function other = (Function) obj;
-		if (framework == null) {
-			if (other.framework != null)
+		FrameworkModel other = (FrameworkModel) obj;
+		if (functions == null) {
+			if (other.functions != null)
 				return false;
-		} else if (!framework.equals(other.framework))
+		} else if (!functions.equals(other.functions))
 			return false;
 		if (name == null) {
 			if (other.name != null)

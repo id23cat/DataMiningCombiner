@@ -1,8 +1,8 @@
-package evm.dmc.api.front;
+package evm.dmc.api.model;
 
 import java.util.Arrays;
 
-public class Data {
+public class DataModel {
 	// TODO: using JSON
 	
 	private String[] titles;
@@ -10,7 +10,7 @@ public class Data {
 	private Integer rowsCount;
 	private String[][] preview;
 	
-	public Data() {}
+	public DataModel() {}
 
 	/**
 	 * @return the titles
@@ -93,7 +93,7 @@ public class Data {
 			return false;
 		if (getClass() != obj.getClass())
 			return false;
-		Data other = (Data) obj;
+		DataModel other = (DataModel) obj;
 		if (!Arrays.deepEquals(preview, other.preview))
 			return false;
 		if (rowsCount == null) {

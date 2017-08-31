@@ -1,15 +1,14 @@
-package evm.dmc.api.front;
+package evm.dmc.api.model;
 
-import java.util.List;
 import java.util.Properties;
 
-public class Framework {
+public class FunctionModel {
 	private String name;
-	private List<Function> functions;
-	private FrameworkType type;
-	private Properties properties;
+	private FrameworkModel framework;
+	private FunctionType type;
+	private Properties properties = new Properties();
 	
-	Framework() {}
+	public FunctionModel(){}
 
 	/**
 	 * @return the name
@@ -26,30 +25,30 @@ public class Framework {
 	}
 
 	/**
-	 * @return the functions
+	 * @return the framework
 	 */
-	public List<Function> getFunctions() {
-		return functions;
+	public FrameworkModel getFramework() {
+		return framework;
 	}
 
 	/**
-	 * @param functions the functions to set
+	 * @param framework the framework to set
 	 */
-	public void setFunctions(List<Function> functions) {
-		this.functions = functions;
+	public void setFramework(FrameworkModel framework) {
+		this.framework = framework;
 	}
 
 	/**
 	 * @return the type
 	 */
-	public FrameworkType getType() {
+	public FunctionType getType() {
 		return type;
 	}
 
 	/**
 	 * @param type the type to set
 	 */
-	public void setType(FrameworkType type) {
+	public void setType(FunctionType type) {
 		this.type = type;
 	}
 
@@ -74,7 +73,7 @@ public class Framework {
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
-		result = prime * result + ((functions == null) ? 0 : functions.hashCode());
+		result = prime * result + ((framework == null) ? 0 : framework.hashCode());
 		result = prime * result + ((name == null) ? 0 : name.hashCode());
 		result = prime * result + ((properties == null) ? 0 : properties.hashCode());
 		result = prime * result + ((type == null) ? 0 : type.hashCode());
@@ -92,11 +91,11 @@ public class Framework {
 			return false;
 		if (getClass() != obj.getClass())
 			return false;
-		Framework other = (Framework) obj;
-		if (functions == null) {
-			if (other.functions != null)
+		FunctionModel other = (FunctionModel) obj;
+		if (framework == null) {
+			if (other.framework != null)
 				return false;
-		} else if (!functions.equals(other.functions))
+		} else if (!framework.equals(other.framework))
 			return false;
 		if (name == null) {
 			if (other.name != null)

@@ -1,10 +1,10 @@
-package evm.dmc.api.front;
+package evm.dmc.api.model;
 
-public class DataSrcDst extends Function {
+public class DataSrcDstModel extends FunctionModel {
 	private String sourceDest;
 	private DataSrcDstType typeSrcDst;
 	
-	public DataSrcDst(){
+	public DataSrcDstModel(){
 		super();
 	}
 
@@ -59,7 +59,7 @@ public class DataSrcDst extends Function {
 			return false;
 		if (getClass() != obj.getClass())
 			return false;
-		DataSrcDst other = (DataSrcDst) obj;
+		DataSrcDstModel other = (DataSrcDstModel) obj;
 		if (sourceDest == null) {
 			if (other.sourceDest != null)
 				return false;

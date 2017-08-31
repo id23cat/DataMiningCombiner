@@ -1,12 +1,15 @@
 package evm.dmc.weka.function;
 
 import java.io.PrintStream;
+import java.util.Properties;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.stereotype.Service;
 
+import evm.dmc.api.model.FunctionType;
+import evm.dmc.core.Function;
 import evm.dmc.core.api.Data;
 import evm.dmc.weka.WekaFW;
 import evm.dmc.weka.WekaFramework;
@@ -25,8 +28,11 @@ import weka.clusterers.SimpleKMeans;
  */
 @Service(WekaFunctions.KMEANS)
 @PropertySource("classpath:weka.properties")
+@Function
 public class ClusteringKMeans extends AbsttractClusterer {
 	public static final String name = WekaFunctions.KMEANS;
+	private static FunctionType type = FunctionType.CLUSTERIZATION;
+	private Properties functionProperties = new Properties();
 	@WekaFW
 	@Autowired
 	WekaFramework fw;
@@ -161,6 +167,22 @@ public class ClusteringKMeans extends AbsttractClusterer {
 		}
 
 		return this;
+	}
+
+	@Override
+	protected FunctionType getFunctionType() {
+		return type;
+	}
+
+	@Override
+	protected Properties getProperties() {
+		return functionProperties;
+	}
+
+	@Override
+	protected void setFunctionProperties(Properties funProperties) {
+		// TODO Auto-generated method stub
+		
 	}
 
 }

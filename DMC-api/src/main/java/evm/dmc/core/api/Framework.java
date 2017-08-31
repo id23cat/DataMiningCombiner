@@ -7,6 +7,7 @@ import org.springframework.context.ApplicationContextAware;
 import java.util.Map;
 import java.util.Set;
 
+import evm.dmc.api.model.FrameworkModel;
 //import evm.dmc.core.api.DMCDataLoader;
 //import evm.dmc.core.api.DMCDataSaver;
 import evm.dmc.core.api.DMCFunction;
@@ -52,5 +53,9 @@ public interface Framework extends ApplicationContextAware {
 	<T> T getDMCDataSaver(String descriptor, Class<T> type);
 
 	<T> T getDMCDataLoader(String descriptor, Class<T> type);
+	
+	void setFrameworkModel(FrameworkModel frameworkModel);
+	
+	FrameworkModel getFrameworkModel();
 
 }

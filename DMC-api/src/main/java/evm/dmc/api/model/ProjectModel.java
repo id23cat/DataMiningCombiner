@@ -1,14 +1,14 @@
-package evm.dmc.api.front;
+package evm.dmc.api.model;
 
 import java.util.List;
 import java.util.Properties;
 
-public class Project {
+public class ProjectModel {
 	String name;
-	List<Algorithm> algorithm;
+	List<AlgorithmModel> algorithm;
 	Properties projectProperties;
 	
-	public Project() {
+	public ProjectModel() {
 		super();
 	}
 	
@@ -29,14 +29,14 @@ public class Project {
 	/**
 	 * @return the algorithm
 	 */
-	public List<Algorithm> getAlgorithm() {
+	public List<AlgorithmModel> getAlgorithm() {
 		return algorithm;
 	}
 
 	/**
 	 * @param algorithm the algorithm to set
 	 */
-	public void setAlgorithm(List<Algorithm> algorithm) {
+	public void setAlgorithm(List<AlgorithmModel> algorithm) {
 		this.algorithm = algorithm;
 	}
 
@@ -77,7 +77,7 @@ public class Project {
 			return false;
 		if (getClass() != obj.getClass())
 			return false;
-		Project other = (Project) obj;
+		ProjectModel other = (ProjectModel) obj;
 		if (algorithm == null) {
 			if (other.algorithm != null)
 				return false;

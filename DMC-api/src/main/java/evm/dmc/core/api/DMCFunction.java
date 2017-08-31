@@ -5,6 +5,7 @@ import org.springframework.context.annotation.Scope;
 
 import java.util.List;
 
+import evm.dmc.api.model.FunctionModel;
 import evm.dmc.core.api.Data;
 import evm.dmc.core.api.back.FrameworkContext;
 import evm.dmc.core.api.back.HasNameAndDescription;
@@ -49,5 +50,9 @@ public interface DMCFunction<T> extends HasNameAndDescription {
 	default void setContext(FrameworkContext context) {
 
 	}
+	
+	void setFunctionModel(FunctionModel model);
+	
+	FunctionModel getFunctionModel();
 
 }

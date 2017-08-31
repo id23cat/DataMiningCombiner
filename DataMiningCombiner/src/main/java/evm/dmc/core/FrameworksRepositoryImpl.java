@@ -20,7 +20,7 @@ import evm.dmc.core.api.Framework;
 import evm.dmc.core.api.FrameworksRepository;
 
 @Service
-@PropertySource("classpath:fwrepo.properties")
+//@PropertySource("classpath:frameworkrepo.properties")
 public class FrameworksRepositoryImpl implements FrameworksRepository {
 	private ApplicationContext applicationContext;
 	private static Class<AbstractFramework> frameworkClass = AbstractFramework.class;

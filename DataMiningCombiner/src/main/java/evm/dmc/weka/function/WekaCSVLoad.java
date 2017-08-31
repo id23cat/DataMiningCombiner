@@ -11,12 +11,17 @@ import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Properties;
 
+import evm.dmc.api.model.FunctionModel;
+import evm.dmc.api.model.FunctionType;
 import evm.dmc.core.DataFactory;
+import evm.dmc.core.Function;
 import evm.dmc.core.api.DMCFunction;
 import evm.dmc.core.api.Data;
 import evm.dmc.core.api.back.CSVLoader;
 import evm.dmc.core.api.exceptions.LoadDataException;
+import evm.dmc.core.function.AbstractDMCFunction;
 import evm.dmc.weka.WekaFW;
 import evm.dmc.weka.WekaFunction;
 import evm.dmc.weka.data.WekaData;
@@ -26,9 +31,15 @@ import weka.core.Instances;
 @Service(WekaFunctions.CSVLOADER)
 @PropertySource("classpath:weka.properties")
 @Scope(ConfigurableBeanFactory.SCOPE_PROTOTYPE)
-public class WekaCSVLoad implements CSVLoader, DMCFunction<Instances>, WekaFunction {
+@Function
+public class WekaCSVLoad extends AbstractDMCFunction<Instances>
+		implements CSVLoader, DMCFunction<Instances>, WekaFunction {
 	private static final String NAME = WekaFunctions.CSVLOADER;
 	private static final Integer ARGS_COUNT = 0;
+	private static final String SOURCE_PARAM = "source";
+	private static FunctionType type = FunctionType.CSV_DATASOURCE;
+	private Properties functionProperties = new Properties();
+
 	private DataFactory dataFactory;
 
 	private String source = null;
@@ -49,6 +60,7 @@ public class WekaCSVLoad implements CSVLoader, DMCFunction<Instances>, WekaFunct
 	public WekaCSVLoad(@Autowired @WekaFW DataFactory dataFactory) {
 		super();
 		this.dataFactory = dataFactory;
+		functionProperties.setProperty(SOURCE_PARAM, "");
 	}
 
 	/*
@@ -162,14 +174,6 @@ public class WekaCSVLoad implements CSVLoader, DMCFunction<Instances>, WekaFunct
 	}
 
 	@Override
-	public void setArgs(Data<Instances>... datas) {
-	}
-
-	@Override
-	public void setArgs(List<Data<Instances>> largs) {
-	}
-
-	@Override
 	public Data getResult() {
 		return this.get();
 	}
@@ -228,7 +232,22 @@ public class WekaCSVLoad implements CSVLoader, DMCFunction<Instances>, WekaFunct
 		loader.setNominalAttributes(nominalAttributes.toString());
 		loader.setNumericAttributes(numericAttributes.toString());
 		loader.setStringAttributes(stringAttributes.toString());
-		loader.setSource(new File(this.source));	
+		loader.setSource(new File(this.source));
+	}
+
+	@Override
+	protected FunctionType getFunctionType() {
+		return type;
+	}
+
+	@Override
+	protected Properties getProperties() {
+		return functionProperties;
+	}
+
+	@Override
+	protected void setFunctionProperties(Properties funProperties) {
+		setSource(funProperties.getProperty(SOURCE_PARAM));
 	}
 
 }

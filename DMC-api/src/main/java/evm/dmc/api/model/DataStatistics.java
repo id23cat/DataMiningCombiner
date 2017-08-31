@@ -1,4 +1,4 @@
-package evm.dmc.api.front;
+package evm.dmc.api.model;
 
 import java.util.Properties;
 

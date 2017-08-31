@@ -11,22 +11,31 @@ import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Properties;
 
+import evm.dmc.api.model.FunctionType;
+import evm.dmc.core.Function;
 import evm.dmc.core.api.DMCFunction;
 import evm.dmc.core.api.Data;
 import evm.dmc.core.api.back.CSVSaver;
 import evm.dmc.core.api.exceptions.StoreDataException;
 import evm.dmc.core.exceptions.UncheckedStoringException;
+import evm.dmc.core.function.AbstractDMCFunction;
 import evm.dmc.weka.WekaFramework;
 import evm.dmc.weka.WekaFunction;
+import weka.core.Instances;
 import weka.core.converters.AbstractSaver;
 
 @Service(WekaFunctions.CSVSAVER)
 @PropertySource("classpath:weka.properties")
 @Scope(ConfigurableBeanFactory.SCOPE_PROTOTYPE)
-public class WekaCSVSave implements CSVSaver, DMCFunction<String>, WekaFunction  {
+@Function
+public class WekaCSVSave extends AbstractDMCFunction<String> implements CSVSaver, WekaFunction  {
 	private static final String NAME = WekaFunctions.CSVSAVER;
 	private static final Integer ARGS_COUNT = 1;
+	private static final String DEST_PARAM = "destination";
+	private static FunctionType type = FunctionType.CSV_DATADESTINATION;
+	private Properties functionProperties = new Properties();
 
 	private File destination = null;
 	private Data save = null;
@@ -36,6 +45,10 @@ public class WekaCSVSave implements CSVSaver, DMCFunction<String>, WekaFunction 
 
 	@Value("${weka.csvsave_desc}")
 	String description;
+	
+	public WekaCSVSave() {
+		functionProperties.setProperty(DEST_PARAM, "");
+	}
 
 	@Override
 	public void save(Data data) throws ClassCastException, StoreDataException {
@@ -114,6 +127,22 @@ public class WekaCSVSave implements CSVSaver, DMCFunction<String>, WekaFunction 
 		Data<String> data = framework.getData(String.class);
 		data.setData(destination.getAbsolutePath());
 		return data;
+	}
+
+	@Override
+	protected FunctionType getFunctionType() {
+		return type;
+	}
+
+	@Override
+	protected Properties getProperties() {
+		return functionProperties;
+	}
+
+	@Override
+	protected void setFunctionProperties(Properties funProperties) {
+		setDestination(funProperties.getProperty(DEST_PARAM));
+		
 	}
 
 }

@@ -1,19 +1,24 @@
 package evm.dmc.weka;
 
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.PropertySource;
 import org.springframework.stereotype.Service;
 
+import evm.dmc.api.model.FrameworkType;
 import evm.dmc.core.AbstractFramework;
-import evm.dmc.core.api.DMCDataLoader;
-import evm.dmc.core.api.DMCDataSaver;
 import evm.dmc.core.api.Data;
 import evm.dmc.weka.data.WekaData;
-import evm.dmc.weka.function.AbstractWekaFunction;
 import weka.core.Instances;
 
 @Service
 @WekaFW
+//@PropertySource("classpath:frameworkrepo.properties")
 public class WekaFramework extends AbstractFramework {
 	static Class CLASS = WekaFunction.class;
+	
+//	@Value("${frameworkrepo.weka_name}")
+	private static final String FRAMEWORK_NAME = "wekaFramework";
+	private static final FrameworkType FRAMEWORK_TYPE = FrameworkType.LOCAL;
 
 	public WekaFramework() {
 		// super(CLASS);
@@ -39,6 +44,16 @@ public class WekaFramework extends AbstractFramework {
 	@Override
 	protected Class getFunctionClass() {
 		return CLASS;
+	}
+	
+	@Override
+	protected String getFrameworkName() {
+		return FRAMEWORK_NAME;
+	}
+
+	@Override
+	protected FrameworkType getFrameworkType() {
+		return FRAMEWORK_TYPE;
 	}
 
 	@Override
