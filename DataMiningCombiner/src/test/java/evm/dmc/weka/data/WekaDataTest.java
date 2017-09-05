@@ -1,5 +1,8 @@
 package evm.dmc.weka.data;
 
+import static org.hamcrest.CoreMatchers.anyOf;
+import static org.hamcrest.CoreMatchers.both;
+import static org.hamcrest.CoreMatchers.either;
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.CoreMatchers.hasItems;
 import static org.hamcrest.CoreMatchers.is;
@@ -13,9 +16,12 @@ import static org.junit.Assert.assertNotEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
+import org.hamcrest.collection.IsMapContaining;
 import org.junit.Before;
 import org.junit.BeforeClass;
+import org.junit.Rule;
 import org.junit.Test;
+import org.junit.rules.ExpectedException;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -23,12 +29,15 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.context.junit4.SpringRunner;
 
+import java.util.Arrays;
 import java.util.Random;
 
+import evm.dmc.api.model.DataModel;
 import evm.dmc.core.api.Data;
 import evm.dmc.core.api.Statistics;
 import evm.dmc.core.api.back.AttributeType;
 import evm.dmc.core.api.back.CSVLoader;
+import evm.dmc.core.api.exceptions.DataOperationException;
 import evm.dmc.weka.DMCWekaConfig;
 import evm.dmc.weka.WekaFramework;
 import weka.core.Instances;
@@ -286,6 +295,34 @@ public class WekaDataTest {
 		for (int i = 0; i < data.getElementsCount(); i++)
 			System.out.println(data.getValue(i, column) + " -> " + data.getValueAsString(i, column));
 		data.printDebug();
+	}
+
+	@Test
+	public final void testGetDataModel() {
+		DataModel model = data.getDataModel();
+		assertNotNull(model);
+		assertEquals(20, model.getTitleTypeMap().size());
+		assertThat(model.getTitleTypeMap(), IsMapContaining.hasEntry("State", "NOMINAL"));
+		assertThat(model.getTitleTypeMap(), IsMapContaining.hasEntry("Total day charge", "NUMERIC"));
+		assertThat(model.getTitleTypeMap(), IsMapContaining.hasEntry("Churn", "NOMINAL"));
+		assertThat(model.getTitleTypeMap(), not(IsMapContaining.hasEntry("", "")));
+		assertThat(model.getPreview().length, anyOf(equalTo(10), equalTo(DataModel.DEFAULT_ROWS_COUNT.intValue())));
+
+		model = data.getDataModel(3);
+		assertThat(model.getPreview().length, equalTo(3));
+		System.out.println(Arrays.deepToString(model.getPreview()));
+
+	}
+
+	@Rule
+	public ExpectedException thrown = ExpectedException.none();
+	
+	@Test(expected = DataOperationException.class)
+	public final void testEmptyDataException() {
+		WekaData emptData = (WekaData) fw.getData(WekaData.class);
+		emptData.getDataModel();
+		thrown.expectMessage("Empty object: Data does not exists");
+		
 	}
 
 	void printInstancesInfo(Instances inst) {

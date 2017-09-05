@@ -15,6 +15,7 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
+import evm.dmc.api.model.DataModel;
 import evm.dmc.core.DataFactory;
 import evm.dmc.core.api.Data;
 import evm.dmc.core.api.Statistics;
@@ -33,8 +34,8 @@ import weka.filters.unsupervised.attribute.NumericToNominal;
 import weka.filters.unsupervised.attribute.StringToNominal;
 
 /**
- * Supported loading from all supported by weka files.
- * Now supports saving only * to SCV files Default separator
+ * Supported loading from all supported by weka files. Now supports saving only
+ * * to SCV files Default separator
  * 
  * @see WEKA CSCSaver documentation
  *      http://weka.sourceforge.net/doc.dev/weka/core/converters/CSVSaver.html
@@ -564,6 +565,33 @@ public class WekaData extends InMemoryData<Instances> implements Cloneable, HasM
 		strb.append(name);
 
 		return strb.toString();
+	}
+
+	@Override
+	public DataModel getDataModel() throws DataOperationException {
+		return getDataModel(DataModel.DEFAULT_ROWS_COUNT);
+	}
+
+	@Override
+	public DataModel getDataModel(Integer previewRowsCount) throws DataOperationException {
+		if(data == null)
+			throw new DataOperationException("Empty object: Data does not exists");
+		
+		DataModel model = new DataModel();
+		int atrCount = getAttributesCount();
+		int rows = getInstancesCount();
+		previewRowsCount = previewRowsCount <= rows ? previewRowsCount : rows;
+		model.setRowsCount(previewRowsCount);
+		String[][] preview = new String[previewRowsCount][atrCount];
+		for (int i = 0; i < atrCount; i++) {
+			model.getTitleTypeMap().put(getTitle(i), getType(i).name());
+			for (int k = 0; k < previewRowsCount; k++) {
+				preview[k][i] = getValueAsString(k, i);
+			}
+		}
+
+		model.setPreview(preview);
+		return model;
 	}
 
 }

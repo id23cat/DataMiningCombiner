@@ -1,5 +1,7 @@
 package evm.dmc.python.function;
 
+import java.util.Optional;
+
 import javax.annotation.PostConstruct;
 import javax.annotation.PreDestroy;
 
@@ -148,6 +150,12 @@ public abstract class AbstractPythonFunction extends AbstractDMCFunction<String>
 			throw new NullPointerException(strb.toString());
 		}
 		return this.result;
+	}
+	
+	@SuppressWarnings("unchecked")
+	@Override
+	public Optional<Data<String>> getOptionalResult() throws NullPointerException {
+		return Optional.ofNullable(this.result);
 	}
 
 	public void setResult(Data result) {

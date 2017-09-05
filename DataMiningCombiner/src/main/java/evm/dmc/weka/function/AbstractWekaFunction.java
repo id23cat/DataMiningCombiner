@@ -1,5 +1,7 @@
 package evm.dmc.weka.function;
 
+import java.util.Optional;
+
 import org.springframework.stereotype.Service;
 
 import evm.dmc.core.Function;
@@ -17,6 +19,11 @@ public abstract class AbstractWekaFunction extends AbstractDMCFunction<Instances
 	@Override
 	public Data<Instances> getResult() {
 		return result;
+	}
+	
+	@Override
+	public Optional<Data<Instances>> getOptionalResult() {
+		return Optional.ofNullable(result);
 	}
 
 	protected void setResult(WekaData res) {

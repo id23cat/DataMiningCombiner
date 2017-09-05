@@ -11,6 +11,7 @@ import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.Properties;
 
 import evm.dmc.api.model.FunctionModel;
@@ -43,7 +44,7 @@ public class WekaCSVLoad extends AbstractDMCFunction<Instances>
 	private DataFactory dataFactory;
 
 	private String source = null;
-	private Data result = null;
+	private Data<Instances> result = null;
 
 	private StringBuilder dateAttributes = new StringBuilder();
 	private StringBuilder numericAttributes = new StringBuilder();
@@ -70,7 +71,7 @@ public class WekaCSVLoad extends AbstractDMCFunction<Instances>
 	 *
 	 */
 	@Override
-	public Data get() throws LoadDataException {
+	public Data<Instances> get() throws LoadDataException {
 		if (result == null)
 			this.execute();
 		return result;
@@ -174,7 +175,7 @@ public class WekaCSVLoad extends AbstractDMCFunction<Instances>
 	}
 
 	@Override
-	public Data getResult() {
+	public Data<Instances> getResult() {
 		return this.get();
 	}
 
@@ -248,6 +249,11 @@ public class WekaCSVLoad extends AbstractDMCFunction<Instances>
 	@Override
 	protected void setFunctionProperties(Properties funProperties) {
 		setSource(funProperties.getProperty(SOURCE_PARAM));
+	}
+
+	@Override
+	public Optional<Data<Instances>> getOptionalResult() {
+		return Optional.ofNullable(getResult());
 	}
 
 }

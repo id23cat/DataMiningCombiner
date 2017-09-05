@@ -3,12 +3,13 @@ package evm.dmc.core.data;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Service;
 
+import evm.dmc.api.model.DataModel;
 import evm.dmc.core.api.Data;
 
 @Service
 @Scope("prototype")
 public abstract class InMemoryData<T> implements Data<T>, Cloneable {
-	protected T data;
+	protected T data = null;
 
 	public InMemoryData() {
 

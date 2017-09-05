@@ -1,43 +1,35 @@
 package evm.dmc.api.model;
 
 import java.util.Arrays;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Set;
+import java.util.Objects;
+import org.apache.commons.lang3.builder.ToStringBuilder;
+import org.apache.commons.lang3.builder.ToStringStyle;
+
 
 public class DataModel {
 	// TODO: using JSON
-	
-	private String[] titles;
-	private String[] types;
-	private Integer rowsCount;
+	public static final Integer DEFAULT_ROWS_COUNT = 10;
+	private Map<String, String> titleTypeMap = new HashMap<>();
+	private Integer rowsCount = DEFAULT_ROWS_COUNT;
 	private String[][] preview;
 	
 	public DataModel() {}
 
 	/**
-	 * @return the titles
+	 * @return the map {@code Map<title, type>}
 	 */
-	public String[] getTitles() {
-		return titles;
+	public Map<String, String> getTitleTypeMap() {
+		return titleTypeMap;
 	}
 
 	/**
-	 * @param titles the titles to set
+	 * @param titleTypesMap the titleTypesMap to set
 	 */
-	public void setTitles(String[] titles) {
-		this.titles = titles;
-	}
-
-	/**
-	 * @return the types
-	 */
-	public String[] getTypes() {
-		return types;
-	}
-
-	/**
-	 * @param types the types to set
-	 */
-	public void setTypes(String[] types) {
-		this.types = types;
+	public void setTitleTypeMap(Map<String, String> titleTypesMap) {
+		this.titleTypeMap = titleTypesMap;
 	}
 
 	/**
@@ -68,44 +60,35 @@ public class DataModel {
 		this.preview = preview;
 	}
 
-	/* (non-Javadoc)
-	 * @see java.lang.Object#hashCode()
-	 */
 	@Override
-	public int hashCode() {
-		final int prime = 31;
-		int result = 1;
-		result = prime * result + Arrays.deepHashCode(preview);
-		result = prime * result + ((rowsCount == null) ? 0 : rowsCount.hashCode());
-		result = prime * result + Arrays.hashCode(titles);
-		result = prime * result + Arrays.hashCode(types);
-		return result;
+	public boolean equals(final Object other) {
+		if (this == other) {
+			return true;
+		}
+		if (!(other instanceof DataModel)) {
+			return false;
+		}
+		DataModel castOther = (DataModel) other;
+		return Objects.equals(titleTypeMap, castOther.titleTypeMap) && Objects.equals(rowsCount, castOther.rowsCount)
+				&& Objects.equals(preview, castOther.preview);
 	}
 
-	/* (non-Javadoc)
-	 * @see java.lang.Object#equals(java.lang.Object)
-	 */
 	@Override
-	public boolean equals(Object obj) {
-		if (this == obj)
-			return true;
-		if (obj == null)
-			return false;
-		if (getClass() != obj.getClass())
-			return false;
-		DataModel other = (DataModel) obj;
-		if (!Arrays.deepEquals(preview, other.preview))
-			return false;
-		if (rowsCount == null) {
-			if (other.rowsCount != null)
-				return false;
-		} else if (!rowsCount.equals(other.rowsCount))
-			return false;
-		if (!Arrays.equals(titles, other.titles))
-			return false;
-		if (!Arrays.equals(types, other.types))
-			return false;
-		return true;
+	public int hashCode() {
+		return Objects.hash(titleTypeMap, rowsCount, preview);
 	}
+
+	@Override
+	public String toString() {
+		return new ToStringBuilder(this, ToStringStyle.JSON_STYLE).append("titleTypeMap", titleTypeMap)
+				.append("rowsCount", rowsCount).append("preview", preview).toString();
+	}
+
+//	@Override
+//	public String toString() {
+//		return Objects.toString(titleTypeMap)
+//	}
+	
+	
 
 }

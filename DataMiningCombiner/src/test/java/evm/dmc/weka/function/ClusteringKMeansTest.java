@@ -5,7 +5,9 @@ import static org.junit.Assert.assertNotNull;
 
 import org.junit.Before;
 import org.junit.BeforeClass;
+import org.junit.Rule;
 import org.junit.Test;
+import org.junit.rules.ExpectedException;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -13,7 +15,10 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.context.junit4.SpringRunner;
 
+import evm.dmc.api.model.DataModel;
 import evm.dmc.core.api.Data;
+import evm.dmc.core.api.exceptions.DataOperationException;
+import evm.dmc.core.function.AbstractDMCFunction;
 import evm.dmc.weka.DMCWekaConfig;
 import evm.dmc.weka.data.WekaData;
 
@@ -89,6 +94,30 @@ public class ClusteringKMeansTest {
 	@Test
 	public final void testGetDescription() {
 		assertEquals(description, kms.getDescription());
+	}
+	
+	@Rule
+	public ExpectedException thrown = ExpectedException.none();
+	
+	@Test(expected = DataOperationException.class)
+	public final void testGetResultBeforeExecute() {
+		Data[] trtst = data.getTrainTest(1);
+
+		kms.getResultDataModel();
+		
+		thrown.expectMessage(AbstractDMCFunction.EMPTY_RESULT_EXC_MSG);
+		
+	}
+	
+	@Test
+	public final void testGetResultModel() {
+		Data[] trtst = data.getTrainTest(1);
+		kms.train(trtst[0]);
+
+		kms.setArgs(data);
+		kms.execute();
+		DataModel res = kms.getResult().getDataModel();
+		System.out.println(res);
 	}
 
 }

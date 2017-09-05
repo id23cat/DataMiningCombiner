@@ -4,11 +4,14 @@ import org.springframework.context.annotation.Lazy;
 import org.springframework.context.annotation.Scope;
 
 import java.util.List;
+import java.util.Optional;
 
+import evm.dmc.api.model.DataModel;
 import evm.dmc.api.model.FunctionModel;
 import evm.dmc.core.api.Data;
 import evm.dmc.core.api.back.FrameworkContext;
 import evm.dmc.core.api.back.HasNameAndDescription;
+import evm.dmc.core.api.exceptions.DataOperationException;
 
 @Scope("prototype")
 @Lazy
@@ -30,7 +33,8 @@ public interface DMCFunction<T> extends HasNameAndDescription {
 	void setArgs(List<Data<T>> largs);
 
 	Data<T> getResult();
-
+	Optional<Data<T>> getOptionalResult();
+	
 	/**
 	 * Returns object that should be used in function object as context of
 	 * execution
@@ -54,5 +58,8 @@ public interface DMCFunction<T> extends HasNameAndDescription {
 	void setFunctionModel(FunctionModel model);
 	
 	FunctionModel getFunctionModel();
+	
+	DataModel getResultDataModel() throws DataOperationException;
+	DataModel getResultDataModel(Integer previewRowsCount) throws DataOperationException;
 
 }

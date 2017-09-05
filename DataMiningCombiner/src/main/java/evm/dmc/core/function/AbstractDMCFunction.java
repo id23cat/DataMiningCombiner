@@ -2,15 +2,18 @@ package evm.dmc.core.function;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.Optional;
 import java.util.Properties;
 
 import javax.annotation.PostConstruct;
 
+import evm.dmc.api.model.DataModel;
 import evm.dmc.api.model.FunctionModel;
 import evm.dmc.api.model.FunctionType;
 import evm.dmc.core.Function;
 import evm.dmc.core.api.DMCFunction;
 import evm.dmc.core.api.Data;
+import evm.dmc.core.api.exceptions.DataOperationException;
 
 /**
  * @author id23cat
@@ -26,6 +29,7 @@ public abstract class AbstractDMCFunction<T> implements DMCFunction<T> {
 	/**
 	 * Count of the parameters have to be setted as arguments
 	 */
+	public static final String EMPTY_RESULT_EXC_MSG = "Empy result field: probably execution was not called";
 	protected Integer argsCount;
 
 	protected List<Data<T>> arguments;
@@ -37,12 +41,14 @@ public abstract class AbstractDMCFunction<T> implements DMCFunction<T> {
 		// this.description = funcName();
 
 	}
-	
-	// TODO: replace with static functions to avoid creating exemplar for getting FunctionModel
+
+	// TODO: replace with static functions to avoid creating exemplar for
+	// getting FunctionModel
 	protected abstract FunctionType getFunctionType();
+
 	protected abstract Properties getProperties();
+
 	protected abstract void setFunctionProperties(Properties funProperties);
-	
 
 	@PostConstruct
 	protected void initFunction() {
@@ -85,6 +91,19 @@ public abstract class AbstractDMCFunction<T> implements DMCFunction<T> {
 
 	public FunctionModel getFunctionModel() {
 		return this.functionModel;
+	}
+
+	public DataModel getResultDataModel() throws DataOperationException {
+		Optional<Data<T>> result = getOptionalResult();
+		return result.map(Data<T>::getDataModel).orElseThrow(() -> new DataOperationException(EMPTY_RESULT_EXC_MSG));
+		// return getResult().getDataModel();
+	}
+
+	public DataModel getResultDataModel(Integer previewRowsCount) throws DataOperationException {
+		Optional<Data<T>> result = getOptionalResult();
+		return result.map((Data<T> data) -> data.getDataModel(previewRowsCount))
+				.orElseThrow(() -> new DataOperationException(EMPTY_RESULT_EXC_MSG));
+		// return getResult().getDataModel(previewRowsCount);
 	}
 
 	/**

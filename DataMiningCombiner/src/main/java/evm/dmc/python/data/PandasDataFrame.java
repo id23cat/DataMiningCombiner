@@ -6,6 +6,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.Enumeration;
 
+import evm.dmc.api.model.DataModel;
 import evm.dmc.core.api.Data;
 import evm.dmc.core.api.Statistics;
 import evm.dmc.core.api.exceptions.DataOperationException;
@@ -127,6 +128,18 @@ public class PandasDataFrame extends JepVariable {
 
 	@Override
 	public String getAllAsString() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public DataModel getDataModel() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public DataModel getDataModel(Integer rowsCount) {
 		// TODO Auto-generated method stub
 		return null;
 	}

@@ -11,6 +11,7 @@ import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.Properties;
 
 import evm.dmc.api.model.FunctionType;
@@ -38,7 +39,7 @@ public class WekaCSVSave extends AbstractDMCFunction<String> implements CSVSaver
 	private Properties functionProperties = new Properties();
 
 	private File destination = null;
-	private Data save = null;
+	private Data<String> save = null;
 
 	@Autowired
 	WekaFramework framework;
@@ -143,6 +144,11 @@ public class WekaCSVSave extends AbstractDMCFunction<String> implements CSVSaver
 	protected void setFunctionProperties(Properties funProperties) {
 		setDestination(funProperties.getProperty(DEST_PARAM));
 		
+	}
+	
+	@Override
+	public Optional<Data<String>> getOptionalResult() {
+		return Optional.ofNullable(getResult());
 	}
 
 }
