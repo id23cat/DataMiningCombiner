@@ -1,29 +1,33 @@
 package evm.dmc.api.model;
 
-public class DataSrcDstModel extends FunctionModel {
-	private String srcdst = null;
+public class FunctionSrcModel extends FunctionModel {
+	public final static String SRC_PROPERTY_NAME = "source";
+	private String source = null;
 	private DataSrcDstType typeSrcDst = DataSrcDstType.LOCAL_FS;
 	
-	public DataSrcDstModel(){
+	public FunctionSrcModel(){
 		super();
 	}
 	
-	public DataSrcDstModel(FunctionModel funmodel){
+	public FunctionSrcModel(FunctionModel funmodel){
 		super(funmodel);
 	}
 
 	/**
 	 * @return the sourceDest
 	 */
-	public String getSourceDest() {
-		return srcdst;
+	public String getSource() {
+		
+		return source==null ? super.getProperties().getProperty(SRC_PROPERTY_NAME) : source;
 	}
 
 	/**
-	 * @param sourceDest the sourceDest to set
+	 * @param source the source to set
 	 */
-	public void setSourceDest(String sourceDest) {
-		this.srcdst = sourceDest;
+	public void setSource(String source) {
+		this.source = source;
+		super.getProperties().setProperty(SRC_PROPERTY_NAME, source);
+		
 	}
 
 	/**
@@ -47,7 +51,7 @@ public class DataSrcDstModel extends FunctionModel {
 	public int hashCode() {
 		final int prime = 31;
 		int result = super.hashCode();
-		result = prime * result + ((srcdst == null) ? 0 : srcdst.hashCode());
+		result = prime * result + ((source == null) ? 0 : source.hashCode());
 		result = prime * result + ((typeSrcDst == null) ? 0 : typeSrcDst.hashCode());
 		return result;
 	}
@@ -63,11 +67,11 @@ public class DataSrcDstModel extends FunctionModel {
 			return false;
 		if (getClass() != obj.getClass())
 			return false;
-		DataSrcDstModel other = (DataSrcDstModel) obj;
-		if (srcdst == null) {
-			if (other.srcdst != null)
+		FunctionSrcModel other = (FunctionSrcModel) obj;
+		if (source == null) {
+			if (other.source != null)
 				return false;
-		} else if (!srcdst.equals(other.srcdst))
+		} else if (!source.equals(other.source))
 			return false;
 		if (typeSrcDst != other.typeSrcDst)
 			return false;

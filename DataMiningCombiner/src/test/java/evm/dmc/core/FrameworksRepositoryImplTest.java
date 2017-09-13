@@ -63,7 +63,7 @@ public class FrameworksRepositoryImplTest {
 	@Test
 	public void testGetFunctionsDescriptions() {
 		Map<String, String> descriptions = repo
-				.getFunctionsDescriptions(repo.getFunctionsDescriptors().keySet());
+				.getFunctionsDescriptionsMap(repo.getFunctionsDescriptors().keySet());
 		assertThat(descriptions.keySet(), not(empty()));
 		assertThat(descriptions.values(), not(empty()));
 		for (String desc : descriptions.values())
@@ -79,7 +79,7 @@ public class FrameworksRepositoryImplTest {
 		map.put("Bad string", "Value 3");
 		map.put("The last word", "value 4");
 		
-		repo.filterFunction(map, "word");
+		repo.filterFunctionMap(map, "word");
 		System.out.println(TestUtils.printMap(map));
 		
 		assertThat(map, not(hasEntry("Bad string","Value 3")));
@@ -88,11 +88,11 @@ public class FrameworksRepositoryImplTest {
 	
 	@Test
 	public void testFindFunctionByWord() {
-		Map<String,String> map = repo.findFunctionByWord("csv");
+		Map<String,String> map = repo.findFunctionByWordMap("csv");
 		System.out.println(TestUtils.printMap(map));
 		
 		assertThat(map.keySet(), hasItems("Weka_CSVLoader", "Weka_CSVSaver"));
-		repo.filterFunction(map, "load");
+		repo.filterFunctionMap(map, "load");
 		assertThat(map.keySet(), both(hasItems("Weka_CSVLoader")).and(not(hasItems("Weka_CSVSaver"))));
 	}
 	

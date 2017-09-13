@@ -1,12 +1,13 @@
 package evm.dmc.api.model;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Properties;
 
 public class ProjectModel {
 	String name;
-	List<AlgorithmModel> algorithm;
-	Properties projectProperties;
+	List<AlgorithmModel> algorithm = new ArrayList<>();
+	Properties projectProperties = new Properties();
 	
 	public ProjectModel() {
 		super();

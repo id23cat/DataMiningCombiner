@@ -15,6 +15,7 @@ import weka.filters.unsupervised.attribute.PrincipalComponents;
 @PropertySource("classpath:weka.properties")
 @Function
 public class PrincipCompAnalysis extends AbstaractWekaFilter {
+	public final static String MAXARRTIB_PROPERTY_KEY = "Max_attr_count";
 	private final static String NAME = WekaFunctions.PCA;
 	private static FunctionType type = FunctionType.PCA;
 	private Properties functionProperties = new Properties();
@@ -54,7 +55,8 @@ public class PrincipCompAnalysis extends AbstaractWekaFilter {
 
 	@Override
 	protected void setFunctionProperties(Properties funProperties) {
-		// TODO Auto-generated method stub
+		functionProperties = funProperties;
+		components =Integer.valueOf(functionProperties.getProperty(MAXARRTIB_PROPERTY_KEY, "2"));
 		
 	}
 

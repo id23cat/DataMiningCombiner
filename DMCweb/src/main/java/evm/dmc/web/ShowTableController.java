@@ -30,8 +30,8 @@ public class ShowTableController {
 	Set<String> names;
 
 	ShowTableController(@Autowired FrameworksRepository repository) {
-		Map<String, String> loaders = repository.findFunctionByWord("csv");
-		repository.filterFunction(loaders, "load");
+		Map<String, String> loaders = repository.findFunctionByWordMap("csv");
+		repository.filterFunctionMap(loaders, "load");
 		CSVLoader loader = (CSVLoader) repository.getFunction(loaders.keySet().iterator().next());
 		this.data = loader.setSource(sourceFileName).get();
 

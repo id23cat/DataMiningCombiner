@@ -1,12 +1,13 @@
 package evm.dmc.api.model;
 
+import java.util.LinkedList;
 import java.util.List;
 
 public class AlgorithmModel {
 	String name;
-	DataSrcDstModel dataSource;
-	List<FunctionModel> functions;
-	DataSrcDstModel dataDestination;
+	FunctionSrcModel dataSource = null;
+	List<FunctionModel> functions = new LinkedList<>();
+	FunctionDstModel dataDestination = null;
 	
 	public AlgorithmModel () {}
 
@@ -27,14 +28,14 @@ public class AlgorithmModel {
 	/**
 	 * @return the dataSource
 	 */
-	public DataSrcDstModel getDataSource() {
+	public FunctionSrcModel getDataSource() {
 		return dataSource;
 	}
 
 	/**
 	 * @param dataSource the dataSource to set
 	 */
-	public void setDataSource(DataSrcDstModel dataSource) {
+	public void setDataSource(FunctionSrcModel dataSource) {
 		this.dataSource = dataSource;
 	}
 
@@ -63,14 +64,14 @@ public class AlgorithmModel {
 	/**
 	 * @return the dataDestination
 	 */
-	public DataSrcDstModel getDataDestination() {
+	public FunctionDstModel getDataDestination() {
 		return dataDestination;
 	}
 
 	/**
 	 * @param dataDestination the dataDestination to set
 	 */
-	public void setDataDestination(DataSrcDstModel dataDestination) {
+	public void setDataDestination(FunctionDstModel dataDestination) {
 		this.dataDestination = dataDestination;
 	};
 	

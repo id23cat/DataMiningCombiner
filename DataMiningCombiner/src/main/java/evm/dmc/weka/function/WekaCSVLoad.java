@@ -14,10 +14,14 @@ import java.util.List;
 import java.util.Optional;
 import java.util.Properties;
 
+import evm.dmc.api.model.DataSrcDstModel;
+import evm.dmc.api.model.DataSrcDstType;
 import evm.dmc.api.model.FunctionModel;
+import evm.dmc.api.model.FunctionSrcModel;
 import evm.dmc.api.model.FunctionType;
 import evm.dmc.core.DataFactory;
 import evm.dmc.core.Function;
+import evm.dmc.core.api.DMCDataLoader;
 import evm.dmc.core.api.DMCFunction;
 import evm.dmc.core.api.Data;
 import evm.dmc.core.api.back.CSVLoader;
@@ -34,16 +38,19 @@ import weka.core.Instances;
 @Scope(ConfigurableBeanFactory.SCOPE_PROTOTYPE)
 @Function
 public class WekaCSVLoad extends AbstractDMCFunction<Instances>
-		implements CSVLoader, DMCFunction<Instances>, WekaFunction {
+		implements CSVLoader, WekaFunction {
 	private static final String NAME = WekaFunctions.CSVLOADER;
 	private static final Integer ARGS_COUNT = 0;
 	private static final String SOURCE_PARAM = "source";
+	private static final String TYPE_PARAM = "srcType";
 	private static FunctionType type = FunctionType.CSV_DATASOURCE;
 	private Properties functionProperties = new Properties();
+	
+	private FunctionSrcModel model = new FunctionSrcModel();
 
 	private DataFactory dataFactory;
 
-	private String source = null;
+//	private String source = null;
 	private Data<Instances> result = null;
 
 	private StringBuilder dateAttributes = new StringBuilder();
@@ -62,6 +69,7 @@ public class WekaCSVLoad extends AbstractDMCFunction<Instances>
 		super();
 		this.dataFactory = dataFactory;
 		functionProperties.setProperty(SOURCE_PARAM, "");
+		super.functionModel = model;
 	}
 
 	/*
@@ -90,13 +98,12 @@ public class WekaCSVLoad extends AbstractDMCFunction<Instances>
 
 	@Override
 	public CSVLoader setSource(String source) {
-		if (this.source == null)
-			this.source = source;
-		else if (!this.source.equals(source)) { // argument is not equal actual
+		if (!model.getSource().equals(source)) { // argument is not equal actual
 												// source
 			result = null;
-			this.source = source;
 		}
+		model.setSource(source);
+		model.setTypeSrcDst(DataSrcDstType.LOCAL_FS);
 		return this;
 	}
 
@@ -233,7 +240,7 @@ public class WekaCSVLoad extends AbstractDMCFunction<Instances>
 		loader.setNominalAttributes(nominalAttributes.toString());
 		loader.setNumericAttributes(numericAttributes.toString());
 		loader.setStringAttributes(stringAttributes.toString());
-		loader.setSource(new File(this.source));
+		loader.setSource(new File(model.getSource()));
 	}
 
 	@Override
@@ -248,12 +255,37 @@ public class WekaCSVLoad extends AbstractDMCFunction<Instances>
 
 	@Override
 	protected void setFunctionProperties(Properties funProperties) {
-		setSource(funProperties.getProperty(SOURCE_PARAM));
+			setSource(funProperties.getProperty(SOURCE_PARAM));
 	}
 
 	@Override
 	public Optional<Data<Instances>> getOptionalResult() {
 		return Optional.ofNullable(getResult());
+	}
+
+	@Override
+	public FunctionSrcModel getSrcModel() {
+		return model;
+	}
+
+	@Override
+	public DMCDataLoader setSrcModel(FunctionSrcModel model) {
+		this.model = model;
+		super.functionModel = this.model;
+		setFunctionProperties(this.model.getProperties());
+		
+		return this;
+	}
+	
+	@Override
+	public void setFunctionModel(FunctionModel model) {
+		this.model = new FunctionSrcModel(model);
+		setFunctionProperties(this.model.getProperties());
+	}
+
+	@Override
+	public FunctionModel getFunctionModel() {
+		return this.model;
 	}
 
 }

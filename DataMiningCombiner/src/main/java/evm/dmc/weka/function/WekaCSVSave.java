@@ -14,8 +14,14 @@ import java.util.List;
 import java.util.Optional;
 import java.util.Properties;
 
+import evm.dmc.api.model.DataSrcDstModel;
+import evm.dmc.api.model.DataSrcDstType;
+import evm.dmc.api.model.FunctionDstModel;
+import evm.dmc.api.model.FunctionModel;
 import evm.dmc.api.model.FunctionType;
 import evm.dmc.core.Function;
+import evm.dmc.core.api.DMCDataLoader;
+import evm.dmc.core.api.DMCDataSaver;
 import evm.dmc.core.api.DMCFunction;
 import evm.dmc.core.api.Data;
 import evm.dmc.core.api.back.CSVSaver;
@@ -35,8 +41,10 @@ public class WekaCSVSave extends AbstractDMCFunction<String> implements CSVSaver
 	private static final String NAME = WekaFunctions.CSVSAVER;
 	private static final Integer ARGS_COUNT = 1;
 	private static final String DEST_PARAM = "destination";
+	
 	private static FunctionType type = FunctionType.CSV_DATADESTINATION;
 	private Properties functionProperties = new Properties();
+	private FunctionDstModel model = new FunctionDstModel();
 
 	private File destination = null;
 	private Data<String> save = null;
@@ -49,6 +57,7 @@ public class WekaCSVSave extends AbstractDMCFunction<String> implements CSVSaver
 	
 	public WekaCSVSave() {
 		functionProperties.setProperty(DEST_PARAM, "");
+		super.functionModel = model;
 	}
 
 	@Override
@@ -64,6 +73,8 @@ public class WekaCSVSave extends AbstractDMCFunction<String> implements CSVSaver
 	@Override
 	public CSVSaver setDestination(String filename) {
 		destination = new File(filename);
+		model.setDestination(filename);
+		model.setTypeSrcDst(DataSrcDstType.LOCAL_FS);
 		return this;
 	}
 
@@ -149,6 +160,31 @@ public class WekaCSVSave extends AbstractDMCFunction<String> implements CSVSaver
 	@Override
 	public Optional<Data<String>> getOptionalResult() {
 		return Optional.ofNullable(getResult());
+	}
+
+	@Override
+	public FunctionDstModel getDstModel() {
+		return model;
+	}
+
+	@Override
+	public DMCDataSaver setDstModel(FunctionDstModel model) {
+		this.model = model;
+		super.functionModel = this.model;
+		setFunctionProperties(this.model.getProperties());
+		
+		return this;
+	}
+	
+	@Override
+	public void setFunctionModel(FunctionModel model) {
+		this.model = new FunctionDstModel(model);
+		setFunctionProperties(this.model.getProperties());
+	}
+
+	@Override
+	public FunctionModel getFunctionModel() {
+		return this.model;
 	}
 
 }

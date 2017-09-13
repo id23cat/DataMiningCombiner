@@ -11,8 +11,10 @@ import javax.annotation.PostConstruct;
 
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.BeansException;
+import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.PropertySource;
+import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Service;
 
 import evm.dmc.core.api.DMCFunction;
@@ -20,6 +22,7 @@ import evm.dmc.core.api.Framework;
 import evm.dmc.core.api.FrameworksRepository;
 
 @Service
+@Scope(ConfigurableBeanFactory.SCOPE_SINGLETON)
 //@PropertySource("classpath:frameworkrepo.properties")
 public class FrameworksRepositoryImpl implements FrameworksRepository {
 	private ApplicationContext applicationContext;
@@ -61,7 +64,7 @@ public class FrameworksRepositoryImpl implements FrameworksRepository {
 	/**
 	 * @return Map<Framework_descriptor, Set<Framework's_DataLoaders>>
 	 */
-	public Map<String, String> getDataLoadersDescriptors() {
+	public Map<String, String> getDataLoadersDescriptorsMap() {
 		Map<String, String> functions = new HashMap<>();
 		for (String framework : getFrameworksDescriptors()) {
 			for(String function : getFramework(framework).getLoaderDescriptors().keySet())
@@ -73,7 +76,7 @@ public class FrameworksRepositoryImpl implements FrameworksRepository {
 	/**
 	 * @return Map<Framework_descriptor, Set<Framework's_DataSavers>>
 	 */
-	public Map<String, String> getDataSaversDescriptors() {
+	public Map<String, String> getDataSaversDescriptorsMap() {
 		Map<String, String> functions = new HashMap<>();
 		for (String framework : getFrameworksDescriptors()) {
 			for(String function : getFramework(framework).getSaverDescriptors().keySet())
@@ -82,7 +85,7 @@ public class FrameworksRepositoryImpl implements FrameworksRepository {
 		return functions;
 	}
 
-	public Map<String, String> getFunctionsDescriptions(Set<String> functions) {
+	public Map<String, String> getFunctionsDescriptionsMap(Set<String> functions) {
 		Map<String, String> descs = new HashMap<>();
 		for(String func : functions)
 			descs.put(func, getFunctionDescription(func));
@@ -99,14 +102,14 @@ public class FrameworksRepositoryImpl implements FrameworksRepository {
 	}
 
 	@Override
-	public Map<String, String> findFunctionByWord(String word) {
+	public Map<String, String> findFunctionByWordMap(String word) {
 		Map<String, String> functions = getFunctionsDescriptors();
 		
-		return filterFunction(functions, word);
+		return filterFunctionMap(functions, word);
 	}
 
 	@Override
-	public Map<String, String> filterFunction(Map<String, String> funDesc, String word) {
+	public Map<String, String> filterFunctionMap(Map<String, String> funDesc, String word) {
 		Set<String> keys = funDesc.keySet();
 		keys.removeIf(p -> !StringUtils.containsIgnoreCase(p, word));
 //		for(String key:keys)

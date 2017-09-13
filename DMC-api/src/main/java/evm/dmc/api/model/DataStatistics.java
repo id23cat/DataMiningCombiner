@@ -3,7 +3,7 @@ package evm.dmc.api.model;
 import java.util.Properties;
 
 public class DataStatistics extends DataInfo {
-	private Properties statValues;
+	private Properties statValues = new Properties();
 
 	public DataStatistics(){
 		super();

@@ -9,6 +9,13 @@ public class FunctionModel {
 	private Properties properties = new Properties();
 	
 	public FunctionModel(){}
+	
+	public FunctionModel(FunctionModel funmodel){
+		name = funmodel.getName();
+		framework = funmodel.getFramework();
+		type = funmodel.getType();
+		properties = funmodel.getProperties();
+	}
 
 	/**
 	 * @return the name

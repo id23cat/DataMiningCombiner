@@ -9,6 +9,8 @@ import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
+import java.io.IOException;
+
 import org.junit.BeforeClass;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -59,9 +61,10 @@ public class AlgorithmTest {
 
 	/**
 	 * Test method for {@link evm.dmc.core.api.Algorithm#execute()}.
+	 * @throws IOException 
 	 */
 	@Test
-	public final void testExecute() {
+	public final void testExecute() throws IOException {
 		mockedAlg.addCommand(mockedCmd);
 		
 		mockedAlg.execute();
