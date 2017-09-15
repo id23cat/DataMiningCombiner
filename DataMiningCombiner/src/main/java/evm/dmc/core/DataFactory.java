@@ -20,7 +20,7 @@ public interface DataFactory {
 		throw new UnsupportedOperationException("Convertion from other Data type not supported");
 	}
 
-	Data getData(Class type);
+	Data getData(Class<?> type);
 
 	// default Data getData(Class type) {
 	// throw new UnsupportedOperationException("Creating Data object for type" +

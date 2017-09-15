@@ -1,9 +1,6 @@
 package evm.dmc.core.api;
 
-import evm.dmc.api.model.DataSrcDstModel;
-import evm.dmc.api.model.FunctionModel;
 import evm.dmc.api.model.FunctionSrcModel;
-import evm.dmc.core.api.back.CSVLoader;
 import evm.dmc.core.api.exceptions.LoadDataException;
 
 public interface DMCDataLoader /*extends Supplier<Data>*/ /* extends DMCFunction<T> */  {
@@ -13,7 +10,7 @@ public interface DMCDataLoader /*extends Supplier<Data>*/ /* extends DMCFunction
 	 * @return Data object contains loaded data
 	 * @throws LoadDataException
 	 */
-	Data get() throws LoadDataException;
+	Data<?> get() throws LoadDataException;
 
 	/**
 	 * Forces to reload data from beginning

@@ -17,9 +17,12 @@ import org.springframework.context.annotation.PropertySource;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Service;
 
+import evm.dmc.core.api.DMCDataLoader;
+import evm.dmc.core.api.DMCDataSaver;
 import evm.dmc.core.api.DMCFunction;
 import evm.dmc.core.api.Framework;
 import evm.dmc.core.api.FrameworksRepository;
+import evm.dmc.core.api.exceptions.NoSuchFunctionException;
 
 @Service
 @Scope(ConfigurableBeanFactory.SCOPE_SINGLETON)
@@ -118,20 +121,38 @@ public class FrameworksRepositoryImpl implements FrameworksRepository {
 	}
 
 	@Override
-	public DMCFunction getFunction(String descriptor) {
+	public DMCFunction<?> getFunction(String descriptor) throws NoSuchFunctionException {
 		Map<String, String> funcMap = getFunctionsDescriptors();
 		
 		return getFunction(descriptor, funcMap.get(descriptor));
 	}
+	
+	@Override
+	public DMCDataLoader getDataLoaderFunction(String descriptor) throws NoSuchFunctionException {
+		Map<String, String> funcMap = getFunctionsDescriptors();
+		
+		return getFunction(descriptor, getFramework(funcMap.get(descriptor)), DMCDataLoader.class);
+	}
+	
+	@Override
+	public DMCDataSaver getDataSaverFunction(String descriptor) throws NoSuchFunctionException {
+		Map<String, String> funcMap = getFunctionsDescriptors();
+		
+		return getFunction(descriptor, getFramework(funcMap.get(descriptor)), DMCDataSaver.class);
+	}
 
 	@Override
-	public DMCFunction getFunction(String descriptor, String framework) {
+	public DMCFunction<?> getFunction(String descriptor, String framework) throws NoSuchFunctionException {
 		return getFunction(descriptor, getFramework(framework));
 	}
 
 	@Override
-	public DMCFunction getFunction(String descriptor, Framework framework) {
+	public DMCFunction<?> getFunction(String descriptor, Framework framework) throws NoSuchFunctionException {
 		return framework.getDMCFunction(descriptor);
+	}
+	
+	public <T> T getFunction(String descriptor, Framework framework, Class<T> type) {
+		return framework.getDMCFunction(descriptor, type);
 	}
 
 }

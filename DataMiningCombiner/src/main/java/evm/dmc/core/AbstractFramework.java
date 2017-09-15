@@ -6,6 +6,8 @@ import org.python.google.common.collect.Lists;
 import org.springframework.beans.BeansException;
 import org.springframework.context.ApplicationContext;
 
+import com.jayway.jsonpath.internal.function.json.Append;
+
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -23,6 +25,7 @@ import evm.dmc.core.api.DMCDataSaver;
 import evm.dmc.core.api.DMCFunction;
 import evm.dmc.core.api.Data;
 import evm.dmc.core.api.Framework;
+import evm.dmc.core.api.exceptions.NoSuchFunctionException;
 
 /**
  * Each final extender must implement initFramework method based on example:
@@ -130,40 +133,54 @@ public abstract class AbstractFramework implements Framework, DataFactory {
 	}
 
 	@Override
-	public DMCFunction getDMCFunction(String descriptor) {
+	public DMCFunction<?> getDMCFunction(String descriptor) throws NoSuchFunctionException {
 		// TODO
-		@SuppressWarnings({ "unchecked", "rawtypes" })
+		// @SuppressWarnings({ "unchecked", "rawtypes" })
 		// DMCFunction function = (DMCFunction)
 		// applicationContext.getBean(descriptor, abstractFunctionClass);
-		DMCFunction function = (DMCFunction) applicationContext.getBean(descriptor);
+		DMCFunction<?> function = null;
+		try {
+			function = (DMCFunction<?>) applicationContext.getBean(descriptor);
+		} catch (BeansException exc) {
+			StringBuilder strBld = new StringBuilder();
+			strBld.append("Probably <\"").append(descriptor).append("\"> bean does not exists");
+			throw new NoSuchFunctionException(strBld.toString(), exc);
+		}
 		function.getFunctionModel().setFramework(frameworkModel);
 		return function;
 	}
 
 	@Override
-	public <T> T getDMCFunction(String descriptor, Class<T> type) {
-		T function = applicationContext.getBean(descriptor, type);
-		((DMCFunction)function).getFunctionModel().setFramework(frameworkModel);
+	public <T> T getDMCFunction(String descriptor, Class<T> type) throws NoSuchFunctionException {
+		T function = null;
+		try{
+			function = applicationContext.getBean(descriptor, type);
+		}catch (BeansException exc) {
+			StringBuilder strBld = new StringBuilder();
+			strBld.append("Probably <\"").append(descriptor).append("\"> With type <\"").append(type.getName()).append("\"> bean does not exists");
+			throw new NoSuchFunctionException(strBld.toString(), exc);
+		}
+		((DMCFunction<?>)function).getFunctionModel().setFramework(frameworkModel);
 		return function;
 	}
 
 	@Override
-	public <T> T getDMCDataSaver(String descriptor, Class<T> type) {
+	public <T> T getDMCDataSaver(String descriptor, Class<T> type) throws NoSuchFunctionException {
 		return getDMCFunction(descriptor, type);
 	}
 
 	@Override
-	public <T> T getDMCDataLoader(String descriptor, Class<T> type) {
+	public <T> T getDMCDataLoader(String descriptor, Class<T> type) throws NoSuchFunctionException {
 		return getDMCFunction(descriptor, type);
 	}
 
 	@Override
-	public Data getData(Class type) {
+	public Data<?> getData(Class<?> type) {
 		return this.instantiateData(type);
 	}
 
 	@SuppressWarnings({ "rawtypes", "unchecked" })
-	protected Data instantiateData(Class dataType) {
+	protected Data<?> instantiateData(Class dataType) {
 		return (Data) applicationContext.getBean(dataType);
 	}
 

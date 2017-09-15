@@ -9,7 +9,7 @@ import org.springframework.context.annotation.PropertySource;
 import org.springframework.stereotype.Service;
 
 import evm.dmc.api.model.FunctionType;
-import evm.dmc.core.Function;
+import evm.dmc.core.annotations.Function;
 
 @Service("Python_ScaleDataset")
 @PropertySource("classpath:jep.properties")

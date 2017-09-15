@@ -10,6 +10,7 @@ import evm.dmc.core.AbstractFramework;
 import evm.dmc.core.api.DMCFunction;
 import evm.dmc.core.api.Data;
 import evm.dmc.core.api.back.FrameworkContext;
+import evm.dmc.core.api.exceptions.NoSuchFunctionException;
 import evm.dmc.python.data.PandasDataFrame;
 import evm.dmc.python.function.AbstractPythonFunction;
 
@@ -43,12 +44,12 @@ public class PythonFramework extends AbstractFramework {
 	}
 
 	@Override
-	public Data getData(Class type) {
+	public Data getData(Class<?> type) {
 		return super.instantiateData(type);
 	}
 
 	@Override
-	public DMCFunction getDMCFunction(String descriptor) {
+	public DMCFunction getDMCFunction(String descriptor) throws NoSuchFunctionException {
 		DMCFunction function = super.getDMCFunction(descriptor);
 		function.setContext(context);
 		return function;

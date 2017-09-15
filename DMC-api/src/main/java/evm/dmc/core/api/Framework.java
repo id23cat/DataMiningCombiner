@@ -11,6 +11,7 @@ import evm.dmc.api.model.FrameworkModel;
 //import evm.dmc.core.api.DMCDataLoader;
 //import evm.dmc.core.api.DMCDataSaver;
 import evm.dmc.core.api.DMCFunction;
+import evm.dmc.core.api.exceptions.NoSuchFunctionException;
 
 /**
  * The Interface Framework. Interface describes common methods for using
@@ -45,14 +46,15 @@ public interface Framework extends ApplicationContextAware {
 	 * @param descriptor
 	 *            the descriptor
 	 * @return the DMC function
+	 * @throws NoSuchFunctionException TODO
 	 */
-	DMCFunction getDMCFunction(String descriptor);
+	DMCFunction getDMCFunction(String descriptor) throws NoSuchFunctionException;
 	
-	<T> T getDMCFunction(String descriptor, Class<T> type);
+	<T> T getDMCFunction(String descriptor, Class<T> type) throws NoSuchFunctionException;
 
-	<T> T getDMCDataSaver(String descriptor, Class<T> type);
+	<T> T getDMCDataSaver(String descriptor, Class<T> type) throws NoSuchFunctionException;
 
-	<T> T getDMCDataLoader(String descriptor, Class<T> type);
+	<T> T getDMCDataLoader(String descriptor, Class<T> type) throws NoSuchFunctionException;
 	
 	void setFrameworkModel(FrameworkModel frameworkModel);
 	

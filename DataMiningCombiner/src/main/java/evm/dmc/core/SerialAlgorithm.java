@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.ListIterator;
 
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -28,11 +29,11 @@ import evm.dmc.core.api.exceptions.StoreDataException;
 public class SerialAlgorithm implements Algorithm {
 	private static final String NAME = "serialAlgorithm";
 	private AlgorithmModel model = new AlgorithmModel();
-	
+
 	private DMCDataLoader dataSource = null;
 	private List<DMCFunction<?>> algChain = new LinkedList<>();
 	private DMCDataSaver dataDestination = null;
-	
+
 	private FrameworksRepository repository = null;
 	private boolean modifyModel = true;
 
@@ -113,38 +114,93 @@ public class SerialAlgorithm implements Algorithm {
 	public void execute() throws IOException {
 		Data data = null;
 		data = dataSource.get();
-		for(DMCFunction<?> function : algChain){
-//			if(data != null)
+		for (DMCFunction<?> function : algChain) {
+			// if(data != null)
 			function.setArgs(data);
 			function.execute();
 			data = function.getResult();
 		}
-		if(dataDestination != null)
+		if (dataDestination != null)
 			dataDestination.save(data);
 
 	}
 
 	@Override
-	public void insertCommand(DMCFunction<?> dMCFunction, DMCFunction<?> after) throws NoSuchFunctionException {
-		int index = algChain.indexOf(after);
-		if (index == -1)
-			throw new NoSuchFunctionException("Function " + after.getName() + "not present in algorithm");
-		algChain.add(index + 1, dMCFunction);
+	public void insertCommandAfter(DMCFunction<?> dMCFunction, DMCFunction<?> after) throws NoSuchFunctionException {
+		Integer index = getIndexOfFunction(after);
+		insertCommand(dMCFunction, index + 1);
+	}
+
+	@Override
+	public void insertCommandAfter(String descriptor, DMCFunction<?> after) throws NoSuchFunctionException {
+		insertCommandAfter(repository.getFunction(descriptor), after);
+
+	}
+
+	@Override
+	public void insertCommandAfter(FunctionModel functionModel, DMCFunction<?> after) throws NoSuchFunctionException {
+		insertCommandAfter(functionModel.getName(), after);
+
+	}
+
+	@Override
+	public void insertCommandAfter(FunctionModel functionModel, FunctionModel after) throws NoSuchFunctionException {
+		// tying to find function which have same model as "after"
+		DMCFunction<?> funcAfter = algChain.stream().filter(func -> func.getFunctionModel().equals(after)).findFirst()
+				.orElseThrow(() -> new NoSuchFunctionException(
+						"Can not instert after unexisted function " + after.getName()));
+		insertCommandAfter(functionModel, funcAfter);
+	}
+	
+	@Override
+	public void insertCommandBefore(FunctionModel functionModel, FunctionModel before) throws NoSuchFunctionException {
+		Integer index = getIndexOfFunction(before);
+		insertCommand(functionModel, index);
+	}
+	
+	@Override
+	public void insertCommandBefore(DMCFunction<?> dMCFunction, DMCFunction<?> before) throws NoSuchFunctionException {
+		Integer index = getIndexOfFunction(before);
+		insertCommand(dMCFunction, index);
+		
+	}
+	
+	@Override
+	public void insertCommandBefore(String descriptor, DMCFunction<?> before) throws NoSuchFunctionException {
+		insertCommandBefore(repository.getFunction(descriptor), before);
+	}
+
+	@Override
+	public void insertCommand(FunctionModel functionModel, Integer index) throws NoSuchFunctionException {
+		insertCommand(repository.getFunction(functionModel.getName()), index);
+	}
+
+	private void insertCommand(DMCFunction<?> dMCFunction, Integer index) throws NoSuchFunctionException {
+		algChain.add(index, dMCFunction);
 		if (modifyModel)
-			model.getFunctions().add(index + 1, dMCFunction.getFunctionModel());
-
+			model.getFunctions().add(index, dMCFunction.getFunctionModel());
 	}
 
 	@Override
-	public void insertCommand(String descriptor, DMCFunction<?> after) {
-		insertCommand(repository.getFunction(descriptor), after);
-
+	public Integer getIndexOfFunction(FunctionModel functionModel) throws NoSuchFunctionException {
+		int index = -1;
+		ListIterator<DMCFunction<?>> iter = algChain.listIterator();
+		while(iter.hasNext()){
+			if(iter.next().getFunctionModel().equals(functionModel)){
+				index = iter.previousIndex();
+				break;
+			}
+		}
+		if (index == -1)
+			throw new NoSuchFunctionException("Function " + functionModel.getName() + "not present in algorithm");
+		return Integer.valueOf(index);
 	}
-
-	@Override
-	public void insertCommand(FunctionModel functionModel, DMCFunction<?> after) {
-		insertCommand(functionModel.getName(), after);
-
+	
+	private Integer getIndexOfFunction(DMCFunction<?> dMCFunction) throws NoSuchFunctionException {
+		int index = algChain.indexOf(dMCFunction);
+		if (index == -1)
+			throw new NoSuchFunctionException("Function " + dMCFunction.getName() + "not present in algorithm");
+		return Integer.valueOf(index);
 	}
 
 	@Override
@@ -162,7 +218,7 @@ public class SerialAlgorithm implements Algorithm {
 		if (model.getDataDestination() != null)
 			addDataDestination(model.getDataDestination());
 
-		modifyModel = true;	// back to default behavior
+		modifyModel = true; // back to default behavior
 		return this;
 	}
 
@@ -175,55 +231,55 @@ public class SerialAlgorithm implements Algorithm {
 	@Override
 	public void addDataSource(DMCDataLoader dataSource) {
 		this.dataSource = dataSource;
-		if (modifyModel){
-//			String src = dataSource.getSrcModel().getSource();
-//			model.getDataSource().setSource(src);
+		if (modifyModel) {
+			// String src = dataSource.getSrcModel().getSource();
+			// model.getDataSource().setSource(src);
 			model.setDataSource(dataSource.getSrcModel());
 		}
-		
+
 	}
 
 	@Override
 	public void addDataSource(String descriptor, String source) {
-		DMCDataLoader dataLoader = (DMCDataLoader)repository.getFunction(descriptor);
+		DMCDataLoader dataLoader = (DMCDataLoader) repository.getFunction(descriptor);
 		dataLoader.setSource(source);
 		addDataSource(dataLoader);
 	}
-	
+
 	@Override
-	public void addDataSource(FunctionModel functionModel) {		
-		DMCDataLoader dataLoader = (DMCDataLoader)repository.getFunction(functionModel.getName());
-		if(functionModel instanceof FunctionSrcModel)
-			dataLoader.setSrcModel((FunctionSrcModel)functionModel);
+	public void addDataSource(FunctionModel functionModel) {
+		DMCDataLoader dataLoader = (DMCDataLoader) repository.getFunction(functionModel.getName());
+		if (functionModel instanceof FunctionSrcModel)
+			dataLoader.setSrcModel((FunctionSrcModel) functionModel);
 		else
 			dataLoader.setSrcModel(new FunctionSrcModel(functionModel));
 		addDataSource(dataLoader);
-		
+
 	}
 
 	@Override
 	public void addDataDestination(DMCDataSaver dataDest) {
 		this.dataDestination = dataDest;
-		if (modifyModel){
-//			model.getDataDestination().setDestination(dataDest.getDstModel().getDestination());
+		if (modifyModel) {
+			// model.getDataDestination().setDestination(dataDest.getDstModel().getDestination());
 			model.setDataDestination(dataDest.getDstModel());
 		}
-		
+
 	}
-	
+
 	@Override
 	public void addDataDestination(String descriptor, String destination) {
-//		addDataDestination((DMCDataSaver)repository.getFunction(descriptor));
-		DMCDataSaver dataSaver = (DMCDataSaver)repository.getFunction(descriptor);
+		// addDataDestination((DMCDataSaver)repository.getFunction(descriptor));
+		DMCDataSaver dataSaver = (DMCDataSaver) repository.getFunction(descriptor);
 		dataSaver.setDestination(destination);
 		addDataDestination(dataSaver);
 	}
 
 	@Override
 	public void addDataDestination(FunctionModel functionModel) {
-//		addDataDestination(functionModel.getName(), null);
-		DMCDataSaver dataSaver = (DMCDataSaver)repository.getFunction(functionModel.getName());
-		if(functionModel instanceof FunctionDstModel)
+		// addDataDestination(functionModel.getName(), null);
+		DMCDataSaver dataSaver = (DMCDataSaver) repository.getFunction(functionModel.getName());
+		if (functionModel instanceof FunctionDstModel)
 			dataSaver.setDstModel((FunctionDstModel) functionModel);
 		else
 			dataSaver.setDstModel(new FunctionDstModel(functionModel));

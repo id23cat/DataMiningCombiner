@@ -3,42 +3,51 @@ package evm.dmc.api.model;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Properties;
+import java.util.Objects;
 
 public class ProjectModel {
-	String name;
-	List<AlgorithmModel> algorithm = new ArrayList<>();
-	Properties projectProperties = new Properties();
+	private String typeName;
+	private List<AlgorithmModel> algorithms = new ArrayList<>();
+	private Properties projectProperties = new Properties();
+	private String projectName;
 	
 	public ProjectModel() {
 		super();
 	}
 	
+	public ProjectModel(String typeName, List<AlgorithmModel> algorithms, Properties projectProperties, String projectName){
+		this.typeName = typeName;
+		this.algorithms =  new ArrayList<>(algorithms);
+		this.projectProperties = new Properties(projectProperties);
+		this.projectName = projectName;
+	}
+	
 	/**
 	 * @return the name
 	 */
-	public String getName() {
-		return name;
+	public String getTypeName() {
+		return typeName;
 	}
 
 	/**
 	 * @param name the name to set
 	 */
-	public void setName(String name) {
-		this.name = name;
+	public void setTypeName(String name) {
+		this.typeName = name;
 	}
 
 	/**
-	 * @return the algorithm
+	 * @return the list of algorithms
 	 */
-	public List<AlgorithmModel> getAlgorithm() {
-		return algorithm;
+	public List<AlgorithmModel> getAlgorithms() {
+		return algorithms;
 	}
 
 	/**
 	 * @param algorithm the algorithm to set
 	 */
-	public void setAlgorithm(List<AlgorithmModel> algorithm) {
-		this.algorithm = algorithm;
+	public void setAlgorithms(List<AlgorithmModel> algorithm) {
+		this.algorithms = algorithm;
 	}
 
 	/**
@@ -55,41 +64,39 @@ public class ProjectModel {
 		this.projectProperties = projectProperties;
 	}
 
-	/* (non-Javadoc)
-	 * @see java.lang.Object#hashCode()
+	/**
+	 * @return the projectName
 	 */
-	@Override
-	public int hashCode() {
-		final int prime = 31;
-		int result = 1;
-		result = prime * result + ((algorithm == null) ? 0 : algorithm.hashCode());
-		result = prime * result + ((projectProperties == null) ? 0 : projectProperties.hashCode());
-		return result;
+	public String getProjectName() {
+		return projectName;
 	}
 
-	/* (non-Javadoc)
-	 * @see java.lang.Object#equals(java.lang.Object)
+	/**
+	 * @param projectName the projectName to set
 	 */
-	@Override
-	public boolean equals(Object obj) {
-		if (this == obj)
-			return true;
-		if (obj == null)
-			return false;
-		if (getClass() != obj.getClass())
-			return false;
-		ProjectModel other = (ProjectModel) obj;
-		if (algorithm == null) {
-			if (other.algorithm != null)
-				return false;
-		} else if (!algorithm.equals(other.algorithm))
-			return false;
-		if (projectProperties == null) {
-			if (other.projectProperties != null)
-				return false;
-		} else if (!projectProperties.equals(other.projectProperties))
-			return false;
-		return true;
+	public void setProjectName(String projectName) {
+		this.projectName = projectName;
 	}
+
+	@Override
+	public boolean equals(final Object other) {
+		if (this == other) {
+			return true;
+		}
+		if (!(other instanceof ProjectModel)) {
+			return false;
+		}
+		ProjectModel castOther = (ProjectModel) other;
+		return Objects.equals(typeName, castOther.typeName) && Objects.equals(algorithms, castOther.algorithms)
+				&& Objects.equals(projectProperties, castOther.projectProperties)
+				&& Objects.equals(projectName, castOther.projectName);
+	}
+
+	@Override
+	public int hashCode() {
+		return Objects.hash(typeName, algorithms, projectProperties, projectName);
+	}
+
+	
 
 }

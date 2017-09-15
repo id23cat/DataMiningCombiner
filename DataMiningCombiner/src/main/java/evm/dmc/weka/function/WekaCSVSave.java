@@ -19,7 +19,7 @@ import evm.dmc.api.model.DataSrcDstType;
 import evm.dmc.api.model.FunctionDstModel;
 import evm.dmc.api.model.FunctionModel;
 import evm.dmc.api.model.FunctionType;
-import evm.dmc.core.Function;
+import evm.dmc.core.annotations.Function;
 import evm.dmc.core.api.DMCDataLoader;
 import evm.dmc.core.api.DMCDataSaver;
 import evm.dmc.core.api.DMCFunction;
@@ -136,7 +136,7 @@ public class WekaCSVSave extends AbstractDMCFunction<String> implements CSVSaver
 	@Override
 	public Data<String> getResult() {
 		@SuppressWarnings("unchecked")
-		Data<String> data = framework.getData(String.class);
+		Data<String> data = (Data<String>) framework.getData(String.class);
 		data.setData(destination.getAbsolutePath());
 		return data;
 	}

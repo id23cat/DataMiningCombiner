@@ -9,7 +9,7 @@ import org.springframework.context.annotation.PropertySource;
 import org.springframework.stereotype.Service;
 
 import evm.dmc.api.model.FunctionType;
-import evm.dmc.core.Function;
+import evm.dmc.core.annotations.Function;
 import evm.dmc.core.api.Data;
 import evm.dmc.weka.WekaFW;
 import evm.dmc.weka.WekaFramework;

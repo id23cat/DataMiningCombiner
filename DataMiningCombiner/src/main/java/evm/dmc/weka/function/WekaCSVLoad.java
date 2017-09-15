@@ -20,7 +20,7 @@ import evm.dmc.api.model.FunctionModel;
 import evm.dmc.api.model.FunctionSrcModel;
 import evm.dmc.api.model.FunctionType;
 import evm.dmc.core.DataFactory;
-import evm.dmc.core.Function;
+import evm.dmc.core.annotations.Function;
 import evm.dmc.core.api.DMCDataLoader;
 import evm.dmc.core.api.DMCFunction;
 import evm.dmc.core.api.Data;

@@ -6,6 +6,7 @@ import java.util.List;
 import evm.dmc.api.model.AlgorithmModel;
 import evm.dmc.api.model.FunctionModel;
 import evm.dmc.core.api.DMCFunction;
+import evm.dmc.core.api.exceptions.NoSuchFunctionException;
 
 /**
  * The Interface Algorithm.
@@ -112,20 +113,60 @@ public interface Algorithm {
 	/**
 	 * @param dMCFunction function to insert
 	 * @param after which to insert 
+	 * @throws NoSuchFunctionException TODO
 	 */
-	void insertCommand(DMCFunction<?> dMCFunction, DMCFunction<?> after);
+	void insertCommandAfter(DMCFunction<?> dMCFunction, DMCFunction<?> after) throws NoSuchFunctionException;
 	
 	/**
 	 * @param functionModel -- model of the command
 	 * @param after which to insert 
+	 * @throws NoSuchFunctionException TODO
 	 */
-	void insertCommand(FunctionModel functionModel, DMCFunction<?> after);
+	void insertCommandAfter(FunctionModel functionModel, DMCFunction<?> after) throws NoSuchFunctionException;
 	
 	/**
 	 * @param descriptor of the function
 	 * @param after which to insert 
+	 * @throws NoSuchFunctionException TODO
 	 */
-	void insertCommand(String descriptor, DMCFunction<?> after);
+	void insertCommandAfter(String descriptor, DMCFunction<?> after) throws NoSuchFunctionException;
+	
+	/**
+	 * @param dMCFunction function to insert
+	 * @param after which to insert 
+	 * @throws NoSuchFunctionException TODO
+	 */
+	void insertCommandAfter(FunctionModel functionModel, FunctionModel after) throws NoSuchFunctionException;
+	
+	/**
+	 * @param functionModel
+	 * @param before
+	 * @throws NoSuchFunctionException
+	 */
+	void insertCommandBefore(FunctionModel functionModel, FunctionModel before) throws NoSuchFunctionException;
+	
+	/**
+	 * @param functionModel
+	 * @param before
+	 * @throws NoSuchFunctionException
+	 */
+	void insertCommandBefore(DMCFunction<?> functionModel, DMCFunction<?> before) throws NoSuchFunctionException;
+	
+	/**
+	 * @param descriptor
+	 * @param before
+	 * @throws NoSuchFunctionException
+	 */
+	void insertCommandBefore(String descriptor, DMCFunction<?> before) throws NoSuchFunctionException;
+	
+	/**
+	 * @param functionModel
+	 * @param index
+	 * @throws NoSuchFunctionException
+	 */
+	void insertCommand(FunctionModel functionModel, Integer index) throws NoSuchFunctionException;
+	
+	Integer getIndexOfFunction(FunctionModel functionModel) throws NoSuchFunctionException;
 	
 	/**
 	 * Execute chain of commands.

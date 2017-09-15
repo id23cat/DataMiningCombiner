@@ -4,10 +4,10 @@ import java.util.LinkedList;
 import java.util.List;
 
 public class AlgorithmModel {
-	String name;
-	FunctionSrcModel dataSource = null;
-	List<FunctionModel> functions = new LinkedList<>();
-	FunctionDstModel dataDestination = null;
+	private String name;
+	private FunctionSrcModel dataSource = null;
+	private List<FunctionModel> functions = new LinkedList<>();
+	private FunctionDstModel dataDestination = null;
 	
 	public AlgorithmModel () {}
 

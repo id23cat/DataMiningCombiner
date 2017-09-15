@@ -1,6 +1,6 @@
 package evm.dmc.weka.function;
 
-import evm.dmc.core.Function;
+import evm.dmc.core.annotations.Function;
 import evm.dmc.weka.exceptions.FilterError;
 import weka.core.Instances;
 import weka.filters.Filter;

@@ -1,9 +1,7 @@
 package evm.dmc.core;
 
 import static org.hamcrest.CoreMatchers.both;
-import static org.hamcrest.CoreMatchers.containsString;
 import static org.hamcrest.CoreMatchers.equalTo;
-import static org.hamcrest.CoreMatchers.not;
 import static org.junit.Assert.*;
 import static evm.dmc.core.CaseInsensitiveSubstringMatcher.containsIgnoringCase;
 
@@ -15,7 +13,6 @@ import java.util.Map;
 import javax.annotation.PostConstruct;
 
 import org.junit.Before;
-import org.junit.BeforeClass;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,7 +29,6 @@ import evm.dmc.core.api.Algorithm;
 import evm.dmc.core.api.DMCDataLoader;
 import evm.dmc.core.api.DMCDataSaver;
 import evm.dmc.core.api.FrameworksRepository;
-import evm.dmc.weka.DMCWekaConfig;
 import evm.dmc.weka.function.WekaFunctions;
 
 @RunWith(SpringRunner.class)
@@ -100,8 +96,8 @@ public class SerialAlgorithmTest {
 		assertFalse(funcIterator.hasNext());
 
 		// check that it contains saver function
-		assertThat(algModel.getDataSource().getName(),
-				both(containsIgnoringCase("csv")).and(containsIgnoringCase("load")));
+		assertThat(algModel.getDataDestination().getName(),
+				both(containsIgnoringCase("csv")).and(containsIgnoringCase("save")));
 
 		// check that it contains correct destination file name
 		assertThat(algModel.getDataDestination().getDestination(),
@@ -148,14 +144,27 @@ public class SerialAlgorithmTest {
 	}
 
 	@Test
-	public final void testInsertCommandStringDMCFunctionOfQ() {
-		algorithm.insertCommand(repo.filterFunctionMap(repo.getFunctionsDescriptors(), "cluster").keySet().stream().findFirst().get(), 
+	public final void testInsertCommandAfterStringDMCFunctionOfQ() {
+		algorithm.insertCommandAfter(repo.filterFunctionMap(repo.getFunctionsDescriptors(), "cluster").keySet().stream().findFirst().get(), 
 				algorithm.getFunctionsList().get(0));
 
 		// check count and content of functions List
 		Iterator<FunctionModel> funcIterator = algorithm.getModel().getFunctions().iterator();
 		assertThat(funcIterator.next().getName(), containsIgnoringCase("standar"));
 		assertThat(funcIterator.next().getName(), containsIgnoringCase("cluster"));
+		assertThat(funcIterator.next().getName(), containsIgnoringCase("pca"));
+		assertFalse(funcIterator.hasNext());
+	}
+	
+	@Test
+	public final void testInsertCommandBefore() {
+		algorithm.insertCommandBefore(repo.filterFunctionMap(repo.getFunctionsDescriptors(), "cluster").keySet().stream().findFirst().get(), 
+				algorithm.getFunctionsList().get(0));
+
+		// check count and content of functions List
+		Iterator<FunctionModel> funcIterator = algorithm.getModel().getFunctions().iterator();
+		assertThat(funcIterator.next().getName(), containsIgnoringCase("cluster"));
+		assertThat(funcIterator.next().getName(), containsIgnoringCase("standar"));
 		assertThat(funcIterator.next().getName(), containsIgnoringCase("pca"));
 		assertFalse(funcIterator.hasNext());
 	}

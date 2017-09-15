@@ -13,5 +13,9 @@ public class NoSuchFunctionException extends IllegalArgumentException {
 	public NoSuchFunctionException(String message) {
 		super(message);
 	}
+	
+	public NoSuchFunctionException(String message, Throwable exc) {
+		super(message, exc);
+	}
 
 }

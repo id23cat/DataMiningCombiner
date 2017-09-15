@@ -8,6 +8,7 @@ import org.springframework.context.ApplicationContextAware;
 import org.springframework.stereotype.Service;
 
 import evm.dmc.core.api.Framework;
+import evm.dmc.core.api.exceptions.NoSuchFunctionException;
 
 @Service
 public interface FrameworksRepository extends ApplicationContextAware {
@@ -16,11 +17,15 @@ public interface FrameworksRepository extends ApplicationContextAware {
 	
 	public Framework getFramework(String descriptor);
 	
-	public DMCFunction getFunction(String descriptor);
+	public DMCFunction<?> getFunction(String descriptor) throws NoSuchFunctionException;
 	
-	public DMCFunction getFunction(String descriptor, String framework);
+	public DMCDataLoader getDataLoaderFunction(String descriptor) throws NoSuchFunctionException;
 	
-	public DMCFunction getFunction(String descriptor, Framework framework);
+	public DMCDataSaver getDataSaverFunction(String descriptor) throws NoSuchFunctionException;
+	
+	public DMCFunction<?> getFunction(String descriptor, String framework) throws NoSuchFunctionException;
+	
+	public DMCFunction<?> getFunction(String descriptor, Framework framework) throws NoSuchFunctionException;
 
 	/**
 	 * @return {@code Map<Framework's_functions, Framework_descriptor>}
