@@ -21,7 +21,7 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 //@ContextConfiguration(classes = DMCWekaConfig.class)
-@ComponentScan({ "evm.dmc.core", "evm.dmc.web.config"  })
+//@ComponentScan({ "evm.dmc.core", "evm.dmc.web.config"  })
 @Import({evm.dmc.web.config.DMCRootConfig.class })
 @WebMvcTest
 public class ShowTableControllerTest {

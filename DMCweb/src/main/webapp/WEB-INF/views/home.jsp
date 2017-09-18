@@ -14,6 +14,7 @@
 	<a href="<c:url value="/hello" />">Click to get Hello</a> <br>
 	<a href="<c:url value="showtable/table/12" />">Show table</a> <br>
 	<a href="<c:url value="showtable/listbeans" />">List Beans</a> <br>
+	<a href="<c:url value="UID/createalg" />">Create Algorithm</a> <br>
 	
 </body>
 </html>

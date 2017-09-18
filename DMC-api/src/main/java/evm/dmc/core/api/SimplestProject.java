@@ -1,4 +1,4 @@
-package evm.dmc.core.annotations;
+package evm.dmc.core.api;
 
 import static java.lang.annotation.ElementType.FIELD;
 import static java.lang.annotation.ElementType.PARAMETER;

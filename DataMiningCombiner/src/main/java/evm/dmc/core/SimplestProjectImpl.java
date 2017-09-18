@@ -14,12 +14,12 @@ import evm.dmc.api.model.FunctionDstModel;
 import evm.dmc.api.model.FunctionModel;
 import evm.dmc.api.model.FunctionSrcModel;
 import evm.dmc.api.model.ProjectModel;
-import evm.dmc.core.annotations.SimplestProject;
 import evm.dmc.core.api.Algorithm;
 import evm.dmc.core.api.DMCDataLoader;
 import evm.dmc.core.api.DMCFunction;
 import evm.dmc.core.api.FrameworksRepository;
 import evm.dmc.core.api.Project;
+import evm.dmc.core.api.SimplestProject;
 import evm.dmc.core.api.exceptions.NoSuchFunctionException;
 
 /**

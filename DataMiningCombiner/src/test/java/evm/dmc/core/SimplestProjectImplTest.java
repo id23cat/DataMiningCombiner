@@ -27,9 +27,9 @@ import evm.dmc.api.model.FunctionDstModel;
 import evm.dmc.api.model.FunctionModel;
 import evm.dmc.api.model.FunctionSrcModel;
 import evm.dmc.api.model.ProjectModel;
-import evm.dmc.core.annotations.SimplestProject;
 import evm.dmc.core.api.Algorithm;
 import evm.dmc.core.api.Project;
+import evm.dmc.core.api.SimplestProject;
 
 @RunWith(SpringRunner.class)
 @ContextConfiguration(classes = DMCCoreConfig.class)
