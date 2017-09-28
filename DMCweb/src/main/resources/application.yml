@@ -27,13 +27,14 @@ logging:
 #  config: log4j2.xml
   level:
     org.springframework.web: INFO
+    evm.dmc.web: DEBUG
   file: ../logs/dmc-web.log
 
 welcome:
   message: "Hello ID#cat:)"
   
 view:
-  createalg: "createalgo"
+  createalg: "createalg"
 
 service:
   message: Hello Alex

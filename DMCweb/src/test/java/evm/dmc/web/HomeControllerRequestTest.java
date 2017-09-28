@@ -1,4 +1,4 @@
-package evm.dmc.web.hello;
+package evm.dmc.web;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.hamcrest.CoreMatchers.containsString;
@@ -24,7 +24,7 @@ import org.springframework.test.web.servlet.MockMvc;
 import evm.dmc.web.HomeController;
 
 @RunWith(SpringRunner.class)
-@SpringBootTest(webEnvironment = WebEnvironment.RANDOM_PORT, properties = "management.port=9002")
+@SpringBootTest(webEnvironment = WebEnvironment.RANDOM_PORT, properties = "management.port=-1")
 @AutoConfigureMockMvc
 public class HomeControllerRequestTest {
 
