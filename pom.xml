@@ -3,18 +3,19 @@
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 
                              http://maven.apache.org/maven-v4_0_0.xsd">
 	<modelVersion>4.0.0</modelVersion>
+	
 	<groupId>by.bsuir.evm</groupId>
 	<artifactId>DMC</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
 	<packaging>pom</packaging>
 	<name>Data Mining Combiner project</name>
 
-	<parent>
+	<!-- <parent>
 		<groupId>org.springframework.boot</groupId>
 		<artifactId>spring-boot-starter-parent</artifactId>
 		<version>1.5.6.RELEASE</version>
-		<relativePath /> <!-- lookup parent from repository -->
-	</parent>
+		<relativePath /> lookup parent from repository
+	</parent> -->
 
 	<properties>
 		<java.version>1.8</java.version>
@@ -23,41 +24,11 @@
 	</properties>
 
 	<modules>
-		<module>dmcombiner</module>
-		<module>DMCweb</module>
-		<!-- <module>simple-persist</module> -->
 		<module>DMC-api</module>
+		<module>DataMiningCombiner</module>
+		<module>DMCweb</module>
 	</modules>
 
-	<build>
-		<pluginManagement>
-			<plugins>
-				<plugin>
-					<groupId>org.apache.maven.plugins</groupId>
-					<artifactId>maven-compiler-plugin</artifactId>
-					<configuration>
-						<source>1.8</source>
-						<target>1.8</target>
-					</configuration>
-				</plugin>
-			</plugins>
-		</pluginManagement>
-	</build>
-
 	<dependencies>
-		<!-- <dependency> <groupId>org.springframework.session</groupId> <artifactId>spring-context</artifactId> 
-			</dependency> -->
-		<!-- https://mvnrepository.com/artifact/org.springframework/spring-core -->
-		<!-- <dependency>
-			<groupId>org.springframework</groupId>
-			<artifactId>spring-core</artifactId>
-			<version>4.3.10.RELEASE</version>
-		</dependency> -->
-		<dependency>
-			<groupId>junit</groupId>
-			<artifactId>junit</artifactId>
-			<version>4.12</version>
-			<scope>test</scope>
-		</dependency>
 	</dependencies>
 </project>

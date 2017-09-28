@@ -2,15 +2,26 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
-	<parent>
+	
+	<groupId>by.bsuir.evm</groupId>
+	<artifactId>dmcombiner</artifactId>
+	<version>0.0.1-SNAPSHOT</version>
+	<packaging>jar</packaging>
+	
+	<!-- <parent>
 		<groupId>by.bsuir.evm</groupId>
 		<artifactId>DMC</artifactId>
 		<version>0.0.1-SNAPSHOT</version>
+	</parent> -->
+	
+	<parent>
+		<groupId>org.springframework.boot</groupId>
+		<artifactId>spring-boot-starter-parent</artifactId>
+		<version>1.5.7.RELEASE</version>
+		<relativePath />
 	</parent>
-	<artifactId>dmcombiner</artifactId>
-	<packaging>jar</packaging>
 
-	<name>DataMiningCombiner</name>
+	<!-- <name>dmcombiner</name> -->
 	<description>Combiner of DM approaches</description>
 
 	<properties>
@@ -25,24 +36,23 @@
 			<artifactId>DMC-api</artifactId>
 			<version>0.0.1-SNAPSHOT</version>
 		</dependency>
-		<dependency>
-			<groupId>org.springframework.boot</groupId>
-			<artifactId>spring-boot-starter-data-jpa</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>org.springframework.boot</groupId>
-			<artifactId>spring-boot-starter-security</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>org.springframework.session</groupId>
-			<artifactId>spring-session</artifactId>
-		</dependency>
 
-		<dependency>
+<!-- 		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter</artifactId>
+		</dependency>
+ -->
+		<!-- <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-actuator</artifactId>
+        </dependency> -->
+		
+<!-- 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-devtools</artifactId>
 			<scope>runtime</scope>
 		</dependency>
+ -->
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-test</artifactId>
@@ -53,19 +63,6 @@
 		<dependency>
 			<groupId>org.mockito</groupId>
 			<artifactId>mockito-core</artifactId>
-			<version>2.8.9</version>
-			<scope>test</scope>
-		</dependency>
-		<dependency>
-			<groupId>junit</groupId>
-			<artifactId>junit</artifactId>
-			<scope>test</scope>
-		</dependency>
-		<!-- https://mvnrepository.com/artifact/org.hamcrest/java-hamcrest -->
-		<dependency>
-			<groupId>org.hamcrest</groupId>
-			<artifactId>java-hamcrest</artifactId>
-			<version>2.0.0.0</version>
 			<scope>test</scope>
 		</dependency>
 
@@ -75,26 +72,22 @@
 			<artifactId>system-rules</artifactId>
 			<version>1.16.1</version>
 		</dependency>
-		<!-- https://mvnrepository.com/artifact/org.python/jython -->
-		<dependency>
-			<groupId>org.python</groupId>
-			<artifactId>jython-standalone</artifactId>
-			<version>2.7.0</version>
+			
+			
+		<!-- https://mvnrepository.com/artifact/nz.ac.waikato.cms.weka/weka-dev -->
+ 		<dependency>
+		    <groupId>nz.ac.waikato.cms.weka</groupId>
+		    <artifactId>weka-dev</artifactId>
+		    <version>3.9.1</version>
 		</dependency>
-		<dependency>
-			<groupId>jep</groupId>
-			<artifactId>jep</artifactId>
-			<version>3.6.3</version>
-			<scope>system</scope>
-			<systemPath>${project.basedir}/libs/jep/jep-3.6.3.jar</systemPath>
-			<!-- <systemPath>/home/id23cat/miniconda2/lib/python2.7/site-packages/jep/jep-3.6.3.jar</systemPath> -->
+
+		<!-- https://mvnrepository.com/artifact/nz.ac.waikato.cms.weka/weka-stable -->
+<!-- 		<dependency>
+		    <groupId>nz.ac.waikato.cms.weka</groupId>
+		    <artifactId>weka-stable</artifactId>
+		    <version>3.8.1</version>
 		</dependency>
-		<!-- https://mvnrepository.com/artifact/net.sf.meka/meka -->
-		<dependency>
-			<groupId>net.sf.meka</groupId>
-			<artifactId>meka</artifactId>
-			<version>1.9.1</version>
-		</dependency>
+ -->		
 		<!-- https://mvnrepository.com/artifact/org.jfree/jfreechart -->
 		<dependency>
 			<groupId>org.jfree</groupId>
@@ -111,47 +104,16 @@
 	</dependencies>
 
 	<build>
-		<plugins>
-			<plugin>
-				<groupId>org.springframework.boot</groupId>
-				<artifactId>spring-boot-maven-plugin</artifactId>
-			</plugin>
-			<!-- To load JEP libraries -->
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-surefire-plugin</artifactId>
-				<configuration>
-					<systemPropertyVariables>
-						<propertyName>java.library.path</propertyName>
-						<buildDirectory>${project.basedir}/libs/jep</buildDirectory>
-					</systemPropertyVariables>
-					<!-- <forkMode>once</forkMode> <argLine>-Djava.library.path=${project.basedir}/libs/jep</argLine> -->
-				</configuration>
-			</plugin>
-			<!-- To push JEP jar to local maven repository -->
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-install-plugin</artifactId>
-				<executions>
-					<execution>
-						<id>install-external</id>
-						<phase>clean</phase>
-						<configuration>
-							<file>${basedir}/libs/jep/jep-3.6.3.jar</file>
-							<repositoryLayout>default</repositoryLayout>
-							<groupId>jep</groupId>
-							<artifactId>jep</artifactId>
-							<version>3.6.3</version>
-							<packaging>jar</packaging>
-							<generatePom>true</generatePom>
-						</configuration>
-						<goals>
-							<goal>install-file</goal>
-						</goals>
-					</execution>
-				</executions>
-			</plugin>
-		</plugins>
+	<plugins>
+<!-- 		<plugin>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-maven-plugin</artifactId>
+			<configuration>
+				<includeSystemScope>true</includeSystemScope>
+			</configuration>
+		</plugin>
+ -->
+	</plugins>
 	</build>
 
 

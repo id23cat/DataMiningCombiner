@@ -1,0 +1,39 @@
+endpoints:
+  shutdown:
+    enabled: true
+
+#Management Configuration
+management:
+  security:
+    enabled: false
+  
+  port: 9001
+  context-path: /management
+    
+spring.mvc.view.prefix: /WEB-INF/jsp/
+spring.mvc.view.suffix: .jsp
+
+# Server Port Configuration
+server:
+  port: 8080
+#Access log configuration
+  tomcat:
+    ccessLogEnabled: true
+    basedir: ../logs
+    accessLogPattern: "%t %s %a %D %r %b"
+
+# Logging Configuration
+logging:
+#  config: log4j2.xml
+  level:
+    org.springframework.web: INFO
+  file: ../logs/dmc-web.log
+
+welcome:
+  message: "Hello ID#cat:)"
+  
+view:
+  createalg: "createalgo"
+
+service:
+  message: Hello Alex

@@ -3,11 +3,8 @@
  */
 package evm.dmc.core;
 
-import static org.junit.Assert.*;
-import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
 
 import java.io.IOException;
 
@@ -15,9 +12,7 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
-import org.mockito.MockitoAnnotations;
-import org.mockito.junit.MockitoJUnitRunner;
-import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.test.context.junit4.SpringRunner;
 
 import evm.dmc.core.api.Algorithm;
 import evm.dmc.core.api.DMCFunction;
@@ -26,11 +21,11 @@ import evm.dmc.core.api.DMCFunction;
  * @author id23cat
  *
  */
-@RunWith(MockitoJUnitRunner.StrictStubs.class)
+@RunWith(SpringRunner.class)
 public class AlgorithmTest {
 	
 	@Mock private Algorithm mockedAlg;
-	@Mock private DMCFunction mockedCmd;
+	@Mock private DMCFunction<?> mockedCmd;
 	
 	@BeforeClass
 	public static void setUpBeforeClass() throws Exception {
