@@ -3,4 +3,4 @@ Python/*.png
 .project
 .settings/
 DMCweb2
-logs
+/logs/
