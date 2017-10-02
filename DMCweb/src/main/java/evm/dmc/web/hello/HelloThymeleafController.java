@@ -9,14 +9,14 @@ import org.springframework.web.bind.annotation.RequestParam;
 import evm.dmc.web.HomeController;
 
 @Controller
-public class HelloController {
+public class HelloThymeleafController {
 	private static final Logger logger = LoggerFactory.getLogger(HomeController.class);
 	
-	@RequestMapping("/hello")
+	@RequestMapping("/helloThyme")
     public String greeting(@RequestParam(value="name", required=false, defaultValue="World") 
     						String name, Model model) {
 		logger.info("HW: " +name);
         model.addAttribute("name", name);
-        return "jsp/greeting";
+        return "thymeleaf/greetingthyme";
     }
 }

@@ -1,4 +1,4 @@
-package evm.dmc.web.algo;
+package evm.dmc.web.config.annotations;
 
 import static java.lang.annotation.ElementType.CONSTRUCTOR;
 import static java.lang.annotation.ElementType.FIELD;

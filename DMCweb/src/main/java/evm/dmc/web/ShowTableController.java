@@ -49,7 +49,7 @@ public class ShowTableController {
 		logger.debug("showTable method args: {}", tableId);
 		 model.addAttribute("data", data.getAllAsString());
 
-		return "showtable";
+		return "jsp/showtable";
 
 	}
 
@@ -58,7 +58,7 @@ public class ShowTableController {
 //		model.addAttribute("data", data.getAllAsString());
 		model.addAttribute("namesList", names);
 		// model.addAllAttributes(this.names);
-		return "showtable";
+		return "jsp/showtable";
 
 	}
 

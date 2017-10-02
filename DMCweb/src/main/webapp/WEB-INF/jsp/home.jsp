@@ -13,10 +13,11 @@
 	
 	<a href="<c:url value="/hello?name=Alex" />">Click to get Hello</a> <br>
 	<a href="<c:url value="/helloREST" />">Click to get Hello from REST</a> <br>
+	<a href="<c:url value="/helloThyme" />">Click to get Hello on Thymeleaf</a> <br>
 	<a href="<c:url value="/welcome" />">Click to get Welcome</a> <br>
 	<a href="<c:url value="showtable/table/12" />">Show table</a> <br>
 	<a href="<c:url value="showtable/listbeans" />">List Beans</a> <br>
-	<a href="<c:url value="UID/createalg" />">Create Algorithm</a> <br>
+	<a href="<c:url value="UID/${careatalgView}" />">Create Algorithm</a> <br>
 	
 </body>
 </html>

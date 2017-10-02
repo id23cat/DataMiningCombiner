@@ -12,12 +12,12 @@ import org.springframework.web.bind.annotation.RestController;
 @Controller
 public class WelcomeController {
 	// inject via application.properties
-	@Value("${welcome.message:test}")
+	@Value("${welcome.message}")
 	private String message = "Hello World";
 	
 	@GetMapping("/welcome")
 	public String welcome(Map<String, Object> model) {
 		model.put("message", this.message);
-		return "welcome";
+		return "jsp/welcome";
 	}
 }

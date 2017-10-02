@@ -13,6 +13,14 @@ management:
 spring.mvc.view.prefix: /WEB-INF/jsp/
 spring.mvc.view.suffix: .jsp
 
+spring:
+  view:
+    prefix: /WEB-INF/
+    suffix: .jsp
+    view-names: jsp/*
+  thymeleaf:
+    view-names: thymeleaf/*
+
 # Server Port Configuration
 server:
   port: 8080
@@ -29,12 +37,9 @@ logging:
     org.springframework.web: INFO
     evm.dmc.web: DEBUG
   file: ../logs/dmc-web.log
-
-welcome:
-  message: "Hello ID#cat:)"
   
-view:
-  createalg: "createalg"
-
+welcome:
+  message: "Hello ID#cat:)!!"
+  
 service:
   message: Hello Alex

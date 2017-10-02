@@ -9,15 +9,17 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import evm.dmc.api.model.AlgorithmModel;
+import evm.dmc.config.ViewsConfig;
 import evm.dmc.core.api.Project;
+import evm.dmc.web.config.annotations.DefaultProject;
 
 @Controller
-//@RequestMapping("/{userId}/${view.createalg}")
-@RequestMapping("/{userId}/createalg")
+@RequestMapping("/{userId}/${views.createalg}")
+//@RequestMapping("/{userId}/createalg")
 public class CreateAlgorithmController {
 	Project project;
-	
-	@Value("${view.createalg}")
+
+	@Value("${views.createalg}")
 	String createView /*= "createalg"*/;
 	
 	public CreateAlgorithmController(@Autowired @DefaultProject Project project) {
@@ -33,7 +35,7 @@ public class CreateAlgorithmController {
 		AlgorithmModel algModel = project.createAlgorithm().getModel();
 		model.addAttribute("algModel", algModel);
 		model.addAttribute("view", createView);
-		return createView;
+		return "jsp/" + createView;
 	}
 
 }
