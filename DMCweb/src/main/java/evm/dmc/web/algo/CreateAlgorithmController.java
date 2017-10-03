@@ -20,7 +20,7 @@ public class CreateAlgorithmController {
 	Project project;
 
 	@Value("${views.createalg}")
-	String createView /*= "createalg"*/;
+	String createAlgView /*= "createalg"*/;
 	
 	public CreateAlgorithmController(@Autowired @DefaultProject Project project) {
 		this.project = project;		
@@ -34,8 +34,8 @@ public class CreateAlgorithmController {
 	String createAlgorithm(@PathVariable String userId, Model model) {
 		AlgorithmModel algModel = project.createAlgorithm().getModel();
 		model.addAttribute("algModel", algModel);
-		model.addAttribute("view", createView);
-		return "jsp/" + createView;
+		model.addAttribute("view", createAlgView);
+		return "thymeleaf/" + createAlgView;
 	}
 
 }

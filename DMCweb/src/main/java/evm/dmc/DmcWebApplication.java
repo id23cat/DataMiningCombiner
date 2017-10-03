@@ -1,6 +1,7 @@
 package evm.dmc;
 
 import java.util.Arrays;
+import java.util.Locale;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.beans.factory.config.YamlPropertiesFactoryBean;
@@ -14,6 +15,10 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Import;
 import org.springframework.context.support.PropertySourcesPlaceholderConfigurer;
 import org.springframework.core.io.ClassPathResource;
+import org.springframework.web.servlet.LocaleResolver;
+import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
+import org.springframework.web.servlet.i18n.LocaleChangeInterceptor;
+import org.springframework.web.servlet.i18n.SessionLocaleResolver;
 import org.springframework.web.servlet.view.InternalResourceViewResolver;
 import org.springframework.web.servlet.view.JstlView;
 import org.thymeleaf.spring4.view.ThymeleafViewResolver;
@@ -28,22 +33,13 @@ public class DmcWebApplication extends SpringBootServletInitializer {
 		SpringApplication.run(DmcWebApplication.class, args);
 	}
 
-	@Value("${spring.view.prefix}")
-    private String prefix = "";
-
-    @Value("${spring.view.suffix}")
-    private String suffix = "";
-
-    @Value("${spring.view.view-names}")
-    private String viewNames = "";
-
 	
 
 	@Override
 	protected SpringApplicationBuilder configure(SpringApplicationBuilder application) {
 		return application.sources(DmcWebApplication.class);
 	}
-	
+
 	@Bean
 	public CommandLineRunner commandLineRunner(ApplicationContext ctx) {
 		return args -> {
@@ -56,16 +52,7 @@ public class DmcWebApplication extends SpringBootServletInitializer {
 			}
 		};
 	}
-	
-	@Bean
-	public InternalResourceViewResolver jspViewResolver() {
-		final InternalResourceViewResolver vr = new InternalResourceViewResolver();
-        vr.setPrefix(prefix);
-        vr.setSuffix(suffix);
-        vr.setViewClass(JstlView.class);
-        vr.setViewNames(viewNames);
-        return vr;
-	}
+
 	
 
 }

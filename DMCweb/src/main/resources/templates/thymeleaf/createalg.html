@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+		th:with="lang=${#locale.language}" th:lang="${lang}">
+<head>
+	<title th:text="#{createalg.title}"></title>
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" /> 
+	<meta name="viewport" content="width=device-width, initial-scale=1" />
+	<link rel="stylesheet" href="/bootstrap-3.3.7/css/bootstrap.min.css" />
+<!--  	<link rel="stylesheet" href="/webjars/bootstrap/3.3.7/css/bootstrap.min.css" />
+-->
+</head>
+<body>
+	<h1 th:text="#{greeting}"></h1>
+	<span th:text="${algModel.name}" > </span>
+	<br/> View: 
+	<p th:text="${view}" />
+	
+
+
+<!-- <script src="/webjars/jquery/3.1.1/jquery.min.js"></script>    
+	<script src="/webjars/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+-->
+	<script src="/jquery/jquery-3.2.1.min.js"></script>    
+	<script src="/bootstrap-3.3.7/js/bootstrap.min.js"></script>
+	<script src="/js/getrequest.js"></script>
+</body>
+</html>

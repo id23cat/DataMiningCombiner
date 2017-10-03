@@ -38,8 +38,8 @@ logging:
     evm.dmc.web: DEBUG
   file: ../logs/dmc-web.log
   
-welcome:
-  message: "Hello ID#cat:)!!"
-  
-service:
-  message: Hello Alex
+#welcome:
+#  message: "Hello ID#cat:)!!"
+#  
+#service:
+#  message: Hello Alex
