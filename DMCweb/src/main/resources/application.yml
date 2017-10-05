@@ -19,7 +19,16 @@ spring:
     suffix: .jsp
     view-names: jsp/*
   thymeleaf:
-    view-names: thymeleaf/*
+#    check-template-location: true
+    cache: false
+#    prefix: classpath:templates/
+#    suffix: .html
+#    mode: HTML5
+#    encoding: UTF-8
+#    content-type: text/html
+#    view-names: thymeleaf/*
+#    suffix: .html
+  
 
 # Server Port Configuration
 server:

@@ -22,6 +22,8 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.context.junit4.SpringRunner;
 
+import evm.dmc.DmcWebApplication;
+
 
 @RunWith(SpringRunner.class)
 //@WebMvcTest(ShowTableController.class)
@@ -41,7 +43,7 @@ public class ShowTableControllerTest {
 		.perform(get("/showtable/table/123").accept(MediaType.TEXT_PLAIN))
 		/*.andDo(print())*/
 		.andExpect(status().isOk())
-		.andExpect(view().name("showtable"));
+		.andExpect(view().name("jsp/showtable"));
 	}
 
 	@Test
@@ -50,7 +52,7 @@ public class ShowTableControllerTest {
 		.perform(get("/showtable/listbeans").accept(MediaType.TEXT_PLAIN))
 		/*.andDo(print())*/
 		.andExpect(status().isOk())
-		.andExpect(view().name("showtable"));
+		.andExpect(view().name("jsp/showtable"));
 	}
 
 }

@@ -7,11 +7,19 @@ management:
   security:
     enabled: false
   
-  port: 9001
+  port: 9002
   context-path: /management
     
-spring.mvc.view.prefix: /WEB-INF/jsp/
-spring.mvc.view.suffix: .jsp
+#spring.mvc.view.prefix: /WEB-INF/jsp/
+#spring.mvc.view.suffix: .jsp
+
+spring:
+  view:
+    prefix: /WEB-INF/
+    suffix: .jsp
+    view-names: jsp/*
+  thymeleaf:
+    view-names: thymeleaf/*
 
 # Server Port Configuration
 server:
@@ -27,13 +35,6 @@ logging:
 #  config: log4j2.xml
   level:
     org.springframework.web: INFO
+    evm.dmc.web: DEBUG
   file: ../logs/dmc-web.log
-
-welcome:
-  message: "Hello ID#cat:)"
-  
-view:
-  createalg: "createalgo"
-
-service:
-  message: Hello Alex
+ 

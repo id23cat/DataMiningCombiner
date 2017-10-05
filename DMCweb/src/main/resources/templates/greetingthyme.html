@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html 	xmlns:th="http://www.thymeleaf.org"
+		xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      	layout:decorate="~{layouts/layout}">
+<head>
+	<title>Hello Spring Boot!</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+    <link href="http://cdn.jsdelivr.net/webjars/bootstrap/3.3.7/css/bootstrap.min.css"
+          th:href="@{/webjars/bootstrap/3.3.7/css/bootstrap.min.css}"
+          rel="stylesheet" media="screen" />
+    <link href="../static/css/core.css"
+          th:href="@{/css/core.css}"
+          rel="stylesheet" media="screen" />
+    <script src="http://cdn.jsdelivr.net/webjars/jquery/3.2.1/jquery.min.js"
+            th:src="@{/webjars/jquery/3.2.1/jquery.min.js}"></script>
+</head>
+<body>
+	<!-- Header -->
+<!-- 	<div>
+		============================================================================
+		This content is only used for static prototyping purposes (natural templates)
+		and is therefore entirely optional.                                          
+		============================================================================
+		<div class="navbar navbar-inverse navbar-fixed-top">
+			<div class="container">
+				<div class="navbar-header">
+					<a class="navbar-brand" href="#">Static header</a>
+				</div>
+				<div class="navbar-collapse collapse">
+					<ul class="nav navbar-nav">
+						<li class="active"><a href="#">Home</a></li>
+					</ul>
+				</div>
+			</div>
+		</div>
+	</div>
+ -->
+<!-- 	<th:block layout:fragment="content"> -->
+		<p th:text="'Hello, ' + ${name} + '!'" />
+		<p th:text="#{message.helloworld}" />
+
+		<div class="container">
+			<h1>Bootstrap Modal</h1>
+			<!-- Trigger the modal with a button -->
+			<button type="button" class="btn btn-info btn-lg" id="btnId">Open
+				Modal</button>
+
+			<!-- Bootstrap Modal -->
+			<div class="modal fade" id="modalId" role="dialog">
+				<div class="modal-dialog">
+
+					<!-- Bootstrap Modal content-->
+					<div class="modal-content">
+						<div class="modal-header">
+							<button type="button" class="close" data-dismiss="modal">&times;</button>
+							<h4 class="modal-title">Header</h4>
+						</div>
+						<div class="modal-body">
+							<p id="greetingId"></p>
+						</div>
+						<div class="modal-footer">
+							<button type="button" class="btn btn-default"
+								data-dismiss="modal">Close</button>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+<!-- 	</th:block> -->
+
+</body>
+</html>

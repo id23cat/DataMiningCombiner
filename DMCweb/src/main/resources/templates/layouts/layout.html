@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout">
+
+<head>
+    <title>Hello Spring Boot!</title>
+    <meta charset="utf-8">
+ 	<meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css"
+    	th:href="@{/webjars/bootstrap/3.3.7/css/bootstrap.min.css}">
+  	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"
+  		th:src="@{/webjars/jquery/3.2.1/jquery.min.js}"></script>
+  	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"
+  		th:href="@{/webjars/bootstrap/3.3.7/css/bootstrap.min.js}"></script>
+  	<link href="../../static/css/core.css"
+          th:href="@{/css/core.css}"
+          rel="stylesheet" media="screen" />
+</head>
+<body>
+<!-- Header -->
+<div th:replace="fragments/header :: header">
+</div>
+<div class="container-fluid">
+<!-- 	<div class="body"> -->
+	    <div layout:fragment="content">
+	        <p>Content goes here...</p>
+	    </div>
+    <!-- </div> -->
+
+ 	<hr>
+    <div class="row">
+        <div class="col-sm-12">
+		<footer>
+	       	<div th:replace="fragments/footer :: footer"></div>
+	    </footer>
+	    </div>
+	</div>
+</div>
+</body>
+</html>

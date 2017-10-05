@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layouts/layout}">
+
+<head>
+	<title>Welcome to Data Mining combiner</title>
+</head>
+<body>
+<!-- Header -->
+<div>
+    <!-- ============================================================================ -->
+    <!-- This content is only used for static prototyping purposes (natural templates)-->
+    <!-- and is therefore entirely optional.                                           -->
+    <!-- ============================================================================ -->
+ <!--     <div class="navbar navbar-inverse navbar-fixed-top">
+        <div class="container">
+            <div class="navbar-header">
+                <a class="navbar-brand" href="#">Static header</a>
+            </div>
+            <div class="navbar-collapse collapse">
+                <ul class="nav navbar-nav">
+                    <li class="active"><a href="#">Home</a></li>
+                </ul>
+            </div>
+        </div>
+    </div>
+ -->
+</div>
+<!-- Insert content into the layouts/layout.html -->
+<th:block layout:fragment="content">
+    <div class="hero-unit">
+        <h1>Test</h1>
+        <p>
+        	Welcome to the Spring Boot Thymeleaf Application! The time is: <strong th:text="${#temporals.format(now, 'dd/MMM/yyyy HH:mm')}">31/12/2015 15:00</strong>
+            <p th:text="'Hello, ' + ${locale} + '!'" />
+        </p>
+        
+        <p th:text="'The time on the server is ' + ${serverTime} + '.'"></p>
+		<P th:text="'Locale is ' + ${locale}"></P>
+		<p>
+		
+		</p>
+        <p>
+            <a href="#" th:href="@{properties}" class="btn btn-large btn-success">System Properties</a>
+        </p>
+    </div>
+    <div>
+        <h1>Spring Actuator</h1>
+        <p>
+            Actuator endpoints allow you to monitor and interact with your application.
+            Spring Boot includes a number of built-in endpoints and you can also add your own.
+        </p>
+        
+        <a href="#" th:href="${@viewsService.hello}">Click to get Hello</a> <br>
+        <a href="#" th:href="${@environment.getProperty('views.hello')}">Click to get Hello</a> <br>
+<!-- 		<a href="<c:url value="/helloREST" />">Click to get Hello from REST</a> <br>
+		<a href="<c:url value="/helloThyme" />">Click to get Hello on Thymeleaf</a> <br>
+		<a href="<c:url value="/welcome" />">Click to get Welcome</a> <br>
+		<a href="<c:url value="showtable/table/12" />">Show table</a> <br>
+		<a href="<c:url value="showtable/listbeans" />">List Beans</a> <br>
+		<a href="<c:url value="UID/${careatalgView}" />">Create Algorithm</a> <br>
+ -->        
+    </div>
+</th:block>
+	<!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+    <!-- Include all compiled plugins (below), or include individual files as needed -->
+    <script src="js/bootstrap.min.js"></script>
+</body>
+</html>

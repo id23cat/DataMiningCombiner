@@ -17,6 +17,6 @@ public class HelloThymeleafController {
     						String name, Model model) {
 		logger.info("HW: " +name);
         model.addAttribute("name", name);
-        return "thymeleaf/greetingthyme";
+        return "greetingthyme";
     }
 }

@@ -17,6 +17,6 @@ public class HelloController {
     						String name, Model model) {
 		logger.info("HW: " +name);
         model.addAttribute("name", name);
-        return "jsp/greeting";
+        return "hello";
     }
 }

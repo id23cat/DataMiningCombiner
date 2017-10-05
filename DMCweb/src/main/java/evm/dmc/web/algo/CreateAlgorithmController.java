@@ -35,7 +35,7 @@ public class CreateAlgorithmController {
 		AlgorithmModel algModel = project.createAlgorithm().getModel();
 		model.addAttribute("algModel", algModel);
 		model.addAttribute("view", createAlgView);
-		return "thymeleaf/" + createAlgView;
+		return createAlgView;
 	}
 
 }
