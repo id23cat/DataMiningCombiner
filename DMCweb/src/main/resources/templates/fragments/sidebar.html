@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html	xmlns:th="http://www.thymeleaf.org"
+		xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout">
+
+<head>
+    <!-- Custom styles for this template -->
+    <link href="#" th:href="@{/css/simple-sidebar.css}" rel="stylesheet">
+</head>
+
+<body>
+ 	<div th:fragment="sidebar">
+	 	<div id="wrapper">
+	 		
+<!-- 	   		<div layout:fragment="sidebarcontent">
+		        <p>Sidebar content goes here...</p>
+		    </div>
+ -->
+		    
+        <!-- Sidebar -->
+        <div id="sidebar-wrapper">
+            <ul class="sidebar-nav">
+                <li class="sidebar-brand">
+                    <a href="#">
+                        Start Bootstrap
+                    </a>
+                </li>
+                <li>
+                    <a href="#">Dashboard</a>
+                </li>
+                <li>
+                    <a href="#">Shortcuts</a>
+                </li>
+                <li>
+                    <a href="#">Overview</a>
+                </li>
+                <li>
+                    <a href="#">Events</a>
+                </li>
+                <li>
+                    <a href="#">About</a>
+                </li>
+                <li>
+                    <a href="#">Services</a>
+                </li>
+                <li>
+                    <a href="#">Contact</a>
+                </li>
+            </ul>
+        </div>
+        <div id="page-content-wrapper">
+            <div class="container-fluid">
+            	<a href="#menu-toggle" class="btn btn-secondary" id="menu-toggle">Toggle Menu</a>
+                <h1>Simple Sidebar</h1>
+                <p>inside sidebar.html</p>
+                <div layout:fragment="sidebar_pagecontent">
+			        <p>Content goes here...</p>
+			    </div>
+                               
+            </div>
+        </div>
+     </div>
+
+    <!-- /#wrapper -->
+
+    <!-- Bootstrap core JavaScript -->
+<!--     <script src="../static/vendor/jquery/jquery.min.js" th:href="@{/vendor/jquery/jquery.min.js}"></script>
+ -->
+ 	<script src="#" th:src="@{/webjars/jquery/3.2.1/jquery.min.js}"></script>
+    <script src="#" th:href="@{/webjars/popper/popper.min.js}"></script>
+    <script src="#" th:href="@{/webjars/bootstrap/3.3.7/css/bootstrap.min.js}"></script>
+
+    <!-- Menu Toggle Script -->
+    <script>
+    $("#menu-toggle").click(function(e) {
+        e.preventDefault();
+        $("#wrapper").toggleClass("toggled");
+    });
+    </script>
+	</div>
+</body>
+
+</html>

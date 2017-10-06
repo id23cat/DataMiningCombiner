@@ -7,26 +7,7 @@
 	<title>Welcome to Data Mining combiner</title>
 </head>
 <body>
-<!-- Header -->
-<div>
-    <!-- ============================================================================ -->
-    <!-- This content is only used for static prototyping purposes (natural templates)-->
-    <!-- and is therefore entirely optional.                                           -->
-    <!-- ============================================================================ -->
- <!--     <div class="navbar navbar-inverse navbar-fixed-top">
-        <div class="container">
-            <div class="navbar-header">
-                <a class="navbar-brand" href="#">Static header</a>
-            </div>
-            <div class="navbar-collapse collapse">
-                <ul class="nav navbar-nav">
-                    <li class="active"><a href="#">Home</a></li>
-                </ul>
-            </div>
-        </div>
-    </div>
- -->
-</div>
+
 <!-- Insert content into the layouts/layout.html -->
 <th:block layout:fragment="content">
     <div class="hero-unit">
@@ -53,7 +34,7 @@
         </p>
         
         <a href="#" th:href="${@viewsService.hello}">Click to get Hello</a> <br>
-        <a href="#" th:href="${@environment.getProperty('views.hello')}">Click to get Hello</a> <br>
+        <a href="sidebar">Sidebar page</a> <br>
 <!-- 		<a href="<c:url value="/helloREST" />">Click to get Hello from REST</a> <br>
 		<a href="<c:url value="/helloThyme" />">Click to get Hello on Thymeleaf</a> <br>
 		<a href="<c:url value="/welcome" />">Click to get Welcome</a> <br>
@@ -62,10 +43,8 @@
 		<a href="<c:url value="UID/${careatalgView}" />">Create Algorithm</a> <br>
  -->        
     </div>
+    
 </th:block>
-	<!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
-    <!-- Include all compiled plugins (below), or include individual files as needed -->
-    <script src="js/bootstrap.min.js"></script>
+	
 </body>
 </html>
