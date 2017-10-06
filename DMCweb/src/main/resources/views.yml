@@ -4,6 +4,6 @@ views:
   hellorest:  /helloREST
   hellothyme: /helloThyme
   welcome:  /welcome
-  showtable:  /showtable/table/12
+  showtable:  /showtable/table/0
   listbeans: /showtable/listbeans
   createalg:  /createalg

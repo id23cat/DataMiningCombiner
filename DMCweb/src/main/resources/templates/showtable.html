@@ -19,10 +19,22 @@
 <body>
 <!-- Insert content into the layouts/layout.html -->
 <th:block layout:fragment="content">
-  	<h1 th:text="#{greeting}"></h1>
-	<span th:text="${algModel.name}" > </span>
-	<br/> View: 
-	<p th:text="${view}" />
+	<!-- IF Data is present -->
+	<div th:if="${data != null}">
+		Data content: <br>
+		<p th:text="${data}" />
+	</div>
+	<!-- ELSE IF  -->
+	<div th:if="${namesList != null}">
+	<table class="table table-striped">
+		<tr> <th>List avaliable Beans: </th></tr>
+		<tr th:each="name : ${namesList}">
+			<td th:text="${name}">Bean name</td>
+		</tr>
+	</table>
+		
+	</div>
+	
 </th:block>
  
 </body>

@@ -23,96 +23,24 @@
 <!-- Header -->
 <div th:insert="fragments/header :: header">
 </div>
+
 <div class="container-fluid">
 	 <div class="page-container">
-		 <div th:fragment="sidebar">
-		 	<div id="wrapper">
-	        <!-- Sidebar -->
-	        <div id="sidebar-wrapper">
-	            <ul class="sidebar-nav">
-	                <li class="sidebar-brand">
-	                    <a href="#">
-	                        Start Bootstrap
-	                    </a>
-	                </li>
-	                <li>
-	                    <a href="#">Dashboard</a>
-	                </li>
-	                <li>
-	                    <a href="#">Shortcuts</a>
-	                </li>
-	                <li>
-	                    <a href="#">Overview</a>
-	                </li>
-	                <li>
-	                    <a href="#">Events</a>
-	                </li>
-	                <li>
-	                    <a href="#">About</a>
-	                </li>
-	                <li>
-	                    <a href="#">Services</a>
-	                </li>
-	                <li>
-	                    <a href="#">Contact</a>
-	                </li>
-	            </ul>
-	        </div>
-	        <div id="page-content-wrapper">
-	            <div class="container-fluid">
-	            	<a href="#menu-toggle" class="btn btn-secondary" id="menu-toggle">Toggle Menu</a>
-	                <h1>Simple Sidebar</h1>
-	                <p>inside sidebar.html</p>
-	                <div layout:fragment="sidebar_pagecontent">
-				        <p>Content goes here...</p>
-				    </div>
-	                               
-	            </div>
-	        </div>
-	     </div>
-<!--	 	<div id="sidebar" th:insert="fragments/sidebar :: sidebar">
+		
+	 	<div id="sidebar" th:insert="fragments/sidebar :: sidebar">
 	 	</div>
-		<div layout:fragment="sidebar_pagecontent">
-			sidebar_pagecontent
-		</div>
- 	 	<div id="page-content-wrapper">
-            <div class="container-fluid">
-			    <div layout:fragment="content">
-			        <p>Content goes here...</p>
-			    </div>
-			    <div id="page-content-wrapper">
-		            <div class="container-fluid">
-		                <h1>Simple Sidebar</h1>
-		                <p>This template has a responsive menu toggling system. The menu will appear collapsed on smaller screens, and will appear non-collapsed on larger screens. When toggled using the button below, the menu will appear/disappear. On small screens, the page content will be pushed off canvas.</p>
-		                <p>Make sure to keep all page content within the <code>#page-content-wrapper</code>.</p>
-		                <a href="#menu-toggle" class="btn btn-secondary" id="menu-toggle">Toggle Menu</a>
-		            </div>
-		        </div>
-    		</div>
-    	</div>
- -->
-	 	<hr>
-	    <div class="row">
-	        <div class="col-sm-12">
-			<footer>
-		       	<div th:insert="fragments/footer :: footer"></div>
-		    </footer>
-		    </div>
-		</div>
+	
 	</div>
-	<script src="#" th:src="@{/webjars/jquery/3.2.1/jquery.min.js}"></script>
-    <script src="#" th:href="@{/webjars/popper/popper.min.js}"></script>
-    <script src="#" th:href="@{/webjars/bootstrap/3.3.7/css/bootstrap.min.js}"></script>
-
-    <!-- Menu Toggle Script -->
-    <script>
-    $("#menu-toggle").click(function(e) {
-        e.preventDefault();
-        $("#wrapper").toggleClass("toggled");
-    });
-    </script>
+	
+	<hr>
+    <div class="row">
+        <div class="col-sm-12">
+		<footer>
+	       	<div th:replace="fragments/footer :: footer"></div>
+	    </footer>
+	    </div>
+	</div>
 </div>
-
 
 </body>
 </html>

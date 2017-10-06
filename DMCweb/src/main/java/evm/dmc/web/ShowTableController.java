@@ -16,6 +16,7 @@ import evm.dmc.core.api.Data;
 import evm.dmc.core.api.Framework;
 import evm.dmc.core.api.FrameworksRepository;
 import evm.dmc.core.api.back.CSVLoader;
+import evm.dmc.service.ViewsService;
 
 @Controller
 // @RequestMapping("/user/{userId}/showtable")
@@ -26,10 +27,13 @@ public class ShowTableController {
 
 	// @Value("${wekatest.datasource}")
 	String sourceFileName = "/home/id23cat/Workspaces/workspace/datamining/DMCweb/Data/telecom_churn.csv";
+	
+	ViewsService views;
 
 	Set<String> names;
 
-	ShowTableController(@Autowired FrameworksRepository repository) {
+	@Autowired
+	ShowTableController( FrameworksRepository repository, ViewsService vservice) {
 		Map<String, String> loaders = repository.findFunctionByWordMap("csv");
 		repository.filterFunctionMap(loaders, "load");
 		CSVLoader loader = (CSVLoader) repository.getFunction(loaders.keySet().iterator().next());
@@ -42,6 +46,8 @@ public class ShowTableController {
 		names = wekaFramework.getFunctionDescriptors();
 		logger.debug("Framework Ref {} ", wekaFramework.toString());
 		logger.debug("Avaliable beans{} ", this.names);
+		
+		views = vservice;
 	}
 
 	@GetMapping("/table/{tableId}")
@@ -49,7 +55,7 @@ public class ShowTableController {
 		logger.debug("showTable method args: {}", tableId);
 		 model.addAttribute("data", data.getAllAsString());
 
-		return "jsp/showtable";
+		return "showtable";
 
 	}
 
@@ -58,7 +64,7 @@ public class ShowTableController {
 //		model.addAttribute("data", data.getAllAsString());
 		model.addAttribute("namesList", names);
 		// model.addAllAttributes(this.names);
-		return "jsp/showtable";
+		return "showtable";
 
 	}
 

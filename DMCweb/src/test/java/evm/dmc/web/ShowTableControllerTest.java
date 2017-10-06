@@ -43,7 +43,7 @@ public class ShowTableControllerTest {
 		.perform(get("/showtable/table/123").accept(MediaType.TEXT_PLAIN))
 		/*.andDo(print())*/
 		.andExpect(status().isOk())
-		.andExpect(view().name("jsp/showtable"));
+		.andExpect(view().name("showtable"));
 	}
 
 	@Test
@@ -52,7 +52,7 @@ public class ShowTableControllerTest {
 		.perform(get("/showtable/listbeans").accept(MediaType.TEXT_PLAIN))
 		/*.andDo(print())*/
 		.andExpect(status().isOk())
-		.andExpect(view().name("jsp/showtable"));
+		.andExpect(view().name("showtable"));
 	}
 
 }

@@ -11,11 +11,7 @@
 <!-- Insert content into the layouts/layout.html -->
 <th:block layout:fragment="content">
     <div class="hero-unit">
-        <h1>Test</h1>
-        <p>
-        	Welcome to the Spring Boot Thymeleaf Application! The time is: <strong th:text="${#temporals.format(now, 'dd/MMM/yyyy HH:mm')}">31/12/2015 15:00</strong>
-            <p th:text="'Hello, ' + ${locale} + '!'" />
-        </p>
+        <h1>Hello World</h1>
         
         <p th:text="'The time on the server is ' + ${serverTime} + '.'"></p>
 		<P th:text="'Locale is ' + ${locale}"></P>
@@ -33,15 +29,16 @@
             Spring Boot includes a number of built-in endpoints and you can also add your own.
         </p>
         
-        <a href="#" th:href="${@viewsService.hello}">Click to get Hello</a> <br>
         <a href="sidebar">Sidebar page</a> <br>
-<!-- 		<a href="<c:url value="/helloREST" />">Click to get Hello from REST</a> <br>
-		<a href="<c:url value="/helloThyme" />">Click to get Hello on Thymeleaf</a> <br>
-		<a href="<c:url value="/welcome" />">Click to get Welcome</a> <br>
-		<a href="<c:url value="showtable/table/12" />">Show table</a> <br>
-		<a href="<c:url value="showtable/listbeans" />">List Beans</a> <br>
-		<a href="<c:url value="UID/${careatalgView}" />">Create Algorithm</a> <br>
- -->        
+        <a th:href="${@viewsService.hello}">Click to get Hello</a> <br>
+        <a th:href="${@viewsService.hellorest}">Click to get Hello from REST</a> <br>
+        <a th:href="${@viewsService.hellothyme}">Click to get Hello on Thymeleaf</a> <br>
+        <a th:href="${@viewsService.welcome}">Click to get Welcome</a> <br>
+        <a th:href="${@viewsService.showtable}">Show table</a> <br>
+        <a th:href="${@viewsService.listbeans}">List Beans</a> <br>
+        <a th:href="@{SASHA/createalg}">Create Algorithm</a> <br>
+       
+
     </div>
     
 </th:block>

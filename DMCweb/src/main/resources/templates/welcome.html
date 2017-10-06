@@ -14,16 +14,18 @@
           rel="stylesheet" media="screen" />
     <script src="http://cdn.jsdelivr.net/webjars/jquery/3.2.1/jquery.min.js"
             th:src="@{/webjars/jquery/3.2.1/jquery.min.js}"></script>
+            
+    <link th:ref="@{/css/main.css}"/>
 
 </head>
 <body>
 <!-- Insert content into the layouts/layout.html -->
-<th:block layout:fragment="content">
-  	<h1 th:text="#{greeting}"></h1>
-	<span th:text="${algModel.name}" > </span>
-	<br/> View: 
-	<p th:text="${view}" />
-</th:block>
- 
+	<th:block layout:fragment="content">
+		<div class="starter-template">
+			<h1>Spring Boot Web JSP Example</h1>
+			<h2 th:text="'Message: ' + ${message}"></h2>
+		</div>
+	</th:block>
+
 </body>
 </html>

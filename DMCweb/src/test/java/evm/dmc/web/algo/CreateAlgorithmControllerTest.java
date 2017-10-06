@@ -12,9 +12,14 @@ import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.context.embedded.LocalServerPort;
+import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.context.SpringBootTest.WebEnvironment;
+import org.springframework.boot.test.context.TestConfiguration;
+import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Import;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
@@ -24,58 +29,51 @@ import org.springframework.web.servlet.view.InternalResourceView;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
-import static org.springframework.test.web.servlet.setup.MockMvcBuilders.*;
+
 
 import evm.dmc.api.model.AlgorithmModel;
 import evm.dmc.core.api.Algorithm;
 import evm.dmc.core.api.Project;
 
-//@RunWith(SpringJUnit4ClassRunner.class)
-//@ComponentScan({ "evm.core", "evm.core.api", "evm.dmc.web.config"  })
 @RunWith(SpringRunner.class)
 @SpringBootTest(webEnvironment = WebEnvironment.RANDOM_PORT, properties = "management.port=-1")
-//@WebMvcTest
+//@WebMvcTest(controllers = {CreateAlgorithmController.class}, secure = false)
+@AutoConfigureMockMvc
 public class CreateAlgorithmControllerTest {
-	
-	@Mock
-	Algorithm mockAlgorithm;
-	
-	@Mock
-	Project mockProject;
+		
+//	@MockBean
+//	Algorithm mockAlgorithm;
+//	
+//	@MockBean
+//	@DefaultProject
+//	Project mockProject;
+//	
+//	AlgorithmModel model;
 	
 	@Autowired
-	CreateAlgorithmController algController;
-	
-	AlgorithmModel model;
 	MockMvc mockMvc;
 	
-	@Before
-	public void setup() {
-		MockitoAnnotations.initMocks(this);
-		model = new AlgorithmModel();
-		when(mockAlgorithm.getModel()).thenReturn(model);
-		when(mockProject.createAlgorithm()).thenReturn(mockAlgorithm);
-		
-		algController.setProject(mockProject);
-		
-		mockMvc = standaloneSetup(algController).build();
-		
-		
-	}
-
+	
+//	@Before
+//	public void setup() throws MalformedURLException {
+//		model = new AlgorithmModel();
+//		when(mockAlgorithm.getModel()).thenReturn(model);
+//		when(mockAlgorithm.toString()).thenReturn("Mock Bean");
+//		when(mockProject.createAlgorithm()).thenReturn(mockAlgorithm);
+//		
+//		algController.setProject(mockProject);
+//		
+//		mockMvc = standaloneSetup(algController).build();
+//	}
+	
 	@Test
-//	@Ignore
-	public void test() throws Exception {
-
-//		MockMvc mockMvc = standaloneSetup(algController)
-//				.setSingleView(new InternalResourceView("/WEB-INF/views/createalg.jsp")).build();
-		assertThat(algController).isNotNull();
-		
-		
-		mockMvc.perform(get("/SASHA/careatealg"))
+	public void testModelContent() throws Exception {
+		this.mockMvc.perform(get("/SASHA/createalg"))
+			.andExpect(status().isOk())
 			.andExpect(view().name("createalg"))
-			.andExpect(model().attributeExists("algModel"))
-			.andExpect(model().attribute("algModel", sameInstance(model)));
+			.andExpect(model().attributeExists("algModel"));
+//			.andExpect(model().attribute("algModel", sameInstance(model)));
 	}
+	
 
 }

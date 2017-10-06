@@ -48,7 +48,7 @@ public class HomeControllerRequestTest {
 	@Test
 	public final void testHome() throws Exception {
 		standaloneSetup(controller).build().perform(get("/").accept(MediaType.TEXT_PLAIN)).andDo(print())
-				.andExpect(status().isOk()).andExpect(view().name("jsp/home"));
+				.andExpect(status().isOk()).andExpect(view().name("index"));
 	}
 
 	@Test

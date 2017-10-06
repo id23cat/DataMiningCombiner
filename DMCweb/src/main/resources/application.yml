@@ -46,7 +46,10 @@ logging:
     org.springframework.web: INFO
     evm.dmc.web: DEBUG
   file: ../logs/dmc-web.log
-  
+
+views2:
+  showtable: /showtable/table
+  hellorest:  /helloREST
 #welcome:
 #  message: "Hello ID#cat:)!!"
 #  
