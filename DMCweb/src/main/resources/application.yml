@@ -14,10 +14,6 @@ spring.mvc.view.prefix: /WEB-INF/jsp/
 spring.mvc.view.suffix: .jsp
 
 spring:
-  view:
-    prefix: /WEB-INF/
-    suffix: .jsp
-    view-names: jsp/*
   thymeleaf:
 #    check-template-location: true
     cache: false
