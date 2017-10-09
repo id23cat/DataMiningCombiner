@@ -24,17 +24,7 @@ import evm.dmc.web.HomeController;
 public class ViewsConfig {
 	private static final Logger logger = LoggerFactory.getLogger(HomeController.class);
 	
-	@Value("${spring.view.prefix}")
-	private String prefix = "";
 
-	@Value("${spring.view.suffix}")
-	private String suffix = "";
-
-	@Value("${spring.view.view-names}")
-	private String viewNames = "";
-
-
-	
 	/*
 	 * Config file to resolve view names
 	 */
@@ -64,18 +54,6 @@ public class ViewsConfig {
 	  propertySourcesPlaceholderConfigurer.setProperties(yaml.getObject());
 	  return propertySourcesPlaceholderConfigurer;
 	}
-	
-	@Bean
-	public InternalResourceViewResolver jspViewResolver() {
-		final InternalResourceViewResolver vr = new InternalResourceViewResolver();
-		logger.debug("JSP prefix: {}", prefix);
-		logger.debug("JSP suffix: {}", suffix);
-		logger.debug("JSP view names: {}", viewNames);
-		vr.setPrefix(prefix);
-		vr.setSuffix(suffix);
-		vr.setViewClass(JstlView.class);
-		vr.setViewNames(viewNames);
-		return vr;
-	}
+
 
 }
