@@ -14,6 +14,7 @@ import evm.dmc.api.model.FunctionDstModel;
 import evm.dmc.api.model.FunctionModel;
 import evm.dmc.api.model.FunctionSrcModel;
 import evm.dmc.api.model.ProjectModel;
+import evm.dmc.api.model.ProjectType;
 import evm.dmc.core.api.Algorithm;
 import evm.dmc.core.api.DMCDataLoader;
 import evm.dmc.core.api.DMCFunction;
@@ -33,7 +34,7 @@ import evm.dmc.core.api.exceptions.NoSuchFunctionException;
 @Scope(ConfigurableBeanFactory.SCOPE_PROTOTYPE)
 @SimplestProject
 public class SimplestProjectImpl implements Project {
-	public static final String PROJIMPL_NAME = "SimplestProjectImpl";
+	public static final ProjectType PROJIMPL_TYPE = ProjectType.valueOf("SIMPLEST_PROJECT");
 	private Algorithm algorithm = new SerialAlgorithm();
 	private ProjectModel model = new ProjectModel();
 
@@ -41,7 +42,7 @@ public class SimplestProjectImpl implements Project {
 	private FrameworksRepository frameworkRepo;
 
 	public SimplestProjectImpl() {
-		model.setTypeName(PROJIMPL_NAME);
+		model.setType(PROJIMPL_TYPE);
 	}
 
 	@PostConstruct

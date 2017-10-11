@@ -6,7 +6,7 @@ import java.util.Properties;
 import java.util.Objects;
 
 public class ProjectModel {
-	private String typeName;
+	private ProjectType type;
 	private List<AlgorithmModel> algorithms = new ArrayList<>();
 	private Properties projectProperties = new Properties();
 	private String projectName;
@@ -15,8 +15,8 @@ public class ProjectModel {
 		super();
 	}
 	
-	public ProjectModel(String typeName, List<AlgorithmModel> algorithms, Properties projectProperties, String projectName){
-		this.typeName = typeName;
+	public ProjectModel(ProjectType type, List<AlgorithmModel> algorithms, Properties projectProperties, String projectName){
+		this.type = type;
 		this.algorithms =  new ArrayList<>(algorithms);
 		this.projectProperties = new Properties(projectProperties);
 		this.projectName = projectName;
@@ -25,15 +25,15 @@ public class ProjectModel {
 	/**
 	 * @return the name
 	 */
-	public String getTypeName() {
-		return typeName;
+	public ProjectType getType() {
+		return type;
 	}
 
 	/**
 	 * @param name the name to set
 	 */
-	public void setTypeName(String name) {
-		this.typeName = name;
+	public void setType(ProjectType name) {
+		this.type = name;
 	}
 
 	/**
@@ -87,14 +87,14 @@ public class ProjectModel {
 			return false;
 		}
 		ProjectModel castOther = (ProjectModel) other;
-		return Objects.equals(typeName, castOther.typeName) && Objects.equals(algorithms, castOther.algorithms)
+		return Objects.equals(type, castOther.type) && Objects.equals(algorithms, castOther.algorithms)
 				&& Objects.equals(projectProperties, castOther.projectProperties)
 				&& Objects.equals(projectName, castOther.projectName);
 	}
 
 	@Override
 	public int hashCode() {
-		return Objects.hash(typeName, algorithms, projectProperties, projectName);
+		return Objects.hash(type, algorithms, projectProperties, projectName);
 	}
 
 	

@@ -27,6 +27,7 @@ import evm.dmc.api.model.FunctionDstModel;
 import evm.dmc.api.model.FunctionModel;
 import evm.dmc.api.model.FunctionSrcModel;
 import evm.dmc.api.model.ProjectModel;
+import evm.dmc.api.model.ProjectType;
 import evm.dmc.core.api.Algorithm;
 import evm.dmc.core.api.Project;
 import evm.dmc.core.api.SimplestProject;
@@ -72,7 +73,7 @@ public class SimplestProjectImplTest {
 
 		AlgorithmModel algModel = model.getAlgorithms().get(0);
 		
-		ProjectModel newProjModel = new ProjectModel(model.getProjectName(), model.getAlgorithms(), model.getProjectProperties(), model.getProjectName());
+		ProjectModel newProjModel = new ProjectModel(model.getType(), model.getAlgorithms(), model.getProjectProperties(), model.getProjectName());
 		AlgorithmModel newAlgModel = newProjModel.getAlgorithms().get(0);
 		
 		// delete PCA function to determine difference with original model
@@ -80,6 +81,8 @@ public class SimplestProjectImplTest {
 		
 		project.setModel(newProjModel);
 		algModel = project.getModel().getAlgorithms().get(0);
+		
+		assertEquals(project.getModel().getType(), ProjectType.SIMPLEST_PROJECT);
 		
 		assertThat(algModel.getDataSource().getName(),
 				both(containsIgnoringCase("csv")).and(containsIgnoringCase("load")));
