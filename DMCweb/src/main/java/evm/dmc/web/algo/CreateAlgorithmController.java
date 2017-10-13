@@ -56,17 +56,25 @@ public class CreateAlgorithmController {
 	
 	@GetMapping(value = "newalg")
 	public String getAlgCreatingPage(@RequestParam("step") CreateAlgStep step) {
-		logger.debug("inside getAlgCreatingPage");
+		logger.debug("inside getAlgCreatingPage: {}", step);
 
-		switch(step){
-		case DATASOURCE : return addPrefix(step.getName());
-		case FUNCTION :	return addPrefix(step.getName());
-		case DATADEST : return addPrefix(step.getName());
-		case VIEWDATAPART :
-		case VIEWCHART :
-		}
+//		switch(step){
+//		case DATASOURCE : return addPrefix(step.getName());
+//		case FUNCTION :	return addPrefix(step.getName());
+//		case DATADEST : return addPrefix(step.getName());
+//		}
 		
-		return "index";
+		return addPrefix(step.getName());
+		
+//		return "index";
+	}
+	
+	@GetMapping(value = "viewalg")
+	public String getViewAlgPage() {
+		logger.debug("inside getViewAlgPage");
+		
+		return "viewalg";
+		
 	}
 	
 	private String addPrefix(String view) {

@@ -4,8 +4,9 @@ public enum CreateAlgStep {
 	DATASOURCE("datasource"),
 	FUNCTION("function"),
 	DATADEST("datadestinaton"),
-	VIEWDATAPART("viewdatapart"),
-	VIEWCHART("viewchart");
+	FUNCTION_KMENS("function_kmeans"),
+	FUNCTION_PCA("function_pca"),
+	FUNCTION_DATPREV("function_datapreview");
 	
 	
 	private final String name;
@@ -14,18 +15,23 @@ public enum CreateAlgStep {
 		 if (name == null) {
 	            throw new IllegalArgumentException("Name cannot be null for step");
 	        }
-	        if (name.toLowerCase().equals("datasource")) {
-	            return DATASOURCE;
-	        } else if (name.toLowerCase().equals("function")) {
-	            return FUNCTION;
-	        } else if (name.toLowerCase().equals("datadestinaton")) {
-	            return DATADEST;
-	        } else if (name.toLowerCase().equals("viewdatapart")) {
-	            return VIEWDATAPART;
-	        } else if (name.toLowerCase().equals("viewchart")) {
-	            return VIEWCHART;
-	        }
-	        throw new IllegalArgumentException("Name \"" + name + "\" does not correspond to any CreateAlgStep");
+		 switch(name){
+		 	case "datasource":
+		 		return DATASOURCE;
+		 	case "function":
+		 		return FUNCTION;
+		 	case "datadestinaton":
+		 		return DATADEST;
+		 	case "function_kmeans":
+		 		return FUNCTION_KMENS;
+		 	case "function_pca":
+		 		return FUNCTION_PCA;
+		 	case "function_datapreview":
+		 		return FUNCTION_DATPREV;
+		 	default:
+		 		throw new IllegalArgumentException("Name \"" + name + "\" does not correspond to any CreateAlgStep");
+		 }
+		 		
 	}
 
 	private CreateAlgStep(final String name) {

@@ -4,16 +4,15 @@
       layout:decorate="~{layouts/sidebarlayout}">
 
 <head>
-	<title>New algorithm: data source</title>
+	<title>Choose function</title>
 	<!-- Custom styles for this template -->
-	<link href="#" th:href="@{/css/simple-sidebar.css}" rel="stylesheet">
-	
-</head>
+    <link href="#" th:href="@{/css/simple-sidebar.css}" rel="stylesheet">
+
+
 <body>
-	<form>
-		<!-- Insert page content into the layouts/sidebarpage.html -->
-		<th:block layout:fragment="sidebar_pagecontent">
-			<h1>Select source data file</h1>
+	<!-- Insert page content into the layouts/sidebarpage.html -->
+	<th:block layout:fragment="sidebar_pagecontent">
+		<h1>Select source data file</h1>
 
 			<div class="file-upload" data-text="Выберите файл">
 				<input type="file">
@@ -23,16 +22,25 @@
 			<ul class="pager">
 				<li><a th:href="@{/UID/project/12/newalg?step=function}">Next</a></li>
 			</ul>
-	</form>
+			
+		<hr>
+		<form>
+			<div id="sidebar" th:insert="fragments/funoptions/func_opts :: dataprewiew_opts">
+		 	</div>
+		</form>
 	</th:block>
 
 	<!-- Insert bar content into the layouts/sidebarpage.html -->
 	<th:block layout:fragment="sidebar_barcontent">
 		<ul class="sidebar-nav">
 			<li class="sidebar-brand"><a href="#"> Start Bootstrap </a></li>
-			<li><a href="#">File source</a></li>
+			<li><a href="@{/UID/project/12/newalg?step=datasource}">Link #1</a></li>
 			<li><a href="#">Link #2</a></li>
-
+			<li><a href="#">Link #3</a></li>
+			<li><a href="#">Link #4</a></li>
+			<li><a href="#">Link #5</a></li>
+			<li><a href="#">Link #6</a></li>
+			<li><a href="#">Link #7</a></li>
 		</ul>
 	</th:block>
 </body>

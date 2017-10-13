@@ -20,8 +20,8 @@
 						<select class="form-control" id="function">
 						<option value="weka_stand">Weka: Standartize</option>
 						<option value="weka_norm">Weka: Normalize</option>
-						<option value="weka_pca">Weka: PCA</option>
-						<option value="weka_kmeans" selected>Weka: KMeansClustering</option>
+						<option value="weka_pca" selected>Weka: PCA</option>
+						<option value="weka_kmeans" >Weka: KMeansClustering</option>
 						
 					</select>
 				</div>
@@ -31,7 +31,7 @@
 		</div>
 		<hr>
 		<form>
-			<div id="sidebar" th:insert="fragments/funoptions/func_opts :: kmeans_opts">
+			<div id="sidebar" th:insert="fragments/funoptions/func_opts :: pca_opts">
 		 	</div>
 		</form>
 	</th:block>
