@@ -4,7 +4,7 @@
       layout:decorate="~{layouts/layout}">
 
 <head>
-    <title>Hello Spring Boot!</title>
+    <title>Create new algorithm:</title>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
     <link href="http://cdn.jsdelivr.net/webjars/bootstrap/3.3.7/css/bootstrap.min.css"
           th:href="@{/webjars/bootstrap/3.3.7/css/bootstrap.min.css}"
@@ -17,13 +17,42 @@
 
 </head>
 <body>
-<!-- Insert content into the layouts/layout.html -->
-<th:block layout:fragment="content">
-  	<h1 th:text="#{greeting}"></h1>
-	<span th:text="${algModel.name}" > </span>
-	<br/> View: 
+	<!-- Insert content into the layouts/layout.html -->
+	<th:block layout:fragment="content">
+		<h1 th:text="#{greeting}"></h1>
+		<span th:text="${algModel.name}"> </span>
+		<br /> View: 
 	<p th:text="${view}" />
-</th:block>
- 
+		<h3>Create new algorithm:</h3>
+
+		<!-- <div id="exTab2" class="container">
+			<ul class="nav nav-tabs">
+				<li class="active"><a href="#1alg" data-toggle="tab">Algorithm</a>
+				</li>
+				<li><a href="#2src" data-toggle="tab">Data source</a></li>
+				<li><a href="#3fun" data-toggle="tab">Function</a></li>
+				<li class="disabled"><a href="#4dst" >Data
+						destination</a></li>
+			</ul>
+
+			<div class="tab-content ">
+				<div class="tab-pane active" id="1alg">
+					<h3>Standard tab panel created on bootstrap using nav-tabs</h3>
+				</div>
+				<div class="tab-pane" id="2src">
+					<h3>Notice the gap between the content and tab after applying
+						a background color</h3>
+				</div>
+				<div class="tab-pane" id="3fun">
+					<h3>add clearfix to tab-content (see the css)</h3>
+				</div>
+				<div class="tab-pane" id="4dst">
+					<h3>We use css to change the background color of the content
+						to be equal to the tab</h3>
+				</div>
+			</div>
+		</div> -->
+	</th:block>
+
 </body>
 </html>

@@ -20,8 +20,8 @@ public class ProjectServiceImpl implements ProjectService{
 	}
 	
 	@Override
-	public void addNew(ProjectModel proModel){
-		projRepository.addNew(proModel);
+	public void add(ProjectModel proModel){
+		projRepository.add(proModel);
 	}
 	
 	@Override

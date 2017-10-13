@@ -12,7 +12,7 @@ public class ProjectRepositoryListImpl implements ProjectRepository{
 	List<ProjectModel> projList = new ArrayList<>();
 	
 	@Override
-	public void addNew(ProjectModel proModel){
+	public void add(ProjectModel proModel){
 		projList.add(proModel);
 		
 	}

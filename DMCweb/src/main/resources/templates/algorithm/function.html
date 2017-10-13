@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layouts/sidebarlayout}">
+
+<head>
+	<title>Choose function</title>
+	<!-- Custom styles for this template -->
+    <link href="#" th:href="@{/css/simple-sidebar.css}" rel="stylesheet">
+
+
+<body>
+	<!-- Insert page content into the layouts/sidebarpage.html -->
+	<th:block layout:fragment="sidebar_pagecontent">
+		<h1>Select function:</h1>
+		<div class="row">
+			<div class="col-sm-4">
+				<div class="form-group">
+					<label for="selfun">(Framework: function)</label> 
+						<select class="form-control" id="selfun">
+						<option>Weka: Standartize</option>
+						<option>Weka: Normalize</option>
+						<option>Weka: PCA</option>
+						<option>Weka: KMeansClustering</option>
+						
+					</select>
+				</div>
+					<button type="submit" class="btn btn-info" name="selectfun" value="" th:text="Select">Select</button>
+			</div>
+			
+			
+		</div>
+		<hr>
+		<form>
+			<div class="form-group">
+
+				<div class="checkbox">
+					<label><input type="checkbox" value="">Order of
+						instances must be preserved.</label>
+				</div>
+			</div>
+			<div class="form-group ">
+				<div class="row">
+					<div class="col-sm-4">
+						<label for="seed">Seed</label> 
+						<input type="number" class="form-control col-sm-1" id="seed" value="10">
+					</div>
+				</div>
+			</div>
+
+			<div class="form-group ">
+				<div class="row">
+					<div class="col-sm-4">
+						<label for="clusters">Number of clusters</label> 
+						<input type="number" class="form-control" id="clusters" value="2">
+					</div>
+				</div>
+			</div>
+
+			<div class="form-group ">
+				<div class="row">
+					<div class="col-sm-4">
+						<label for="iters">Max number of iterations</label> 
+						<input type="number" class="form-control" id="iters" value="" min="0" placeholder="Default if emty">
+					</div>
+				</div>
+			</div>
+		</form>
+	</th:block>
+
+	<!-- Insert bar content into the layouts/sidebarpage.html -->
+	<th:block layout:fragment="sidebar_barcontent">
+		<ul class="sidebar-nav">
+			<li class="sidebar-brand"><a href="#"> Start Bootstrap </a></li>
+			<li><a href="@{/UID/project/12/newalg?step=datasource}">Link #1</a></li>
+			<li><a href="#">Link #2</a></li>
+			<li><a href="#">Link #3</a></li>
+			<li><a href="#">Link #4</a></li>
+			<li><a href="#">Link #5</a></li>
+			<li><a href="#">Link #6</a></li>
+			<li><a href="#">Link #7</a></li>
+		</ul>
+	</th:block>
+</body>
+
+</html>
