@@ -34,6 +34,10 @@
 			<div id="sidebar" th:insert="fragments/funoptions/func_opts :: pca_opts">
 		 	</div>
 		</form>
+		 	<ul class="pager">
+				<li><a th:href="@{/UID/project/12/newalg?step=function}">Previous</a></li>
+				<li><a th:href="@{/UID/project/12/newalg?step=function}">Next</a></li>
+			</ul>
 	</th:block>
 
 	<!-- Insert bar content into the layouts/sidebarpage.html -->

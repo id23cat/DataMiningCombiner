@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layouts/layout}">
+
+<head>
+    <title>Hello Spring Boot!</title>
+</head>
+<body>
+<!-- Insert content into the layouts/layout.html -->
+<th:block layout:fragment="content">
+	<!-- IF Data is present -->
+	<div th:if="${data != null}">
+		Data content: <br>
+		<p th:text="${data}" />
+	</div>
+	<!-- ELSE IF  -->
+	<div th:if="${namesList != null}">
+	<table class="table table-striped">
+		<tr> <th>List avaliable Beans: </th></tr>
+		<tr th:each="name : ${namesList}">
+			<td th:text="${name}">Bean name</td>
+		</tr>
+	</table>
+		
+	</div>
+	
+</th:block>
+ 
+</body>
+</html>

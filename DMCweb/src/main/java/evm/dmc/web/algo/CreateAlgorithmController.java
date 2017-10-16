@@ -69,11 +69,11 @@ public class CreateAlgorithmController {
 //		return "index";
 	}
 	
-	@GetMapping(value = "viewalg")
-	public String getViewAlgPage() {
+	@GetMapping("viewalg{id}")
+	public String getViewAlgPage(@PathVariable String id ) {
 		logger.debug("inside getViewAlgPage");
 		
-		return "viewalg";
+		return "viewalg"+id;
 		
 	}
 	

@@ -15,15 +15,16 @@
 			<div th:insert="fragments/funoptions/func_opts :: src_opts">
 		 	</div>
 		 	<ul class="pager">
-				<li><a th:href="@{/UID/project/12/newalg?step=function_datapreview2}">Next</a></li>
+				<li><a th:href="@{/UID/project/12/newalg?step=function_kmeans}">Next</a></li>
 			</ul>
-
 		<hr>
 		<form>
 			<!-- See http://www.bootstraptoggle.com/ -->
-			<input checked data-toggle="toggle" data-onstyle="primary" data-offstyle="success" data-on="Table" data-off="2D chart" type="checkbox">
+			<input data-toggle="toggle" data-onstyle="primary" data-offstyle="success" data-on="Table" data-off="2D chart" type="checkbox">
 			
-			<div id="sidebar" th:insert="fragments/preview/previews :: table">
+			<div class="container">
+				<div id="sidebar" th:insert="fragments/preview/previews :: plot2d">
+		 		</div>
 		 	</div>
 		</form>
 	</th:block>

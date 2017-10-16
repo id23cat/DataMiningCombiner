@@ -6,21 +6,60 @@
 <head>
 	<title>Choose function</title>
 	<!-- Custom styles for this template -->
-    <link href="#" th:href="@{/css/simple-sidebar.css}" rel="stylesheet">
-	<!-- <link href="#" th:href="@{/css/table.css}" rel="stylesheet"> -->
 
 <body>
+	<div th:fragment="src_opts">
+		<h3>Select source data file</h3>
+
+		<div class="file-upload" data-text="Выберите файл">
+				<input type="file">
+		</div>
+	</div>
+
+	<div th:fragment="dst_opts">
+		<form>
+		<h3>Where you want to save result</h3>
+		
+		<div class="form-group ">
+				<div class="row">
+					<div class="col-sm-4">
+						<label for="selfun">Result destination:</label>
+						<select	class="form-control" id="function">
+							<option selected value="proj_dir">Save to project directory</option>
+							<option value="download">Download</option>
+						</select>
+				<!-- <button type="submit" class="btn btn-info" name="selectfun" value="" th:text="Select">Select</button> -->
+					</div>
+				</div>
+		</div>
+
+		<br>
+		<div class="form-group ">
+				<div class="row">
+					<div class="col-sm-4">
+			<!-- <div class="col-sm-4 row"> -->
+						<label for="clusters">Destination name</label> 
+						<input type="text" class="form-control" id="destname">
+     					<!-- <br>	 
+						<input type="submit" class="btn btn-info" value="Set name"> -->
+						<button style="margin-top: 5px;" type="button" class="btn btn-info " data-target="#myModal">SetName</button>
+					</div>
+				</div>
+		</div>
+		</form>
+	</div>
+
 	<!-- KMeans options -->
 	<div th:fragment="kmeans_opts">
 		<form>
 			<div class="form-group">
-
 				<div class="checkbox">
 					<label><input type="checkbox" value="">
 						Order of instances must be preserved
 					</label>
 				</div>
 			</div>
+			
 			<div class="form-group ">
 				<div class="row">
 					<div class="col-sm-4">
@@ -34,7 +73,7 @@
 				<div class="row">
 					<div class="col-sm-4">
 						<label for="clusters">Number of clusters</label> 
-						<input type="number" class="form-control" id="clusters" value="2">
+						<input type="number" class="form-control" id="clusters" value="3">
 					</div>
 				</div>
 			</div>
@@ -52,7 +91,16 @@
 					</div>
 				</div>
 			</div>
+			<div class="form-group">
+
+				<div class="checkbox">
+					<label><input type="checkbox" checked value="">
+						View result
+					</label>
+				</div>
+			</div>
 		</form>
+		
 	</div>
 
 	<div th:fragment="pca_opts">
@@ -69,17 +117,64 @@
 					Set whether to center (rather than standardize) the data </label>
 			</div>
 		</div>
-
 	</div>
-
-	<div th:fragment="dataprewiew_opts">
+	
+	<div th:fragment="table_features">
 		<div class="container">
-			<div class="col-sm-4">
+			<div class="col-sm-2 form-group">
 					<label for="iters">Number of rows to show</label>
-					<input type="number" class="form-control" id="components" value="5"	min="0">
-				</div>
-			<table class="table table-bordered table-responsive "> <!-- table-fixed -->
-				<thead>
+					<input type="number" class="form-control" id="iters" value="5"	min="0">
+			</div>
+			
+			<div class="container pre-scrollable form-group">
+			
+			<label for="intable">Select required features and multiplictor:</label>
+			<table class="table table-bordered " id="intable"> <!-- table-fixed -->
+			
+				<thead class="head">
+					<tr>
+						<th style="text-align:left; vertical-align: top"><div class="checkbox"><label><input type="checkbox" value=""></label></div></th>
+						<th style="text-align:left; vertical-align: top"><div class="checkbox"><label><input type="checkbox" value=""></label></div></th>
+						<th style="text-align:left; vertical-align: top"><div class="checkbox"><label><input type="checkbox" value=""></label></div></th>
+						<th style="text-align:left; vertical-align: top"><div class="checkbox"><label><input type="checkbox" value=""></label></div></th>
+						<th style="text-align:left; vertical-align: top"><div class="checkbox"><label><input type="checkbox" value=""></label></div></th>
+						<th style="text-align:left; vertical-align: top"><div class="checkbox"><label><input type="checkbox" value=""></label></div></th>
+						<th style="text-align:left; vertical-align: top">
+							<form class="">
+								<div class="checkbox"><label><input type="checkbox" checked value=""></label></div>
+								<label for="multipl">Multiplicator:</label> 
+								<input type="number" step="0.01" class="form-control " id="multipl" value="1">
+								
+							</form>
+						</th>
+						<th style="text-align:left; vertical-align: top"><div class="checkbox"><label><input type="checkbox" value=""></label></div></th>
+						<th style="text-align:left; vertical-align: top"><div class="checkbox"><label><input type="checkbox" value=""></label></div></th>
+						<th style="text-align:left; vertical-align: top">
+							<form class="">
+								<div class="checkbox"><label><input type="checkbox" checked value=""></label></div>
+								<label for="multipl">Multiplicator:</label> 
+								<input type="number" step="0.01" class="form-control " id="multipl" value="0.95">
+								
+							</form>
+						</th>
+						<th style="text-align:left; vertical-align: top"><div class="checkbox"><label><input type="checkbox" value=""></label></div></th>
+						<th style="text-align:left; vertical-align: top"><div class="checkbox"><label><input type="checkbox" value=""></label></div></th>
+						<th style="text-align:left; vertical-align: top">
+							<form class="">
+								<div class="checkbox"><label><input type="checkbox" checked value=""></label></div>
+								<label for="multipl">Multiplicator:</label> 
+								<input type="number" step="0.01" class="form-control " id="multipl" value="0.88">
+								
+							</form>
+						</th>
+						<th style="text-align:left; vertical-align: top"><div class="checkbox"><label><input type="checkbox" value=""></label></div></th>
+						<th style="text-align:left; vertical-align: top"><div class="checkbox"><label><input type="checkbox" value=""></label></div></th>
+						<th style="text-align:left; vertical-align: top"><div class="checkbox"><label><input type="checkbox" value=""></label></div></th>
+						<th style="text-align:left; vertical-align: top"><div class="checkbox"><label><input type="checkbox" value=""></label></div></th>
+						<th style="text-align:left; vertical-align: top"><div class="checkbox"><label><input type="checkbox" value=""></label></div></th>
+						<th style="text-align:left; vertical-align: top"><div class="checkbox"><label><input type="checkbox" value=""></label></div></th>
+						<th style="text-align:left; vertical-align: top"><div class="checkbox"><label><input type="checkbox" value=""></label></div></th>
+					</tr>
 					<tr>
 						<th>State</th>
 						<th>Account length</th>
@@ -100,6 +195,7 @@
 						<th>Total intl calls</th>
 						<th>Total intl charge</th>
 						<th>Customer service calls</th>
+						<th>Churn</th>
 					</tr>
 				</thead>
 				<tbody>
@@ -215,8 +311,10 @@
 					</tr>
 				</tbody>
 			</table>
+			</div>
 		</div>
 	</div>
+
 </body>
 
 </html>

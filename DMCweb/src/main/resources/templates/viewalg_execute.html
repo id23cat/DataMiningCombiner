@@ -10,16 +10,16 @@
 	<!-- Insert content into the layouts/layout.html -->
 	<th:block layout:fragment="content">
 		<div class="form-group">
-		<h2>Start</h2>
-		<!-- <button type="button" th:href="@{/UID/project/12/viewalg_execute}" class="btn btn-info">Execute <span class="glyphicon glyphicon-play"></span></button> -->
-		<a th:href="@{/UID/project/12/viewalg_execute}" class="btn btn-info" role="button">Execute <span class="glyphicon glyphicon-play"></span></a>
+		<h2>Execution...</h2>
+		<!-- <button type="button" class="btn btn-info">Execute <span class="glyphicon glyphicon-play"></span></button> -->
+		<a th:href="@{/UID/project/12/viewalg_finish}" class="btn btn-warning" role="button">Stop <span class="glyphicon glyphicon-stop"></span></a>
 		</div>
 		
 		<ul class="nav nav-tabs">
 			<li><a data-toggle="tab" href="#tab0">Data load</a></li>
 			<li class="active"><a data-toggle="tab" href="#tab1">Select features</a></li>
-			<li><a data-toggle="tab" href="#tab2">KMeans</a></li>
-			<li><a data-toggle="tab" href="#tab3">PCA</a></li>
+			<li class="disabled"><a href="#tab2">KMeans</a></li>
+			<li class="disabled"><a href="#tab3">PCA</a></li>
 		</ul>
 		
 

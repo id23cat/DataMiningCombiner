@@ -27,26 +27,26 @@
 				</div>
 					<button type="submit" class="btn btn-info" name="selectfun" value="" th:text="Select">Select</button>
 			</div>
-			
 		</div>
+		<ul class="pager">
+				<li><a th:href="@{/UID/project/12/newalg?step=function_datapreview2}">Previous</a></li>
+				<li><a th:href="@{/UID/project/12/newalg?step=function}">Next</a></li>
+			</ul>
 		<hr>
 		<form>
 			<div id="sidebar" th:insert="fragments/funoptions/func_opts :: kmeans_opts">
 		 	</div>
+		 	
 		</form>
 	</th:block>
 
 	<!-- Insert bar content into the layouts/sidebarpage.html -->
 	<th:block layout:fragment="sidebar_barcontent">
 		<ul class="sidebar-nav">
-			<li class="sidebar-brand"><a href="#"> Start Bootstrap </a></li>
-			<li><a href="@{/UID/project/12/newalg?step=datasource}">Link #1</a></li>
-			<li><a href="#">Link #2</a></li>
-			<li><a href="#">Link #3</a></li>
-			<li><a href="#">Link #4</a></li>
-			<li><a href="#">Link #5</a></li>
-			<li><a href="#">Link #6</a></li>
-			<li><a href="#">Link #7</a></li>
+			<li class="sidebar-brand">Algorithm flow</li>
+			<li><a th:href="@{/UID/project/12/newalg?step=function_datapreview2}">File source</a></li>
+			<li><a href="#">KMeans</a></li>
+			
 		</ul>
 	</th:block>
 </body>
