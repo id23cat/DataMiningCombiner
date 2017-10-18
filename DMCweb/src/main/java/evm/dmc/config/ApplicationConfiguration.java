@@ -6,8 +6,8 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 
-import evm.dmc.service.Service;
-import evm.dmc.service.ServiceProperties;
+import evm.dmc.service.testing.Service;
+import evm.dmc.service.testing.ServiceProperties;
 
 @EnableConfigurationProperties(ServiceProperties.class)
 @EnableAutoConfiguration

@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{testing/layouts/layout}">
+
+<head>
+    <title>Hello Spring Boot!</title>
+</head>
+<body>
+	<!-- Insert content into the layouts/layout.html -->
+	<th:block layout:fragment="content">
+		<div class="form-group">
+		<h2>Execution...</h2>
+		<!-- <button type="button" class="btn btn-info">Execute <span class="glyphicon glyphicon-play"></span></button> -->
+		<a th:href="@{/testing/UID/project/12/viewalg_finish}" class="btn btn-warning" role="button">Stop <span class="glyphicon glyphicon-stop"></span></a>
+		</div>
+		
+		<ul class="nav nav-tabs">
+			<li><a data-toggle="tab" href="#tab0">Data load</a></li>
+			<li class="active"><a data-toggle="tab" href="#tab1">Select features</a></li>
+			<li class="disabled"><a href="#tab2">KMeans</a></li>
+			<li class="disabled"><a href="#tab3">PCA</a></li>
+		</ul>
+		
+
+		<div class="tab-content">
+			<div id="tab0" class="tab-pane fade ">
+				<h3>Selected file: </h3>
+				<div th:insert="testing/fragments/funoptions/func_opts :: src_opts">
+		 		</div>
+			</div>
+			<div id="tab1" class="tab-pane fade in active">
+				<div th:insert="testing/fragments/funoptions/func_opts :: table_features">
+		 		</div>
+			</div>
+			<div id="tab2" class="tab-pane fade">
+				<div th:insert="testing/fragments/funoptions/func_opts :: kmeans_opts">
+		 		</div>
+			</div>
+			<div id="tab3" class="tab-pane fade">
+				<div th:insert="testing/fragments/funoptions/func_opts :: pca_opts">
+		 		</div>
+			</div>
+		</div>
+	</th:block>
+
+</body>
+</html>

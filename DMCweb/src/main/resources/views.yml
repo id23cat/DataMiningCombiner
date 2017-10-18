@@ -1,9 +1,10 @@
 views:
-  index:  index
-  hello:  /hello?name=Alex
-  hellorest:  /helloREST
-  hellothyme: /helloThyme
-  welcome:  /welcome
-  showtable:  /showtable/table/0
-  listbeans: /showtable/listbeans
-  createalg:  /createalg
+  testing:
+    index:  testing/index
+    hello:  testing/hello?name=Alex
+    hellorest:  testing/helloREST
+    hellothyme: testing/helloThyme
+    welcome:  /testing/welcome
+    showtable:  /testing/showtable/table/0
+    listbeans: /testing/showtable/listbeans
+    createalg:  /createalg
