@@ -28,13 +28,18 @@
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
 		<java.version>1.8</java.version>
+		<stefanbirkner.system-rulesVersion>1.16.1</stefanbirkner.system-rulesVersion>
+		<weka.weka-devVersion>3.9.1</weka.weka-devVersion>
+		<jfree.jfreechartVersion>1.0.19</jfree.jfreechartVersion>
+		<apache.commons-lang3Version>3.6</apache.commons-lang3Version>
+		<dmc-apiVersion>${version}</dmc-apiVersion>
 	</properties>
 
 	<dependencies>
 		<dependency>
 			<groupId>by.bsuir.evm</groupId>
 			<artifactId>DMC-api</artifactId>
-			<version>0.0.1-SNAPSHOT</version>
+			<version>${dmc-apiVersion}</version>
 		</dependency>
 
 <!-- 		<dependency>
@@ -70,7 +75,7 @@
 		<dependency>
 			<groupId>com.github.stefanbirkner</groupId>
 			<artifactId>system-rules</artifactId>
-			<version>1.16.1</version>
+			<version>${stefanbirkner.system-rulesVersion}</version>
 		</dependency>
 			
 			
@@ -78,7 +83,7 @@
  		<dependency>
 		    <groupId>nz.ac.waikato.cms.weka</groupId>
 		    <artifactId>weka-dev</artifactId>
-		    <version>3.9.1</version>
+		    <version>${weka.weka-devVersion}</version>
 		</dependency>
 
 		<!-- https://mvnrepository.com/artifact/nz.ac.waikato.cms.weka/weka-stable -->
@@ -92,13 +97,13 @@
 		<dependency>
 			<groupId>org.jfree</groupId>
 			<artifactId>jfreechart</artifactId>
-			<version>1.0.19</version>
+			<version>${jfree.jfreechartVersion}</version>
 		</dependency>
 		<!-- https://mvnrepository.com/artifact/org.apache.commons/commons-lang3 -->
 		<dependency>
 			<groupId>org.apache.commons</groupId>
 			<artifactId>commons-lang3</artifactId>
-			<version>3.6</version>
+			<version>${apache.commons-lang3Version}</version>
 		</dependency>
 
 	</dependencies>

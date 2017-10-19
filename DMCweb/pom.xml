@@ -27,6 +27,13 @@
         <thymeleaf.version>3.0.7.RELEASE</thymeleaf.version>
         <thymeleaf-extras-java8time.version>3.0.1.RELEASE</thymeleaf-extras-java8time.version>
         <thymeleaf-layout-dialect.version>2.2.2</thymeleaf-layout-dialect.version>
+        <bootstrap.version>3.3.7</bootstrap.version>
+        <jquery.version>3.2.1</jquery.version>
+        <popper.js.version>1.12.3</popper.js.version>
+        <bootstrap-toggle.version>2.2.2</bootstrap-toggle.version>
+        <ajax-utils.version>1.0</ajax-utils.version>
+        <dmcombiner.version>${version}</dmcombiner.version>
+        <DMC-api.version>${version}</DMC-api.version>
 	</properties>
 
 	<dependencies>
@@ -46,6 +53,10 @@
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-aop</artifactId>
 		</dependency>
+		 <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-data-jpa</artifactId>
+        </dependency>
 		<dependency>
 			<groupId>org.thymeleaf.extras</groupId>
 			<artifactId>thymeleaf-extras-java8time</artifactId>
@@ -57,14 +68,14 @@
 		<dependency>
 			<groupId>org.webjars</groupId>
 			<artifactId>bootstrap</artifactId>
-			<version>3.3.7</version>
+			<version>${bootstrap.version}</version>
 		</dependency>
 
 		<!-- JQuery -->
 		<dependency>
 			<groupId>org.webjars</groupId>
 			<artifactId>jquery</artifactId>
-			<version>3.2.1</version>
+			<version>${jquery.version}</version>
 		</dependency>
 		
 		<!--  Need for sidebar -->
@@ -72,17 +83,17 @@
 		<dependency>
 		    <groupId>org.webjars.bower</groupId>
 		    <artifactId>popper.js</artifactId>
-		    <version>1.12.3</version>
+		    <version>${popper.js.version}</version>
 		</dependency>
 	
 		<!-- https://mvnrepository.com/artifact/org.webjars.bower/bootstrap-toggle -->
 		<dependency>
 		    <groupId>org.webjars.bower</groupId>
 		    <artifactId>bootstrap-toggle</artifactId>
-		    <version>2.2.2</version>
+		    <version>${bootstrap-toggle.version}</version>
 		</dependency>
-
 		
+		<!-- https://mvnrepository.com/artifact/li.rudin.mavenjs/ajax-utils -->
 
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
@@ -95,6 +106,12 @@
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-tomcat</artifactId>
 			<scope>provided</scope>
+		</dependency>
+		
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-configuration-processor</artifactId>
+			<optional>true</optional>
 		</dependency>
 
 		<!-- JSTL for JSP -->
@@ -121,13 +138,14 @@
 		<dependency>
 			<groupId>by.bsuir.evm</groupId>
 			<artifactId>dmcombiner</artifactId>
-			<version>0.0.1-SNAPSHOT</version>
+			<version>${dmcombiner.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>by.bsuir.evm</groupId>
 			<artifactId>DMC-api</artifactId>
-			<version>0.0.1-SNAPSHOT</version>
+			<version>${DMC-api.version}</version>
 		</dependency>
+		
 	</dependencies>
 
 	<build>
