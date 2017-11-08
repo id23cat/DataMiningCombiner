@@ -20,7 +20,7 @@
         <!-- Page content -->
         <div id="page-content-wrapper">
             <div class="container-fluid">
-            	<a href="#menu-toggle" class="btn btn-info" id="menu-toggle">--> List all steps</a>
+            	<a href="#menu-toggle" class="btn btn-info" id="menu-toggle">--> Open Menu</a>
                 <div layout:fragment="sidebar_pagecontent">
 			        <p>Content goes here...</p>
 			    </div>
@@ -39,11 +39,11 @@
     <script>
     $("#menu-toggle").click(function(e) {
         e.preventDefault();
-        if($(this).text()=="--> List all steps")
+        if($(this).text()=="--> Open Menu")
         {
-            $(this).text("<-- Hide steps");
+            $(this).text("<-- Hide Menu");
         } else {
-            $(this).text("--> List all ateps");
+            $(this).text("--> Open Menu");
         }
         $("#wrapper").toggleClass("toggled");
     });

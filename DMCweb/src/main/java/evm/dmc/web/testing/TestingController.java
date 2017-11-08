@@ -15,27 +15,27 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
-import evm.dmc.service.testing.ViewsService;
+import evm.dmc.service.testing.TestingViewsService;
 
 /**
  * Handles requests for the application home page.
  */
 @Controller
-public class HomeController {
+public class TestingController {
 	
-	private static final Logger logger = LoggerFactory.getLogger(HomeController.class);
+	private static final Logger logger = LoggerFactory.getLogger(TestingController.class);
 	
-	ViewsService views;
+	TestingViewsService views;
 	
 	
-	public HomeController(@Autowired ViewsService views){
+	public TestingController(@Autowired TestingViewsService views){
 		this.views = views;
 	}
 	
 	/**
 	 * Simply selects the home view to render by returning its name.
 	 */
-	@GetMapping(value = "/")
+	@GetMapping(value = "/testing")
 	public String index(Locale locale, Model model) {
 		logger.info("Welcome home! The client locale is {}.", locale);
 		
@@ -51,7 +51,7 @@ public class HomeController {
 		
 		logger.debug("Now Time: " + model.asMap().get("now").toString());
 		
-		return views.getIndex();
+		return views.getTestindex();
 	}
 	
 }

@@ -12,7 +12,7 @@ import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.web.servlet.view.InternalResourceViewResolver;
 
-import evm.dmc.service.testing.ViewsService;
+import evm.dmc.service.testing.TestingViewsService;
 import evm.dmc.web.testing.hello.HelloController;
 
 import org.junit.Before;

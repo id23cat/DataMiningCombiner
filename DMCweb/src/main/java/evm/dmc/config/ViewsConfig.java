@@ -1,4 +1,4 @@
-package evm.dmc.config.testing;
+package evm.dmc.config;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -16,13 +16,13 @@ import org.springframework.web.servlet.view.InternalResourceViewResolver;
 import org.springframework.web.servlet.view.JstlView;
 
 import evm.dmc.DmcWebApplication;
-import evm.dmc.web.testing.HomeController;
+import evm.dmc.web.testing.TestingController;
 
 @Configuration
 //@PropertySource("classpath:views.properties")
 @ConfigurationProperties(prefix = "views")
 public class ViewsConfig {
-	private static final Logger logger = LoggerFactory.getLogger(HomeController.class);
+	private static final Logger logger = LoggerFactory.getLogger(TestingController.class);
 	
 
 	/*

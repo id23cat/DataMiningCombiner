@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org"
       xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
-      layout:decorate="~{testing/layouts/layout}">
+      layout:decorate="~{/testing/layouts/layout}">
 
 <head>
 	<title>Welcome to Data Mining combiner</title>
@@ -30,12 +30,12 @@
         </p>
         
         <a th:href="@{/testing/sidebar}">Sidebar page</a> <br>
-        <a th:href="${@viewsService.hello}">Click to get Hello</a> <br>
-        <a th:href="${@viewsService.hellorest}">Click to get Hello from REST</a> <br>
-        <a th:href="${@viewsService.hellothyme}">Click to get Hello on Thymeleaf</a> <br>
+        <a th:href="${@testingViewsService.hello}">Click to get Hello</a> <br>
+        <a th:href="${@testingViewsService.hellorest}">Click to get Hello from REST</a> <br>
+        <a th:href="${@testingViewsService.hellothyme}">Click to get Hello on Thymeleaf</a> <br>
         <a th:href="@{/welcome}">Click to get Welcome</a> <br>
-        <a th:href="${@viewsService.showtable}">Show table</a> <br>
-        <a th:href="${@viewsService.listbeans}">List Beans</a> <br>
+        <a th:href="${@testingViewsService.showtable}">Show table</a> <br>
+        <a th:href="${@testingViewsService.listbeans}">List Beans</a> <br>
         <a th:href="@{/testing/UID/project/12/createalg}">Create Algorithm</a> <br>
         <a th:href="@{/testing/UID/project/newproject}">Create New Project</a> <br>
         <a th:href="@{/testing/UID/project/12/main}">Open project</a> <br>

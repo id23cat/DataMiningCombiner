@@ -16,7 +16,7 @@ import evm.dmc.core.api.Data;
 import evm.dmc.core.api.Framework;
 import evm.dmc.core.api.FrameworksRepository;
 import evm.dmc.core.api.back.CSVLoader;
-import evm.dmc.service.testing.ViewsService;
+import evm.dmc.service.testing.TestingViewsService;
 
 @Controller
 // @RequestMapping("/user/{userId}/showtable")
@@ -28,12 +28,12 @@ public class ShowTableController {
 	// @Value("${wekatest.datasource}")
 	String sourceFileName = "/home/id23cat/Workspaces/workspace/datamining/DMCweb/Data/telecom_churn.csv";
 	
-	ViewsService views;
+	TestingViewsService views;
 
 	Set<String> names;
 
 	@Autowired
-	ShowTableController( FrameworksRepository repository, ViewsService vservice) {
+	ShowTableController( FrameworksRepository repository, TestingViewsService vservice) {
 		Map<String, String> loaders = repository.findFunctionByWordMap("csv");
 		repository.filterFunctionMap(loaders, "load");
 		CSVLoader loader = (CSVLoader) repository.getFunction(loaders.keySet().iterator().next());

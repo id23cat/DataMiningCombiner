@@ -5,8 +5,8 @@ import org.springframework.stereotype.Service;
 
 @Service
 @ConfigurationProperties("views.testing")
-public class ViewsService {
-	private String index;
+public class TestingViewsService {
+	private String testindex;
 	private String hello;
 	private String hellorest;
 	private String hellothyme;
@@ -17,14 +17,14 @@ public class ViewsService {
 	/**
 	 * @return the index
 	 */
-	public String getIndex() {
-		return index;
+	public String getTestindex() {
+		return testindex;
 	}
 	/**
 	 * @param index the index to set
 	 */
-	public void setIndex(String index) {
-		this.index = index;
+	public void setTestindex(String index) {
+		this.testindex = index;
 	}
 	/**
 	 * @return the hello

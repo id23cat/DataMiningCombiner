@@ -1,6 +1,11 @@
 views:
+  index: index
+  about: about
+  register: register
+  signin: signin
+  home: userHome
   testing:
-    index:  testing/index
+    testindex:  testing/testindex
     hello:  testing/hello?name=Alex
     hellorest:  testing/helloREST
     hellothyme: testing/helloThyme

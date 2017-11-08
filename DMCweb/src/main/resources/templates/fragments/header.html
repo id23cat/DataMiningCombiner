@@ -21,22 +21,30 @@
 	        <!-- Collect the nav links, forms, and other content for toggling -->
 			<div class="collapse navbar-collapse" id="myNavbar">
 				<ul class="nav navbar-nav">
-					<li class="active"><a th:href="@{/testing}">Home</a></li>		<!-- target="_blank" -->
-					<li class="dropdown"><a class="dropdown-toggle"	data-toggle="dropdown" href="#">Page 1 <span class="caret"></span></a>
-						<ul class="dropdown-menu">
-							<li><a href="#">Page 1-1</a></li>
-							<li><a href="#">Page 1-2</a></li>
-							<li><a href="#">Page 1-3</a></li>
-						</ul>
+					<li th:classappend="${module == 'home' ? 'active' : ''}">
+						<a th:href="@{/}">Home</a>
 					</li>
-					<li><a href="#" th:href="@{/testing}">About</a></li>
+					<li th:classappend="${module == 'about' ? 'active' : ''}">
+						<a th:href="${@requestPath.about}">About</a>
+					</li>
 				</ul>
 				<ul class="nav navbar-nav navbar-right">
-					<li><a href="#"><span class="glyphicon glyphicon-user"></span>Sign Up</a></li>
-					<li><a href="#"><span class="glyphicon glyphicon-log-in"></span>Login</a></li>
+					<!-- <li><a href="/register" th:href="${@requestPath.register}"><span class="glyphicon glyphicon-user"></span>Register</a></li> -->
+					<!-- <li th:insert="fragments/register_modal :: reg_header"></li> -->
+					<!-- <li><a href="#myModal" data-toggle="modal" data-target="#myModal">Log-in</a></li> -->
+					<!-- <li th:insert="~{fragments/register_modal :: reg_link}"></li> -->
+					
+					<!-- <li><a id="header_reg" href="register" data-target="#register"><span class="glyphicon glyphicon-user"></span>Register</a></li> -->
+					<li><a href="#" id="header_register" ><span class="glyphicon glyphicon-user"></span>Register</a></li>
+					<li><a href="#" id="header_signin"><span class="glyphicon glyphicon-log-in"></span>Sign In</a></li>
 				</ul>
 			</div>
+			
    </div>
+   
 </nav>
+
+
+
 </body>
 </html>

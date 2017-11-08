@@ -23,7 +23,7 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import evm.dmc.DmcWebApplication;
-import evm.dmc.service.testing.ViewsService;
+import evm.dmc.service.testing.TestingViewsService;
 import evm.dmc.web.testing.ShowTableController;
 
 

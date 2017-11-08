@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layouts/sidebarlayout}">
+
+<body>
+<!-- 	<div th:fragment="register_link(type)"> reg_text or reg_image_text
+		<a id="register" class="btn btn-success btn-lg">
+			<div th:replace="${type}">Register</div>
+		</a>
+	</div> -->
+	
+	<div th:fragment="reg_button">
+		<a id="register" class="btn btn-success btn-lg">Register</a>
+		<!-- <div th:insert="~{:: register_modal}"></div> -->
+	</div>
+	
+	<div th:fragment="reg_link">
+		<a id="register" class="btn navbar-btn" ><span class="glyphicon glyphicon-user"></span>Register</a>
+		<!-- <div th:insert="~{:: register_modal}"></div> -->
+	</div>
+	<!-- Register modal window -->
+	<div th:fragment="register_modal">
+		<script th:inline="javascript" type="text/javascript">
+			/* Fill in modal with content loaded with Ajax */
+			$(document).ready(function () {
+			    $('#register').on('click', function (e) {
+			        $("#regModal").modal();
+			        $("#regModalBody").text("");
+			        $.ajax({
+			            url: "register",
+			            cache: false
+			        }).done(function (html) {
+			            $("#regModalBody").append(html);
+			        });
+			    })
+			});
+		</script>
+		<div class="modal fade" id="regModal" > <!-- tabindex="-1" role="dialog" aria-labelledby="regModalLabel"  aria-hidden="true" -->
+		    <div class="modal-dialog">
+		        <div class="modal-content">
+		            <div class="modal-header">
+		                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+		                <h4 class="modal-title" id="regModalLabel">Registration</h4>
+		
+		<!-- Modal -->
+<!-- 		<div class="modal fade" id="regModal" tabindex="-1" role="dialog" aria-labelledby="regModalLabel1" aria-hidden="true">
+		    <div class="modal-dialog">
+		        <div class="modal-content">
+		            <div class="modal-header">
+		                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button> -->
+		               <!--  <h4 class="modal-title" id="regModalLabel">Registration</h4> -->
+		            </div>
+		            <div class="modal-body" id="regModalBody">Lorem ipsum</div>
+		            <div class="modal-footer">
+		                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+		            </div>
+		        </div><!-- /.modal-content -->
+		    </div><!-- /.modal-dialog -->
+		</div><!-- /.modal -->
+	</div>
+	
+	<!-- Common modal window -->
+	<div th:fragment="common_modal(id, page, title)">
+		<script th:inline="javascript" type="text/javascript">
+		/*<![CDATA[*/
+			/* Fill in modal with content loaded with Ajax */
+			$(document).ready(function () {
+			    $("#".concat(/*[[${id}]]*/)).on('click', function (e) {
+			        $("#commModal_".concat(/*[[${id}]]*/)).modal();
+			        $("#commModalBody_".concat(/*[[${id}]]*/)).text("");
+			        $.ajax({
+			            url: /*[[${page}]]*/"error",
+			            cache: false
+			        }).done(function (html) {
+			            $("#commModalBody_".concat(/*[[${id}]]*/)).append(html);
+			        });
+			    })
+			});
+		/*]]>*/
+		</script>
+		
+		<!-- Modal -->
+		<div class="modal fade" th:id="'commModal_'+${id}" > <!-- tabindex="-1" role="dialog" aria-labelledby="regModalLabel"  aria-hidden="true" -->
+		    <div class="modal-dialog">
+		        <div class="modal-content">
+		            <div class="modal-header">
+		                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+		                <h4 class="modal-title" th:id="'commModalLabel__${id}__'" th:text="${title}">Registration</h4>
+		            </div>
+		            <div class="modal-body" th:id="'commModalBody_'+${id}">Lorem ipsum</div>
+		            <div class="modal-footer">
+		                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+		            </div>
+		        </div><!-- /.modal-content -->
+		    </div><!-- /.modal-dialog -->
+		</div><!-- /.modal -->
+	</div>
+<body>
+</html>

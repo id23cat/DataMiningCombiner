@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout">
+
+<head>
+    <title>Hello Spring Boot!</title>
+    <meta charset="utf-8">
+ 	<meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" th:href="@{/webjars/bootstrap/3.3.7/css/bootstrap.min.css}">
+  	<script th:src="@{/webjars/jquery/3.2.1/jquery.min.js}"></script>
+  	<script th:src="@{/webjars/bootstrap/3.3.7/js/bootstrap.min.js}"></script>
+  	<link th:href="@{/css/core.css}" rel="stylesheet" media="screen" />
+
+</head>
+<body>
+<!-- Header -->
+<div th:replace="fragments/header :: header">
+</div>
+<div class="container-fluid">
+	<div class="container">
+	    <div layout:fragment="content">
+	        <p>Content goes here...</p>
+	    </div>
+	    
+	</div>
+	
+ 	<hr>
+    <div class="row">
+        <div class="col-sm-12">
+		<footer>
+	       	<div th:replace="fragments/footer :: footer"></div>
+	    </footer>
+	    </div>
+	</div>
+	
+	<!-- <div th:insert="fragments/register_modal :: register_modal"></div> -->
+	<div th:insert="fragments/control_elements :: common_modal(id='header_register', page='register', title='Registration')"></div>
+	<div th:insert="fragments/control_elements :: common_modal(id='header_signin', page='signin', title='Sign in')"></div>
+</div>
+
+
+
+	<div class="modal fade" id="myModal">
+		<div class="modal-dialog">
+			<div class="modal-content">
+				<div class="modal-header">
+					<button type="button" class="close" data-dismiss="modal"
+						aria-hidden="true">×</button>
+					<h4 class="modal-title">Log-in</h4>
+				</div>
+				<div class="modal-body">
+					<div class="form-group">
+						<label for="exampleInputEmail1">Email address</label> <input
+							class="form-control" id="exampleInputEmail1"
+							placeholder="Enter email" type="email">
+					</div>
+					<div class="form-group">
+						<label for="exampleInputPassword1">Password</label> <input
+							class="form-control" id="exampleInputPassword1"
+							placeholder="Password" type="password">
+					</div>
+					<p class="text-right">
+						<a href="#">Forgot password?</a>
+					</p>
+				</div>
+				<div class="modal-footer">
+					<a href="#" data-dismiss="modal" class="btn">Close</a> <a href="#"
+						class="btn btn-primary">Log-in</a>
+				</div>
+			</div>
+		</div>
+	</div>
+	
+</body>
+</html>

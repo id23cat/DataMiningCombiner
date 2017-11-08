@@ -17,13 +17,13 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import evm.dmc.api.model.AlgorithmModel;
-import evm.dmc.config.testing.ViewsConfig;
+import evm.dmc.config.ViewsConfig;
 import evm.dmc.core.api.Project;
 import evm.dmc.web.config.annotations.DefaultProject;
 import evm.dmc.web.testing.ShowTableController;
 
 @Controller
-@RequestMapping("testing/{userId}/project/{projId}/")
+@RequestMapping("/testing/{userId}/project/{projId}/")
 //@RequestMapping("/{userId}/createalg")
 public class CreateAlgorithmController {
 	private static final Logger logger = LoggerFactory.getLogger(CreateAlgorithmController.class);

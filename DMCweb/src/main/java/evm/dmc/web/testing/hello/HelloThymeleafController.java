@@ -7,17 +7,17 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
-import evm.dmc.service.testing.ViewsService;
-import evm.dmc.web.testing.HomeController;
+import evm.dmc.service.testing.TestingViewsService;
+import evm.dmc.web.testing.TestingController;
 
 @Controller
 public class HelloThymeleafController {
-	private static final Logger logger = LoggerFactory.getLogger(HomeController.class);
+	private static final Logger logger = LoggerFactory.getLogger(TestingController.class);
 	
-	ViewsService views;
+	TestingViewsService views;
 	
 	
-	public HelloThymeleafController(@Autowired ViewsService views){
+	public HelloThymeleafController(@Autowired TestingViewsService views){
 		this.views = views;
 	}
 	

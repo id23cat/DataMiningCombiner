@@ -21,15 +21,15 @@ import org.springframework.http.MediaType;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
 
-import evm.dmc.web.testing.HomeController;
+import evm.dmc.web.testing.TestingController;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest(webEnvironment = WebEnvironment.RANDOM_PORT, properties = "management.port=-1")
 @AutoConfigureMockMvc
-public class HomeControllerRequestTest {
+public class TestingControllerRequestTest {
 
 	@Autowired
-	private HomeController controller;
+	private TestingController controller;
 
 	@LocalServerPort
 	private int port;
