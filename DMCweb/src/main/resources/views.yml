@@ -3,6 +3,7 @@ views:
   about: about
   register: register
   signin: signin
+  regsign: "register_signin"
   home: userHome
   testing:
     testindex:  testing/testindex

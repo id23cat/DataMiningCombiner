@@ -10,24 +10,19 @@
 
 <!-- Insert content into the layouts/layout.html -->
 <th:block layout:fragment="content">
-   <div class="text-center">
-        
-        <h1>Welcome to DataMiningCombiner</h1>
-        
-        <div class="lead" th:insert="~{fragments/dmchello :: hello_descripion}">
-            Please Sign in or Register to continue
-        </div>
-        
-        <!-- <p>	<div th:insert="fragments/register_modal :: reg_button"></div>
-        <div th:insert="fragments/register_modal :: register_modal"></div> -->
-        
-        <div th:insert="fragments/control_elements :: common_modal(id='index_reg', page='register', title='Index registration')"></div>
-       
-       <a id="index_reg" class="btn btn-success btn-lg">Register</a>
-      
-    </div>
-  
-</th:block>
-	
+	<div th:insert="fragments/control_elements :: common_modal(id='index_reg', page='register', title='Index registration')"></div>
+		<div class="text-center">
+			<h1>Welcome to DataMiningCombiner</h1>
+
+			<div class="lead"
+				th:insert="~{fragments/dmchello :: hello_descripion}">Please
+				Sign in or Register to continue</div>
+
+			<!-- <p>	<div th:insert="fragments/register_modal :: reg_button"></div>
+        	<div th:insert="fragments/register_modal :: register_modal"></div> -->
+
+			<a id="index_reg" class="btn btn-success btn-lg">Register</a>
+		</div>
+	</th:block>
 </body>
 </html>

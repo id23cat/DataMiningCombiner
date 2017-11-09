@@ -14,7 +14,8 @@
         <div th:replace="fragments/alert :: alert (type='danger', message='Sign in error. Please try again.')">Alert</div>
     </th:block>
     <fieldset>
-        <legend>Please Sign In</legend>
+        <!-- <legend>Please Sign In</legend> -->
+        <legend></legend>
         <div class="form-group">
             <label for="inputEmail" class="col-lg-2 control-label">Email</label>
             <div class="col-lg-10">
@@ -38,14 +39,14 @@
         </div>
         <div class="form-group">
             <div class="col-lg-offset-2 col-lg-10">
-                <button type="submit" class="btn btn-default">Sign in</button>
+                <button type="submit" class="btn btn-success">Sign in</button>
             </div>
         </div>
-        <div class="form-group">
+        <!-- <div class="form-group">
             <div class="col-lg-offset-2 col-lg-10">
                 <p>New here? <a href="signup" th:href="@{/signup}">Sign Up</a></p>
             </div>
-        </div>
+        </div> -->
     </fieldset>
 </form>
 </body>
