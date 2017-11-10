@@ -3,6 +3,7 @@ package evm.dmc;
 import java.util.Arrays;
 import java.util.Locale;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.beans.factory.config.YamlPropertiesFactoryBean;
 import org.springframework.boot.CommandLineRunner;
@@ -14,6 +15,7 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Import;
 import org.springframework.context.support.PropertySourcesPlaceholderConfigurer;
+import org.springframework.core.env.Environment;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.web.servlet.LocaleResolver;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
@@ -28,6 +30,12 @@ import evm.dmc.config.ApplicationConfiguration;
 @SpringBootApplication
 @Import(ApplicationConfiguration.class)
 public class DmcWebApplication extends SpringBootServletInitializer {
+	
+//	@Autowired
+//    Environment environment;
+	
+//	@Value("${spring.profiles.active}")
+//	private String activeProfile;
 
 	public static void main(String[] args) {
 		SpringApplication.run(DmcWebApplication.class, args);
@@ -49,6 +57,14 @@ public class DmcWebApplication extends SpringBootServletInitializer {
 //			Arrays.sort(beanNames);
 //			for (String beanName : beanNames) {
 //				System.out.println(beanName);
+//			}
+//			
+//			for (final String profileName : environment.getActiveProfiles()) {
+//				System.out.println("Currently active profile - " + profileName);
+//			}
+//			
+//			for (final String profileName : environment.getDefaultProfiles()) {
+//				System.out.println("Currently default profile - " + profileName);
 //			}
 //		};
 //	}

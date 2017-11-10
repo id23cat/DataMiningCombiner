@@ -9,7 +9,8 @@
     <link th:href="@{/css/core.css}" rel="stylesheet" media="screen" />
 </head>
 <body>
-<form class="form-narrow form-horizontal" action="#" method="post" th:action="@{signin/authenticate}" th:fragment="signinForm">
+<!-- th:action="@{signin/authenticate}" -->
+<form class="form-narrow form-horizontal" action="#" method="post" th:action="@{/signin}" th:fragment="signinForm">
     <th:block th:if="${param.error != null}">
         <div th:replace="fragments/alert :: alert (type='danger', message='Sign in error. Please try again.')">Alert</div>
     </th:block>

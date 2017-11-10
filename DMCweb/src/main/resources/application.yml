@@ -20,6 +20,8 @@ spring:
 #    prefix: classpath:templates/
 #    suffix: .html
     mode: HTML
+  profiles:
+    active: devel
 #    encoding: UTF-8
 #    content-type: text/html
 #    view-names: thymeleaf/*
@@ -30,17 +32,29 @@ server:
   port: 8080
 #Access log configuration
   tomcat:
-    ccessLogEnabled: true
+    accesslog:
+      enabled: true
     basedir: ../logs
-    accessLogPattern: "%t %s %a %D %r %b"
+#    accessLogPattern: "%t %s %a %D %r %b"
 
 # Logging Configuration
 logging:
 #  config: log4j2.xml
   level:
-    org.springframework.web: INFO
+    org.springframework.web: WARN
+    org.springframework.security: WARN
     evm.dmc.web: DEBUG
   file: ../logs/dmc-web.log
+  
+---
+spring:
+    profiles: devel
+logging:
+  level:
+    org.springframework: ERROR
+    org.springframework.web: ERROR
+    org.springframework.security: DEBUG
+    evm.dmc.web: DEBUG
 
 views2:
   showtable: /showtable/table
