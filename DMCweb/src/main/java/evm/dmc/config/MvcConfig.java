@@ -16,12 +16,19 @@ public class MvcConfig extends WebMvcConfigurerAdapter {
 	@Value("${views.index}")
 	String indexView;
 	
+	@Value("${views.userHome}")
+	String userHome;
+	
+	@Value("${views.adminHome}")
+	String adminHome;
+	
 	@Override
     public void addViewControllers(ViewControllerRegistry registry) {
         registry.addViewController(RequestPath.HOME).setViewName(indexView);
         registry.addViewController(RequestPath.ROOT).setViewName(indexView);
         registry.addViewController(RequestPath.ABOUT).setViewName(aboutView);
-        registry.addViewController("/login").setViewName("login");
-
+//        registry.addViewController("/login").setViewName("login");
+        registry.addViewController(RequestPath.USERHOME).setViewName(userHome);
+        registry.addViewController(RequestPath.ADMINHOME).setViewName(adminHome);
     }
 }

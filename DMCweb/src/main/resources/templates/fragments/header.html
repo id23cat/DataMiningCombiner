@@ -27,6 +27,14 @@
 					<li th:classappend="${module == 'about' ? 'active' : ''}">
 						<a th:href="${@requestPath.about}">About</a>
 					</li>
+					
+					<li th:classappend="${module == 'userHome' ? 'active' : ''}">
+						<a th:href="${@requestPath.userHome}">User home</a>
+					</li>
+					
+					<li th:classappend="${module == 'admin' ? 'active' : ''}">
+						<a th:href="${@requestPath.adminHome}">Admin</a>
+					</li>
 				</ul>
 				<ul class="nav navbar-nav navbar-right">
 					<!-- <li><a href="/register" th:href="${@requestPath.register}"><span class="glyphicon glyphicon-user"></span>Register</a></li> -->

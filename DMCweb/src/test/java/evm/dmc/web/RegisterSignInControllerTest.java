@@ -13,6 +13,7 @@ import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
+import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.context.SpringBootTest.WebEnvironment;
 import org.springframework.test.context.junit4.SpringRunner;
@@ -31,11 +32,29 @@ public class RegisterSignInControllerTest {
 	@Value("${views.regsign}")
 	String regSignView;
 	
+	@Value("${views.register}")
+	String registerView;
+
+	@Value("${views.signin}")
+	String signinView;
+	
+	@Value("${views.regsig_fragment}")
+	private String regsign_fragment ;
+	
 	@Test
 	public final void getRegisterTest() throws Exception {
 		this.mockMvc.perform(get(RequestPath.REGISTER))
 		.andExpect(status().isOk())
-		.andExpect(view().name(regSignView))
+		.andExpect(view().name(registerView))
+		.andExpect(model().attributeExists("registrationForm"));
+		
+	}
+	
+	@Test
+	public final void getRegisterXreqTest() throws Exception {
+		this.mockMvc.perform(get(RequestPath.REGISTER).header("X-Requested-With", "XMLHttpRequest"))
+		.andExpect(status().isOk())
+		.andExpect(view().name(regSignView.concat(String.format(regsign_fragment, "register"))))
 		.andExpect(model().attributeExists("registrationForm"))
 		.andExpect(content().string(containsString("<li class=\"active\"><a data-toggle=\"tab\" href=\"#register\">Register</a></li>")));
 	}
@@ -44,9 +63,17 @@ public class RegisterSignInControllerTest {
 	public final void getSignInTest() throws Exception {
 		this.mockMvc.perform(get(RequestPath.SIGNIN))
 		.andExpect(status().isOk())
-		.andExpect(view().name(regSignView.concat(" :: regsignForm(active='signin')")))
+		.andExpect(view().name(signinView));
+	}
+	
+	@Test
+	public final void getSignInXreqTest() throws Exception {
+		this.mockMvc.perform(get(RequestPath.SIGNIN).header("X-Requested-With", "XMLHttpRequest"))
+		.andExpect(status().isOk())
+		.andExpect(view().name(regSignView.concat(String.format(regsign_fragment, "signin"))))
 		.andExpect(model().attributeExists("registrationForm"))
 		.andExpect(content().string(containsString("<li class=\"active\"><a data-toggle=\"tab\" href=\"#signin\">Sign In</a></li>")));
 	}
+
 
 }

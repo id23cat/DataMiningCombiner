@@ -4,7 +4,9 @@ views:
   register: register
   signin: signin
   regsign: "register_signin"
-  home: userHome
+  regsig_fragment: " :: regsignForm(active='%s')"
+  userHome: userHome
+  adminHome: adminHome
   testing:
     testindex:  testing/testindex
     hello:  testing/hello?name=Alex

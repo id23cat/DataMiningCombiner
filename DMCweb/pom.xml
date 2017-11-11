@@ -38,6 +38,10 @@
 
 	<dependencies>
 		<dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter</artifactId>
+		</dependency>
+		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-actuator</artifactId>
 		</dependency>
@@ -70,6 +74,12 @@
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-security</artifactId> 
 		</dependency>
+		
+		<dependency>
+		    <groupId>org.springframework.security</groupId>
+		    <artifactId>spring-security-test</artifactId>
+		</dependency>
+		
 		<!-- Bootstrap -->
 		<dependency>
 			<groupId>org.webjars</groupId>

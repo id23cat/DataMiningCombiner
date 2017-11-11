@@ -12,7 +12,8 @@
 <body>
 <div class="container">
 <div th:fragment="regsignForm(active)" th:with="isRegister=${#strings.equals(active,'register') or #strings.isEmpty(active)}">
-	
+	<!-- <span th:inline="text">[[${isRegister}]]</span>
+	<span th:inline="text">[[${active}]]</span> -->
 	<ul class="nav nav-pills">
 	  <li class="active" th:class="${isRegister}? active: ''"><a data-toggle="tab" href="#register">Register</a></li>
 	  <li th:class="${not isRegister}? active: ''"><a data-toggle="tab" href="#signin">Sign In</a></li>

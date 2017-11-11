@@ -21,7 +21,16 @@ public class RegisterSignInController {
 	private static final Logger logger = LoggerFactory.getLogger(RegisterSignInController.class);
 	
 	@Value("${views.regsign}")
-	String regSignView;
+	private String regSignView;
+	
+	@Value("${views.register}")
+	private String registerView;
+
+	@Value("${views.signin}")
+	private String signinView;
+	
+	@Value("${views.regsig_fragment}")
+	private String regsign_fragment ;
 	
 	@ModelAttribute
 	public RegistrationForm setupRegistrationForm(){
@@ -34,18 +43,24 @@ public class RegisterSignInController {
 		logger.debug("regsignPage value: {}", regSignView);
 		if (AjaxUtils.isAjaxRequest(requestedWith)) {
 			logger.debug("registration Ajax: {}", regSignView.concat(" :: regsignForm"));
-
-			return regSignView.concat(" :: regsignForm(active='register')");
+			return regSignView.concat(String.format(regsign_fragment, "register"));
 		}
 		
-		return regSignView;
+		return registerView;
 	}
 	
 	@GetMapping(RequestPath.SIGNIN)
 	public String getSignInPage(Model model, @RequestHeader(value = "X-Requested-With", required = false) String requestedWith){
 		logger.debug("SignIn page controller");
 		
-		return regSignView.concat(" :: regsignForm(active='signin')");
+		if (AjaxUtils.isAjaxRequest(requestedWith)) {
+			logger.debug("registration Ajax: {}", regSignView.concat(" :: regsignForm"));
+
+			return regSignView.concat(" :: regsignForm(active='signin')");
+		}
+		
+		return signinView;
+		
 	}
 	
 	@PostMapping(RequestPath.AUTH)

@@ -10,6 +10,8 @@ public  final  class RequestPath {
 	public static final String ABOUT = "/about";
 	public static final String REGISTER = "/register";
 	public static final String SIGNIN = "/signin";
+	public static final String USERHOME = "/userHome";
+	public static final String ADMINHOME = "/adminHome";
 	public static final String AUTH = "/authenticate";
 	/**
 	 * @return the root
@@ -40,6 +42,18 @@ public  final  class RequestPath {
 	 */
 	public static String getSignin() {
 		return SIGNIN;
+	}
+	/**
+	 * @return the userhome
+	 */
+	public static String getUserHome() {
+		return USERHOME;
+	}
+	/**
+	 * @return the adminhome
+	 */
+	public static String getAdminHome() {
+		return ADMINHOME;
 	}
 	/**
 	 * @return the auth

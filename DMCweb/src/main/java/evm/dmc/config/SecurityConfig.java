@@ -16,6 +16,7 @@ import org.springframework.security.config.annotation.web.configuration.WebSecur
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
+import evm.dmc.service.RequestPath;
 import evm.dmc.web.RegisterSignInController;
 
 
@@ -34,8 +35,11 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 			"/webjars/**",
 			"layouts/**",
 			"fragments/**",
-			"/",
-			"/home"
+			RequestPath.ROOT,
+			RequestPath.HOME,
+			RequestPath.REGISTER,
+			RequestPath.SIGNIN,
+			RequestPath.ABOUT
 	};
 	
 	@Autowired
@@ -56,10 +60,11 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 		http.csrf().disable()
 			.authorizeRequests()
 				.antMatchers(PUBLIC_MATCHERS).permitAll()
+				.antMatchers(RequestPath.ADMINHOME).hasRole("ADMIN")
 				.anyRequest().authenticated()
 				.and()
 			.formLogin()
-				.loginPage("/login")
+				.loginPage(RequestPath.SIGNIN)
 				.permitAll()
 				.and()
 			.logout()
