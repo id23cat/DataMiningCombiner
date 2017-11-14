@@ -32,7 +32,6 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 			"/images/**",
 			"/webjars/**",
 			"/js/**",
-			"/webjars/**",
 			"layouts/**",
 			"fragments/**",
 			RequestPath.ROOT,
@@ -68,6 +67,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 				.permitAll()
 				.and()
 			.logout()
+	            .logoutSuccessUrl(RequestPath.HOME)
 				.permitAll();
 	}
 	

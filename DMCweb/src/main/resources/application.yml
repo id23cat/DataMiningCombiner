@@ -11,6 +11,12 @@ management:
   context-path: /management
     
 spring:
+  datasource:
+#    driver-class-name: org.h2database.jdbcDriver
+    url: jdbc:h2:mem:dmc
+#    username: sa
+#    password: sa
+    
   mvc:
     favicon:
       enabled: false
@@ -43,9 +49,11 @@ logging:
   level:
     org.springframework.web: WARN
     org.springframework.security: WARN
+    org.springframework.data: WARN
     evm.dmc.web: DEBUG
   file: ../logs/dmc-web.log
-  
+
+ 
 ---
 spring:
     profiles: devel
@@ -54,6 +62,7 @@ logging:
     org.springframework: ERROR
     org.springframework.web: ERROR
     org.springframework.security: DEBUG
+    org.springframework.data: DEBUG
     evm.dmc.web: DEBUG
 
 views2:

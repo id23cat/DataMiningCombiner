@@ -2,6 +2,8 @@ package evm.dmc.web.business;
 
 import org.hibernate.validator.constraints.*;
 
+import evm.dmc.business.account.Account;
+
 
 public class RegistrationForm {
 
@@ -31,7 +33,7 @@ public class RegistrationForm {
 		this.password = password;
 	}
 
-	public Account createAccount() {
-        return new Account(getEmail(), getPassword(), "ROLE_USER");
-	}
+//	public Account createAccount() {
+//        return new Account(getEmail(), getPassword(), "ROLE_USER");
+//	}
 }
