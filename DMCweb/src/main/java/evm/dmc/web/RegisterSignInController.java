@@ -2,7 +2,9 @@ package evm.dmc.web;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -11,14 +13,18 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 
+import evm.dmc.business.account.Account;
 import evm.dmc.service.RequestPath;
 import evm.dmc.utils.AjaxUtils;
-import evm.dmc.web.business.RegistrationForm;
+
 
 @Controller
 @RequestMapping
 public class RegisterSignInController {
 	private static final Logger logger = LoggerFactory.getLogger(RegisterSignInController.class);
+	
+	@Autowired
+	PasswordEncoder encoder;
 	
 	@Value("${views.regsign}")
 	private String regSignView;
@@ -32,9 +38,9 @@ public class RegisterSignInController {
 	@Value("${views.regsig_fragment}")
 	private String regsign_fragment ;
 	
-	@ModelAttribute
-	public RegistrationForm setupRegistrationForm(){
-		return new RegistrationForm();
+	@ModelAttribute("registrationForm")
+	public Account setupRegistrationForm(){
+		return new Account();
 	}
 	
 	@GetMapping(value={RequestPath.REGISTER})
@@ -52,6 +58,7 @@ public class RegisterSignInController {
 	@GetMapping(RequestPath.SIGNIN)
 	public String getSignInPage(Model model, @RequestHeader(value = "X-Requested-With", required = false) String requestedWith){
 		logger.debug("SignIn page controller");
+		logger.debug("====== password: {} =======", encoder.encode("adminpass"));
 		
 		if (AjaxUtils.isAjaxRequest(requestedWith)) {
 			logger.debug("registration Ajax: {}", regSignView.concat(" :: regsignForm"));

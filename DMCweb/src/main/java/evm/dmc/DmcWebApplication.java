@@ -9,6 +9,7 @@ import org.springframework.beans.factory.config.YamlPropertiesFactoryBean;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.boot.autoconfigure.domain.EntityScan;
 import org.springframework.boot.builder.SpringApplicationBuilder;
 import org.springframework.boot.web.support.SpringBootServletInitializer;
 import org.springframework.context.ApplicationContext;
@@ -17,6 +18,7 @@ import org.springframework.context.annotation.Import;
 import org.springframework.context.support.PropertySourcesPlaceholderConfigurer;
 import org.springframework.core.env.Environment;
 import org.springframework.core.io.ClassPathResource;
+import org.springframework.data.jpa.convert.threeten.Jsr310JpaConverters;
 import org.springframework.web.servlet.LocaleResolver;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.i18n.LocaleChangeInterceptor;
@@ -26,6 +28,11 @@ import org.springframework.web.servlet.view.JstlView;
 import org.thymeleaf.spring4.view.ThymeleafViewResolver;
 
 import evm.dmc.config.ApplicationConfiguration;
+
+//for jsr310 java 8 java.time.*
+@EntityScan(
+      basePackageClasses = {DmcWebApplication.class, Jsr310JpaConverters.class}
+)
 
 @SpringBootApplication
 @Import(ApplicationConfiguration.class)

@@ -39,7 +39,7 @@ public class AccountService implements UserDetailsService {
 	
 	@PostConstruct
 	protected void init() {
-		save(new Account("id23cat@tut.by", "id23cat", "password", "Alex", "Demidchuk", "ROLE_ADMIN"));
+		save(new Account("id23cat", "password", "id23cat@tut.by", "Alex", "Demidchuk"));
 	}
 	
 	@Transactional
@@ -64,7 +64,7 @@ public class AccountService implements UserDetailsService {
 	}
 	
 	private User createUser(Account account) {
-		return new User(account.getEmail(), account.getPassword(), Collections.singleton(createAuthority(account)));
+		return new User(account.getUserName(), account.getPassword(), Collections.singleton(createAuthority(account)));
 	}
 
 	private GrantedAuthority createAuthority(Account account) {

@@ -14,8 +14,10 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.NoOpPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
+import evm.dmc.business.account.AccountService;
 import evm.dmc.service.RequestPath;
 import evm.dmc.web.RegisterSignInController;
 
@@ -42,11 +44,31 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 	};
 	
 	@Autowired
+	AccountService accountService;
+	
+	@Autowired
     Environment environment;
 	
 	@Bean
 	public PasswordEncoder passwordEncoder() {
-		return new BCryptPasswordEncoder();
+//		return new BCryptPasswordEncoder();
+		return NoOpPasswordEncoder.getInstance();
+	}
+	
+	@Override
+	protected void configure(AuthenticationManagerBuilder auth) throws Exception {
+//		auth
+//			.eraseCredentials(true)
+//			.inMemoryAuthentication()
+//				.withUser("user").password("password").roles("USER")
+//				.and()
+//				.withUser("admin").password("password").roles("USER", "ADMIN");
+		
+		auth
+			.eraseCredentials(true)
+			.userDetailsService(accountService)
+			.passwordEncoder(passwordEncoder())
+		;
 	}
 	
 	@Override
@@ -61,25 +83,23 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 				.antMatchers(PUBLIC_MATCHERS).permitAll()
 				.antMatchers(RequestPath.ADMINHOME).hasRole("ADMIN")
 				.anyRequest().authenticated()
-				.and()
+			.and()
 			.formLogin()
 				.loginPage(RequestPath.SIGNIN)
 				.permitAll()
-				.and()
+				.failureUrl("/signin?error=1")
+				.loginProcessingUrl(RequestPath.AUTH)
+				.defaultSuccessUrl(RequestPath.USERHOME)
+			.and()
 			.logout()
 	            .logoutSuccessUrl(RequestPath.HOME)
-				.permitAll();
+				.permitAll()
+			.and()
+			.rememberMe()
+			;
 	}
 	
-	@Override
-	protected void configure(AuthenticationManagerBuilder auth) throws Exception {
-		auth
-			.eraseCredentials(true)
-			.inMemoryAuthentication()
-				.withUser("user").password("password").roles("USER")
-				.and()
-				.withUser("admin").password("password").roles("USER", "ADMIN");
-	}
+	
 	
 	@Bean(name = "authenticationManager")
     @Override
