@@ -16,19 +16,20 @@ import org.springframework.security.config.annotation.web.configuration.WebSecur
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.NoOpPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.web.access.AccessDeniedHandler;
 
 import evm.dmc.business.account.AccountService;
+import evm.dmc.business.account.Roles;
 import evm.dmc.service.RequestPath;
 import evm.dmc.web.RegisterSignInController;
-
-
+import evm.dmc.web.security.CustomAccessDeniedHandler;
 
 @Configuration
 @EnableWebSecurity
 @EnableGlobalMethodSecurity(securedEnabled = true)
 @Profile("devel")
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
-	private static final Logger logger = LoggerFactory.getLogger(RegisterSignInController.class);
+	private static final Logger logger = LoggerFactory.getLogger(SecurityConfig.class);
 	private static final String[] PUBLIC_MATCHERS = {
 			"/css/**",
 			"/images/**",
@@ -55,6 +56,11 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 		return NoOpPasswordEncoder.getInstance();
 	}
 	
+	@Bean
+	public AccessDeniedHandler accessDeniedHandler(){
+	    return new CustomAccessDeniedHandler();
+	}
+	
 	@Override
 	protected void configure(AuthenticationManagerBuilder auth) throws Exception {
 //		auth
@@ -73,7 +79,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 	
 	@Override
 	protected void configure(HttpSecurity http) throws Exception{
-		logger.debug("Active profile: {}", (Object[])environment.getActiveProfiles());
+//		logger.debug("Active profile: {}", (Object[])environment.getActiveProfiles());
 		// http://www.baeldung.com/spring-security-session
 //		http
 //			.sessionManagement()
@@ -81,22 +87,29 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 		http.csrf().disable()
 			.authorizeRequests()
 				.antMatchers(PUBLIC_MATCHERS).permitAll()
-				.antMatchers(RequestPath.ADMINHOME).hasRole("ADMIN")
+				.antMatchers(RequestPath.ADMIN_HOME).hasAuthority(Roles.ADMIN)
 				.anyRequest().authenticated()
 			.and()
 			.formLogin()
 				.loginPage(RequestPath.SIGNIN)
 				.permitAll()
-				.failureUrl("/signin?error=1")
+				.failureUrl(RequestPath.SIGNIN+"?error=1")
 				.loginProcessingUrl(RequestPath.AUTH)
-				.defaultSuccessUrl(RequestPath.USERHOME)
+				.defaultSuccessUrl(RequestPath.USER_HOME)
 			.and()
 			.logout()
+				.logoutUrl(RequestPath.LOGOUT) 
 	            .logoutSuccessUrl(RequestPath.HOME)
 				.permitAll()
 			.and()
+			.exceptionHandling()
+				.accessDeniedHandler(accessDeniedHandler())
+			.and()
 			.rememberMe()
 			;
+		// # for H2 console frame
+        http.csrf().disable();
+        http.headers().frameOptions().disable();
 	}
 	
 	

@@ -8,5 +8,10 @@
     "name": "views2.hellorest",
     "type": "java.lang.String",
     "description": "A description for 'views2.hellorest'"
+  },
+  {
+    "name": "dmc.security.account.user",
+    "type": "java.lang.String",
+    "description": "A description for 'dmc.security.account.user'"
   }
 ]}

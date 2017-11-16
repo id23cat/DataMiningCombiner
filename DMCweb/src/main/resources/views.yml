@@ -7,6 +7,9 @@ views:
   regsig_fragment: " :: regsignForm(active='%s')"
   userHome: userHome
   adminHome: adminHome
+  errors:
+    accessDenied: errors/accessDenied
+    notFound: errors/notFound
   testing:
     testindex:  testing/testindex
     hello:  testing/hello?name=Alex

@@ -1,5 +1,6 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html xmlns:th="http://www.thymeleaf.org"
+		xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 
 <head>
 </head>
@@ -28,25 +29,37 @@
 						<a th:href="${@requestPath.about}">About</a>
 					</li>
 					
-					<li th:classappend="${module == 'userHome' ? 'active' : ''}">
+					<li sec:authorize="hasAuthority(@roles.user)" th:classappend="${module == 'userHome' ? 'active' : ''}">
 						<a th:href="${@requestPath.userHome}">User home</a>
 					</li>
 					
-					<li th:classappend="${module == 'admin' ? 'active' : ''}">
-						<a th:href="${@requestPath.adminHome}">Admin</a>
+					<li sec:authorize="hasAuthority(@roles.admin)" th:classappend="${module == 'adminHome' ? 'active' : ''}">
+						<a th:href="${@requestPath.adminHome}">Admin home</a>
 					</li>
 				</ul>
-				<ul class="nav navbar-nav navbar-right">
-					<!-- <li><a href="/register" th:href="${@requestPath.register}"><span class="glyphicon glyphicon-user"></span>Register</a></li> -->
-					<!-- <li th:insert="fragments/register_modal :: reg_header"></li> -->
-					<!-- <li><a href="#myModal" data-toggle="modal" data-target="#myModal">Log-in</a></li> -->
-					<!-- <li th:insert="~{fragments/register_modal :: reg_link}"></li> -->
-					
-					<!-- <li><a id="header_reg" href="register" data-target="#register"><span class="glyphicon glyphicon-user"></span>Register</a></li> -->
-					<!-- <li><a href="#" id="header_regsign" ><span class="glyphicon glyphicon-user"></span>Register/Sign In</a></li> -->
-					<li><a href="#" id="header_register" ><span class="glyphicon glyphicon-user"></span>Register</a></li>
-					<li><a href="#" id="header_signin"><span class="glyphicon glyphicon-log-in"></span>Sign In</a></li>
-				</ul>
+				<div sec:authorize="!isAuthenticated()">
+					<ul class="nav navbar-nav navbar-right">
+						<li><a href="#" id="header_register" ><span class="glyphicon glyphicon-user"></span>Register</a>
+						</li>
+						<li><a href="#" id="header_signin"><span class="glyphicon glyphicon-log-in"></span>Sign In</a>
+						</li>
+					</ul>
+				</div>
+				
+				<div sec:authorize="isAuthenticated()">
+					<ul class="nav navbar-nav navbar-right">
+						<li><a th:href="${@requestPath.about}"> 
+							<span sec:authentication="name"></span>
+						</a></li>
+						<li>
+							<a href="${@requestPath.logout}" th:href="@{#}" onclick="$('#form').submit();">
+	                       		<span class="glyphicon glyphicon-log-out" aria-hidden="true"></span>&nbsp;Logout
+		                    </a>
+		                    <form style="visibility: hidden" id="form" method="post" action="#" th:action="${@requestPath.logout}"></form>
+						</li>
+						
+					</ul>
+				</div>
 			</div>
 			
    </div>

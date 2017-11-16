@@ -36,16 +36,16 @@ public class Account implements Serializable {
 	private Long id;
 
 	@NotBlank(message = Account.NOT_BLANK_MESSAGE)
-//	@Column(unique  = true, nullable = false)
+	@Column(unique  = true, nullable = false)
 	private String userName;
 	
 	@JsonIgnore
 	@NotBlank(message = Account.NOT_BLANK_MESSAGE)
 	private String password;
 	
-//	@Column(unique = true, nullable = false)
-//	@NotBlank(message = Account.NOT_BLANK_MESSAGE)
-//	@Email(message = Account.EMAIL_MESSAGE)
+	@Column(unique = true, nullable = false)
+	@NotBlank(message = Account.NOT_BLANK_MESSAGE)
+	@Email(message = Account.EMAIL_MESSAGE)
 	private String email;
 	
 	private String firstName;

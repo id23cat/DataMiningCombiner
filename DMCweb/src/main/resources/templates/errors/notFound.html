@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layouts/layout}">
+
+<head>
+	<title>Page Not Found</title>
+</head>
+<body>
+
+<!-- Insert content into the layouts/layout.html -->
+<th:block layout:fragment="content">
+	<div th:insert="fragments/control_elements :: common_modal(id='index_reg', page='register', title='Index registration')"></div>
+		<div class="text-center">
+			<h2>404 -- Page not found</h2>
+
+			<h3>
+				<a th:href="@{/}">Go home</a>
+			</h3>
+		</div>
+	</th:block>
+</body>
+</html>

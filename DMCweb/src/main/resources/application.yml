@@ -53,15 +53,26 @@ logging:
     evm.dmc.web: DEBUG
   file: ../logs/dmc-web.log
 
- 
+dmc:
+  security:
+    account:
+      username: admin
+      password: adminpass
+       
 ---
 spring:
     profiles: devel
+
+# for H2 console frame
+security:
+  headers: 
+    frame: false
+        
 logging:
   level:
     org.springframework: ERROR
     org.springframework.web: ERROR
-    org.springframework.security: DEBUG
+    org.springframework.security: WARN
     org.springframework.data: DEBUG
     org.hibernate.SQL: DEBUG
     org.hibernate.type.descriptor.sql.BasicBinder: TRACE

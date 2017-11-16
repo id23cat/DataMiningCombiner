@@ -61,7 +61,7 @@ public class TestUnauthenticatedAccess {
 	
 	@Test
 	public final void getUserHomeUnauthenticatedTest() throws Exception {
-		this.mockMvc.perform(get(RequestPath.USERHOME))
+		this.mockMvc.perform(get(RequestPath.USER_HOME))
 		.andExpect(status().is3xxRedirection())		// login form redirection
 		.andExpect(redirectedUrlPattern("**/" + signinView))
 		;

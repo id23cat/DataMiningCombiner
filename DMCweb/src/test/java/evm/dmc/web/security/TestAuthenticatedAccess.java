@@ -33,7 +33,7 @@ public class TestAuthenticatedAccess {
 	@Test
 	@WithMockUser
 	public final void getUserHomeAuthenticatedTest() throws Exception {
-		this.mockMvc.perform(get(RequestPath.USERHOME))
+		this.mockMvc.perform(get(RequestPath.USER_HOME))
 		.andExpect(status().isOk())		
 		.andExpect(view().name(userHomeView))
 		;
@@ -42,7 +42,7 @@ public class TestAuthenticatedAccess {
 	@Test
 	@WithMockUser
 	public final void getAdminHomeAuthenticated_NotAuthorizedTest() throws Exception {
-		this.mockMvc.perform(get(RequestPath.ADMINHOME))
+		this.mockMvc.perform(get(RequestPath.ADMIN_HOME))
 		.andExpect(status().isForbidden())	
 		;
 	}
@@ -50,7 +50,7 @@ public class TestAuthenticatedAccess {
 	@Test
 	@WithMockUser(username = "admin", roles = "ADMIN")
 	public final void getAdminHomeAuthenticated_AndAuthorizedTest() throws Exception {
-		this.mockMvc.perform(get(RequestPath.ADMINHOME))
+		this.mockMvc.perform(get(RequestPath.ADMIN_HOME))
 		.andExpect(status().isOk())	
 		;
 	}

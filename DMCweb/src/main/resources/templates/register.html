@@ -1,16 +1,17 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html xmlns:th="http://www.thymeleaf.org"
+		xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+		layout:decorate="~{layouts/layout}">
 <head>
     <title>Registration</title>
     <meta charset="utf-8">
- 	<meta name="viewport" content="width=device-width, initial-scale=1">
+ 	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
     <link rel="stylesheet" th:href="@{/webjars/bootstrap/3.3.7/css/bootstrap.min.css}">
-  	<script th:src="@{/webjars/jquery/3.2.1/jquery.min.js}"></script>
-  	<script th:src="@{/webjars/bootstrap/3.3.7/js/bootstrap.min.js}"></script>
-  	<link th:href="@{/css/core.css}" rel="stylesheet" media="screen" />
+    <link th:href="@{/css/core.css}" rel="stylesheet" media="screen" />
 </head>
 <body>
-<div class="container" >
+<th:block layout:fragment="content">
+<h1>Registration</h1>
 <form class="form-narrow form-horizontal" method="post" th:action="${@requestPath.register}" th:object="${registrationForm}" th:fragment="registerForm">
     <!--/* Show general error message when form contains errors */-->
     <th:block th:if="${#fields.hasErrors('${registrationForm.*}')}">
@@ -18,6 +19,13 @@
     </th:block>
     <fieldset>
       	<legend></legend>
+      	<div class="form-group" th:classappend="${#fields.hasErrors('userName')}? 'has-error'">
+            <label for="userName" class="col-lg-2 control-label">User name</label>
+            <div class="col-lg-10">
+                <input type="text" class="form-control" id="userName" placeholder="User name" th:field="*{userName}" />
+                <span class="help-block" th:if="${#fields.hasErrors('userName')}" th:errors="*{userName}">Incorrect user name</span>
+            </div>
+        </div>
         <div class="form-group" th:classappend="${#fields.hasErrors('email')}? 'has-error'">
             <label for="email" class="col-lg-2 control-label">Email</label>
             <div class="col-lg-10">
@@ -32,6 +40,21 @@
                 <span class="help-block" th:if="${#fields.hasErrors('password')}" th:errors="*{password}">Incorrect password</span>
             </div>
         </div>
+        
+        <div class="form-group" th:classappend="${#fields.hasErrors('firstName')}? 'has-error'">
+            <label for="firstName" class="col-lg-2 control-label">First name</label>
+            <div class="col-lg-10">
+                <input type="text" class="form-control" id="firstName" placeholder="User's first name" th:field="*{firstName}" />
+                <span class="help-block" th:if="${#fields.hasErrors('firstName')}" th:errors="*{firstName}">Incorrect user's first name</span>
+            </div>
+        </div>
+        <div class="form-group" th:classappend="${#fields.hasErrors('lastName')}? 'has-error'">
+            <label for="lastName" class="col-lg-2 control-label">Last name</label>
+            <div class="col-lg-10">
+                <input type="text" class="form-control" id="lastName" placeholder="User's last name" th:field="*{lastName}" />
+                <span class="help-block" th:if="${#fields.hasErrors('lastName')}" th:errors="*{lastName}">Incorrect user's last name</span>
+            </div>
+        </div>
         <div class="form-group">
             <div class="col-lg-offset-2 col-lg-10">
                 <button type="submit" class="btn btn-success">Register</button>
@@ -44,6 +67,6 @@
         </div> -->
     </fieldset>
 </form>
-</div>
+</th:block>
 </body>
 </html>

@@ -4,7 +4,11 @@ import java.util.Collections;
 
 import javax.annotation.PostConstruct;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
 import org.springframework.context.annotation.ScopedProxyMode;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -20,16 +24,31 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import evm.dmc.web.RegisterSignInController;
+
 
 @Service
-@Scope(proxyMode = ScopedProxyMode.TARGET_CLASS)
+//@Scope(proxyMode = ScopedProxyMode.TARGET_CLASS)
+@Scope(value = ConfigurableBeanFactory.SCOPE_SINGLETON)
 public class AccountService implements UserDetailsService {
+	private static final Logger logger = LoggerFactory.getLogger(RegisterSignInController.class);
 	
 	@Autowired
     private AccountRepository accountRepository;
 	
 	@Autowired
 	private PasswordEncoder passwordEncoder;
+	
+	@Value("${dmc.security.account.username}")
+	private String admuser;
+	
+	@Value("${dmc.security.account.password}")
+	private String admpass;
+	
+	private static final String ADMIN_EMAIL = "admin@admin";
+	private static final String ADMIN_FIRSTNAME = "Admin";
+	private static final String ADMIN_LASTNAME = "Admin";
+	
 	
 //	@PostConstruct
 //	protected void initialize() {
@@ -39,7 +58,9 @@ public class AccountService implements UserDetailsService {
 	
 	@PostConstruct
 	protected void init() {
-		save(new Account("id23cat", "password", "id23cat@tut.by", "Alex", "Demidchuk"));
+//		save(new Account("id23cat", "password", "id23cat@tut.by", "Alex", "Demidchuk"));
+		logger.debug("Account service: create admin in DB");
+		save(new AccountExt(admuser, admpass, ADMIN_EMAIL, ADMIN_FIRSTNAME, ADMIN_LASTNAME, Roles.ADMIN));
 	}
 	
 	@Transactional

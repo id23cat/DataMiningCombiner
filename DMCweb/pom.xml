@@ -27,6 +27,7 @@
         <thymeleaf.version>3.0.7.RELEASE</thymeleaf.version>
         <thymeleaf-extras-java8time.version>3.0.1.RELEASE</thymeleaf-extras-java8time.version>
         <thymeleaf-layout-dialect.version>2.2.2</thymeleaf-layout-dialect.version>
+        <thymeleaf-extras-springsecurity4.version>3.0.2.RELEASE</thymeleaf-extras-springsecurity4.version>
         <bootstrap.version>3.3.7</bootstrap.version>
         <jquery.version>3.2.1</jquery.version>
         <popper.js.version>1.12.3</popper.js.version>
@@ -34,6 +35,7 @@
         <ajax-utils.version>1.0</ajax-utils.version>
         <dmcombiner.version>${version}</dmcombiner.version>
         <DMC-api.version>${version}</DMC-api.version>
+        
 	</properties>
 
 	<dependencies>
@@ -54,6 +56,14 @@
 			<artifactId>spring-boot-starter-thymeleaf</artifactId>
 		</dependency>
 		<dependency>
+			<groupId>org.thymeleaf.extras</groupId>
+			<artifactId>thymeleaf-extras-java8time</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.thymeleaf.extras</groupId>
+			<artifactId>thymeleaf-extras-springsecurity4</artifactId>
+		</dependency>
+		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-aop</artifactId>
 		</dependency>
@@ -71,11 +81,7 @@
             <groupId>com.h2database</groupId>
             <artifactId>h2</artifactId>
         </dependency>
-
-		<dependency>
-			<groupId>org.thymeleaf.extras</groupId>
-			<artifactId>thymeleaf-extras-java8time</artifactId>
-		</dependency>
+		
 		<!-- Spring Security -->
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
