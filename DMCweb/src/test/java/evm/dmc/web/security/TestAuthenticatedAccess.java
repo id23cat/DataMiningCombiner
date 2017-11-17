@@ -18,7 +18,7 @@ import org.springframework.test.web.servlet.MockMvc;
 import evm.dmc.service.RequestPath;
 
 @RunWith(SpringRunner.class)
-@SpringBootTest(webEnvironment = WebEnvironment.RANDOM_PORT, properties = "management.port=-1")
+@SpringBootTest(webEnvironment = WebEnvironment.RANDOM_PORT, properties = {"management.port=-1", "security.headers.frame=true"})
 @AutoConfigureMockMvc
 public class TestAuthenticatedAccess {
 	@Autowired
@@ -43,7 +43,7 @@ public class TestAuthenticatedAccess {
 	@WithMockUser
 	public final void getAdminHomeAuthenticated_NotAuthorizedTest() throws Exception {
 		this.mockMvc.perform(get(RequestPath.ADMIN_HOME))
-		.andExpect(status().isForbidden())	
+		.andExpect(status().isFound())	
 		;
 	}
 	

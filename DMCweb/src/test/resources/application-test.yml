@@ -1,40 +1,36 @@
 endpoints:
   shutdown:
-    enabled: true
+    enabled: false
 
 #Management Configuration
 management:
   security:
     enabled: false
   
-  port: 9002
-  context-path: /management
     
 #spring.mvc.view.prefix: /WEB-INF/jsp/
 #spring.mvc.view.suffix: .jsp
 
 spring:
-  view:
-    prefix: /WEB-INF/
-    suffix: .jsp
-    view-names: jsp/*
-  thymeleaf:
-    view-names: thymeleaf/*
+  datasource:
+    url: jdbc:h2:mem:testdmc
 
-# Server Port Configuration
-server:
-  port: 8080
-#Access log configuration
-  tomcat:
-    ccessLogEnabled: true
-    basedir: ../logs
-    accessLogPattern: "%t %s %a %D %r %b"
 
 # Logging Configuration
 logging:
 #  config: log4j2.xml
   level:
+    org.springframework.test: DEBUG
     org.springframework.web: INFO
     evm.dmc.web: DEBUG
-  file: ../logs/dmc-web.log
+    org.springframework.data: DEBUG
+    org.hibernate.SQL: TRACE
+    org.hibernate.type.descriptor.sql.BasicBinder: TRACE
+
+dmc:
+  security:
+    account:
+      username: admin
+      password: adminpass
+  
  

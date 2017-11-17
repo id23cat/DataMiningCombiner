@@ -32,7 +32,7 @@ public class Account implements Serializable {
 	private static final long serialVersionUID = 4198630702609693622L;
 	
 	@Id
-	@GeneratedValue(strategy=GenerationType.AUTO)
+	@GeneratedValue(strategy=GenerationType.IDENTITY)
 	private Long id;
 
 	@NotBlank(message = Account.NOT_BLANK_MESSAGE)

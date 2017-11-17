@@ -50,12 +50,6 @@ public class AccountService implements UserDetailsService {
 	private static final String ADMIN_LASTNAME = "Admin";
 	
 	
-//	@PostConstruct
-//	protected void initialize() {
-//		save(new Account("user", "demo", "ROLE_USER"));
-//		save(new Account("admin", "admin", "ROLE_ADMIN"));
-//	}
-	
 	@PostConstruct
 	protected void init() {
 //		save(new Account("id23cat", "password", "id23cat@tut.by", "Alex", "Demidchuk"));
