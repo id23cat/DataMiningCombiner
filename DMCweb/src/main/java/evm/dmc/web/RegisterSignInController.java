@@ -28,6 +28,8 @@ import evm.dmc.utils.MessageHelper;
 @RequestMapping
 public class RegisterSignInController {
 	private static final Logger logger = LoggerFactory.getLogger(RegisterSignInController.class);
+	private static final String REGISTER = "register";
+	private static final String SIGNIN = "signin";
 	
 	@Autowired
 	PasswordEncoder encoder;
@@ -58,7 +60,8 @@ public class RegisterSignInController {
 		logger.debug("regsignPage value: {}", regSignView);
 		if (AjaxUtils.isAjaxRequest(requestedWith)) {
 			logger.debug("registration Ajax: {}", regSignView.concat(" :: regsignForm"));
-			return regSignView.concat(String.format(regsign_fragment, "register"));
+//			return regSignView.concat(String.format(regsign_fragment, "register"));
+			return returnModalView(REGISTER);
 		}
 		
 		return registerView;
@@ -72,7 +75,8 @@ public class RegisterSignInController {
 		if (AjaxUtils.isAjaxRequest(requestedWith)) {
 			logger.debug("registration Ajax: {}", regSignView.concat(" :: regsignForm"));
 
-			return regSignView.concat(" :: regsignForm(active='signin')");
+//			return regSignView.concat(" :: regsignForm(active='signin')");
+			return returnModalView(SIGNIN);
 		}
 		
 		return signinView;
@@ -93,15 +97,21 @@ public class RegisterSignInController {
 		if(errors.hasErrors()) {
 			if(AjaxUtils.isAjaxRequest(requestedWith)){
 				logger.debug("Invalid registration attempt in modal: {}", errors);
-				return regSignView.concat(String.format(regsign_fragment, "register"));
+//				return regSignView.concat(String.format(regsign_fragment, "register"));
+				return returnModalView(REGISTER);
 			}
 			logger.debug("Invalid registration attempt: {}", errors);
 			return registerView;
+//			return returnModalView(REGISTER);
 		}
 		
 		account = accountService.save(account);
 		MessageHelper.addSuccessAttribute(ra, "registration success");
 		return "redirect:/";
+	}
+	
+	private String returnModalView(String destination) {
+		return regSignView.concat(String.format(regsign_fragment, destination));
 	}
 
 }

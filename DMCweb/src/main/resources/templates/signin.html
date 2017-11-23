@@ -14,7 +14,11 @@
 <th:block layout:fragment="content">
 <h1>Please Sign In</h1>
 <!-- th:action="@{signin/authenticate}" -->
-<form class="form-narrow form-horizontal" action="#" method="post" th:action="${@requestPath.auth}" th:fragment="signinForm">
+<form class="form-narrow form-horizontal" 
+		action="#" 
+		method="post" 
+		th:action="${@requestPath.auth}" 
+		th:fragment="signinForm">
     <th:block th:if="${param.error != null}">
         <div th:replace="fragments/alert :: alert (type='danger', message='Sign in error. Please try again or ')">Alert</div>
     </th:block>

@@ -11,6 +11,8 @@ import javax.persistence.PersistenceContext;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.boot.test.autoconfigure.orm.jpa.TestEntityManager;
@@ -19,12 +21,16 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit4.SpringRunner;
+import org.springframework.transaction.annotation.Transactional;
+
+import evm.dmc.web.RegisterSignInController;
 
 @RunWith(SpringRunner.class)
 @DataJpaTest
-//@Transactional(propagation = Propagation.NOT_SUPPORTED)
+@Transactional()
 @ActiveProfiles("test")
 public class AccountRepositoryTest {
+	private static final Logger logger = LoggerFactory.getLogger(AccountRepositoryTest.class);
 	
 	@Autowired
     private TestEntityManager entityManager;
@@ -80,5 +86,22 @@ public class AccountRepositoryTest {
 	@Test(expected = org.springframework.dao.DataIntegrityViolationException.class)
 	public final void testAddExistingAccount() {
 		repository.save(new AccountExt("id42cat", "password", "id42cat@tut.by", "Alex", "Demidchuk", "ROLE_ADMIN"));
+	}
+	
+	@Test
+	public final void testAccountManipulation() {
+		{
+			Account account = repository.findByUserName("id42cat").get();
+			System.out.println("-= Account entities first: " + System.identityHashCode(account));
+			account.setFirstName("XXX");
+			Account account2 = repository.findByEmail("id42cat@tut.by").get();
+			assertThat(account2.getFirstName()).isEqualTo("XXX");
+			assertTrue(account == account2);
+			assertTrue(account.equals(account2));
+			System.out.println("-= Account entities: " + System.identityHashCode(account));
+		}
+		System.gc();
+		Account account = repository.findByUserName("id42cat").get();
+		System.out.println("-= Account entities next: " + System.identityHashCode(account));
 	}
 }

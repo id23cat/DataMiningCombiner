@@ -11,7 +11,8 @@
 </head>
 <body>
 <div class="container">
-<div th:fragment="regsignForm(active)" th:with="isRegister=${#strings.equals(active,'register') or #strings.isEmpty(active)}">
+<div th:fragment="regsignForm(active)" 
+		th:with="isRegister=${#strings.equals(active,'register') or #strings.isEmpty(active)}">
 	<!-- <span th:inline="text">[[${isRegister}]]</span>
 	<span th:inline="text">[[${active}]]</span> -->
 	<ul class="nav nav-pills">

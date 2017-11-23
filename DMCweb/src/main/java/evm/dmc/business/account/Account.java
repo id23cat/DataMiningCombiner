@@ -12,6 +12,7 @@ import javax.persistence.Inheritance;
 import javax.persistence.InheritanceType;
 import javax.persistence.Table;
 import javax.persistence.Transient;
+import javax.validation.constraints.Size;
 
 import org.hibernate.validator.constraints.Email;
 import org.hibernate.validator.constraints.NotBlank;
@@ -37,6 +38,7 @@ public class Account implements Serializable {
 
 	@NotBlank(message = Account.NOT_BLANK_MESSAGE)
 	@Column(unique  = true, nullable = false)
+	@Size(min=5, max=16, message="{error.username}")
 	private String userName;
 	
 	@JsonIgnore
