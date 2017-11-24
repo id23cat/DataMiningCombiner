@@ -24,14 +24,14 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import evm.dmc.web.RegisterSignInController;
+import evm.dmc.web.SignInController;
 
 
 @Service
 //@Scope(proxyMode = ScopedProxyMode.TARGET_CLASS)
 @Scope(value = ConfigurableBeanFactory.SCOPE_SINGLETON)
 public class AccountService implements UserDetailsService {
-	private static final Logger logger = LoggerFactory.getLogger(RegisterSignInController.class);
+	private static final Logger logger = LoggerFactory.getLogger(SignInController.class);
 	
 	@Autowired
     private AccountRepository accountRepository;

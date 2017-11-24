@@ -12,7 +12,7 @@ import org.springframework.web.servlet.ModelAndView;
 
 //import com.google.common.base.Throwables;
 
-import evm.dmc.web.RegisterSignInController;
+import evm.dmc.web.SignInController;
 
 /**
  * General error handler for the application.

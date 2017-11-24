@@ -21,7 +21,8 @@
 			<!-- <p>	<div th:insert="fragments/register_modal :: reg_button"></div>
         	<div th:insert="fragments/register_modal :: register_modal"></div> -->
 
-			<a id="index_reg" class="btn btn-success btn-lg">Register</a>
+			<!-- <a id="index_reg" class="btn btn-success btn-lg">Register</a> -->
+			<a th:href="${@requestPath.register}" class="btn btn-success btn-lg">Register</a>
 		</div>
 	</th:block>
 </body>

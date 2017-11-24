@@ -8,7 +8,7 @@
 
 <!-- Navbar -->
 <nav class="navbar navbar-inverse navbar-fixed-top" th:fragment="header">
-    <div class="container-fluid">
+    <div class="container-fluid" th:with="module=${#httpServletRequest.getServletPath()}">
 	        <div class="navbar-header">
 	            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#myNavbar">
 	                <span class="icon-bar"></span>
@@ -22,26 +22,25 @@
 	        <!-- Collect the nav links, forms, and other content for toggling -->
 			<div class="collapse navbar-collapse" id="myNavbar">
 				<ul class="nav navbar-nav">
-					<li th:classappend="${module == 'home' ? 'active' : ''}">
+					<li th:classappend="${module == '/' ? 'active' : ''}">
 						<a th:href="@{/}">Home</a>
 					</li>
-					<li th:classappend="${module == 'about' ? 'active' : ''}">
+					<li th:classappend="${module == @requestPath.about ? 'active' : ''}">
 						<a th:href="${@requestPath.about}">About</a>
 					</li>
 					
-					<li sec:authorize="hasAuthority(@roles.user)" th:classappend="${module == 'userHome' ? 'active' : ''}">
+					<li sec:authorize="hasAuthority(@roles.user)" th:classappend="${module == @requestPath.userHome ? 'active' : ''}">
 						<a th:href="${@requestPath.userHome}">User home</a>
 					</li>
 					
-					<li sec:authorize="hasAuthority(@roles.admin)" th:classappend="${module == 'adminHome' ? 'active' : ''}">
+					<li sec:authorize="hasAuthority(@roles.admin)" th:classappend="${module == @requestPath.adminHome ? 'active' : ''}">
 						<a th:href="${@requestPath.adminHome}">Admin home</a>
 					</li>
 				</ul>
 				<div sec:authorize="!isAuthenticated()">
 					<ul class="nav navbar-nav navbar-right">
-						<li><a href="#" id="header_register" ><span class="glyphicon glyphicon-user"></span>Register</a>
-						</li>
-						<li><a href="#" id="header_signin"><span class="glyphicon glyphicon-log-in"></span>Sign In</a>
+						<li th:classappend="${module == @requestPath.signin ? 'active' : ''}">
+							<a href="#" id="header_signin"><span class="glyphicon glyphicon-log-in"></span>Sign In</a>
 						</li>
 					</ul>
 				</div>
@@ -51,6 +50,9 @@
 						<li><a th:href="${@requestPath.about}"> 
 							<span sec:authentication="name"></span>
 						</a></li>
+						<li sec:authorize="hasAuthority(@roles.admin)" th:classappend="${module == @requestPath.register ? 'active' : ''}">
+							<a th:href="${@requestPath.register}" ><span class="glyphicon glyphicon-user"></span>Register</a>
+						</li>
 						<li>
 							<a href="${@requestPath.logout}" th:href="@{#}" onclick="$('#form').submit();">
 	                       		<span class="glyphicon glyphicon-log-out" aria-hidden="true"></span>&nbsp;Logout

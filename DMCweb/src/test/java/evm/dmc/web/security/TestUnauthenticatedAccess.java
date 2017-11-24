@@ -44,16 +44,15 @@ public class TestUnauthenticatedAccess {
 	@Test
 	public void getRegisterUnauthenticatedTest() throws Exception {
 		mockMvc
-		.perform(get(RequestPath.REGISTER))
-		.andExpect(status().isOk())
-		.andExpect(view().name(registerView))
+		.perform(get(RequestPath.register))
+		.andExpect(status().isFound())
 		;
 	}
 	
 	@Test
 	public void getSignInUnauthenticatedTest() throws Exception {
 		mockMvc
-		.perform(get(RequestPath.SIGNIN))
+		.perform(get(RequestPath.signin))
 		.andExpect(status().isOk())
 		.andExpect(view().name(signinView))
 		;
@@ -61,7 +60,7 @@ public class TestUnauthenticatedAccess {
 	
 	@Test
 	public final void getUserHomeUnauthenticatedTest() throws Exception {
-		this.mockMvc.perform(get(RequestPath.USER_HOME))
+		this.mockMvc.perform(get(RequestPath.userHome))
 		.andExpect(status().is3xxRedirection())		// login form redirection
 		.andExpect(redirectedUrlPattern("**/" + signinView))
 		;

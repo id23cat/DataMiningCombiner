@@ -20,14 +20,14 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.transaction.annotation.Transactional;
 
-import evm.dmc.web.RegisterSignInController;
+import evm.dmc.web.SignInController;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest
 @Transactional
 @Rollback
 public class AccountServiceTest {
-	private static final Logger logger = LoggerFactory.getLogger(RegisterSignInController.class);
+	private static final Logger logger = LoggerFactory.getLogger(AccountServiceTest.class);
 	
 	@Autowired 
 	private AccountService userService;

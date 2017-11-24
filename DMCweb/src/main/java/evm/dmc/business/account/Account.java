@@ -16,6 +16,7 @@ import javax.validation.constraints.Size;
 
 import org.hibernate.validator.constraints.Email;
 import org.hibernate.validator.constraints.NotBlank;
+import org.springframework.stereotype.Component;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
@@ -29,6 +30,8 @@ public class Account implements Serializable {
 	public static final String NOT_BLANK_MESSAGE = "{error.emptyField}";
 	@Transient
 	public static final String EMAIL_MESSAGE = "{error.email}";
+	@Transient
+	public static final String USERNAME_SIZE_MESSAGE = "{error.username.size}";
 	
 	private static final long serialVersionUID = 4198630702609693622L;
 	
@@ -36,13 +39,14 @@ public class Account implements Serializable {
 	@GeneratedValue(strategy=GenerationType.IDENTITY)
 	private Long id;
 
-	@NotBlank(message = Account.NOT_BLANK_MESSAGE)
+	@NotBlank(message = NOT_BLANK_MESSAGE)
 	@Column(unique  = true, nullable = false)
-	@Size(min=5, max=16, message="{error.username}")
+	@Size(min=4, max=16, message = USERNAME_SIZE_MESSAGE)
 	private String userName;
 	
 	@JsonIgnore
 	@NotBlank(message = Account.NOT_BLANK_MESSAGE)
+	@Size(min=5, max=16)
 	private String password;
 	
 	@Column(unique = true, nullable = false)

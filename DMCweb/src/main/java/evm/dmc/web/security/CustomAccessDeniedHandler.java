@@ -33,7 +33,7 @@ public class CustomAccessDeniedHandler implements AccessDeniedHandler {
               + request.getRequestURI());
         }
         
-        logger.debug("Redirection string: {}", request.getContextPath() + RequestPath.ER_ACC_DINIED);
-        response.sendRedirect(request.getContextPath() + RequestPath.ER_ACC_DINIED);
+        logger.debug("Redirection string: {}", request.getContextPath() + RequestPath.erAccDenied);
+        response.sendRedirect(request.getContextPath() + RequestPath.erAccDenied);
     }
 }

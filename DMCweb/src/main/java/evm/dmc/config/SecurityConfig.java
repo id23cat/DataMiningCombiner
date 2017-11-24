@@ -21,7 +21,7 @@ import org.springframework.security.web.access.AccessDeniedHandler;
 import evm.dmc.business.account.AccountService;
 import evm.dmc.business.account.Roles;
 import evm.dmc.service.RequestPath;
-import evm.dmc.web.RegisterSignInController;
+import evm.dmc.web.SignInController;
 import evm.dmc.web.security.CustomAccessDeniedHandler;
 
 @Configuration
@@ -37,11 +37,19 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 			"/js/**",
 			"layouts/**",
 			"fragments/**",
-			RequestPath.ROOT,
-			RequestPath.HOME,
-			RequestPath.REGISTER,
-			RequestPath.SIGNIN,
-			RequestPath.ABOUT
+			RequestPath.root,
+			RequestPath.home,
+			RequestPath.signin,
+			RequestPath.about
+	};
+	
+	private static final String[] ADMIN_MATCHERS = {
+			RequestPath.adminHome,
+			RequestPath.register
+	};
+	
+	private static final String[] USER_MATCHERS = {
+			RequestPath.userHome,
 	};
 	
 	@Autowired
@@ -87,19 +95,20 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 		http.csrf().disable()
 			.authorizeRequests()
 				.antMatchers(PUBLIC_MATCHERS).permitAll()
-				.antMatchers(RequestPath.ADMIN_HOME).hasAuthority(Roles.ADMIN)
+				.antMatchers(ADMIN_MATCHERS).hasAuthority(Roles.ADMIN)
+				.antMatchers(USER_MATCHERS).hasAuthority(Roles.USER)
 				.anyRequest().authenticated()
 			.and()
 			.formLogin()
-				.loginPage(RequestPath.SIGNIN)
+				.loginPage(RequestPath.signin)
 				.permitAll()
-				.failureUrl(RequestPath.SIGNIN+"?error=1")
-				.loginProcessingUrl(RequestPath.AUTH)
-				.defaultSuccessUrl(RequestPath.USER_HOME)
+				.failureUrl(RequestPath.signin+"?error=1")
+				.loginProcessingUrl(RequestPath.auth)
+				.defaultSuccessUrl(RequestPath.userHome)
 			.and()
 			.logout()
-				.logoutUrl(RequestPath.LOGOUT) 
-	            .logoutSuccessUrl(RequestPath.HOME)
+				.logoutUrl(RequestPath.logout) 
+	            .logoutSuccessUrl(RequestPath.home)
 				.permitAll()
 			.and()
 			.exceptionHandling()

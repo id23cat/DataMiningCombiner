@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.beans.factory.config.YamlPropertiesFactoryBean;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.context.properties.ConfigurationProperties;
+import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.PropertySource;
@@ -16,10 +17,10 @@ import org.springframework.web.servlet.view.InternalResourceViewResolver;
 import org.springframework.web.servlet.view.JstlView;
 
 import evm.dmc.DmcWebApplication;
+import evm.dmc.service.Views;
 import evm.dmc.web.testing.TestingController;
 
 @Configuration
-//@PropertySource("classpath:views.properties")
 @ConfigurationProperties(prefix = "views")
 public class ViewsConfig {
 	private static final Logger logger = LoggerFactory.getLogger(TestingController.class);

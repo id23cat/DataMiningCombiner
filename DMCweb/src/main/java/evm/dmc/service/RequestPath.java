@@ -2,90 +2,22 @@ package evm.dmc.service;
 
 import org.springframework.stereotype.Service;
 
+import lombok.Getter;
+
 @Service
 public  final  class RequestPath {
 	private RequestPath(){};
-	public static final String ROOT = "/";
-	public static final String HOME = "/home";
-	public static final String ABOUT = "/about";
-	public static final String REGISTER = "/register";
-	public static final String SIGNIN = "/signin";
-	public static final String USER_HOME = "/userHome";
-	public static final String ADMIN_HOME = "/adminHome";
-	public static final String AUTH = "/authenticate";
-	public static final String LOGOUT = "/logout";
+	@Getter public static final String root = "/";
+	@Getter public static final String home = "/home";
+	@Getter public static final String about = "/about";
+	@Getter public static final String register = "/register";
+	@Getter public static final String signin = "/signin";
+	@Getter public static final String userHome = "/userHome";
+	@Getter public static final String adminHome = "/adminHome";
+	@Getter public static final String auth = "/authenticate";
+	@Getter public static final String logout = "/logout";
 	
-	public static final String ER_ACC_DINIED = "/errors/accessDenied";
-	public static final String ER_NOT_FOUND = "/errors/notFound";
+	@Getter public static final String erAccDenied = "/errors/accessDenied";
+	@Getter public static final String erNotFound = "/errors/notFound";
 	
-	/**
-	 * @return the root
-	 */
-	public static String getRoot() {
-		return ROOT;
-	}
-	/**
-	 * @return the home
-	 */
-	public static String getHome() {
-		return HOME;
-	}
-	/**
-	 * @return the about
-	 */
-	public static String getAbout() {
-		return ABOUT;
-	}
-	/**
-	 * @return the register
-	 */
-	public static String getRegister() {
-		return REGISTER;
-	}
-	/**
-	 * @return the signin
-	 */
-	public static String getSignin() {
-		return SIGNIN;
-	}
-	/**
-	 * @return the userhome
-	 */
-	public static String getUserHome() {
-		return USER_HOME;
-	}
-	/**
-	 * @return the adminhome
-	 */
-	public static String getAdminHome() {
-		return ADMIN_HOME;
-	}
-	/**
-	 * @return the auth
-	 */
-	public static String getAuth() {
-		return AUTH;
-	}
-	/**
-	 * @return the logout
-	 */
-	public static String getLogout() {
-		return LOGOUT;
-	}
-	/**
-	 * @return the erAccDinied
-	 */
-	public static String getErAccDinied() {
-		return ER_ACC_DINIED;
-	}
-	/**
-	 * @return the erNotFound
-	 */
-	public static String getErNotFound() {
-		return ER_NOT_FOUND;
-	}
-	
-	
-	
-
 }

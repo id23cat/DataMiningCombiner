@@ -4,9 +4,11 @@ views:
   register: register
   signin: signin
   regsign: "register_signin"
-  regsig_fragment: " :: regsignForm(active='%s')"
   userHome: userHome
   adminHome: adminHome
+  fragments: 
+    signin: " :: signinForm"
+    regsign: " :: regsignForm(active='%s')"
   errors:
     accessDenied: errors/accessDenied
     notFound: errors/notFound

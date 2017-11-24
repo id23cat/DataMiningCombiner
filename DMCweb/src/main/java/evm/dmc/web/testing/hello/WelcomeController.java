@@ -16,7 +16,7 @@ import evm.dmc.service.testing.TestingViewsService;
 public class WelcomeController {
 	TestingViewsService views;
 	
-	@Value("${welcome.message}")
+//	@Value("${welcome.message}")
 	private String message = "Hello World";
 	
 	@Autowired
