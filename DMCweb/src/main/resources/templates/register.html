@@ -18,8 +18,10 @@
 		th:object="${account}" 
 		th:fragment="registerForm">
     <!--/* Show general error message when form contains errors */-->
-    <th:block th:if="${#fields.hasErrors('${account.*}')}">
-        <div th:replace="fragments/alert :: alert (type='danger', message='Form contains errors. Please try again.')">Alert</div>
+    <th:block th:if="${#fields.hasErrors('${account.*}') or errorMessage != null}"
+   	   	th:with="errMsg= ${#strings.isEmpty(errorMessage)} ? 'Form contains errors. Please try again.' : ${errorMessage}">
+    	
+        <div th:replace="fragments/alert :: alert (type='danger', message=${errMsg})">Alert</div>
     </th:block>
     <fieldset>
       	<legend></legend>

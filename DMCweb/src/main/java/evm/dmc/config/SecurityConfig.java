@@ -104,7 +104,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 				.permitAll()
 				.failureUrl(RequestPath.signin+"?error=1")
 				.loginProcessingUrl(RequestPath.auth)
-				.defaultSuccessUrl(RequestPath.userHome)
+				.defaultSuccessUrl(RequestPath.home)
 			.and()
 			.logout()
 				.logoutUrl(RequestPath.logout) 

@@ -29,6 +29,7 @@ public class Views {
 	public static class Errors {
 		@Getter @Setter private String accessDenied;
 		@Getter @Setter private String notFound;
+		@Getter @Setter private String userExists;
 	}
 
 }

@@ -12,6 +12,7 @@ views:
   errors:
     accessDenied: errors/accessDenied
     notFound: errors/notFound
+    userExists: errors/userExists
   testing:
     testindex:  testing/testindex
     hello:  testing/hello?name=Alex
