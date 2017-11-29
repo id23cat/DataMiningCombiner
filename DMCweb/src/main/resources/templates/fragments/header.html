@@ -29,18 +29,15 @@
 						<a th:href="${@requestPath.about}">About</a>
 					</li>
 					
-					<li>
-						<a th:text="${T(evm.dmc.business.account.Role).USER}">About</a>
-					</li>
-					
 					<!-- <li sec:authorize="hasAuthority(@roles.user)" th:classappend="${module == @requestPath.userHome ? 'active' : ''}"> -->
-					<li sec:authorize="hasAuthority('ROLE_USER')" th:classappend="${module == @requestPath.userHome ? 'active' : ''}">
+					<!-- <li sec:authorize="hasAuthority('USER')" th:classappend="${module == @requestPath.userHome ? 'active' : ''}">
 						<a th:href="${@requestPath.userHome}">User home</a>
 					</li>
 					
-					<li sec:authorize="hasAuthority('ROLE_ADMIN')" th:classappend="${module == @requestPath.adminHome ? 'active' : ''}">
+					<li sec:authorize="hasAuthority('ADMIN')" th:classappend="${module == @requestPath.adminHome ? 'active' : ''}">
 						<a th:href="${@requestPath.adminHome}">Admin home</a>
 					</li>
+					-->
 				</ul>
 				<div sec:authorize="!isAuthenticated()">
 					<ul class="nav navbar-nav navbar-right">
@@ -55,7 +52,7 @@
 						<li><a th:href="${@requestPath.about}"> 
 							<span sec:authentication="name"></span>
 						</a></li>
-						<li sec:authorize="hasAuthority('ROLE_ADMIN')" th:classappend="${module == @requestPath.register ? 'active' : ''}">
+						<li sec:authorize="hasAuthority('ADMIN')" th:classappend="${module == @requestPath.register ? 'active' : ''}">
 							<a th:href="${@requestPath.register}" ><span class="glyphicon glyphicon-user"></span>Register</a>
 						</li>
 						<li>

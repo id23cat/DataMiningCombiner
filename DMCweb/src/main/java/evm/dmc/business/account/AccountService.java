@@ -26,6 +26,9 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import evm.dmc.api.model.account.Account;
+import evm.dmc.api.model.account.AccountExt;
+import evm.dmc.api.model.account.Role;
 import evm.dmc.web.SignInController;
 import evm.dmc.web.exceptions.UserExistsException;
 

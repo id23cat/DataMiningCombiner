@@ -18,8 +18,8 @@ import org.springframework.security.crypto.password.NoOpPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.access.AccessDeniedHandler;
 
+import evm.dmc.api.model.account.Role;
 import evm.dmc.business.account.AccountService;
-import evm.dmc.business.account.Role;
 import evm.dmc.service.RequestPath;
 import evm.dmc.web.SignInController;
 import evm.dmc.web.security.CustomAccessDeniedHandler;

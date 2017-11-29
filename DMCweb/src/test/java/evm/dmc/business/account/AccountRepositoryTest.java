@@ -21,6 +21,9 @@ import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.transaction.annotation.Transactional;
 
+import evm.dmc.api.model.account.Account;
+import evm.dmc.api.model.account.AccountExt;
+import evm.dmc.api.model.account.Role;
 import evm.dmc.service.Views;
 
 

@@ -19,7 +19,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
-import evm.dmc.business.account.Account;
+import evm.dmc.api.model.account.Account;
 import evm.dmc.business.account.AccountService;
 import evm.dmc.service.RequestPath;
 import evm.dmc.service.Views;

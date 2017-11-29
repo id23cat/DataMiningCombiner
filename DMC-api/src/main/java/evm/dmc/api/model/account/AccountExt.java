@@ -1,4 +1,4 @@
-package evm.dmc.business.account;
+package evm.dmc.api.model.account;
 
 import java.time.Instant;
 
