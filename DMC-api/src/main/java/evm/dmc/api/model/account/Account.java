@@ -21,24 +21,32 @@ import org.hibernate.validator.constraints.NotBlank;
 import org.springframework.stereotype.Component;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+
+import lombok.AccessLevel;
+import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
+
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 
 @Entity
 @Table(name="ACCOUNT")
 @Inheritance(strategy=InheritanceType.SINGLE_TABLE)
+@Data
 public class Account implements Serializable {
 	@Transient
-	public static final String NOT_BLANK_MESSAGE = "{error.emptyField}";
+	private static final String NOT_BLANK_MESSAGE = "{error.emptyField}";
 	@Transient
-	public static final String EMAIL_MESSAGE = "{error.email}";
+	private static final String EMAIL_MESSAGE = "{error.email}";
 	@Transient
-	public static final String USERNAME_SIZE_MESSAGE = "{error.username.size}";
+	private static final String USERNAME_SIZE_MESSAGE = "{error.username.size}";
 	
 	private static final long serialVersionUID = 4198630702609693622L;
 	
 	@Id
 	@GeneratedValue(strategy=GenerationType.IDENTITY)
+	@Setter(AccessLevel.NONE) 
 	private Long id;
 
 	@NotBlank(message = NOT_BLANK_MESSAGE)
@@ -61,8 +69,10 @@ public class Account implements Serializable {
 	private String lastName;
 	
 	@Enumerated(EnumType.STRING)
+	@Setter(AccessLevel.PROTECTED)
 	protected Role role = Role.USER;
 	
+	@Setter(AccessLevel.NONE) 
 	private Instant created;
 
     public Account() {
@@ -92,125 +102,4 @@ public class Account implements Serializable {
 		this.role = acc.role;
 	}
 
-	/**
-	 * @return the email
-	 */
-	public String getEmail() {
-		return email;
-	}
-
-	/**
-	 * @param email the email to set
-	 */
-	public void setEmail(String email) {
-		this.email = email;
-	}
-
-	/**
-	 * @return the username
-	 */
-	public String getUserName() {
-		return userName;
-	}
-
-	/**
-	 * @param username the username to set
-	 */
-	public void setUserName(String username) {
-		this.userName = username;
-	}
-
-	/**
-	 * @return the password
-	 */
-	public String getPassword() {
-		return password;
-	}
-
-	/**
-	 * @param password the password to set
-	 */
-	public void setPassword(String password) {
-		this.password = password;
-	}
-
-	/**
-	 * @return the firstName
-	 */
-	public String getFirstName() {
-		return firstName;
-	}
-
-	/**
-	 * @param firstName the firstName to set
-	 */
-	public void setFirstName(String firstName) {
-		this.firstName = firstName;
-	}
-
-	/**
-	 * @return the lastName
-	 */
-	public String getLastName() {
-		return lastName;
-	}
-
-	/**
-	 * @param lastName the lastName to set
-	 */
-	public void setLastName(String lastName) {
-		this.lastName = lastName;
-	}
-
-	/**
-	 * @return the role
-	 */
-	public Role getRole() {
-		return role;
-	}
-
-	/**
-	 * @param role the role to set
-	 */
-	protected void setRole(Role role) {
-		this.role = role;
-	}
-
-	/**
-	 * @return the id
-	 */
-	public Long getId() {
-		return id;
-	}
-
-	/**
-	 * @return the created
-	 */
-	public Instant getCreated() {
-		return created;
-	}
-
-	@Override
-	public boolean equals(final Object other) {
-		if (this == other) {
-			return true;
-		}
-		if (!(other instanceof Account)) {
-			return false;
-		}
-		Account castOther = (Account) other;
-		return new EqualsBuilder().append(id, castOther.id).append(userName, castOther.userName)
-				.append(password, castOther.password).append(email, castOther.email)
-				.append(firstName, castOther.firstName).append(lastName, castOther.lastName)
-				.append(role, castOther.role).append(created, castOther.created).isEquals();
-	}
-
-	@Override
-	public int hashCode() {
-		return new HashCodeBuilder().append(id).append(userName).append(password).append(email).append(firstName)
-				.append(lastName).append(role).append(created).toHashCode();
-	}
-    
-	
-    
 }
