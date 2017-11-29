@@ -15,16 +15,20 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.boot.test.autoconfigure.orm.jpa.TestEntityManager;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.context.annotation.Import;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.transaction.annotation.Transactional;
+
+import evm.dmc.service.Views;
 
 
 @RunWith(SpringRunner.class)
 @DataJpaTest
 @Transactional()
 @ActiveProfiles("test")
+@Import(Views.class)
 public class AccountRepositoryTest {
 	private static final Logger logger = LoggerFactory.getLogger(AccountRepositoryTest.class);
 	
@@ -63,14 +67,14 @@ public class AccountRepositoryTest {
 
 	@Test
 	public final void testFindByRoleString() {
-		List<Account> accCollection = this.repository.findByRole("ROLE_ADMIN");
+		List<Account> accCollection = this.repository.findByRole("ADMIN");
 		assertThat(accCollection).isNotEmpty();
 		assertThat(accCollection).hasSize(2);
 	}
 
 	@Test
 	public final void testFindByRoleStringPageable() {
-		List<Account> accCollection = this.repository.findByRole("ROLE_ADMIN", new PageRequest(0,1));
+		List<Account> accCollection = this.repository.findByRole("ADMIN", new PageRequest(0,1));
 		assertThat(accCollection).hasSize(1);
 		assertThat(accCollection.get(0).getUserName()).isEqualTo("id42cat");
 		
@@ -81,7 +85,7 @@ public class AccountRepositoryTest {
 
 	@Test(expected = org.springframework.dao.DataIntegrityViolationException.class)
 	public final void testAddExistingAccount() {
-		repository.save(new AccountExt("id42cat", "password", "id42cat@tut.by", "Alex", "Demidchuk", "ROLE_ADMIN"));
+		repository.save(new AccountExt("id42cat", "password", "id42cat@tut.by", "Alex", "Demidchuk", "ADMIN"));
 	}
 	
 	@Test

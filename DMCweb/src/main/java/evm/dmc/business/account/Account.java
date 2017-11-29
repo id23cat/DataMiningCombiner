@@ -5,6 +5,8 @@ import java.time.Instant;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -58,7 +60,8 @@ public class Account implements Serializable {
 	
 	private String lastName;
 	
-	protected String role = "ROLE_USER";
+	@Enumerated(EnumType.STRING)
+	protected Role role = Role.USER;
 	
 	private Instant created;
 
@@ -162,8 +165,15 @@ public class Account implements Serializable {
 	/**
 	 * @return the role
 	 */
-	public String getRole() {
+	public Role getRole() {
 		return role;
+	}
+
+	/**
+	 * @param role the role to set
+	 */
+	protected void setRole(Role role) {
+		this.role = role;
 	}
 
 	/**

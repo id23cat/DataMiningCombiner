@@ -19,7 +19,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.access.AccessDeniedHandler;
 
 import evm.dmc.business.account.AccountService;
-import evm.dmc.business.account.Roles;
+import evm.dmc.business.account.Role;
 import evm.dmc.service.RequestPath;
 import evm.dmc.web.SignInController;
 import evm.dmc.web.security.CustomAccessDeniedHandler;
@@ -95,8 +95,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 		http.csrf().disable()
 			.authorizeRequests()
 				.antMatchers(PUBLIC_MATCHERS).permitAll()
-				.antMatchers(ADMIN_MATCHERS).hasAuthority(Roles.ADMIN)
-				.antMatchers(USER_MATCHERS).hasAuthority(Roles.USER)
+				.antMatchers(ADMIN_MATCHERS).hasAuthority(Role.ADMIN.getName())
+				.antMatchers(USER_MATCHERS).hasAuthority(Role.USER.getName())
 				.anyRequest().authenticated()
 			.and()
 			.formLogin()

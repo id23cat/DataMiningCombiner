@@ -1,35 +1,38 @@
 package evm.dmc.service;
 
 import org.springframework.boot.context.properties.ConfigurationProperties;
-import org.springframework.context.annotation.PropertySource;
 import org.springframework.stereotype.Service;
 
+import lombok.Data;
 import lombok.Getter;
 import lombok.Setter;
 
 @Service
 @ConfigurationProperties("views")
+@Data
 public class Views {
-	@Getter @Setter private String index;
-	@Getter @Setter private String about;
-	@Getter @Setter private String register;
-	@Getter @Setter private String signin;
-	@Getter @Setter private String regsign;
-	@Getter @Setter private String userHome;
-	@Getter @Setter private String adminHome;
+	private String index;
+	private String about;
+	private String register;
+	private String signin;
+	private String regsign;
+	private String userHome;
+	private String adminHome;
 	
 	@Getter private final Fragments fragments = new Fragments();
 	@Getter private final Errors errors = new Errors();
 			
+	@Data
 	public static class Fragments {
-		@Getter @Setter private String signin;
-		@Getter @Setter private String regsign;
+		private String signin;
+		private String regsign;
 	}
 	
+	@Data
 	public static class Errors {
-		@Getter @Setter private String accessDenied;
-		@Getter @Setter private String notFound;
-		@Getter @Setter private String userExists;
+		private String accessDenied;
+		private String notFound;
+		private String userExists;
 	}
 
 }

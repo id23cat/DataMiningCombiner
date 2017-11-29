@@ -18,7 +18,7 @@ import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
 
-import evm.dmc.business.account.Roles;
+import evm.dmc.business.account.Role;
 import evm.dmc.service.RequestPath;
 import evm.dmc.service.Views;
 
@@ -36,7 +36,7 @@ public class RegisterControllerTest {
 	
 		
 	@Test
-	@WithMockUser(authorities = Roles.ADMIN)
+	@WithMockUser(authorities = "ROLE_ADMIN")
 	public final void getRegisterTest() throws Exception {
 		assertNotNull(views);
 		assertNotNull(views.getRegister());

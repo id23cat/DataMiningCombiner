@@ -57,7 +57,7 @@ public class AccountService implements UserDetailsService {
 	protected void init() {
 //		save(new Account("id23cat", "password", "id23cat@tut.by", "Alex", "Demidchuk"));
 		logger.debug("Account service: create admin in DB");
-		save(new AccountExt(admuser, admpass, ADMIN_EMAIL, ADMIN_FIRSTNAME, ADMIN_LASTNAME, Roles.ADMIN));
+		save(new AccountExt(admuser, admpass, ADMIN_EMAIL, ADMIN_FIRSTNAME, ADMIN_LASTNAME, Role.ADMIN));
 	}
 	
 	@Transactional
@@ -86,7 +86,7 @@ public class AccountService implements UserDetailsService {
 	}
 
 	private GrantedAuthority createAuthority(Account account) {
-		return new SimpleGrantedAuthority(account.getRole());
+		return new SimpleGrantedAuthority(account.getRole().toString());
 	}
 
 }
