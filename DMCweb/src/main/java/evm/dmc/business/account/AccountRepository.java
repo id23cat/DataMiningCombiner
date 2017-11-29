@@ -12,8 +12,8 @@ public interface AccountRepository extends CrudRepository<Account, Long> {
 	Optional<Account> findByUserName(String userName);
 	
 //	@Async
-	List<Account> findByRole(String role);
+	List<Account> findByRole(Role role);
 	
 //	@Async
-	List<Account> findByRole(String role, Pageable pageable);
+	List<Account> findByRole(Role role, Pageable pageable);
 }

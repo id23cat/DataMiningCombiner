@@ -43,8 +43,8 @@ public class AccountRepositoryTest {
 
 	@Before
 	public void init() {
-		this.entityManager.persist(new AccountExt("id42cat", "password", "id42cat@tut.by", "Alex", "Demidchuk", "ROLE_ADMIN").getAccount());
-		this.entityManager.persist(new AccountExt("admin3", "password", "admin@mail.org", "Admin", "AD_min", "ROLE_ADMIN").getAccount());
+		this.entityManager.persist(new AccountExt("id42cat", "password", "id42cat@tut.by", "Alex", "Demidchuk", "ADMIN").getAccount());
+		this.entityManager.persist(new AccountExt("admin3", "password", "admin@mail.org", "Admin", "AD_min", "ADMIN").getAccount());
 	}
 	
 	@Test
@@ -67,18 +67,18 @@ public class AccountRepositoryTest {
 
 	@Test
 	public final void testFindByRoleString() {
-		List<Account> accCollection = this.repository.findByRole("ADMIN");
+		List<Account> accCollection = this.repository.findByRole(Role.ADMIN);
 		assertThat(accCollection).isNotEmpty();
 		assertThat(accCollection).hasSize(2);
 	}
 
 	@Test
 	public final void testFindByRoleStringPageable() {
-		List<Account> accCollection = this.repository.findByRole("ADMIN", new PageRequest(0,1));
+		List<Account> accCollection = this.repository.findByRole(Role.ADMIN, new PageRequest(0,1));
 		assertThat(accCollection).hasSize(1);
 		assertThat(accCollection.get(0).getUserName()).isEqualTo("id42cat");
 		
-		accCollection = this.repository.findByRole("ROLE_ADMIN", new PageRequest(1,1));
+		accCollection = this.repository.findByRole(Role.ADMIN, new PageRequest(1,1));
 		assertThat(accCollection).hasSize(1);
 		assertThat(accCollection.get(0).getUserName()).isEqualTo("admin3");
 	}

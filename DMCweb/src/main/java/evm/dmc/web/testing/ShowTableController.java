@@ -26,7 +26,7 @@ public class ShowTableController {
 	Data<?> data;
 
 	// @Value("${wekatest.datasource}")
-	String sourceFileName = "/home/id23cat/Workspaces/workspace/datamining/DMCweb/Data/telecom_churn.csv";
+	String sourceFileName = "Data/telecom_churn.csv";
 	
 	TestingViewsService views;
 

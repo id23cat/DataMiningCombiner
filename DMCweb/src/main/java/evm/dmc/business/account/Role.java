@@ -13,9 +13,9 @@ public enum Role implements Serializable {
         if (name == null) {
             throw new IllegalArgumentException("Name cannot be null for Role");
         }
-        if (name.toUpperCase().equals("ROLE_ADMIN")) {
+        if (name.toUpperCase().contains("ADMIN")) {
             return ADMIN;
-        } else if (name.toUpperCase().equals("ROLE_USER")) {
+        } else if (name.toUpperCase().contains("USER")) {
             return USER;
         } 
         throw new IllegalArgumentException("Name \"" + name + "\" does not correspond to any Role");
@@ -28,10 +28,18 @@ public enum Role implements Serializable {
 	public final String getName() {
 		return this.name;
 	}
-
-	@Override
-	public String toString() {
+	
+	public final String getRole() {
+		return this.toString();
+	}
+	
+	public final String getAutority() {
 		return getName();
 	}
+
+	/*@Override
+	public String toString() {
+		return getName();
+	}*/
 	
 }

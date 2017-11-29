@@ -49,7 +49,7 @@ public class AccountServiceTest {
 		UserDetails user = userService.loadUserByUsername("user");
 		
 		assertThat(user.getUsername()).isEqualTo("user");
-		assertThat(user.getAuthorities().stream().findFirst().get()).isEqualTo(new SimpleGrantedAuthority("ROLE_USER"));
+		assertThat(user.getAuthorities().stream().findFirst().get()).isEqualTo(new SimpleGrantedAuthority(Role.USER.toString()));
 		
 	}
 
