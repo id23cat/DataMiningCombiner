@@ -1,13 +1,52 @@
 package evm.dmc.api.model;
 
+import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Properties;
+import java.util.Set;
+
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.Table;
+import javax.persistence.Transient;
+import javax.validation.constraints.Null;
+
+import evm.dmc.api.model.account.Account;
+import lombok.AccessLevel;
+import lombok.Data;
+import lombok.Setter;
+
 import java.util.Objects;
 
-public class ProjectModel {
+@Entity
+@Table(name="PROJECT")
+@Data
+public class ProjectModel implements Serializable{
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -5045386144743151365L;
+	
+	@Id
+	@GeneratedValue(strategy=GenerationType.IDENTITY)
+	@Setter(AccessLevel.NONE) 
+	private Long id;
+	
+	@ManyToOne
+	@JoinColumn(name = "account_id")
+	private Account account;
+	
 	private ProjectType type;
-	private List<AlgorithmModel> algorithms = new ArrayList<>();
+	
+	@Transient
+	private Set<AlgorithmModel> algorithms = new HashSet<>();
+	
 	private Properties projectProperties = new Properties();
 	private String projectName;
 	
@@ -15,88 +54,12 @@ public class ProjectModel {
 		super();
 	}
 	
-	public ProjectModel(ProjectType type, List<AlgorithmModel> algorithms, Properties projectProperties, String projectName){
+	public ProjectModel(ProjectType type, Set<AlgorithmModel> algorithms, Properties projectProperties, String projectName){
 		this.type = type;
-		this.algorithms =  new ArrayList<>(algorithms);
+		this.algorithms =  new HashSet<>(algorithms);
 		this.projectProperties = new Properties(projectProperties);
 		this.projectName = projectName;
 	}
-	
-	/**
-	 * @return the name
-	 */
-	public ProjectType getType() {
-		return type;
-	}
-
-	/**
-	 * @param name the name to set
-	 */
-	public void setType(ProjectType name) {
-		this.type = name;
-	}
-
-	/**
-	 * @return the list of algorithms
-	 */
-	public List<AlgorithmModel> getAlgorithms() {
-		return algorithms;
-	}
-
-	/**
-	 * @param algorithm the algorithm to set
-	 */
-	public void setAlgorithms(List<AlgorithmModel> algorithm) {
-		this.algorithms = algorithm;
-	}
-
-	/**
-	 * @return the projectProperties
-	 */
-	public Properties getProjectProperties() {
-		return projectProperties;
-	}
-
-	/**
-	 * @param projectProperties the projectProperties to set
-	 */
-	public void setProjectProperties(Properties projectProperties) {
-		this.projectProperties = projectProperties;
-	}
-
-	/**
-	 * @return the projectName
-	 */
-	public String getProjectName() {
-		return projectName;
-	}
-
-	/**
-	 * @param projectName the projectName to set
-	 */
-	public void setProjectName(String projectName) {
-		this.projectName = projectName;
-	}
-
-	@Override
-	public boolean equals(final Object other) {
-		if (this == other) {
-			return true;
-		}
-		if (!(other instanceof ProjectModel)) {
-			return false;
-		}
-		ProjectModel castOther = (ProjectModel) other;
-		return Objects.equals(type, castOther.type) && Objects.equals(algorithms, castOther.algorithms)
-				&& Objects.equals(projectProperties, castOther.projectProperties)
-				&& Objects.equals(projectName, castOther.projectName);
-	}
-
-	@Override
-	public int hashCode() {
-		return Objects.hash(type, algorithms, projectProperties, projectName);
-	}
-
 	
 
 }

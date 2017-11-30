@@ -48,13 +48,13 @@ public class SimplestProjectImpl implements Project {
 	@PostConstruct
 	protected void init() {
 		algorithm.setFrameworksRepository(frameworkRepo);
-		model.getAlgorithms().add(0, algorithm.getModel());
+		model.getAlgorithms().add(algorithm.getModel());
 	}
 
 	@Override
 	public Project setModel(ProjectModel model) {
 		this.model = model;
-		createAlgorithm(model.getAlgorithms().get(0));
+		addAlgorithm(model.getAlgorithms().iterator().next());
 		return this;
 	}
 
@@ -64,19 +64,45 @@ public class SimplestProjectImpl implements Project {
 	}
 
 	@Override
-	public Algorithm createAlgorithm() {
+	public Algorithm addAlgorithm() {
+		deleteAlgorithm(algorithm);				// remove previous algorithm
+		
 		algorithm = new SerialAlgorithm(frameworkRepo);
-		model.getAlgorithms().add(0, algorithm.getModel());
+		model.getAlgorithms().add(algorithm.getModel());
 
 		return algorithm;
 	}
 
 	@Override
-	public Algorithm createAlgorithm(AlgorithmModel algModel) {
+	public Algorithm addAlgorithm(AlgorithmModel algModel) {
+		deleteAlgorithm(algModel);				// remove previous algorithm
+		
 		algorithm = new SerialAlgorithm(frameworkRepo, algModel);
-		model.getAlgorithms().add(0, algorithm.getModel());
+		model.getAlgorithms().add(algorithm.getModel());
 
 		return algorithm;
+	}
+	
+	@Override
+	public	Algorithm deleteAlgorithm(Algorithm algorithm) {
+		if(!this.algorithm.equals(algorithm)) {
+			return null;
+		}
+		
+		return deleteAlgorithm(algorithm.getModel());
+	}
+	
+	@Override
+	public Algorithm deleteAlgorithm(AlgorithmModel algModel) {
+		if(!this.algorithm.getModel().equals(algModel)){
+			return null;
+		}
+		
+		Algorithm alg = this.algorithm;
+		this.algorithm = null;
+		model.getAlgorithms().remove(algModel);
+		return alg;
+		
 	}
 
 	@Override
@@ -91,7 +117,7 @@ public class SimplestProjectImpl implements Project {
 	}
 
 	@Override
-	public String getPrijectName() {
+	public String getProjectName() {
 		return model.getProjectName();
 	}
 

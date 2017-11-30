@@ -48,7 +48,7 @@ public class CreateAlgorithmController {
 		logger.debug("Inside CreateAlgorithmController: " + userId);
 		
 		
-		AlgorithmModel algModel = project.createAlgorithm().getModel();
+		AlgorithmModel algModel = project.addAlgorithm().getModel();
 		model.addAttribute("algModel", algModel);
 //		model.addAttribute("view", createAlgView);
 		return "testing/createalg";

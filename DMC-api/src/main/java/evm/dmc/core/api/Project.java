@@ -25,15 +25,19 @@ public interface Project {
 
 	ProjectModel getModel();
 
-	Algorithm createAlgorithm();
+	Algorithm addAlgorithm();
 
-	Algorithm createAlgorithm(AlgorithmModel algModel);
+	Algorithm addAlgorithm(AlgorithmModel algModel);
+	
+	Algorithm deleteAlgorithm(Algorithm algorithm);
+	
+	Algorithm deleteAlgorithm(AlgorithmModel algModel);
 
 	Algorithm getAlgorithm();
 	
 	Project setProjectName(String name);
 	
-	String getPrijectName();
+	String getProjectName();
 	
 	FrameworksRepository getFunctionsRepository();
 	

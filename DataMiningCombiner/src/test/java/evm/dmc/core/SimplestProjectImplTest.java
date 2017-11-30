@@ -8,7 +8,9 @@ import java.util.Iterator;
 import java.util.Objects;
 import java.util.Set;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.hamcrest.CoreMatchers.both;
+import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.CoreMatchers.not;
 import static org.hamcrest.Matchers.empty;
 import static evm.dmc.core.CaseInsensitiveSubstringMatcher.containsIgnoringCase;
@@ -48,10 +50,11 @@ public class SimplestProjectImplTest {
 	@Before
 	public void before() {
 		assertNotNull(project);
-		project.createAlgorithm();
+		project.addAlgorithm();
+		
 		ProjectModel model = project.getModel();
 		assertThat(model.getAlgorithms(), not(empty()));
-		assertThat(model.getAlgorithms().get(0).getName(), containsIgnoringCase("serialalgorithm"));
+		assertThat(model.getAlgorithms().iterator().next().getName(), containsIgnoringCase("serialalgorithm"));
 
 		Algorithm alg = project.getAlgorithm();
 
@@ -66,21 +69,31 @@ public class SimplestProjectImplTest {
 		project.addFunction(alg, project.getFunctionModel(getDescriptor(project.getFunctionsSet(), "pca")));
 		project.setDataDst(alg, dstModel);
 	}
-
+	
+	
 	@Test
 	public final void testSetModel() {
+		assertThat(project.getModel().getAlgorithms().size(), equalTo(1));
+		assertEquals(project.getAlgorithm().getModel(), project.getModel().getAlgorithms().iterator().next());
+		
 		ProjectModel model = project.getModel();
 
-		AlgorithmModel algModel = model.getAlgorithms().get(0);
+		AlgorithmModel algModel = model.getAlgorithms().iterator().next();
+		
+		System.out.println(String.format("model algoritms set size: %d", model.getAlgorithms().size()));
 		
 		ProjectModel newProjModel = new ProjectModel(model.getType(), model.getAlgorithms(), model.getProjectProperties(), model.getProjectName());
-		AlgorithmModel newAlgModel = newProjModel.getAlgorithms().get(0);
+		System.out.println(String.format("newProjectModel algoritms set size: %d", newProjModel.getAlgorithms().size()));
+//		System.out.println(String.format("newAlgModel functions list size: %d", newAlgModel.getFunctions().size()));
 		
+		AlgorithmModel newAlgModel = newProjModel.getAlgorithms().iterator().next();
+		
+		System.out.println(String.format("newAlgModel functions list size: %d", newAlgModel.getFunctions().size()));
 		// delete PCA function to determine difference with original model
 		newAlgModel.delFunction(newAlgModel.getFunctions().get(1));
 		
 		project.setModel(newProjModel);
-		algModel = project.getModel().getAlgorithms().get(0);
+		algModel = project.getModel().getAlgorithms().iterator().next();
 		
 		assertEquals(project.getModel().getType(), ProjectType.SIMPLEST_PROJECT);
 		
@@ -133,7 +146,7 @@ public class SimplestProjectImplTest {
 		// delete PCA function to determine difference with original model
 		algModel.delFunction(algModel.getFunctions().get(1));
 
-		project.createAlgorithm(algModel);
+		project.addAlgorithm(algModel);
 
 		algModel = project.getAlgorithm().getModel();
 
