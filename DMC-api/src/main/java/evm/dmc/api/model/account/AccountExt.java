@@ -1,7 +1,5 @@
 package evm.dmc.api.model.account;
 
-import java.time.Instant;
-
 import javax.persistence.Entity;
 
 @Entity

@@ -25,13 +25,11 @@ import evm.dmc.api.model.account.Account;
 import evm.dmc.api.model.account.AccountExt;
 import evm.dmc.api.model.account.Role;
 import evm.dmc.service.Views;
+import evm.dmc.testannotations.TransactionalDataTest;
 
 
 @RunWith(SpringRunner.class)
-@DataJpaTest
-@Transactional()
-@ActiveProfiles("test")
-@Import(Views.class)
+@TransactionalDataTest
 public class AccountRepositoryTest {
 	private static final Logger logger = LoggerFactory.getLogger(AccountRepositoryTest.class);
 	
@@ -46,7 +44,7 @@ public class AccountRepositoryTest {
 
 	@Before
 	public void init() {
-		this.entityManager.persist(new AccountExt("id42cat", "password", "id42cat@tut.by", "Alex", "Demidchuk", "ADMIN").getAccount());
+		this.entityManager.persist(new AccountExt("id42cat", "password", "id42cat@mail.sm", "Alex", "Demidchuk", "ADMIN").getAccount());
 		this.entityManager.persist(new AccountExt("admin3", "password", "admin@mail.org", "Admin", "AD_min", "ADMIN").getAccount());
 	}
 	

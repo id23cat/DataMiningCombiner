@@ -30,7 +30,7 @@ import evm.dmc.api.model.account.Account;
 import evm.dmc.api.model.account.AccountExt;
 import evm.dmc.api.model.account.Role;
 import evm.dmc.web.SignInController;
-import evm.dmc.web.exceptions.UserExistsException;
+import evm.dmc.web.exceptions.UserNotExistsException;
 
 
 @Service

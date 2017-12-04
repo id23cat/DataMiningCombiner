@@ -24,7 +24,7 @@ import evm.dmc.business.account.AccountService;
 import evm.dmc.service.RequestPath;
 import evm.dmc.service.Views;
 import evm.dmc.utils.MessageHelper;
-import evm.dmc.web.exceptions.UserExistsException;
+import evm.dmc.web.exceptions.UserNotExistsException;
 
 @Controller
 @RequestMapping
@@ -52,7 +52,7 @@ public class RegisterController {
 	
 	@PostMapping(RequestPath.register)
 	public String register(@Valid @ModelAttribute Account account, 
-			Errors errors, RedirectAttributes ra) throws UserExistsException{
+			Errors errors, RedirectAttributes ra) throws UserNotExistsException{
 		if(errors.hasErrors()) {
 			
 			logger.debug("Invalid registration attempt: {}", errors);

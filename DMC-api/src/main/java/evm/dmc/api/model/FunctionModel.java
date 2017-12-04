@@ -1,11 +1,56 @@
 package evm.dmc.api.model;
 
+import java.io.Serializable;
 import java.util.Properties;
 
-public class FunctionModel {
+import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.Inheritance;
+import javax.persistence.InheritanceType;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.Table;
+import javax.validation.constraints.NotNull;
+
+import org.hibernate.validator.constraints.Length;
+import org.hibernate.validator.constraints.NotBlank;
+
+import lombok.AccessLevel;
+import lombok.Data;
+import lombok.Setter;
+
+@Data
+@Entity
+@Table(name = "function")
+@Inheritance(strategy=InheritanceType.SINGLE_TABLE)
+public class FunctionModel implements Serializable {
+	
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -2557529452898863152L;
+
+	@Id
+	@GeneratedValue(strategy=GenerationType.IDENTITY)
+	@Setter(AccessLevel.NONE) 
+	private Long id;
+	
+	@NotBlank
+	@Length(max = 100)
 	private String name;
+	
+	@ManyToOne
+	@JoinColumn(name = "framework_id")
 	private FrameworkModel framework;
+	
+	@Enumerated(EnumType.STRING)
+	@NotNull
 	private FunctionType type;
+	
 	private Properties properties = new Properties();
 	
 	public FunctionModel(){}
@@ -15,108 +60,6 @@ public class FunctionModel {
 		framework = funmodel.getFramework();
 		type = funmodel.getType();
 		properties = funmodel.getProperties();
-	}
-
-	/**
-	 * @return the name
-	 */
-	public String getName() {
-		return name;
-	}
-
-	/**
-	 * @param name the name to set
-	 */
-	public void setName(String name) {
-		this.name = name;
-	}
-
-	/**
-	 * @return the framework
-	 */
-	public FrameworkModel getFramework() {
-		return framework;
-	}
-
-	/**
-	 * @param framework the framework to set
-	 */
-	public void setFramework(FrameworkModel framework) {
-		this.framework = framework;
-	}
-
-	/**
-	 * @return the type
-	 */
-	public FunctionType getType() {
-		return type;
-	}
-
-	/**
-	 * @param type the type to set
-	 */
-	public void setType(FunctionType type) {
-		this.type = type;
-	}
-
-	/**
-	 * @return the properties
-	 */
-	public Properties getProperties() {
-		return properties;
-	}
-
-	/**
-	 * @param properties the properties to set
-	 */
-	public void setProperties(Properties properties) {
-		this.properties = properties;
-	}
-
-	/* (non-Javadoc)
-	 * @see java.lang.Object#hashCode()
-	 */
-	@Override
-	public int hashCode() {
-		final int prime = 31;
-		int result = 1;
-		result = prime * result + ((framework == null) ? 0 : framework.hashCode());
-		result = prime * result + ((name == null) ? 0 : name.hashCode());
-		result = prime * result + ((properties == null) ? 0 : properties.hashCode());
-		result = prime * result + ((type == null) ? 0 : type.hashCode());
-		return result;
-	}
-
-	/* (non-Javadoc)
-	 * @see java.lang.Object#equals(java.lang.Object)
-	 */
-	@Override
-	public boolean equals(Object obj) {
-		if (this == obj)
-			return true;
-		if (obj == null)
-			return false;
-		if (getClass() != obj.getClass())
-			return false;
-		FunctionModel other = (FunctionModel) obj;
-		if (framework == null) {
-			if (other.framework != null)
-				return false;
-		} else if (!framework.equals(other.framework))
-			return false;
-		if (name == null) {
-			if (other.name != null)
-				return false;
-		} else if (!name.equals(other.name))
-			return false;
-		if (properties == null) {
-			if (other.properties != null)
-				return false;
-		} else if (!properties.equals(other.properties))
-			return false;
-		if (type != other.type)
-			return false;
-		return true;
 	}
 	
 }

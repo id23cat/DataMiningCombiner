@@ -82,7 +82,7 @@ public class SimplestProjectImplTest {
 		
 		System.out.println(String.format("model algoritms set size: %d", model.getAlgorithms().size()));
 		
-		ProjectModel newProjModel = new ProjectModel(model.getType(), model.getAlgorithms(), model.getProjectProperties(), model.getProjectName());
+		ProjectModel newProjModel = new ProjectModel(model.getType(), model.getAlgorithms(), model.getProperties(), model.getProjectName());
 		System.out.println(String.format("newProjectModel algoritms set size: %d", newProjModel.getAlgorithms().size()));
 //		System.out.println(String.format("newAlgModel functions list size: %d", newAlgModel.getFunctions().size()));
 		
