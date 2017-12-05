@@ -1,7 +1,7 @@
 package evm.dmc.weka;
 
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.context.annotation.PropertySource;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 import evm.dmc.api.model.FrameworkType;
@@ -14,19 +14,14 @@ import weka.core.Instances;
 @WekaFW
 //@PropertySource("classpath:frameworkrepo.properties")
 public class WekaFramework extends AbstractFramework {
-	static Class CLASS = WekaFunction.class;
+	private static final Logger logger = LoggerFactory.getLogger(WekaFramework.class);
+	static Class WEKA_CLASS = WekaFunction.class;
 	
 //	@Value("${frameworkrepo.weka_name}")
 	private static final String FRAMEWORK_NAME = "wekaFramework";
 	private static final FrameworkType FRAMEWORK_TYPE = FrameworkType.LOCAL;
 
 	public WekaFramework() {
-		// super(CLASS);
-	}
-
-	@Override
-	public void initFramework() {
-		super.initFrameworkForType(CLASS);
 	}
 
 	public WekaData castToWekaData(Data data) throws ClassCastException {
@@ -43,7 +38,7 @@ public class WekaFramework extends AbstractFramework {
 
 	@Override
 	protected Class getFunctionClass() {
-		return CLASS;
+		return WEKA_CLASS;
 	}
 	
 	@Override

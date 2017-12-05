@@ -147,7 +147,7 @@ public class WekaFrameworkTest {
 		assertFalse(model.getFunctions().isEmpty());
 		System.out.println(model.getName());
 		assertEquals("wekaFramework", model.getName());
-		System.out.println(model.getFunctions().get(0).getName());
+		System.out.println(model.getFunctions().iterator().next().getName());
 	}
 
 }

@@ -20,11 +20,13 @@ import org.hibernate.validator.constraints.NotBlank;
 
 import lombok.AccessLevel;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import lombok.Setter;
 
 @Data
 @Entity
 @Table(name = "framework")
+@EqualsAndHashCode(exclude={"functions"})
 public class FrameworkModel {
 	
 	@Id
@@ -45,10 +47,15 @@ public class FrameworkModel {
 	
 	private Properties properties = new Properties();
 	
+	public FrameworkModel() {
+		super();
+	}
+	
 	public FrameworkModel(String name, FrameworkType type) {
 		super();
 		this.name = name;
 		this.type = type;
-	}	
+	}
+	
 	
 }

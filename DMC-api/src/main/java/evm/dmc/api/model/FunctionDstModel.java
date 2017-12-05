@@ -24,7 +24,11 @@ public class FunctionDstModel extends FunctionModel {
 	@Enumerated(EnumType.STRING)
 	@NotNull
 	private DataSrcDstType typeSrcDst = DataSrcDstType.LOCAL_FS;
-		
+	
+	public FunctionDstModel(){
+		super();
+	}
+	
 	public FunctionDstModel(FunctionModel funmodel){
 		super(funmodel);
 	}

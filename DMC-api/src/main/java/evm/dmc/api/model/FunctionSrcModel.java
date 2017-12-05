@@ -25,6 +25,10 @@ public class FunctionSrcModel extends FunctionModel {
 	@NotNull
 	private DataSrcDstType typeSrcDst = DataSrcDstType.LOCAL_FS;
 		
+	public FunctionSrcModel(){
+		super();
+	}
+	
 	public FunctionSrcModel(FunctionModel funmodel){
 		super(funmodel);
 	}

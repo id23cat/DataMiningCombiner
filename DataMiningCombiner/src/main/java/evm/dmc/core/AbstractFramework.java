@@ -73,8 +73,12 @@ public abstract class AbstractFramework implements Framework, DataFactory {
 	protected abstract String getFrameworkName();
 
 	protected abstract FrameworkType getFrameworkType();
+	
+	public void initFramework() {
+		postInit();
+	}
 
-	@PostConstruct
+//	@PostConstruct
 	protected void postInit() {
 		Class cls = getFunctionClass();
 		initFrameworkForType(cls);
@@ -84,6 +88,7 @@ public abstract class AbstractFramework implements Framework, DataFactory {
 			frameworkModel.getFunctions().add(getDMCFunction(funcDesc).getFunctionModel());
 		}
 	}
+	
 
 	/**
 	 * Initialize the framework for a function type. This type will be used as
