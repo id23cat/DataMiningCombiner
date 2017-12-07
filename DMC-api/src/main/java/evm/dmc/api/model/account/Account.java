@@ -5,6 +5,7 @@ import java.time.Instant;
 import java.util.HashSet;
 import java.util.Set;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
@@ -77,7 +78,8 @@ public class Account implements Serializable {
 	@Setter(AccessLevel.NONE) 
 	private Instant created;
 	
-	@OneToMany(mappedBy="account", fetch = FetchType.LAZY)
+	@OneToMany(mappedBy="account", fetch = FetchType.LAZY,
+			cascade = CascadeType.ALL, orphanRemoval = true)
 	private Set<ProjectModel> projects = new HashSet<>();
 
     public Account() {
@@ -104,6 +106,18 @@ public class Account implements Serializable {
 		this.lastName = acc.lastName;
 		this.password = acc.password;
 		this.role = acc.role;
+	}
+	
+	public Account addProject(ProjectModel project) {
+		projects.add(project);
+		project.setAccount(this);
+		return this;
+	}
+	
+	public Account removeProject(ProjectModel project) {
+		projects.remove(project);
+		project.setAccount(null);
+		return this;
 	}
 
 }

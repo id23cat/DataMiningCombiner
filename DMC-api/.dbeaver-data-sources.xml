@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<data-sources>
+	<data-source id="mysql5-1602cb96a02-153f2d38c373f5b0" provider="mysql" driver="mysql5" name="MySQL - DMC" save-password="true" show-system-objects="true" read-only="false">
+		<connection host="localhost" port="3306" server="" database="DMC" url="jdbc:mysql://localhost:3306/DMC" user="root" password="Hh1SckVOR3bk" home="/usr" type="dev">
+			<property name="connectTimeout" value="20000"/>
+			<network-handler type="TUNNEL" id="ssh_tunnel" enabled="false" save-password="false">
+				<property name="sshConnectTimeout" value="10000"/>
+				<property name="port" value="22"/>
+				<property name="authType" value="PASSWORD"/>
+			</network-handler>
+			<network-handler type="CONFIG" id="mysql_ssl" enabled="false" save-password="false">
+				<property name="ssl.public.key.retrieve" value="false"/>
+				<property name="ssl.verify.server" value="true"/>
+				<property name="ssl.require" value="false"/>
+			</network-handler>
+			<network-handler type="PROXY" id="socks_proxy" enabled="false" save-password="false">
+				<property name="socks-port" value="1080"/>
+			</network-handler>
+		</connection>
+	</data-source>
+	<data-source id="h2_embedded-160312c7f2a-2c24b6ac5ab1a1fb" provider="generic" driver="h2_embedded" name="H2 - dmc" save-password="true" show-system-objects="true" read-only="false">
+		<connection server="" database="mem:dmc" url="jdbc:h2:mem:dmc" type="dev"/>
+	</data-source>
+	<filters/>
+</data-sources>

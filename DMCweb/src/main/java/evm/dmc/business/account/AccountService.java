@@ -45,10 +45,10 @@ public class AccountService implements UserDetailsService {
 	@Autowired
 	private PasswordEncoder passwordEncoder;
 	
-	@Value("${dmc.security.account.username}")
+	@Value("${dmc.security.admin.username}")
 	private String admuser;
 	
-	@Value("${dmc.security.account.password}")
+	@Value("${dmc.security.admin.password}")
 	private String admpass;
 	
 	private static final String ADMIN_EMAIL = "admin@admin";

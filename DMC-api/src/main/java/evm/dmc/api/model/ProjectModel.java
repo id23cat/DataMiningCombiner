@@ -14,9 +14,8 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
-import javax.persistence.JoinTable;
-import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
 
@@ -50,10 +49,12 @@ public class ProjectModel implements Serializable {
 	@NotNull
 	private ProjectType type;
 	
-	@ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-	@JoinTable(name = "project_algorithm", 
-			joinColumns = @JoinColumn(name = "project_id", referencedColumnName = "id"),
-			inverseJoinColumns = @JoinColumn(name = "algorithm_id", referencedColumnName = "id"))
+//	@ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+//	@JoinTable(name = "project_algorithm", 
+//			joinColumns = @JoinColumn(name = "project_id", referencedColumnName = "id"),
+//			inverseJoinColumns = @JoinColumn(name = "algorithm_id", referencedColumnName = "id"))
+	@OneToMany(mappedBy="parentProject", fetch = FetchType.LAZY,
+			cascade = CascadeType.ALL, orphanRemoval = true)
 	private Set<AlgorithmModel> algorithms = new HashSet<>();
 	
 	private Properties properties = new Properties();
@@ -72,6 +73,18 @@ public class ProjectModel implements Serializable {
 		if(properties != null && !properties.isEmpty())
 			this.properties = new Properties(properties);
 		this.projectName = projectName;
+	}
+	
+	public ProjectModel addAlgorithm(AlgorithmModel algorithm){
+		algorithms.add(algorithm);
+		algorithm.setParentProject(this);
+		return this;
+	}
+	
+	public ProjectModel removeAlgorithm(AlgorithmModel algorithm) {
+		algorithms.remove(algorithm);
+		algorithm.setParentProject(null);
+		return this;
 	}
 	
 

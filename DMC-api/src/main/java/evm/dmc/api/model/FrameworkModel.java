@@ -4,6 +4,7 @@ import java.util.HashSet;
 import java.util.Properties;
 import java.util.Set;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
@@ -38,7 +39,8 @@ public class FrameworkModel {
 	@Length(max = 100)
 	private String name;
 	
-	@OneToMany(mappedBy = "framework", fetch = FetchType.LAZY)
+	@OneToMany(mappedBy = "framework", fetch = FetchType.LAZY,
+			cascade = CascadeType.ALL, orphanRemoval = true)
 	private Set<FunctionModel> functions = new HashSet<>();
 	
 	@Enumerated(EnumType.STRING)
@@ -56,6 +58,5 @@ public class FrameworkModel {
 		this.name = name;
 		this.type = type;
 	}
-	
 	
 }

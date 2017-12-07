@@ -5,10 +5,9 @@ import static org.junit.Assert.*;
 import java.io.File;
 import java.io.IOException;
 import java.util.Iterator;
-import java.util.Objects;
 import java.util.Set;
 
-import static org.assertj.core.api.Assertions.assertThat;
+import static org.hamcrest.Matchers.*;
 import static org.hamcrest.CoreMatchers.both;
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.CoreMatchers.not;
@@ -53,6 +52,7 @@ public class SimplestProjectImplTest {
 		project.addAlgorithm();
 		
 		ProjectModel model = project.getModel();
+//		assertThat((Collection)model.getAlgorithms(), is(not(empty())));
 		assertThat(model.getAlgorithms(), not(empty()));
 		assertThat(model.getAlgorithms().iterator().next().getName(), containsIgnoringCase("serialalgorithm"));
 

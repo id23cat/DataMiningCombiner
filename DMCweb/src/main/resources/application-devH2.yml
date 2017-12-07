@@ -1,0 +1,28 @@
+# devH2 -- H2 development profile
+
+spring:
+  include:
+    - default
+    
+  datasource:
+#    driver-class-name: org.h2database.jdbcDriver
+    url: jdbc:h2:mem:dmc
+
+# for H2 console frame
+security:
+  headers: 
+    frame: false
+        
+logging:
+  level:
+    org.springframework: ERROR
+    org.springframework.web: ERROR
+    org.springframework.security: WARN
+    org.springframework.data: DEBUG
+    org.hibernate.SQL: DEBUG
+    org.hibernate.type.descriptor.sql.BasicBinder: TRACE
+    evm.dmc.web: DEBUG
+
+views2:
+  showtable: /showtable/table
+  hellorest:  /helloREST

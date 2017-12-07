@@ -38,7 +38,44 @@
         <DMC-api.version>${version}</DMC-api.version>
         
 	</properties>
-
+	
+	<profiles>
+		<profile>
+			<id>devH2</id>
+			<activation>
+			 <!-- <activeByDefault>true</activeByDefault> -->
+	            <property>
+	                <name>spring.profiles.active</name>
+	                <value>devH2</value>
+	            </property>
+			</activation>
+			<dependencies>
+	            <dependency>
+	               <groupId>com.h2database</groupId>
+		            <artifactId>h2</artifactId>
+		       </dependency>
+	        </dependencies>
+		</profile>
+		
+		<profile>
+	        <id>devMySQL</id>
+	        <activation>
+	            <activeByDefault>true</activeByDefault>
+	            <property>
+	                <name>spring.profiles.active</name>
+	                <value>devMySQL</value>
+	            </property>
+	        </activation>
+	        <dependencies>
+	            <dependency>
+	                <groupId>mysql</groupId>
+            		<artifactId>mysql-connector-java</artifactId>
+	            </dependency>
+	        </dependencies>
+	    </profile>
+	</profiles>
+	
+	
 	<dependencies>
 		<dependency>
             <groupId>org.springframework.boot</groupId>
@@ -78,10 +115,7 @@
 			<scope>runtime</scope>
 		</dependency>
 		 -->
-        <dependency>
-            <groupId>com.h2database</groupId>
-            <artifactId>h2</artifactId>
-        </dependency>
+        
 		
 		<!-- Spring Security -->
 		<dependency>
@@ -184,6 +218,12 @@
 			<plugin>
 				<groupId>org.springframework.boot</groupId>
 				<artifactId>spring-boot-maven-plugin</artifactId>
+				<configuration>
+		          <profiles>
+		            <!-- <profile>devH2</profile> -->
+		            <profile>devMySQL</profile>
+		          </profiles>
+		        </configuration>
 			</plugin>
 
 			<plugin>

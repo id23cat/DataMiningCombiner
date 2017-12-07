@@ -1,0 +1,27 @@
+# devMySQL -- MySQL development profile
+
+spring:
+  include:
+    - default
+
+  jpa:
+    hibernate:
+      ddl-auto: create-drop
+  datasource:
+    url: jdbc:mysql://localhost:3306/DMC
+    username: root
+    password: my42dmc
+
+logging:
+  level:
+    org.springframework: ERROR
+    org.springframework.web: ERROR
+    org.springframework.security: WARN
+    org.springframework.data: DEBUG
+    org.hibernate.SQL: DEBUG
+    org.hibernate.type.descriptor.sql.BasicBinder: TRACE
+    evm.dmc.web: DEBUG
+    
+views2:
+  showtable: /showtable/table
+  hellorest:  /helloREST

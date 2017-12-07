@@ -27,7 +27,7 @@ import evm.dmc.web.security.CustomAccessDeniedHandler;
 @Configuration
 @EnableWebSecurity
 @EnableGlobalMethodSecurity(securedEnabled = true)
-@Profile({"devel", "test"})
+@Profile({"devH2", "devMySQL", "test"})
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
 	private static final Logger logger = LoggerFactory.getLogger(SecurityConfig.class);
 	private static final String[] PUBLIC_MATCHERS = {
