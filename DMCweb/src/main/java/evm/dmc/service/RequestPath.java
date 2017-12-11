@@ -8,7 +8,7 @@ import lombok.Getter;
 public  final  class RequestPath {
 	private RequestPath(){};
 	@Getter public static final String root = "/";
-	@Getter public static final String home = "/home";
+	@Getter public static final String home = root;
 	@Getter public static final String about = "/about";
 	@Getter public static final String register = "/register";
 	@Getter public static final String signin = "/signin";
@@ -16,6 +16,13 @@ public  final  class RequestPath {
 	@Getter public static final String adminHome = "/adminHome";
 	@Getter public static final String auth = "/authenticate";
 	@Getter public static final String logout = "/logout";
+	
+	@Getter public static final String project ="/project";
+	@Getter public static final String add ="/add";
+	@Getter public static final String addProject = project + add;
+	@Getter public static final String newAlg = project + "/newalg";
+	
+	@Getter public static final String algorithm = "/algorithm";
 	
 	@Getter public static final String erAccDenied = "/errors/accessDenied";
 	@Getter public static final String erNotFound = "/errors/notFound";

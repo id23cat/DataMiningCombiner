@@ -19,9 +19,9 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.access.AccessDeniedHandler;
 
 import evm.dmc.api.model.account.Role;
-import evm.dmc.business.account.AccountService;
+import evm.dmc.service.AccountService;
 import evm.dmc.service.RequestPath;
-import evm.dmc.web.SignInController;
+import evm.dmc.web.controllers.SignInController;
 import evm.dmc.web.security.CustomAccessDeniedHandler;
 
 @Configuration
@@ -104,7 +104,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 				.permitAll()
 				.failureUrl(RequestPath.signin+"?error=1")
 				.loginProcessingUrl(RequestPath.auth)
-				.defaultSuccessUrl(RequestPath.home)
+				.defaultSuccessUrl(RequestPath.project)
 			.and()
 			.logout()
 				.logoutUrl(RequestPath.logout) 

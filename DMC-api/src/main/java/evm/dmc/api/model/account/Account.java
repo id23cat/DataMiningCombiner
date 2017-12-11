@@ -30,12 +30,16 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import evm.dmc.api.model.ProjectModel;
 import lombok.AccessLevel;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import lombok.Setter;
+import lombok.ToString;
 
 @Entity
 @Data
 @Table(name="ACCOUNT")
 @Inheritance(strategy=InheritanceType.SINGLE_TABLE)
+@EqualsAndHashCode(exclude={"projects"})
+@ToString(exclude="projects")
 public class Account implements Serializable {
 	@Transient
 	private static final String NOT_BLANK_MESSAGE = "{error.emptyField}";

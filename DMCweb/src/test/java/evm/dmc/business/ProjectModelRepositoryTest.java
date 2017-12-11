@@ -6,6 +6,7 @@ import static org.junit.Assert.*;
 
 import java.util.Iterator;
 import java.util.List;
+import java.util.Optional;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -15,25 +16,27 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.boot.test.autoconfigure.orm.jpa.TestEntityManager;
+import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Import;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.context.WebApplicationContext;
 
 import evm.dmc.api.model.ProjectModel;
 import evm.dmc.api.model.ProjectType;
 import evm.dmc.api.model.account.Account;
 import evm.dmc.api.model.account.AccountExt;
-import evm.dmc.business.account.AccountRepository;
-import evm.dmc.business.account.AccountRepositoryTest;
-import evm.dmc.business.account.AccountService;
+import evm.dmc.service.AccountService;
 import evm.dmc.service.Views;
 import evm.dmc.testannotations.TransactionalDataTest;
+import evm.dmc.web.exceptions.ProjectNotFoundException;
 import evm.dmc.web.exceptions.UserNotExistsException;
 
 @RunWith(SpringRunner.class)
 @TransactionalDataTest
-@Import(AccountService.class)
+@ComponentScan( basePackages = { "evm.dmc.web", "evm.dmc.core", "evm.dmc.service", "evm.dmc.model", "org.springframework.web.context"})
+@Import({AccountService.class})
 public class ProjectModelRepositoryTest {
 	private static final Logger logger = LoggerFactory.getLogger(ProjectModelRepositoryTest.class);
 	private static final String PROJECTNAME_1 = "TestProject1";
@@ -42,8 +45,8 @@ public class ProjectModelRepositoryTest {
 	@Autowired
 	private ProjectModelRepository projectRepository;
 	
-	@Autowired
-	private AccountRepository accRepository;
+//	@Autowired
+//	private AccountRepository accRepository;
 	
 	@Autowired
     private TestEntityManager entityManager;
@@ -58,24 +61,21 @@ public class ProjectModelRepositoryTest {
 	}
 
 
-//	@Test
-//	public final void testFindAllByAccount() {
-//		Account account = accRepository.findByUserName("id42cat").get();
-//		assertNotNull(account);
-//		logger.debug("Account: ", account.getFirstName());
-//		assertThat(projectRepository.findByAccountId(account.getId()).iterator().next().getProjectName(), 
-//					anyOf(equalTo(PROJECTNAME_1), equalTo(PROJECTNAME_2)));
-//	}
-
 	@Test
-	public final void testFindAll() throws UserNotExistsException {
-		Account acc = accRepository.findByUserName("id42cat").orElseThrow(() -> new UserNotExistsException());
-		assertThat(acc.getProjects().size(), equalTo(2));
-		
-//		Iterator<ProjectModel> it = projectRepository.findAll().iterator();
-//		assertTrue(it.hasNext());
-
+	public final void testFindByProjectName() throws ProjectNotFoundException {
+		ProjectModel project = projectRepository.findByProjectName(PROJECTNAME_1).orElseThrow(()-> new ProjectNotFoundException("Project "+PROJECTNAME_1+" not found"));
+		assertNotNull(project);
 	}
+
+//	@Test
+//	public final void testFindAll() throws UserNotExistsException {
+//		Account acc = accRepository.findByUserName("id42cat").orElseThrow(() -> new UserNotExistsException());
+//		assertThat(acc.getProjects().size(), equalTo(2));
+//		
+////		Iterator<ProjectModel> it = projectRepository.findAll().iterator();
+////		assertTrue(it.hasNext());
+//
+//	}
 
 
 }

@@ -22,7 +22,10 @@
 	        <!-- Collect the nav links, forms, and other content for toggling -->
 			<div class="collapse navbar-collapse" id="myNavbar">
 				<ul class="nav navbar-nav">
-					<li th:classappend="${module == '/' ? 'active' : ''}">
+					<li sec:authorize="hasAuthority('USER')" th:classappend="${module == @requestPath.project ? 'active' : ''}">
+						<a th:href="${@requestPath.project}" >Projects</a>
+					</li>
+					<li sec:authorize="!isAuthenticated()" th:classappend="${module == '/' ? 'active' : ''}">
 						<a th:href="@{/}">Home</a>
 					</li>
 					<li th:classappend="${module == @requestPath.about ? 'active' : ''}">

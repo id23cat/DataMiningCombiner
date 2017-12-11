@@ -13,10 +13,7 @@ import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.servlet.ModelAndView;
 
 import evm.dmc.service.Views;
-
-//import com.google.common.base.Throwables;
-
-import evm.dmc.web.SignInController;
+import evm.dmc.web.controllers.SignInController;
 import lombok.extern.slf4j.Slf4j;
 
 /**

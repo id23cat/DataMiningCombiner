@@ -12,9 +12,9 @@ import org.springframework.jdbc.datasource.init.ScriptUtils;
 import org.springframework.web.context.WebApplicationContext;
 
 @Configuration
-@Profile("devel")
-public class DbDataInitializer {
-private final String SAMPLE_DATA = "classpath:data-h2-devel.sql";
+@Profile("devMySQL")
+public class DbDataInitializerMySQL {
+private final String SAMPLE_DATA = "classpath:data-mysql-devel.sql";
 	
 	@Autowired
 	private DataSource datasource;

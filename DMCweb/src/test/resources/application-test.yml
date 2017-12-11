@@ -29,7 +29,7 @@ logging:
 
 dmc:
   security:
-    account:
+    admin:
       username: admin
       password: adminpass
   

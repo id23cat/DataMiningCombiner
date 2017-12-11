@@ -21,6 +21,7 @@ public class Views {
 	
 	@Getter private final Fragments fragments = new Fragments();
 	@Getter private final Errors errors = new Errors();
+	@Getter private final Project project = new Project();
 			
 	@Data
 	public static class Fragments {
@@ -33,6 +34,13 @@ public class Views {
 		private String accessDenied;
 		private String notFound;
 		private String userExists;
+	}
+	
+	@Data
+	public static class Project {
+		private String main;
+		private String algorithmsList;
+		private String newAlg;
 	}
 
 }

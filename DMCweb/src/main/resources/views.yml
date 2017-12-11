@@ -13,6 +13,10 @@ views:
     accessDenied: errors/accessDenied
     notFound: errors/notFound
     userExists: errors/userExists
+  project:
+    main: "project/list"
+    algorithmsList: "project/algorithm/algslist"
+    newAlg: "project/algorithm/new"
   testing:
     testindex:  testing/testindex
     hello:  testing/hello?name=Alex

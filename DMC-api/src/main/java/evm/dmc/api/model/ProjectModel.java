@@ -24,12 +24,16 @@ import org.hibernate.validator.constraints.NotBlank;
 import evm.dmc.api.model.account.Account;
 import lombok.AccessLevel;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import lombok.Setter;
+import lombok.ToString;
 
 
 @Data
 @Entity
 @Table(name="PROJECT")
+@EqualsAndHashCode(exclude={"algorithms"})
+@ToString(exclude="algorithms")
 public class ProjectModel implements Serializable {
 	/**
 	 * 
@@ -47,7 +51,7 @@ public class ProjectModel implements Serializable {
 	
 	@Enumerated(EnumType.STRING)
 	@NotNull
-	private ProjectType type;
+	private ProjectType type = ProjectType.SIMPLEST_PROJECT;
 	
 //	@ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
 //	@JoinTable(name = "project_algorithm", 

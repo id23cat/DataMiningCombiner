@@ -1,4 +1,4 @@
-package evm.dmc.business.account;
+package evm.dmc.service;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.Assert.*;
@@ -22,7 +22,8 @@ import org.springframework.transaction.annotation.Transactional;
 
 import evm.dmc.api.model.account.Account;
 import evm.dmc.api.model.account.Role;
-import evm.dmc.web.SignInController;
+import evm.dmc.service.AccountService;
+import evm.dmc.web.controllers.SignInController;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest

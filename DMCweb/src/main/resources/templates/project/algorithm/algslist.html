@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layouts/layout}">
+
+<head>
+    <title>Algorithms List</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+    <link href="http://cdn.jsdelivr.net/webjars/bootstrap/3.3.7/css/bootstrap.min.css"
+          th:href="@{/webjars/bootstrap/3.3.7/css/bootstrap.min.css}"
+          rel="stylesheet" media="screen" />
+    <link href="../static/css/core.css"
+          th:href="@{/css/core.css}"
+          rel="stylesheet" media="screen" />
+    <script src="http://cdn.jsdelivr.net/webjars/jquery/3.2.1/jquery.min.js"
+            th:src="@{/webjars/jquery/3.2.1/jquery.min.js}"></script>
+
+</head>
+<body>
+<!-- Insert content into the layouts/layout.html -->
+<!-- <th:block th:if="${#fields.hasErrors('${newProject.*}') or errorMessage != null}"
+   	   	th:with="errMsg= ${#strings.isEmpty(errorMessage)} ? 'Form contains errors. Please try again.' : ${errorMessage}">
+    	
+        <div th:replace="fragments/alert :: alert (type='danger', message=${errMsg})">Alert</div>
+</th:block> -->
+<th:block layout:fragment="content">
+	<div class="row">
+		<h3>Algorithms:</h3>
+			<div class="col-sm-4">
+				<div th:each="project : ${projectsList}" th:with="base=${@requestPath.project}">
+					<h4>
+						<a href=/project/name th:href="@{{base}/{name}(base=${base}, name=${project.projectName})}">
+							<span th:text="${project.projectName}">Algorithm name</span>
+						</a><br>
+					</h4>
+				</div>
+			</div>
+		</div>
+		
+		<form method="post" 
+			th:action="${@requestPath.addProject}" 
+			th:object="${newProject}">
+			
+            <label for="newName" class="control-label">Add new algorithm</label>
+            <div class="input-group col-sm-4">
+                <input type="text" class="form-control" placeholder="New project name" th:field="*{projectName}" />
+                <span class="input-group-btn">
+                <button class="btn btn-primary" type="submit">Add</button>
+                </span>
+            </div>
+        </form>
+        
+		
+</th:block>
+ 
+</body>
+</html>

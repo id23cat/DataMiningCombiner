@@ -12,6 +12,7 @@ import java.lang.annotation.Target;
 
 import org.junit.runner.RunWith;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
+import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Import;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit4.SpringRunner;
@@ -24,7 +25,7 @@ import evm.dmc.service.Views;
 @Target({ TYPE })
 @DataJpaTest
 @Transactional
-@ActiveProfiles("test")
+@ActiveProfiles({"test", "devH2"})
 @Import(Views.class)
 public @interface TransactionalDataTest {
 

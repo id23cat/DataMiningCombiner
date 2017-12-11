@@ -1,4 +1,4 @@
-package evm.dmc.business.account;
+package evm.dmc.service;
 
 import java.util.Collections;
 
@@ -29,7 +29,8 @@ import org.springframework.transaction.annotation.Transactional;
 import evm.dmc.api.model.account.Account;
 import evm.dmc.api.model.account.AccountExt;
 import evm.dmc.api.model.account.Role;
-import evm.dmc.web.SignInController;
+import evm.dmc.business.AccountRepository;
+import evm.dmc.web.controllers.SignInController;
 import evm.dmc.web.exceptions.UserNotExistsException;
 
 
@@ -72,8 +73,11 @@ public class AccountService implements UserDetailsService {
 
 	@Override
 	public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-		Account account = accountRepository.findByUserName(username).get();
-		return createUser(account);
+		return createUser(getAccountByName(username));
+	}
+	
+	public Account getAccountByName(String username) throws UsernameNotFoundException {
+		return  accountRepository.findByUserName(username).orElseThrow(() -> new UsernameNotFoundException(username));
 	}
 	
 	public void signin(Account account) {
