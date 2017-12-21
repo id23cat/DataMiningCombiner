@@ -14,7 +14,6 @@ import java.util.List;
 import java.util.Optional;
 import java.util.Properties;
 
-import evm.dmc.api.model.DataSrcDstModel;
 import evm.dmc.api.model.DataSrcDstType;
 import evm.dmc.api.model.FunctionDstModel;
 import evm.dmc.api.model.FunctionModel;

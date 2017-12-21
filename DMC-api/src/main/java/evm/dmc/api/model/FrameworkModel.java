@@ -26,7 +26,7 @@ import lombok.Setter;
 
 @Data
 @Entity
-@Table(name = "framework")
+@Table(name = "Framework")
 @EqualsAndHashCode(exclude={"functions"})
 public class FrameworkModel {
 	

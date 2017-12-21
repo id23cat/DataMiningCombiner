@@ -9,7 +9,6 @@ import java.util.ListIterator;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import evm.dmc.api.model.AlgorithmModel;
-import evm.dmc.api.model.DataSrcDstModel;
 import evm.dmc.api.model.FunctionDstModel;
 import evm.dmc.api.model.FunctionModel;
 import evm.dmc.api.model.FunctionSrcModel;

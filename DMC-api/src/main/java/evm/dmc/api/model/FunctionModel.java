@@ -25,7 +25,7 @@ import lombok.Setter;
 
 @Data
 @Entity
-@Table(name = "function")
+@Table(name = "Function")
 @Inheritance(strategy=InheritanceType.SINGLE_TABLE)
 public class FunctionModel implements Serializable {
 	
