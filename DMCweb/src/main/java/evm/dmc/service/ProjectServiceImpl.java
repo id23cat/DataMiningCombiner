@@ -6,12 +6,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import evm.dmc.api.model.ProjectModel;
-import evm.dmc.api.model.account.Account;
 import evm.dmc.business.ProjectModelRepository;
-import evm.dmc.core.api.Project;
-import evm.dmc.core.api.SimplestProject;
 import evm.dmc.model.repositories.ProjectRepository;
-import evm.dmc.web.exceptions.ProjectNotFoundException;
 
 @Service
 public class ProjectServiceImpl implements ProjectService{
@@ -19,12 +15,10 @@ public class ProjectServiceImpl implements ProjectService{
 	private ProjectModelRepository projectMRepository;
 
 	private ProjectRepository projectRepository;
-	private Project project;
 	
 	@Autowired
-	public ProjectServiceImpl(ProjectRepository repo, @SimplestProject Project proj) {
+	public ProjectServiceImpl(ProjectRepository repo) {
 		this.projectRepository = repo;
-		this.project = proj;
 	}
 	
 	@Override

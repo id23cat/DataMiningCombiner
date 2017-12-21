@@ -33,7 +33,6 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 import evm.dmc.api.model.AlgorithmModel;
 import evm.dmc.core.api.Algorithm;
-import evm.dmc.core.api.Project;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest(webEnvironment = WebEnvironment.RANDOM_PORT, properties = "management.port=-1")
