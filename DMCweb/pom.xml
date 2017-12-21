@@ -43,7 +43,7 @@
 		<profile>
 			<id>devH2</id>
 			<activation>
-			 <!-- <activeByDefault>true</activeByDefault> -->
+			 <activeByDefault>true</activeByDefault>
 	            <property>
 	                <name>spring.profiles.active</name>
 	                <value>devH2</value>
@@ -60,7 +60,7 @@
 		<profile>
 	        <id>devMySQL</id>
 	        <activation>
-	            <activeByDefault>true</activeByDefault>
+	            <!-- <activeByDefault>true</activeByDefault> -->
 	            <property>
 	                <name>spring.profiles.active</name>
 	                <value>devMySQL</value>

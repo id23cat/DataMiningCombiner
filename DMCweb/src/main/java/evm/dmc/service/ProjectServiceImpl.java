@@ -1,9 +1,12 @@
 package evm.dmc.service;
 
+import java.util.Optional;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import evm.dmc.api.model.ProjectModel;
+import evm.dmc.api.model.account.Account;
 import evm.dmc.business.ProjectModelRepository;
 import evm.dmc.core.api.Project;
 import evm.dmc.core.api.SimplestProject;
@@ -35,10 +38,8 @@ public class ProjectServiceImpl implements ProjectService{
 	}
 
 	@Override
-	public ProjectModel getByName(String name) throws ProjectNotFoundException {
-		return projectMRepository.findByProjectName(name)
-				.orElseThrow(()-> new ProjectNotFoundException(String.format("Project %s not found", name)));
+	public Optional<ProjectModel> getByName(String name) {
+		return projectMRepository.findByProjectName(name);
 	}
 	
-
 }
