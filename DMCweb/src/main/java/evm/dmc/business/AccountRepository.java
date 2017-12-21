@@ -4,12 +4,12 @@ import java.util.List;
 import java.util.Optional;
 
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.repository.CrudRepository;
+import org.springframework.data.jpa.repository.JpaRepository;
 
 import evm.dmc.api.model.account.Account;
 import evm.dmc.api.model.account.Role;
 
-public interface AccountRepository extends CrudRepository<Account, Long> {
+public interface AccountRepository extends JpaRepository<Account, Long> {
 	Optional<Account> findByEmail(String email);
 	
 	Optional<Account> findByUserName(String userName);
