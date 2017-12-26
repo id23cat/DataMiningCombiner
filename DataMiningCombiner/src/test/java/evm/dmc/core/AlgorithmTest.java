@@ -14,7 +14,6 @@ import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.springframework.test.context.junit4.SpringRunner;
 
-import evm.dmc.core.api.Algorithm;
 import evm.dmc.core.api.DMCFunction;
 
 /**
@@ -33,7 +32,7 @@ public class AlgorithmTest {
 	}
 
 	/**
-	 * Test method for {@link evm.dmc.core.api.Algorithm#addCommand(evm.dmc.core.api.DMCFunction)}.
+	 * Test method for {@link evm.dmc.core.Algorithm#addCommand(evm.dmc.core.api.DMCFunction)}.
 	 */
 	@Test
 	public final void testAddCommand() {		
@@ -43,7 +42,7 @@ public class AlgorithmTest {
 	}
 
 	/**
-	 * Test method for {@link evm.dmc.core.api.Algorithm#delCommand(evm.dmc.core.api.DMCFunction)}.
+	 * Test method for {@link evm.dmc.core.Algorithm#delCommand(evm.dmc.core.api.DMCFunction)}.
 	 */
 	@Test
 	public final void testDelCommand() {		
@@ -55,7 +54,7 @@ public class AlgorithmTest {
 	}
 
 	/**
-	 * Test method for {@link evm.dmc.core.api.Algorithm#execute()}.
+	 * Test method for {@link evm.dmc.core.Algorithm#execute()}.
 	 * @throws IOException 
 	 */
 	@Test

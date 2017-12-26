@@ -6,20 +6,17 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.ListIterator;
 
-import org.springframework.beans.factory.annotation.Autowired;
 
 import evm.dmc.api.model.AlgorithmModel;
 import evm.dmc.api.model.FunctionDstModel;
 import evm.dmc.api.model.FunctionModel;
 import evm.dmc.api.model.FunctionSrcModel;
-import evm.dmc.core.api.Algorithm;
 import evm.dmc.core.api.DMCDataLoader;
 import evm.dmc.core.api.DMCDataSaver;
 import evm.dmc.core.api.DMCFunction;
 import evm.dmc.core.api.Data;
-import evm.dmc.core.api.FrameworksRepository;
 import evm.dmc.core.api.exceptions.NoSuchFunctionException;
-import evm.dmc.core.api.exceptions.StoreDataException;
+import evm.dmc.core.services.FrameworksService;
 
 /**
  * The Class SerialAlgorithm. Serial Implementation of interface, means serial
@@ -33,26 +30,26 @@ public class SerialAlgorithm implements Algorithm {
 	private List<DMCFunction<?>> algChain = new LinkedList<>();
 	private DMCDataSaver dataDestination = null;
 
-	private FrameworksRepository repository = null;
+	private FrameworksService frameworks = null;
 	private boolean modifyModel = true;
 
 	public SerialAlgorithm() {
 		model.setName(NAME);
 	};
 
-	public SerialAlgorithm(FrameworksRepository repo) {
-		setFrameworksRepository(repo);
+	public SerialAlgorithm(FrameworksService service) {
+		setFrameworksRepository(service);
 		model.setName(NAME);
 	};
 
-	public SerialAlgorithm(FrameworksRepository repo, AlgorithmModel model) {
-		setFrameworksRepository(repo);
+	public SerialAlgorithm(FrameworksService service, AlgorithmModel model) {
+		setFrameworksRepository(service);
 		setModel(model);
 	}
 
 	@Override
-	public Algorithm setFrameworksRepository(FrameworksRepository repo) {
-		this.repository = repo;
+	public Algorithm setFrameworksRepository(FrameworksService service) {
+		this.frameworks = service;
 		return this;
 	}
 
@@ -71,7 +68,7 @@ public class SerialAlgorithm implements Algorithm {
 
 	@Override
 	public void addCommand(String descriptor) {
-		addCommand(repository.getFunction(descriptor));
+		addCommand(frameworks.getFunction(descriptor));
 
 	}
 
@@ -132,7 +129,7 @@ public class SerialAlgorithm implements Algorithm {
 
 	@Override
 	public void insertCommandAfter(String descriptor, DMCFunction<?> after) throws NoSuchFunctionException {
-		insertCommandAfter(repository.getFunction(descriptor), after);
+		insertCommandAfter(frameworks.getFunction(descriptor), after);
 
 	}
 
@@ -166,12 +163,12 @@ public class SerialAlgorithm implements Algorithm {
 	
 	@Override
 	public void insertCommandBefore(String descriptor, DMCFunction<?> before) throws NoSuchFunctionException {
-		insertCommandBefore(repository.getFunction(descriptor), before);
+		insertCommandBefore(frameworks.getFunction(descriptor), before);
 	}
 
 	@Override
 	public void insertCommand(FunctionModel functionModel, Integer index) throws NoSuchFunctionException {
-		insertCommand(repository.getFunction(functionModel.getName()), index);
+		insertCommand(frameworks.getFunction(functionModel.getName()), index);
 	}
 
 	private void insertCommand(DMCFunction<?> dMCFunction, Integer index) throws NoSuchFunctionException {
@@ -240,14 +237,14 @@ public class SerialAlgorithm implements Algorithm {
 
 	@Override
 	public void addDataSource(String descriptor, String source) {
-		DMCDataLoader dataLoader = (DMCDataLoader) repository.getFunction(descriptor);
+		DMCDataLoader dataLoader = (DMCDataLoader) frameworks.getFunction(descriptor);
 		dataLoader.setSource(source);
 		addDataSource(dataLoader);
 	}
 
 	@Override
 	public void addDataSource(FunctionModel functionModel) {
-		DMCDataLoader dataLoader = (DMCDataLoader) repository.getFunction(functionModel.getName());
+		DMCDataLoader dataLoader = (DMCDataLoader) frameworks.getFunction(functionModel.getName());
 		if (functionModel instanceof FunctionSrcModel)
 			dataLoader.setSrcModel((FunctionSrcModel) functionModel);
 		else
@@ -269,7 +266,7 @@ public class SerialAlgorithm implements Algorithm {
 	@Override
 	public void addDataDestination(String descriptor, String destination) {
 		// addDataDestination((DMCDataSaver)repository.getFunction(descriptor));
-		DMCDataSaver dataSaver = (DMCDataSaver) repository.getFunction(descriptor);
+		DMCDataSaver dataSaver = (DMCDataSaver) frameworks.getFunction(descriptor);
 		dataSaver.setDestination(destination);
 		addDataDestination(dataSaver);
 	}
@@ -277,7 +274,7 @@ public class SerialAlgorithm implements Algorithm {
 	@Override
 	public void addDataDestination(FunctionModel functionModel) {
 		// addDataDestination(functionModel.getName(), null);
-		DMCDataSaver dataSaver = (DMCDataSaver) repository.getFunction(functionModel.getName());
+		DMCDataSaver dataSaver = (DMCDataSaver) frameworks.getFunction(functionModel.getName());
 		if (functionModel instanceof FunctionDstModel)
 			dataSaver.setDstModel((FunctionDstModel) functionModel);
 		else

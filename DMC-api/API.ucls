@@ -10,16 +10,7 @@
       <operations public="true" package="true" protected="true" private="true" static="true"/>    
     </display>  
   </class>  
-  <annotation id="2" language="java" name="evm.dmc.core.api.SimplestProject" project="DMC-api" 
-    file="/DMC-api/src/main/java/evm/dmc/core/api/SimplestProject.java" binary="false" corner="BOTTOM_RIGHT">    
-    <position height="-1" width="-1" x="463" y="95"/>    
-    <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
-      sort-features="false" accessors="true" visibility="true">      
-      <attributes public="true" package="true" protected="true" private="true" static="true"/>      
-      <operations public="true" package="true" protected="true" private="true" static="true"/>    
-    </display>  
-  </annotation>  
-  <interface id="3" language="java" name="evm.dmc.core.api.DMCFunction" project="DMC-api" 
+  <interface id="2" language="java" name="evm.dmc.core.api.DMCFunction" project="DMC-api" 
     file="/DMC-api/src/main/java/evm/dmc/core/api/DMCFunction.java" binary="false" corner="BOTTOM_RIGHT">    
     <position height="-1" width="-1" x="502" y="312"/>    
     <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
@@ -28,7 +19,7 @@
       <operations public="true" package="true" protected="true" private="true" static="true"/>    
     </display>  
   </interface>  
-  <interface id="4" language="java" name="evm.dmc.core.api.DMCDataLoader" project="DMC-api" 
+  <interface id="3" language="java" name="evm.dmc.core.api.DMCDataLoader" project="DMC-api" 
     file="/DMC-api/src/main/java/evm/dmc/core/api/DMCDataLoader.java" binary="false" corner="BOTTOM_RIGHT">    
     <position height="-1" width="-1" x="216" y="773"/>    
     <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
@@ -37,7 +28,7 @@
       <operations public="true" package="true" protected="true" private="true" static="true"/>    
     </display>  
   </interface>  
-  <interface id="5" language="java" name="evm.dmc.core.api.DMCDataSaver" project="DMC-api" 
+  <interface id="4" language="java" name="evm.dmc.core.api.DMCDataSaver" project="DMC-api" 
     file="/DMC-api/src/main/java/evm/dmc/core/api/DMCDataSaver.java" binary="false" corner="BOTTOM_RIGHT">    
     <position height="-1" width="-1" x="221" y="619"/>    
     <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
@@ -46,7 +37,7 @@
       <operations public="true" package="true" protected="true" private="true" static="true"/>    
     </display>  
   </interface>  
-  <interface id="6" language="java" name="evm.dmc.core.api.Data" project="DMC-api" 
+  <interface id="5" language="java" name="evm.dmc.core.api.Data" project="DMC-api" 
     file="/DMC-api/src/main/java/evm/dmc/core/api/Data.java" binary="false" corner="BOTTOM_RIGHT">    
     <position height="-1" width="-1" x="476" y="625"/>    
     <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
@@ -55,7 +46,7 @@
       <operations public="true" package="true" protected="true" private="true" static="true"/>    
     </display>  
   </interface>  
-  <interface id="7" language="java" name="evm.dmc.core.api.Framework" project="DMC-api" 
+  <interface id="6" language="java" name="evm.dmc.core.api.Framework" project="DMC-api" 
     file="/DMC-api/src/main/java/evm/dmc/core/api/Framework.java" binary="false" corner="BOTTOM_RIGHT">    
     <position height="-1" width="-1" x="794" y="173"/>    
     <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
@@ -64,7 +55,7 @@
       <operations public="true" package="true" protected="true" private="true" static="true"/>    
     </display>  
   </interface>  
-  <interface id="8" language="java" name="evm.dmc.core.api.FrameworksRepository" project="DMC-api" 
+  <interface id="7" language="java" name="evm.dmc.core.api.FrameworksRepository" project="DMC-api" 
     file="/DMC-api/src/main/java/evm/dmc/core/api/FrameworksRepository.java" binary="false" corner="BOTTOM_RIGHT">    
     <position height="-1" width="-1" x="827" y="617"/>    
     <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
@@ -73,17 +64,8 @@
       <operations public="true" package="true" protected="true" private="true" static="true"/>    
     </display>  
   </interface>  
-  <interface id="9" language="java" name="evm.dmc.core.api.Project" project="DMC-api" 
-    file="/DMC-api/src/main/java/evm/dmc/core/api/Project.java" binary="false" corner="BOTTOM_RIGHT">    
-    <position height="-1" width="-1" x="1198" y="794"/>    
-    <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
-      sort-features="false" accessors="true" visibility="true">      
-      <attributes public="true" package="true" protected="true" private="true" static="true"/>      
-      <operations public="true" package="true" protected="true" private="true" static="true"/>    
-    </display>  
-  </interface>  
-  <interface id="10" language="java" name="evm.dmc.core.api.Algorithm" project="DMC-api" 
-    file="/DMC-api/src/main/java/evm/dmc/core/api/Algorithm.java" binary="false" corner="BOTTOM_RIGHT">    
+  <interface id="8" language="java" name="evm.dmc.core.Algorithm" project="dmcombiner" 
+    file="/dmcombiner/src/main/java/evm/dmc/core/Algorithm.java" binary="false" corner="BOTTOM_RIGHT">    
     <position height="-1" width="-1" x="1212" y="294"/>    
     <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
       sort-features="false" accessors="true" visibility="true">      

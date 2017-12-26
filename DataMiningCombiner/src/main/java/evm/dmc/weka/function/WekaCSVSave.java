@@ -176,9 +176,10 @@ public class WekaCSVSave extends AbstractDMCFunction<String> implements CSVSaver
 	}
 	
 	@Override
-	public void setFunctionModel(FunctionModel model) {
+	public WekaCSVSave setFunctionModel(FunctionModel model) {
 		this.model = new FunctionDstModel(model);
 		setFunctionProperties(this.model.getProperties());
+		return this;
 	}
 
 	@Override

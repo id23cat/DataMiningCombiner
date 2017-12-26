@@ -277,9 +277,10 @@ public class WekaCSVLoad extends AbstractDMCFunction<Instances>
 	}
 	
 	@Override
-	public void setFunctionModel(FunctionModel model) {
+	public WekaCSVLoad setFunctionModel(FunctionModel model) {
 		this.model = new FunctionSrcModel(model);
 		setFunctionProperties(this.model.getProperties());
+		return this;
 	}
 
 	@Override

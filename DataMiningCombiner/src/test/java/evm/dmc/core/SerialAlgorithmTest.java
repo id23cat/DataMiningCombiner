@@ -25,10 +25,9 @@ import evm.dmc.api.model.AlgorithmModel;
 import evm.dmc.api.model.FunctionDstModel;
 import evm.dmc.api.model.FunctionModel;
 import evm.dmc.api.model.FunctionSrcModel;
-import evm.dmc.core.api.Algorithm;
 import evm.dmc.core.api.DMCDataLoader;
 import evm.dmc.core.api.DMCDataSaver;
-import evm.dmc.core.api.FrameworksRepository;
+import evm.dmc.core.services.FrameworksService;
 import evm.dmc.weka.function.WekaFunctions;
 
 @RunWith(SpringRunner.class)
@@ -36,12 +35,12 @@ import evm.dmc.weka.function.WekaFunctions;
 @TestPropertySource("classpath:wekatest.properties")
 public class SerialAlgorithmTest {
 	Algorithm algorithm = null;
-	Map<String, String> loadersMap = null;
-	Map<String, String> saversMap = null;
-	Map<String, String> functionsMap = null;
+//	Map<String, String> loadersMap = null;
+//	Map<String, String> saversMap = null;
+//	Map<String, String> functionsMap = null;
 
 	@Autowired
-	FrameworksRepository repo = null;
+	FrameworksService repo = null;
 
 	@Value("${wekatest.datasourceSmall}")
 	String file;
@@ -50,9 +49,9 @@ public class SerialAlgorithmTest {
 
 	@PostConstruct
 	public void init() {
-		loadersMap = repo.filterFunctionMap(repo.getDataLoadersDescriptorsMap(), "csv");
-		saversMap = repo.filterFunctionMap(repo.getDataSaversDescriptorsMap(), "csv");
-		functionsMap = repo.getFunctionsDescriptors();
+//		loadersMap = repo.filterFunctionMap(repo.getDataLoadersDescriptorsMap(), "csv");
+//		saversMap = repo.filterFunctionMap(repo.getDataSaversDescriptorsMap(), "csv");
+//		functionsMap = repo.getFunctionsDescriptors();
 	}
 
 	@Before

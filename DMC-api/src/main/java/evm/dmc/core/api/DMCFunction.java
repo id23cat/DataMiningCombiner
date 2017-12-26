@@ -55,7 +55,7 @@ public interface DMCFunction<T> extends HasNameAndDescription {
 
 	}
 	
-	void setFunctionModel(FunctionModel model);
+	DMCFunction<T> setFunctionModel(FunctionModel model);
 	
 	FunctionModel getFunctionModel();
 	

@@ -1,15 +1,12 @@
-package evm.dmc.core;
+package evm.dmc.core.services;
 
-import static org.hamcrest.CoreMatchers.both;
+import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.CoreMatchers.hasItems;
-import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.Matchers.empty;
-import static org.hamcrest.Matchers.hasEntry;
 import static org.hamcrest.Matchers.not;
 import static org.junit.Assert.*;
 
 import java.util.Arrays;
-import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 
@@ -19,18 +16,24 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringRunner;
 
+import evm.dmc.api.model.FrameworkModel;
+import evm.dmc.api.model.FrameworkType;
+import evm.dmc.api.model.FunctionModel;
+import evm.dmc.api.model.FunctionType;
+import evm.dmc.core.DMCCoreConfig;
+import evm.dmc.core.TestUtils;
 import evm.dmc.core.api.DMCFunction;
 import evm.dmc.core.api.Framework;
-import evm.dmc.core.api.FrameworksRepository;
 import evm.dmc.weka.WekaFramework;
 import evm.dmc.weka.function.WekaCSVLoad;
 import evm.dmc.weka.function.WekaFunctions;
 
 @RunWith(SpringRunner.class)
 @ContextConfiguration(classes = DMCCoreConfig.class)
-public class FrameworksRepositoryImplTest {
+public class FrameworksServiceImplTest {
+	
 	@Autowired
-	FrameworksRepository repo;
+	FrameworksService repo;
 
 	@Test
 	public void testGetFrameworksDescriptors() {
@@ -41,9 +44,9 @@ public class FrameworksRepositoryImplTest {
 
 		assertThat(names, hasItems("wekaFramework"));
 	}
-
+	
 	@Test
-	public void testGetFramework() {
+	public final void testGetFramework() {
 		Framework fw = repo.getFramework("wekaFramework");
 		assertNotNull(fw);
 		assertTrue(fw instanceof WekaFramework);
@@ -51,49 +54,13 @@ public class FrameworksRepositoryImplTest {
 		System.out.println(fw.getLoaderDescriptors());
 		System.out.println(fw.getSaverDescriptors());
 	}
-
+	
 	@Test
 	public void testGetFunctionsDescriptors() {
 		Map<String, String> fdescriptors = repo.getFunctionsDescriptors();
 		assertThat(fdescriptors.values(), not(empty()));
 
 		System.out.println(TestUtils.printMap(fdescriptors));
-	}
-
-	@Test
-	public void testGetFunctionsDescriptions() {
-		Map<String, String> descriptions = repo
-				.getFunctionsDescriptionsMap(repo.getFunctionsDescriptors().keySet());
-		assertThat(descriptions.keySet(), not(empty()));
-		assertThat(descriptions.values(), not(empty()));
-		for (String desc : descriptions.values())
-			assertThat(desc.isEmpty(), is(false));
-		System.out.println(TestUtils.printMap(descriptions));
-	}
-	
-	@Test
-	public void testFilterFunction() {
-		Map<String, String> map = new HashMap<>();
-		map.put("Some word","Value 1");
-		map.put("Another_word", "value 2");
-		map.put("Bad string", "Value 3");
-		map.put("The last word", "value 4");
-		
-		repo.filterFunctionMap(map, "word");
-		System.out.println(TestUtils.printMap(map));
-		
-		assertThat(map, not(hasEntry("Bad string","Value 3")));
-		
-	}
-	
-	@Test
-	public void testFindFunctionByWord() {
-		Map<String,String> map = repo.findFunctionByWordMap("csv");
-		System.out.println(TestUtils.printMap(map));
-		
-		assertThat(map.keySet(), hasItems("Weka_CSVLoader", "Weka_CSVSaver"));
-		repo.filterFunctionMap(map, "load");
-		assertThat(map.keySet(), both(hasItems("Weka_CSVLoader")).and(not(hasItems("Weka_CSVSaver"))));
 	}
 	
 	@Test
@@ -103,7 +70,17 @@ public class FrameworksRepositoryImplTest {
 		assertNotNull(func);
 		assertTrue(func instanceof WekaCSVLoad);
 		 
-		
 	}
+	
+	@Test
+	public void testGetFunctionByModel() {
+		FunctionModel fnModel = new FunctionModel();
+		fnModel.setFramework(repo.getFramework("wekaFramework").getFrameworkModel());
+		fnModel.setName("Weka_CSVLoader");
+		fnModel.setType(FunctionType.CSV_DATASOURCE);
+		DMCFunction fun = repo.getFunction(fnModel);
+		assertThat(fun.getName(), equalTo("Weka_CSVLoader"));
+	}
+
 
 }

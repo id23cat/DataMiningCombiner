@@ -16,6 +16,7 @@ import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Service;
 
 import evm.dmc.api.model.FrameworkModel;
+import evm.dmc.api.model.FunctionModel;
 import evm.dmc.core.AbstractFramework;
 import evm.dmc.core.api.DMCDataLoader;
 import evm.dmc.core.api.DMCDataSaver;
@@ -33,14 +34,11 @@ public class FrameworksServiceImpl implements FrameworksService {
 	private static Class<AbstractFramework> frameworkClass = AbstractFramework.class;
 	
 	private FrameworkModelCoreRepository frameRepo;
-	private FunctionModelCoreRepository funcRepo;
 	
 	private Set<String> frmwkIDs = new HashSet<String>();
 
-	public FrameworksServiceImpl(@Autowired FrameworkModelCoreRepository frameRepo,
-			@Autowired FunctionModelCoreRepository funcRepo) {
+	public FrameworksServiceImpl(@Autowired FrameworkModelCoreRepository frameRepo) {
 		this.frameRepo = frameRepo;
-		this.funcRepo = funcRepo;
 	}
 	
 	@PostConstruct
@@ -56,6 +54,11 @@ public class FrameworksServiceImpl implements FrameworksService {
 	}
 	
 	@Override
+	public Set<String> getFrameworksDescriptors() {
+		return frmwkIDs;
+	}
+	
+	@Override
 	public void setApplicationContext(ApplicationContext applicationContext) throws BeansException {
 		this.applicationContext = applicationContext;
 	}
@@ -65,12 +68,30 @@ public class FrameworksServiceImpl implements FrameworksService {
 	public Framework getFramework(String descriptor) {
 		return applicationContext.getBean(descriptor, frameworkClass);
 	}
+	
+	/**
+	 * @return Map<Framework_descriptor, Set<Framework's_functions>>
+	 */
+	@Override
+	public Map<String, String> getFunctionsDescriptors() {
+		Map<String, String> functions = new HashMap<>();
+		for (String framework : getFrameworksDescriptors()) {
+			for(String function : getFramework(framework).getFunctionDescriptors())
+				functions.put(function, framework);
+		}
+		return functions;
+	} 
 
 	@Override
 	public DMCFunction<?> getFunction(String descriptor) throws NoSuchFunctionException {
 		Map<String, String> funcMap = getFunctionsDescriptors();
 		
 		return getFunction(descriptor, funcMap.get(descriptor));
+	}
+	
+	@Override
+	public DMCFunction<?> getFunction(FunctionModel model) throws NoSuchFunctionException {
+		return getFunction(model.getName(), model.getFramework().getName()).setFunctionModel(model);
 	}
 
 	@Override
@@ -97,21 +118,9 @@ public class FrameworksServiceImpl implements FrameworksService {
 		return framework.getDMCFunction(descriptor);
 	}
 	
-	/**
-	 * @return Map<Framework_descriptor, Set<Framework's_functions>>
-	 */
-	private Map<String, String> getFunctionsDescriptors() {
-		Map<String, String> functions = new HashMap<>();
-		for (String framework : getFrameworksDescriptors()) {
-			for(String function : getFramework(framework).getFunctionDescriptors())
-				functions.put(function, framework);
-		}
-		return functions;
-	} 
 	
-	private Set<String> getFrameworksDescriptors() {
-		return frmwkIDs;
-	}
+	
+	
 	
 	private <T> T getFunction(String descriptor, Framework framework, Class<T> type) {
 		return framework.getDMCFunction(descriptor, type);

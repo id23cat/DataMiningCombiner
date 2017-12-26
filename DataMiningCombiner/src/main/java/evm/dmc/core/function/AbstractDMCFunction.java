@@ -85,9 +85,10 @@ public abstract class AbstractDMCFunction<T> implements DMCFunction<T> {
 		return arguments;
 	}
 
-	public void setFunctionModel(FunctionModel model) {
+	public DMCFunction<T> setFunctionModel(FunctionModel model) {
 		this.functionModel = model;
 		setFunctionProperties(this.functionModel.getProperties());
+		return this;
 	}
 
 	public FunctionModel getFunctionModel() {

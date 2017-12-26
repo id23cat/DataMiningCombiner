@@ -1,12 +1,15 @@
-package evm.dmc.core.api;
+package evm.dmc.core;
 
 import java.io.IOException;
 import java.util.List;
 
 import evm.dmc.api.model.AlgorithmModel;
 import evm.dmc.api.model.FunctionModel;
+import evm.dmc.core.api.DMCDataLoader;
+import evm.dmc.core.api.DMCDataSaver;
 import evm.dmc.core.api.DMCFunction;
 import evm.dmc.core.api.exceptions.NoSuchFunctionException;
+import evm.dmc.core.services.FrameworksService;
 
 /**
  * The Interface Algorithm.
@@ -17,7 +20,7 @@ import evm.dmc.core.api.exceptions.NoSuchFunctionException;
  */
 public interface Algorithm {
 	
-	Algorithm setFrameworksRepository(FrameworksRepository repo);
+	Algorithm setFrameworksRepository(FrameworksService repo);
 	
 	/**
 	 * Adds the command to the chain of algorithm
