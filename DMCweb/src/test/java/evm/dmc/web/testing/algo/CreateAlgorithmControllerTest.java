@@ -38,6 +38,7 @@ import evm.dmc.core.api.Algorithm;
 @SpringBootTest(webEnvironment = WebEnvironment.RANDOM_PORT, properties = "management.port=-1")
 //@WebMvcTest(controllers = {CreateAlgorithmController.class}, secure = false)
 @AutoConfigureMockMvc
+@Ignore
 public class CreateAlgorithmControllerTest {
 		
 //	@MockBean

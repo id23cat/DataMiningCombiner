@@ -16,11 +16,13 @@ import evm.dmc.service.testing.TestingViewsService;
 import evm.dmc.web.testing.hello.HelloController;
 
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
 @RunWith(SpringRunner.class)
 @WebMvcTest(value = HelloController.class, secure = false)
+@Ignore
 public class HelloControllerTest {
 	@Autowired
 	private MockMvc mvc;

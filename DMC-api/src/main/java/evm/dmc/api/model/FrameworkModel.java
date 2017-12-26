@@ -23,11 +23,13 @@ import lombok.AccessLevel;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.Setter;
+import lombok.ToString;
 
 @Data
 @Entity
 @Table(name = "Framework")
 @EqualsAndHashCode(exclude={"functions"})
+@ToString(exclude="functions")
 public class FrameworkModel {
 	
 	@Id
@@ -47,6 +49,9 @@ public class FrameworkModel {
 	@NotNull
 	private FrameworkType type;
 	
+	@NotNull
+	private boolean active = false;
+	
 	private Properties properties = new Properties();
 	
 	public FrameworkModel() {
@@ -57,6 +62,12 @@ public class FrameworkModel {
 		super();
 		this.name = name;
 		this.type = type;
+	}
+	
+	public boolean isSame(FrameworkModel model) {
+		return name.equals(model.getName()) 
+				&& type.equals(model.getType()) 
+				&& active == model.isActive();
 	}
 	
 }

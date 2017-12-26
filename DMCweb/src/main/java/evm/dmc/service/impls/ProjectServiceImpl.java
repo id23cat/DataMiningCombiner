@@ -1,4 +1,4 @@
-package evm.dmc.service;
+package evm.dmc.service.impls;
 
 import java.util.Optional;
 
@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 import evm.dmc.api.model.ProjectModel;
 import evm.dmc.business.ProjectModelRepository;
 import evm.dmc.model.repositories.ProjectRepository;
+import evm.dmc.service.ProjectService;
 
 @Service
 public class ProjectServiceImpl implements ProjectService{

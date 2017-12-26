@@ -55,6 +55,7 @@ public abstract class AbstractDMCFunction<T> implements DMCFunction<T> {
 		functionModel.setName(getName());
 		functionModel.setType(getFunctionType());
 		functionModel.setProperties(getProperties());
+		functionModel.setDescription(getDescription());
 	}
 
 	/**

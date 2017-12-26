@@ -18,11 +18,13 @@ spring:
 
 # Logging Configuration
 logging:
+  debug: true
 #  config: log4j2.xml
   level:
-    org.springframework.test: DEBUG
-    org.springframework.web: INFO
+    org.springframework.test: WARN
+    org.springframework.web: WARN
     evm.dmc.web: DEBUG
+    evm.dmc.service: DEBUG
     org.springframework.data: DEBUG
     org.hibernate.SQL: TRACE
     org.hibernate.type.descriptor.sql.BasicBinder: TRACE

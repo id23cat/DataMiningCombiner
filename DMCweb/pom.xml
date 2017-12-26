@@ -36,6 +36,7 @@
         <commons-lang3.version>3.7</commons-lang3.version>
         <dmcombiner.version>${version}</dmcombiner.version>
         <DMC-api.version>${version}</DMC-api.version>
+        <assertj-core.version>3.8.0</assertj-core.version>
         
 	</properties>
 	
@@ -164,7 +165,8 @@
 			<artifactId>spring-boot-starter-test</artifactId>
 			<scope>test</scope>
 		</dependency>
-
+		
+		
 		<!-- Tomcat embedded container -->
 		<dependency>
 			<groupId>org.springframework.boot</groupId>

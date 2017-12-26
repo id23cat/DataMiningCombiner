@@ -53,6 +53,8 @@ public class FunctionModel implements Serializable {
 	
 	private Properties properties = new Properties();
 	
+	private String description;
+	
 	public FunctionModel(){}
 	
 	public FunctionModel(FunctionModel funmodel){
@@ -60,6 +62,7 @@ public class FunctionModel implements Serializable {
 		framework = funmodel.getFramework();
 		type = funmodel.getType();
 		properties = funmodel.getProperties();
+		description = funmodel.getDescription();
 	}
 	
 }
