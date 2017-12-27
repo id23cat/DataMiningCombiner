@@ -13,9 +13,16 @@ import java.util.Set;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.SpringBootConfiguration;
+import org.springframework.boot.autoconfigure.AutoConfigurationPackage;
+import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.context.annotation.ComponentScan;
+import org.springframework.test.annotation.Rollback;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringRunner;
 
+import evm.dmc.DataMiningCombinerApplicationTests;
 import evm.dmc.api.model.FrameworkModel;
 import evm.dmc.api.model.FrameworkType;
 import evm.dmc.api.model.FunctionModel;
@@ -29,7 +36,13 @@ import evm.dmc.weka.function.WekaCSVLoad;
 import evm.dmc.weka.function.WekaFunctions;
 
 @RunWith(SpringRunner.class)
-@ContextConfiguration(classes = DMCCoreConfig.class)
+@ContextConfiguration(classes = {DMCCoreConfig.class, FrameworksService.class, DataMiningCombinerApplicationTests.class})
+//@SpringBootTest	// https://github.com/spring-projects/spring-boot/issues/10465
+@DataJpaTest
+@Rollback
+@ComponentScan( basePackages = { "evm.dmc.core", "evm.dmc.model", "evm.dmc.api.model"})
+//@SpringBootConfiguration
+//@AutoConfigurationPackage
 public class FrameworksServiceImplTest {
 	
 	@Autowired
@@ -76,10 +89,10 @@ public class FrameworksServiceImplTest {
 	public void testGetFunctionByModel() {
 		FunctionModel fnModel = new FunctionModel();
 		fnModel.setFramework(repo.getFramework("wekaFramework").getFrameworkModel());
-		fnModel.setName("Weka_CSVLoader");
+		fnModel.setName(WekaFunctions.KMEANS);
 		fnModel.setType(FunctionType.CSV_DATASOURCE);
-		DMCFunction fun = repo.getFunction(fnModel);
-		assertThat(fun.getName(), equalTo("Weka_CSVLoader"));
+		DMCFunction<?> fun = repo.getFunction(fnModel);
+		assertThat(fun.getName(), equalTo(WekaFunctions.KMEANS));
 	}
 
 
