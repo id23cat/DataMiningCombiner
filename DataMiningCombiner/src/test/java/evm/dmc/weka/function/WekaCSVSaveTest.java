@@ -14,10 +14,13 @@ import org.junit.rules.TemporaryFolder;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
+import org.springframework.context.annotation.ComponentScan;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.context.junit4.SpringRunner;
 
+import evm.dmc.DataMiningCombinerApplicationTests;
 import evm.dmc.core.api.Data;
 import evm.dmc.core.api.back.CSVLoader;
 import evm.dmc.core.api.exceptions.StoreDataException;
@@ -26,8 +29,10 @@ import evm.dmc.weka.WekaFW;
 import evm.dmc.weka.WekaFramework;
 
 @RunWith(SpringRunner.class)
-@ContextConfiguration(classes = DMCWekaConfig.class)
 @TestPropertySource("classpath:wekatest.properties")
+@ContextConfiguration(classes = {DataMiningCombinerApplicationTests.class})
+@ComponentScan( basePackages="evm.dmc.core, evm.dmc.weka")
+@DataJpaTest  // TODO: remove where unneeded
 public class WekaCSVSaveTest {
 	@Autowired
 	@WekaFW

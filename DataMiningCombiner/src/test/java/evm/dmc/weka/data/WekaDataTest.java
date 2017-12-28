@@ -25,6 +25,8 @@ import org.junit.rules.ExpectedException;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
+import org.springframework.context.annotation.ComponentScan;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.context.junit4.SpringRunner;
@@ -32,6 +34,7 @@ import org.springframework.test.context.junit4.SpringRunner;
 import java.util.Arrays;
 import java.util.Random;
 
+import evm.dmc.DataMiningCombinerApplicationTests;
 import evm.dmc.api.model.DataModel;
 import evm.dmc.core.api.Data;
 import evm.dmc.core.api.Statistics;
@@ -43,8 +46,10 @@ import evm.dmc.weka.WekaFramework;
 import weka.core.Instances;
 
 @RunWith(SpringRunner.class)
-@ContextConfiguration(classes = DMCWekaConfig.class)
 @TestPropertySource("classpath:wekatest.properties")
+@ContextConfiguration(classes = {DataMiningCombinerApplicationTests.class})
+@ComponentScan( basePackages="evm.dmc.core, evm.dmc.weka")
+@DataJpaTest  // TODO: remove where unneeded
 public class WekaDataTest {
 	// @Value("#{wekaFramework.getData(Weka_Instances.getClass())}")
 	WekaData data;

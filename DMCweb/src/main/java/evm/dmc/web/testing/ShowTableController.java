@@ -1,6 +1,5 @@
 package evm.dmc.web.testing;
 
-import java.util.Map;
 import java.util.Set;
 
 import org.slf4j.Logger;
@@ -14,9 +13,10 @@ import org.springframework.web.bind.annotation.RequestMapping;
 
 import evm.dmc.core.api.Data;
 import evm.dmc.core.api.Framework;
-import evm.dmc.core.api.FrameworksRepository;
 import evm.dmc.core.api.back.CSVLoader;
+import evm.dmc.core.services.FrameworksService;
 import evm.dmc.service.testing.TestingViewsService;
+import evm.dmc.weka.function.WekaFunctions;
 
 @Controller
 // @RequestMapping("/user/{userId}/showtable")
@@ -33,10 +33,8 @@ public class ShowTableController {
 	Set<String> names;
 
 	@Autowired
-	ShowTableController( FrameworksRepository repository, TestingViewsService vservice) {
-		Map<String, String> loaders = repository.findFunctionByWordMap("csv");
-		repository.filterFunctionMap(loaders, "load");
-		CSVLoader loader = (CSVLoader) repository.getFunction(loaders.keySet().iterator().next());
+	ShowTableController( FrameworksService repository, TestingViewsService vservice) {
+		CSVLoader loader = (CSVLoader) repository.getFunction(WekaFunctions.CSVLOADER);
 		this.data = loader.setSource(sourceFileName).get();
 
 		Set<String> frmwksDesc = repository.getFrameworksDescriptors();
