@@ -17,7 +17,7 @@ import org.springframework.web.servlet.view.InternalResourceViewResolver;
 import org.springframework.web.servlet.view.JstlView;
 
 import evm.dmc.DmcWebApplication;
-import evm.dmc.service.Views;
+import evm.dmc.web.service.Views;
 import evm.dmc.web.testing.TestingController;
 
 @Configuration

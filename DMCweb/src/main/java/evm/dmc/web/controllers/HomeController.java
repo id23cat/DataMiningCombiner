@@ -6,8 +6,8 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
-import evm.dmc.service.RequestPath;
-import evm.dmc.service.Views;
+import evm.dmc.web.service.RequestPath;
+import evm.dmc.web.service.Views;
 
 @Controller
 @RequestMapping(RequestPath.home)

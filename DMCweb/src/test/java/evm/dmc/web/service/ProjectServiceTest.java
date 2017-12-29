@@ -1,9 +1,16 @@
-package evm.dmc.service;
+package evm.dmc.web.service;
 
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.junit.Assert.*;
 
+import java.util.Arrays;
+import java.util.List;
+import java.util.Optional;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
+
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,7 +34,7 @@ import lombok.extern.slf4j.Slf4j;
 @RunWith(SpringRunner.class)
 @SpringBootTest
 @DataJpaTest
-@Transactional
+//@Transactional
 @ActiveProfiles({"test", "devH2"})
 @Rollback
 @ComponentScan( basePackages = { "evm.dmc.web", "evm.dmc.core", "evm.dmc.service", "evm.dmc.model"})
@@ -49,8 +56,8 @@ public class ProjectServiceTest {
 	public void init() {
 //		Account account = new Account("id42cat", "password", "id42cat@mail.sm", "Alex", "Demidchuk");
 		Account account = accService.getAccountByName("idcat");
-		account.getProjects().add(new ProjectModel(ProjectType.SIMPLEST_PROJECT, null, null, PROJECTNAME_1));
-		account.getProjects().add(new ProjectModel(ProjectType.SIMPLEST_PROJECT, null, null, PROJECTNAME_2));
+		account.getProjects().add(projectService.getNew(ProjectType.SIMPLEST_PROJECT, null, null, PROJECTNAME_1));
+		account.getProjects().add(projectService.getNew(ProjectType.SIMPLEST_PROJECT, null, null, PROJECTNAME_2));
 		this.entityManager.persist(account);
 		
 	}
@@ -61,6 +68,45 @@ public class ProjectServiceTest {
 		assertThat(projectService.getByName(PROJECTNAME_1)
 				.orElseThrow(() -> new ProjectNotFoundException())
 				.getProjectName(), equalTo(PROJECTNAME_1));
+	}
+	
+	@Test
+	public final void testGetAll() {
+		assertThat(projectService.getAll().count(), equalTo(2L));
+		projectService.save(Optional.of(projectService.getNew(ProjectType.SIMPLEST_PROJECT, null, null, "TestTest")));
+		assertThat(projectService.getAll().count(), equalTo(3L));
+	}
+	
+	@Test
+	public final void testSave() {
+		String name = "TestingTesting";
+		ProjectModel tmpProj = projectService.getNew(ProjectType.SIMPLEST_PROJECT, null, null, name);
+		projectService.save(Optional.of(tmpProj));
+		
+		assertThat(projectService.getByName(name).get().getProjectName(), equalTo(name));
+	}
+	
+	@Test
+	@Transactional
+	@Rollback
+	// TODO: not working correctly on deletion
+	@Ignore
+	public final void testDelete() {
+		assertThat(projectService.getAll().count(), equalTo(2L));
+//		projectService.delete(projectService.getNew(ProjectType.SIMPLEST_PROJECT, null, null, PROJECTNAME_1));
+		
+		projectService.delete(projectService.getByName(PROJECTNAME_1));
+		projectService.delete(PROJECTNAME_1);
+		entityManager.flush();
+		
+		assertThat(projectService.getAll().count(), equalTo(1L));
+		
+		List<ProjectModel> all = projectService.getAll().collect(Collectors.toList());
+		projectService.save(projectService.getByName(PROJECTNAME_2));
+		log.debug("=== List {}", Arrays.toString(all.toArray()));
+		assertThat(all.get(0).getProjectName(), equalTo(PROJECTNAME_2));
+		
+		
 	}
 
 }

@@ -18,12 +18,12 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import evm.dmc.api.model.ProjectModel;
 import evm.dmc.api.model.account.Account;
-import evm.dmc.service.AccountService;
-import evm.dmc.service.ProjectService;
-import evm.dmc.service.RequestPath;
-import evm.dmc.service.Views;
 import evm.dmc.web.exceptions.ProjectNotFoundException;
 import evm.dmc.web.exceptions.UserNotExistsException;
+import evm.dmc.web.service.AccountService;
+import evm.dmc.web.service.ProjectService;
+import evm.dmc.web.service.RequestPath;
+import evm.dmc.web.service.Views;
 import lombok.extern.java.Log;
 import lombok.extern.slf4j.Slf4j;
 
@@ -49,7 +49,7 @@ public class ProjectController {
 	@GetMapping
 	public String getProjectsList(@ModelAttribute("account") Account account, Model model) {
 		model.addAttribute("projectsList", account.getProjects());
-		model.addAttribute("newProject", new ProjectModel());
+		model.addAttribute("newProject", projectService.getNew());
 		log.debug("Projects: {}", account.getProjects().toString());
 		return views.getProject().getMain();
 	}

@@ -1,4 +1,4 @@
-package evm.dmc.service;
+package evm.dmc.web.service;
 
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.junit.Assert.*;
@@ -26,6 +26,7 @@ import evm.dmc.api.model.FunctionDstModel;
 import evm.dmc.api.model.FunctionModel;
 import evm.dmc.api.model.FunctionSrcModel;
 import evm.dmc.web.exceptions.FrameworkNotFoundException;
+import evm.dmc.web.service.FrameworkFrontendService;
 import lombok.extern.slf4j.Slf4j;
 
 @RunWith(SpringRunner.class)
@@ -36,9 +37,9 @@ import lombok.extern.slf4j.Slf4j;
 @Rollback
 @ComponentScan( basePackages = { "evm.dmc.web", "evm.dmc.core", "evm.dmc.service", "evm.dmc.model"})
 @Slf4j
-public class FrameworkModelFrontendServiceTest {
+public class FrameworkFrontendServiceTest {
 	@Autowired
-	private FrameworkModelFrontendService service;
+	private FrameworkFrontendService service;
 
 	@Test
 	public final void testGetFramework() throws FrameworkNotFoundException {

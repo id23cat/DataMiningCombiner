@@ -12,8 +12,8 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.servlet.ModelAndView;
 
-import evm.dmc.service.Views;
 import evm.dmc.web.controllers.SignInController;
+import evm.dmc.web.service.Views;
 import lombok.extern.slf4j.Slf4j;
 
 /**

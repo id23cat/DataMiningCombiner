@@ -1,4 +1,4 @@
-package evm.dmc.service;
+package evm.dmc.web.service;
 
 import java.util.Collections;
 
@@ -29,7 +29,7 @@ import org.springframework.transaction.annotation.Transactional;
 import evm.dmc.api.model.account.Account;
 import evm.dmc.api.model.account.AccountExt;
 import evm.dmc.api.model.account.Role;
-import evm.dmc.business.AccountRepository;
+import evm.dmc.model.repositories.AccountRepository;
 import evm.dmc.web.controllers.SignInController;
 import evm.dmc.web.exceptions.UserNotExistsException;
 
@@ -82,6 +82,10 @@ public class AccountService implements UserDetailsService {
 	
 	public void signin(Account account) {
 		SecurityContextHolder.getContext().setAuthentication(authenticate(account));
+	}
+	
+	public void delete(Account account) {
+		accountRepository.delete(account);
 	}
 	
 	private Authentication authenticate(Account account) {

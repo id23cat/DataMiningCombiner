@@ -20,11 +20,11 @@ import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import evm.dmc.api.model.account.Account;
-import evm.dmc.service.AccountService;
-import evm.dmc.service.RequestPath;
-import evm.dmc.service.Views;
 import evm.dmc.utils.MessageHelper;
 import evm.dmc.web.exceptions.UserNotExistsException;
+import evm.dmc.web.service.AccountService;
+import evm.dmc.web.service.RequestPath;
+import evm.dmc.web.service.Views;
 
 @Controller
 @RequestMapping

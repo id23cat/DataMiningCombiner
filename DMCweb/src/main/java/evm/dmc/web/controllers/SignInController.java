@@ -11,9 +11,9 @@ import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import evm.dmc.api.model.account.Account;
-import evm.dmc.service.RequestPath;
-import evm.dmc.service.Views;
 import evm.dmc.utils.AjaxUtils;
+import evm.dmc.web.service.RequestPath;
+import evm.dmc.web.service.Views;
 
 
 @Controller

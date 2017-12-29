@@ -1,4 +1,4 @@
-package evm.dmc.service;
+package evm.dmc.web.service;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.Assert.*;
@@ -15,6 +15,7 @@ import org.springframework.boot.test.context.TestConfiguration;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.test.annotation.Rollback;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringRunner;
@@ -22,8 +23,8 @@ import org.springframework.transaction.annotation.Transactional;
 
 import evm.dmc.api.model.account.Account;
 import evm.dmc.api.model.account.Role;
-import evm.dmc.service.AccountService;
 import evm.dmc.web.controllers.SignInController;
+import evm.dmc.web.service.AccountService;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest
@@ -66,6 +67,12 @@ public class AccountServiceTest {
 		assertThat( userService.loadUserByUsername("id23cat").getUsername()).isEqualTo("id23cat");
 	}
 
-
+	@Test(expected = UsernameNotFoundException.class )
+	public final void testDelete() {
+		userService.save(new Account("user", "password2", "user@mail.org", "UUser", "Just"));
+		Account acc = userService.getAccountByName("user");
+		userService.delete(acc);
+		userService.getAccountByName("user");
+	}
 
 }

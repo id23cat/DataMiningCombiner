@@ -1,4 +1,4 @@
-package evm.dmc.service;
+package evm.dmc.web.service;
 
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.stereotype.Service;

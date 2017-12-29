@@ -1,4 +1,4 @@
-package evm.dmc.service.impls;
+package evm.dmc.web.service.impls;
 
 import java.util.List;
 import java.util.Optional;
@@ -14,18 +14,18 @@ import evm.dmc.api.model.FunctionDstModel;
 import evm.dmc.api.model.FunctionModel;
 import evm.dmc.api.model.FunctionSrcModel;
 import evm.dmc.api.model.FunctionType;
-import evm.dmc.business.FrameworkFrontendRepository;
-import evm.dmc.business.FunctionFrontendRepository;
-import evm.dmc.service.FrameworkModelFrontendService;
+import evm.dmc.model.repositories.FrameworkFrontendRepository;
+import evm.dmc.model.repositories.FunctionFrontendRepository;
+import evm.dmc.web.service.FrameworkFrontendService;
 
 @Service
 @Scope(value = ConfigurableBeanFactory.SCOPE_SINGLETON)
-public class FrameworkModelFrontendServiceImpl implements FrameworkModelFrontendService {
+public class FrameworkFrontendServiceImpl implements FrameworkFrontendService {
 	
 	FrameworkFrontendRepository frameworkRepo;
 	FunctionFrontendRepository functionRepo;
 
-	public FrameworkModelFrontendServiceImpl(@Autowired	FrameworkFrontendRepository frameworkRepo,
+	public FrameworkFrontendServiceImpl(@Autowired	FrameworkFrontendRepository frameworkRepo,
 			@Autowired FunctionFrontendRepository functionRepo) {
 		this.frameworkRepo = frameworkRepo;
 		this.functionRepo = functionRepo;

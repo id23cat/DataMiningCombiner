@@ -14,8 +14,8 @@ import org.thymeleaf.extras.springsecurity4.dialect.SpringSecurityDialect;
 import org.thymeleaf.spring4.SpringTemplateEngine;
 import org.thymeleaf.templateresolver.ITemplateResolver;
 
-import evm.dmc.service.RequestPath;
-import evm.dmc.service.Views;
+import evm.dmc.web.service.RequestPath;
+import evm.dmc.web.service.Views;
 
 @Configuration
 public class MvcConfig extends WebMvcConfigurerAdapter {

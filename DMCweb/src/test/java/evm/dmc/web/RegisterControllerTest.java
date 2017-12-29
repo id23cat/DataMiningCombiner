@@ -19,8 +19,8 @@ import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
 
 import evm.dmc.api.model.account.Role;
-import evm.dmc.service.RequestPath;
-import evm.dmc.service.Views;
+import evm.dmc.web.service.RequestPath;
+import evm.dmc.web.service.Views;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest(webEnvironment = WebEnvironment.RANDOM_PORT, properties = "management.port=-1")

@@ -14,8 +14,11 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
+import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
+import javax.persistence.PreRemove;
 import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
 
@@ -27,6 +30,7 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.Setter;
 import lombok.ToString;
+import lombok.extern.slf4j.Slf4j;
 
 
 @Data
@@ -34,6 +38,7 @@ import lombok.ToString;
 @Table(name="PROJECT")
 @EqualsAndHashCode(exclude={"algorithms"})
 @ToString(exclude="algorithms")
+@Slf4j
 public class ProjectModel implements Serializable {
 	/**
 	 * 
@@ -53,12 +58,12 @@ public class ProjectModel implements Serializable {
 	@NotNull
 	private ProjectType type = ProjectType.SIMPLEST_PROJECT;
 	
-//	@ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-//	@JoinTable(name = "project_algorithm", 
-//			joinColumns = @JoinColumn(name = "project_id", referencedColumnName = "id"),
-//			inverseJoinColumns = @JoinColumn(name = "algorithm_id", referencedColumnName = "id"))
-	@OneToMany(mappedBy="parentProject", fetch = FetchType.LAZY,
-			cascade = CascadeType.ALL, orphanRemoval = true)
+	@ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+	@JoinTable(name = "project_algorithm", 
+			joinColumns = @JoinColumn(name = "project_id", referencedColumnName = "id"),
+			inverseJoinColumns = @JoinColumn(name = "algorithm_id", referencedColumnName = "id"))
+//	@OneToMany(mappedBy="parentProject", fetch = FetchType.LAZY,
+//			cascade = CascadeType.ALL, orphanRemoval = true)
 	private Set<AlgorithmModel> algorithms = new HashSet<>();
 	
 	private Properties properties = new Properties();
@@ -81,15 +86,23 @@ public class ProjectModel implements Serializable {
 	
 	public ProjectModel addAlgorithm(AlgorithmModel algorithm){
 		algorithms.add(algorithm);
-		algorithm.setParentProject(this);
+//		algorithm.setParentProject(this);
+		algorithm.getDependentProjects().add(this);
 		return this;
 	}
 	
 	public ProjectModel removeAlgorithm(AlgorithmModel algorithm) {
 		algorithms.remove(algorithm);
-		algorithm.setParentProject(null);
+//		algorithm.setParentProject(null);
+		algorithm.getDependentProjects().remove(this);
 		return this;
 	}
+	
+//	@PreRemove
+//	public void removeProject() {
+//		algorithms.parallelStream().forEach((alg) -> alg.getDependentProjects().remove(this));
+//		log.debug("===PreDeleting procedure");
+//	}
 	
 
 }

@@ -19,10 +19,10 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.access.AccessDeniedHandler;
 
 import evm.dmc.api.model.account.Role;
-import evm.dmc.service.AccountService;
-import evm.dmc.service.RequestPath;
 import evm.dmc.web.controllers.SignInController;
 import evm.dmc.web.security.CustomAccessDeniedHandler;
+import evm.dmc.web.service.AccountService;
+import evm.dmc.web.service.RequestPath;
 
 @Configuration
 @EnableWebSecurity

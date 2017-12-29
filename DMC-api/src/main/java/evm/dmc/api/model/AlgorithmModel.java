@@ -1,15 +1,19 @@
 package evm.dmc.api.model;
 
 import java.io.Serializable;
+import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Set;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
+import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.OrderColumn;
@@ -52,10 +56,11 @@ public class AlgorithmModel implements Serializable {
 	
 	private FunctionDstModel dataDestination = null;
 	
-//	@ManyToMany(mappedBy = "algorithms")
-	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "parent_project_id")
-	private ProjectModel parentProject;
+	@ManyToMany(mappedBy = "algorithms", cascade = {CascadeType.ALL})
+	private Set<ProjectModel> dependentProjects = new HashSet<>();
+//	@ManyToOne(fetch = FetchType.LAZY)
+//	@JoinColumn(name = "parent_project_id")
+//	private ProjectModel parentProject;
 
 	private boolean shared = false;
 	
