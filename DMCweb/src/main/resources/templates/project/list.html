@@ -5,16 +5,6 @@
 
 <head>
     <title>Projects List</title>
-    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
-    <link href="http://cdn.jsdelivr.net/webjars/bootstrap/3.3.7/css/bootstrap.min.css"
-          th:href="@{/webjars/bootstrap/3.3.7/css/bootstrap.min.css}"
-          rel="stylesheet" media="screen" />
-    <link href="../static/css/core.css"
-          th:href="@{/css/core.css}"
-          rel="stylesheet" media="screen" />
-    <script src="http://cdn.jsdelivr.net/webjars/jquery/3.2.1/jquery.min.js"
-            th:src="@{/webjars/jquery/3.2.1/jquery.min.js}"></script>
-
 </head>
 <body>
 <!-- Insert content into the layouts/layout.html -->
@@ -26,32 +16,77 @@
 <th:block layout:fragment="content">
 	<div class="row">
 		<h3>Projects:</h3>
-			<div class="col-sm-4">
-				<div th:each="project : ${projectsList}" th:with="base=${@requestPath.project}">
+		<form method="post"
+			th:action="${@requestPath.delProject}" 
+			th:object="${account}">
+			<div class="col-sm-4 form-group">
+				<div th:each="project : ${account.projects}">
 					<h4>
+						<input type="checkbox" th:field="*{projects}" th:value="${project}" 
+						data-toggle="toggle" />
+						<!-- onchange="document.getElementById('deleteButton').disabled = !this.checked;"-->
+						
 						<a href=/project/name th:href="@{{base}/{name}(base=${base}, name=${project.projectName})}">
 							<span th:text="${project.projectName}">Project name</span>
 						</a><br>
 					</h4>
 				</div>
+				<button id="deleteButton" class="btn btn-primary" type="submit" disabled>Delete</button>
 			</div>
-		</div>
-		
+			
+		</form>
+		<script>
+		$(function() {
+			var checkboxes = $("input[type='checkbox']"), submitButt = $("#deleteButton");
+
+			checkboxes.click(function() {
+				console.log("Checkbox clicked");
+				console.log(checkboxes);
+				console.log(submitButt);
+				//submitButt.attr("disabled", !checkboxes.is(":checked"));
+				//submitButt.attr("disabled", false);
+				if(checkboxes.is(":checked")) {
+					submitButt.attr("disabled", false);
+				} else {
+					submitButt.attr("disabled", true);
+				}
+			});
+		});
+			</script>
+	</div>
+	<div class="col-xs-12" style="height:50px;"></div>
+	<div class="form-group">
 		<form method="post" 
 			th:action="${@requestPath.addProject}" 
 			th:object="${newProject}">
-			
-            <label for="newName" class="control-label">Add new project</label>
-            <div class="input-group col-sm-4">
-                <input type="text" class="form-control" placeholder="New project name" th:field="*{projectName}" />
-                <span class="input-group-btn">
-                <button class="btn btn-primary" type="submit">Add</button>
-                </span>
+           
+            <div class="col-sm-4">
+	            <label for="newName" class="control-label">Add new project</label>
+	            <div class="alert alert-danger" th:if="${#fields.hasErrors('projectName')}">
+				  <strong>Important!</strong> 
+				  <span class="help-block" th:if="${#fields.hasErrors('projectName')}" th:errors="*{projectName}">Incorrect project name</span>
+				</div>
+	            <div class="input-group">
+	                <input type="text" class="form-control" placeholder="New project name"
+	                	th:field="*{projectName}" />
+	                <span class="input-group-btn">
+	                <button class="btn btn-primary" type="submit">Add</button>
+	                </span>
+	                <!-- <span class="help-block" th:if="${#fields.hasErrors('projectName')}" th:errors="*{projectName}">Incorrect project name</span> -->
+	            </div>
             </div>
         </form>
-        
+   </div>
+   <script>   
+//$(document.getElementById('project1')).change(function() {
+	  //alert($(this).prop('checked'));
+	  //document.getElementById('grabaperaus').disabled = !$(this).prop('checked');
+	//var checkboxes = $("input[type='checkbox']"),
+    //	submitButt = $("input[type='submit']");
+	//})
+</script>
 		
 </th:block>
- 
+
 </body>
 </html>

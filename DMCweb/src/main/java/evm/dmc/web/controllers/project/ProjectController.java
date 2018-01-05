@@ -1,12 +1,20 @@
 package evm.dmc.web.controllers.project;
 
+import java.util.List;
+import java.util.Optional;
+import java.util.Set;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
+
 import javax.validation.Valid;
 
 import org.apache.tomcat.util.buf.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.validation.Errors;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
@@ -16,6 +24,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.SessionAttributes;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import evm.dmc.api.model.AlgorithmModel;
 import evm.dmc.api.model.ProjectModel;
 import evm.dmc.api.model.account.Account;
 import evm.dmc.web.exceptions.ProjectNotFoundException;
@@ -46,36 +55,74 @@ public class ProjectController {
 			return accountService.getAccountByName(authentication.getName());
 	}
 	
+	@Transactional(readOnly = true)
 	@GetMapping
 	public String getProjectsList(@ModelAttribute("account") Account account, Model model) {
-		model.addAttribute("projectsList", account.getProjects());
+		Set<ProjectModel> projectsSet;
+		try(Stream<ProjectModel> pros = projectService.getByAccount(account)) {
+			projectsSet = pros.collect(Collectors.toSet());
+		}
+		account.setProjects(projectsSet);
+//		model.addAttribute("projectsList", projectsSet);
 		model.addAttribute("newProject", projectService.getNew());
-		log.debug("Projects: {}", account.getProjects().toString());
+		
+		log.debug("Projects: {}", projectsSet.stream()
+				.map(
+						(proj)->{return String.format("{ID=%d, Name=%s}", proj.getId(), proj.getProjectName());}
+					).toArray());
+		for(ProjectModel pro: projectsSet){
+			log.debug("From List: {}",pro.getProjectName());
+		}
+		
+		for(ProjectModel pro: account.getProjects()) {
+			log.debug("From Acclount {}", pro.getProjectName());
+		}
+		
 		return views.getProject().getMain();
 	}
 	
 	@GetMapping(value="{projectName}")
 	public String getProject(@PathVariable String projectName, Model model) throws ProjectNotFoundException{
-		String sessionProject = "currentProject";
-		if(!model.containsAttribute(sessionProject)) {
-			model.addAttribute(sessionProject, projectService.getByName(projectName));
+		String currentProject = "currentProject";
+		log.debug("Request for project {}", projectName);
+		Optional<ProjectModel> optProject = projectService.getByName(projectName);
+		if(!optProject.isPresent()){
+			log.warn("Reqiest for non-existing project {}", projectName);
+			return views.getErrors().getNotFound();
 		}
-		ProjectModel project = (ProjectModel) model.asMap().get(sessionProject);
-		if(project.getAlgorithms().isEmpty()){
+		
+		ProjectModel project = optProject.get();
+		model.addAttribute(currentProject, project);
+		
+		Set<AlgorithmModel> algSet = project.getAlgorithms(); 
+		if(algSet.isEmpty()){
 			return views.getProject().getNewAlg();
 		}else
-			// TODO: not yet implemented
+			model.addAttribute("alggorithmsSet", algSet);
 			return views.getProject().getAlgorithmsList();
 		
 	}
 	
 	@PostMapping(RequestPath.add)
-	public String getAddProject(@ModelAttribute("account") Account account, 
-						@Valid @ModelAttribute ProjectModel project, 
-						Errors errors, RedirectAttributes ra) {
+	public String postAddProject(@ModelAttribute("account") Account account, 
+						@Valid @ModelAttribute("newProject") ProjectModel project,
+						BindingResult bindingResult, RedirectAttributes ra) {
+		if(bindingResult.hasErrors()) {
+			log.debug("Invalid new project property: {}", bindingResult);
+//			model.addAttribute("newProject", project);
+			return views.getProject().getMain();
+		}
 		log.debug("Registering new project {}", project.getProjectName());
-		account.addProject(project);
-		accountService.save(account);
+		project.setAccount(account);
+		projectService.save(Optional.of(project));
+//		account.addProject(project);
+//		accountService.save(account);
+		return "redirect:" + RequestPath.project + "/" + project.getProjectName();
+	}
+	
+	@PostMapping(RequestPath.delete)
+	public String postDelProjedct(@ModelAttribute Account account) {
+		log.debug("Selected projects: {}", account.getProjects());
 		return "redirect:" + RequestPath.project;
 	}
 

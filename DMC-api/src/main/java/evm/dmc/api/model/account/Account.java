@@ -89,6 +89,11 @@ public class Account implements Serializable {
     public Account() {
     	this.created = Instant.now();
     }
+    
+    public Account(String name) {
+    	this.userName = name;
+    	this.created = Instant.now();
+    }
 
 	public Account(String username, String password, String email, 
 			String firstName, String lastName) {

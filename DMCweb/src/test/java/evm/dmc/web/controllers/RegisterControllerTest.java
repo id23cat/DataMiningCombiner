@@ -1,4 +1,4 @@
-package evm.dmc.web;
+package evm.dmc.web.controllers;
 
 import static org.junit.Assert.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;

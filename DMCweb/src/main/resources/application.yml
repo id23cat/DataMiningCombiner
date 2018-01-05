@@ -48,7 +48,7 @@ server:
 logging:
 #  config: log4j2.xml
   level:
-    org.springframework.web: WARN
+    org.springframework.web: DEBUG
     org.springframework.security: WARN
     org.springframework.data: WARN
     evm.dmc.web: DEBUG

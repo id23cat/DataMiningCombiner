@@ -40,7 +40,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 			RequestPath.root,
 			RequestPath.home,
 			RequestPath.signin,
-			RequestPath.about
+			RequestPath.about,
+			"/test"
 	};
 	
 	private static final String[] ADMIN_MATCHERS = {

@@ -1,4 +1,4 @@
-package evm.dmc.web;
+package evm.dmc.web.controllers;
 
 import static org.hamcrest.CoreMatchers.containsString;
 import static org.junit.Assert.*;

@@ -11,6 +11,7 @@ import org.springframework.stereotype.Service;
 import evm.dmc.api.model.AlgorithmModel;
 import evm.dmc.api.model.ProjectModel;
 import evm.dmc.api.model.ProjectType;
+import evm.dmc.api.model.account.Account;
 import evm.dmc.model.repositories.ProjectModelRepository;
 import evm.dmc.web.service.ProjectService;
 import lombok.extern.slf4j.Slf4j;
@@ -55,6 +56,11 @@ public class ProjectServiceImpl implements ProjectService{
 	@Override
 	public Optional<ProjectModel> getByName(String name) {
 		return projectRepo.findByProjectName(name);
+	}
+	
+	@Override
+	public Stream<ProjectModel> getByAccount(Account account) {
+		return projectRepo.findAllByAccount(account);
 	}
 
 	@Override

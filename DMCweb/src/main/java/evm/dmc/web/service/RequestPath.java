@@ -19,7 +19,9 @@ public  final  class RequestPath {
 	
 	@Getter public static final String project ="/project";
 	@Getter public static final String add ="/add";
+	@Getter public static final String delete="/delete";
 	@Getter public static final String addProject = project + add;
+	@Getter public static final String delProject = project + delete;
 	@Getter public static final String newAlg = project + "/newalg";
 	
 	@Getter public static final String algorithm = "/algorithm";
