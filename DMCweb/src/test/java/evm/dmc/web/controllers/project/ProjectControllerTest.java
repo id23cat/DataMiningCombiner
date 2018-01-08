@@ -124,9 +124,9 @@ public class ProjectControllerTest {
 	@Test
 	@WithMockUser("Alex")
 	public final void testGetProjectWithEmptyAlgorithmsSet() throws Exception {
-		Mockito.when(projServ.getByName(proj.getProjectName()))
+		Mockito.when(projServ.getByName(proj.getName()))
 			.thenReturn(Optional.of(proj));
-		mockMvc.perform(get(RequestPath.project+"/"+proj.getProjectName()))
+		mockMvc.perform(get(RequestPath.project+"/"+proj.getName()))
 			.andExpect(status().isOk())
 			.andExpect(view().name(views.getProject().getNewAlg()))
 		;

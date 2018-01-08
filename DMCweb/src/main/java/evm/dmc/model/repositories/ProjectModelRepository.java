@@ -1,5 +1,6 @@
 package evm.dmc.model.repositories;
 
+import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Stream;
@@ -17,9 +18,11 @@ public interface ProjectModelRepository extends JpaRepository<ProjectModel, Long
 	
 	@Modifying
 //	@Transactional
-	Long deleteByProjectName(String name);
+	Long deleteByName(String name);
 	
-	Optional<ProjectModel> findByProjectName(String name);
+	Long deleteByNameIn(List<String> name);
+	
+	Optional<ProjectModel> findByName(String name);
 	
 	Stream<ProjectModel> findAllByAccount(Account account);
 	

@@ -1,6 +1,11 @@
 package evm.dmc.web.controllers.project;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Comparator;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -20,6 +25,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.SessionAttributes;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
@@ -27,12 +33,14 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import evm.dmc.api.model.AlgorithmModel;
 import evm.dmc.api.model.ProjectModel;
 import evm.dmc.api.model.account.Account;
+import evm.dmc.web.controllers.CheckboxBean;
 import evm.dmc.web.exceptions.ProjectNotFoundException;
 import evm.dmc.web.exceptions.UserNotExistsException;
 import evm.dmc.web.service.AccountService;
 import evm.dmc.web.service.ProjectService;
 import evm.dmc.web.service.RequestPath;
 import evm.dmc.web.service.Views;
+import lombok.Data;
 import lombok.extern.java.Log;
 import lombok.extern.slf4j.Slf4j;
 
@@ -50,6 +58,14 @@ public class ProjectController {
 	@Autowired
 	private Views views;
 	
+	@Data
+	public class CheckboxArray {
+		private String[] projects = new String[10];
+		
+		public CheckboxArray() {}
+		
+	}
+	
 	@ModelAttribute("account")
 	public Account getAccount(Authentication authentication) throws UserNotExistsException {
 			return accountService.getAccountByName(authentication.getName());
@@ -58,25 +74,9 @@ public class ProjectController {
 	@Transactional(readOnly = true)
 	@GetMapping
 	public String getProjectsList(@ModelAttribute("account") Account account, Model model) {
-		Set<ProjectModel> projectsSet;
-		try(Stream<ProjectModel> pros = projectService.getByAccount(account)) {
-			projectsSet = pros.collect(Collectors.toSet());
-		}
-		account.setProjects(projectsSet);
-//		model.addAttribute("projectsList", projectsSet);
+		model.addAttribute("projectsSet", projectService.getSetByAccount(account));
 		model.addAttribute("newProject", projectService.getNew());
-		
-		log.debug("Projects: {}", projectsSet.stream()
-				.map(
-						(proj)->{return String.format("{ID=%d, Name=%s}", proj.getId(), proj.getProjectName());}
-					).toArray());
-		for(ProjectModel pro: projectsSet){
-			log.debug("From List: {}",pro.getProjectName());
-		}
-		
-		for(ProjectModel pro: account.getProjects()) {
-			log.debug("From Acclount {}", pro.getProjectName());
-		}
+		model.addAttribute("backBean", new CheckboxBean());
 		
 		return views.getProject().getMain();
 	}
@@ -109,21 +109,35 @@ public class ProjectController {
 						BindingResult bindingResult, RedirectAttributes ra) {
 		if(bindingResult.hasErrors()) {
 			log.debug("Invalid new project property: {}", bindingResult);
-//			model.addAttribute("newProject", project);
+			
 			return views.getProject().getMain();
 		}
-		log.debug("Registering new project {}", project.getProjectName());
+		log.debug("Registering new project {}", project.getName());
 		project.setAccount(account);
 		projectService.save(Optional.of(project));
 //		account.addProject(project);
 //		accountService.save(account);
-		return "redirect:" + RequestPath.project + "/" + project.getProjectName();
+		return "redirect:" + RequestPath.project + "/" + project.getName();
 	}
 	
 	@PostMapping(RequestPath.delete)
-	public String postDelProjedct(@ModelAttribute Account account) {
-		log.debug("Selected projects: {}", account.getProjects());
+	public String postDelProjedct(
+			@ModelAttribute("account") Account account,
+			@ModelAttribute("backBean") CheckboxBean bean,
+			BindingResult bindingResult, RedirectAttributes ra
+			) {
+		log.debug("BackBean: {}", Arrays.stream(bean.getNames()).collect(Collectors.toList()));
+		
+//		projectService.deleteAllByNames(Arrays.stream(bean.getNames()).collect(Collectors.toList()));
+		
+		
+		
+		account.getProjects().removeIf((proj) -> nameContainsOneOf(proj.getName(), bean.getNames()));
 		return "redirect:" + RequestPath.project;
+	}
+	
+	private static boolean nameContainsOneOf(String name, String[] names) {
+		return Arrays.stream(names).anyMatch(name :: contains);
 	}
 
 }

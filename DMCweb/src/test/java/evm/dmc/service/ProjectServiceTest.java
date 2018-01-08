@@ -60,7 +60,7 @@ public class ProjectServiceTest {
 		assertNotNull(projectService);
 		assertThat(projectService.getByName(PROJECTNAME_1)
 				.orElseThrow(() -> new ProjectNotFoundException())
-				.getProjectName(), equalTo(PROJECTNAME_1));
+				.getName(), equalTo(PROJECTNAME_1));
 	}
 
 }

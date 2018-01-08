@@ -17,20 +17,35 @@
 	<div class="row">
 		<h3>Projects:</h3>
 		<form method="post"
-			th:action="${@requestPath.delProject}" 
-			th:object="${account}">
+			th:action="${@requestPath.delProject}"
+			th:object="${backBean}"
+			>
+			<!-- th:object="${deleteProjects}" -->
 			<div class="col-sm-4 form-group">
-				<div th:each="project : ${account.projects}">
+				<!-- <ul> -->
+				<!-- <div th:each="name : ${projects.namesSet}"> -->
+				<div th:each="project, stat : ${projectsSet}">
 					<h4>
-						<input type="checkbox" th:field="*{projects}" th:value="${project}" 
-						data-toggle="toggle" />
-						<!-- onchange="document.getElementById('deleteButton').disabled = !this.checked;"-->
+						<!-- <select hidden=true th:field="*{projects[__${stat.index}__].projectName}">
+							<option th:value="${project.projectName}"></option>
+						</select> -->
+						<!-- <select hidden=true th:field="*{projects[__${stat.index}__].id}">
+							<option th:value="${project.id}"></option>
+						</select> -->
 						
-						<a href=/project/name th:href="@{{base}/{name}(base=${base}, name=${project.projectName})}">
-							<span th:text="${project.projectName}">Project name</span>
+						<!-- <input type="checkbox" th:field="*{projects[__${stat.index}__]}" th:value="${project.projectName}"/> -->
+						<!-- <input type="checkbox" th:field="*{projects[__${stat.index}__].projectName}" th:value="${project.projectName}"/> -->
+						<!-- <input type="checkbox" th:field="*{projects[__${stat.index}__].checked}" th:value="${project.projectName}"/> -->
+						<input type="checkbox" th:field="*{names}" th:value="${project.name}"/>
+						<!-- <input type="checkbox" /> -->
+						<!-- <input type="checkbox" th:field="*{namesSet}" th:value="false" /> -->
+						
+						<a href=/project/name th:href="@{{base}/{name}(base=${base}, name=${project.name})}">
+							<span th:text="${project.name}">Project name</span>
 						</a><br>
 					</h4>
 				</div>
+				<!-- </ul> -->
 				<button id="deleteButton" class="btn btn-primary" type="submit" disabled>Delete</button>
 			</div>
 			
@@ -41,8 +56,8 @@
 
 			checkboxes.click(function() {
 				console.log("Checkbox clicked");
-				console.log(checkboxes);
-				console.log(submitButt);
+				//console.log(checkboxes);
+				//console.log(submitButt);
 				//submitButt.attr("disabled", !checkboxes.is(":checked"));
 				//submitButt.attr("disabled", false);
 				if(checkboxes.is(":checked")) {
@@ -62,13 +77,13 @@
            
             <div class="col-sm-4">
 	            <label for="newName" class="control-label">Add new project</label>
-	            <div class="alert alert-danger" th:if="${#fields.hasErrors('projectName')}">
+	            <div class="alert alert-danger" th:if="${#fields.hasErrors('name')}">
 				  <strong>Important!</strong> 
-				  <span class="help-block" th:if="${#fields.hasErrors('projectName')}" th:errors="*{projectName}">Incorrect project name</span>
+				  <span class="help-block" th:if="${#fields.hasErrors('name')}" th:errors="*{name}">Incorrect project name</span>
 				</div>
 	            <div class="input-group">
 	                <input type="text" class="form-control" placeholder="New project name"
-	                	th:field="*{projectName}" />
+	                	th:field="*{name}" />
 	                <span class="input-group-btn">
 	                <button class="btn btn-primary" type="submit">Add</button>
 	                </span>

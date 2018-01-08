@@ -3,6 +3,8 @@ package evm.dmc.api.model.account;
 import java.io.Serializable;
 import java.time.Instant;
 import java.util.HashSet;
+import java.util.LinkedList;
+import java.util.List;
 import java.util.Set;
 
 import javax.persistence.CascadeType;
@@ -82,9 +84,10 @@ public class Account implements Serializable {
 	@Setter(AccessLevel.NONE) 
 	private Instant created;
 	
-	@OneToMany(mappedBy="account", fetch = FetchType.LAZY,
+	@OneToMany(mappedBy="account", fetch = FetchType.EAGER,
 			cascade = CascadeType.ALL, orphanRemoval = true)
 	private Set<ProjectModel> projects = new HashSet<>();
+//	private List<ProjectModel> projects = new LinkedList<>();
 
     public Account() {
     	this.created = Instant.now();

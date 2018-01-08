@@ -67,7 +67,7 @@ public class ProjectServiceTest {
 		assertNotNull(projectService);
 		assertThat(projectService.getByName(PROJECTNAME_1)
 				.orElseThrow(() -> new ProjectNotFoundException())
-				.getProjectName(), equalTo(PROJECTNAME_1));
+				.getName(), equalTo(PROJECTNAME_1));
 	}
 	
 	@Test
@@ -83,7 +83,7 @@ public class ProjectServiceTest {
 		ProjectModel tmpProj = projectService.getNew(ProjectType.SIMPLEST_PROJECT, null, null, name);
 		projectService.save(Optional.of(tmpProj));
 		
-		assertThat(projectService.getByName(name).get().getProjectName(), equalTo(name));
+		assertThat(projectService.getByName(name).get().getName(), equalTo(name));
 	}
 	
 	@Test
@@ -104,7 +104,7 @@ public class ProjectServiceTest {
 		List<ProjectModel> all = projectService.getAll().collect(Collectors.toList());
 		projectService.save(projectService.getByName(PROJECTNAME_2));
 		log.debug("=== List {}", Arrays.toString(all.toArray()));
-		assertThat(all.get(0).getProjectName(), equalTo(PROJECTNAME_2));
+		assertThat(all.get(0).getName(), equalTo(PROJECTNAME_2));
 		
 		
 	}

@@ -1,6 +1,7 @@
 package evm.dmc.api.model;
 
 import java.io.Serializable;
+import java.time.Instant;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
@@ -37,7 +38,6 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.Setter;
 import lombok.ToString;
-import lombok.extern.slf4j.Slf4j;
 
 
 @Data
@@ -45,7 +45,6 @@ import lombok.extern.slf4j.Slf4j;
 @Table(name="PROJECT")
 @EqualsAndHashCode(exclude={"algorithms"})
 @ToString(exclude="algorithms")
-@Slf4j
 public class ProjectModel implements Serializable {
 	/**
 	 * 
@@ -67,7 +66,7 @@ public class ProjectModel implements Serializable {
 	
 	@Enumerated(EnumType.STRING)
 	@NotNull
-	private ProjectType type = ProjectType.SIMPLEST_PROJECT;
+	private ProjectType projectType = ProjectType.SIMPLEST_PROJECT;
 	
 	@ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
 	@JoinTable(name = "project_algorithm", 
@@ -88,19 +87,27 @@ public class ProjectModel implements Serializable {
 	
 	@NotBlank(message = ProjectModel.NOT_BLANK_MESSAGE)
 	@Column(unique = true, nullable = false)
-	private String projectName;
+	private String name;
+	
+	@Setter(AccessLevel.NONE) 
+	private Instant created;
+	
+	@Transient
+	private boolean checked = false;
 	
 	public ProjectModel() {
 		super();
+		
+		created = Instant.now();
 	}
 	
 	public ProjectModel(ProjectType type, Set<AlgorithmModel> algorithms, Properties properties, String projectName){
-		this.type = type;
+		this.projectType = type;
 		if(algorithms != null  && !algorithms.isEmpty())
 			this.algorithms =  new HashSet<>(algorithms);
 		if(propertsMap != null && !properties.isEmpty())
 			setProperties(properties);
-		this.projectName = projectName;
+		this.name = projectName;
 	}
 	
 	public ProjectModel addAlgorithm(AlgorithmModel algorithm){
