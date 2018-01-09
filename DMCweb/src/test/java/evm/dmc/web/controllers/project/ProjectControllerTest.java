@@ -36,11 +36,10 @@ import evm.dmc.api.model.ProjectModel;
 import evm.dmc.api.model.ProjectType;
 import evm.dmc.api.model.account.Account;
 import evm.dmc.config.SecurityConfig;
-import evm.dmc.service.ProjectServiceTest;
-import evm.dmc.web.service.AccountService;
 import evm.dmc.web.service.ProjectService;
 import evm.dmc.web.service.RequestPath;
 import evm.dmc.web.service.Views;
+import evm.dmc.web.service.impls.AccountService;
 import lombok.extern.slf4j.Slf4j;
 
 @RunWith(SpringRunner.class)
@@ -81,7 +80,7 @@ public class ProjectControllerTest {
 		assertNotNull(views.getRegister());
 		
 		acc = new Account("Alex");
-		proj = new ProjectModel(ProjectType.SIMPLEST_PROJECT, null, null, "test");
+		proj = new ProjectModel(acc, ProjectType.SIMPLEST_PROJECT, null, null, "test");
 		acc.getProjects().add(proj);
 		Mockito.when(accServ.getAccountByName(acc.getUserName()))
 			.thenReturn(acc);
@@ -99,7 +98,7 @@ public class ProjectControllerTest {
 		this.mockMvc.perform(get(RequestPath.project))
 			.andExpect(status().isOk())
 			.andExpect(view().name(views.getProject().getMain()))
-			.andExpect(model().attributeExists("account", "projectsList", "newProject"))
+			.andExpect(model().attributeExists("account", "projectsSet", "newProject", "backBean"))
 			;
 	}
 	

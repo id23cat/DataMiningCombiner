@@ -28,6 +28,7 @@ import javax.persistence.OneToMany;
 import javax.persistence.PreRemove;
 import javax.persistence.Table;
 import javax.persistence.Transient;
+import javax.persistence.UniqueConstraint;
 import javax.validation.constraints.NotNull;
 
 import org.hibernate.validator.constraints.NotBlank;
@@ -42,7 +43,9 @@ import lombok.ToString;
 
 @Data
 @Entity
-@Table(name="PROJECT")
+@Table(name="PROJECT"
+	,uniqueConstraints={@UniqueConstraint(columnNames = {"account_id", "name"})}
+)
 @EqualsAndHashCode(exclude={"algorithms"})
 @ToString(exclude="algorithms")
 public class ProjectModel implements Serializable {
@@ -60,7 +63,7 @@ public class ProjectModel implements Serializable {
 	@Setter(AccessLevel.NONE) 
 	private Long id;
 	
-	@ManyToOne
+	@ManyToOne(optional = false)
 	@JoinColumn(name = "account_id")
 	private Account account;
 	
@@ -83,31 +86,28 @@ public class ProjectModel implements Serializable {
 	@MapKeyColumn(name = "property")
 	@Column(name = "value")
 	@CollectionTable(name = "projectProps")
-	private Map<String, String> propertsMap = new HashMap<>();
+	private Map<String, String> propertiesMap = new HashMap<>();
 	
 	@NotBlank(message = ProjectModel.NOT_BLANK_MESSAGE)
 	@Column(unique = true, nullable = false)
 	private String name;
 	
 	@Setter(AccessLevel.NONE) 
-	private Instant created;
-	
-	@Transient
-	private boolean checked = false;
+	private Instant created = Instant.now();
 	
 	public ProjectModel() {
 		super();
-		
-		created = Instant.now();
 	}
 	
-	public ProjectModel(ProjectType type, Set<AlgorithmModel> algorithms, Properties properties, String projectName){
+	public ProjectModel(Account acc, ProjectType type, Set<AlgorithmModel> algorithms, Properties properties, String projectName){
 		this.projectType = type;
 		if(algorithms != null  && !algorithms.isEmpty())
 			this.algorithms =  new HashSet<>(algorithms);
-		if(propertsMap != null && !properties.isEmpty())
+		if(this.propertiesMap != null && properties != null && !properties.isEmpty())
 			setProperties(properties);
 		this.name = projectName;
+		acc.addProject(this);
+		this.account = acc;
 	}
 	
 	public ProjectModel addAlgorithm(AlgorithmModel algorithm){
@@ -132,7 +132,7 @@ public class ProjectModel implements Serializable {
 	
 	public Properties getProperties() {
 		Properties props = new Properties();
-		props.putAll(propertsMap);
+		props.putAll(propertiesMap);
 		return props;
 	}
 	
@@ -140,7 +140,7 @@ public class ProjectModel implements Serializable {
 //		prop.stringPropertyNames().parallelStream().map((name)->propMap.put(name, prop.getProperty(name)));
 //		propMap.prop.entrySet()
 		for(String name: prop.stringPropertyNames()) {
-			propertsMap.put(name, prop.getProperty(name));
+			propertiesMap.put(name, prop.getProperty(name));
 		}
 	}
 

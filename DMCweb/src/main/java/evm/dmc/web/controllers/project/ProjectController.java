@@ -36,10 +36,10 @@ import evm.dmc.api.model.account.Account;
 import evm.dmc.web.controllers.CheckboxBean;
 import evm.dmc.web.exceptions.ProjectNotFoundException;
 import evm.dmc.web.exceptions.UserNotExistsException;
-import evm.dmc.web.service.AccountService;
 import evm.dmc.web.service.ProjectService;
 import evm.dmc.web.service.RequestPath;
 import evm.dmc.web.service.Views;
+import evm.dmc.web.service.impls.AccountService;
 import lombok.Data;
 import lombok.extern.java.Log;
 import lombok.extern.slf4j.Slf4j;
@@ -58,14 +58,6 @@ public class ProjectController {
 	@Autowired
 	private Views views;
 	
-	@Data
-	public class CheckboxArray {
-		private String[] projects = new String[10];
-		
-		public CheckboxArray() {}
-		
-	}
-	
 	@ModelAttribute("account")
 	public Account getAccount(Authentication authentication) throws UserNotExistsException {
 			return accountService.getAccountByName(authentication.getName());
@@ -74,13 +66,21 @@ public class ProjectController {
 	@Transactional(readOnly = true)
 	@GetMapping
 	public String getProjectsList(@ModelAttribute("account") Account account, Model model) {
-		model.addAttribute("projectsSet", projectService.getSetByAccount(account));
+		model.addAttribute("projectsSet", account.getProjects());
 		model.addAttribute("newProject", projectService.getNew());
 		model.addAttribute("backBean", new CheckboxBean());
 		
 		return views.getProject().getMain();
 	}
 	
+	/**
+	 * @param projectName
+	 * @param model
+	 * @return
+	 * @throws ProjectNotFoundException
+	 * 
+	 * Open selected or newly created project
+	 */
 	@GetMapping(value="{projectName}")
 	public String getProject(@PathVariable String projectName, Model model) throws ProjectNotFoundException{
 		String currentProject = "currentProject";
@@ -113,10 +113,9 @@ public class ProjectController {
 			return views.getProject().getMain();
 		}
 		log.debug("Registering new project {}", project.getName());
-		project.setAccount(account);
-		projectService.save(Optional.of(project));
-//		account.addProject(project);
-//		accountService.save(account);
+
+		account.addProject(project);
+		accountService.save(account);
 		return "redirect:" + RequestPath.project + "/" + project.getName();
 	}
 	
@@ -128,11 +127,8 @@ public class ProjectController {
 			) {
 		log.debug("BackBean: {}", Arrays.stream(bean.getNames()).collect(Collectors.toList()));
 		
-//		projectService.deleteAllByNames(Arrays.stream(bean.getNames()).collect(Collectors.toList()));
-		
-		
-		
 		account.getProjects().removeIf((proj) -> nameContainsOneOf(proj.getName(), bean.getNames()));
+		accountService.save(account);
 		return "redirect:" + RequestPath.project;
 	}
 	

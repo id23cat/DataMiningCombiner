@@ -34,32 +34,32 @@ public class ProjectServiceImpl implements ProjectService{
 		return this;
 	}
 
-	@Override
-	@Transactional
-	public ProjectService delete(Optional<ProjectModel> proModel) {
-		proModel.ifPresent((model) -> {
-			projectRepo.delete(model);
-			projectRepo.flush();
-		});
-		if(!proModel.isPresent())
-			log.warn("Trying to delete empty ProjectModel");
-		return this;
-	}
-
-	@Override
-	@Transactional
-	public ProjectService delete(String name) {
-		projectRepo.deleteByName(name);
-		projectRepo.flush();
-		return this;
-	}
-	
-	@Override
-	@Transactional
-	public ProjectService deleteAllByNames(List<String> names){
-		projectRepo.deleteByNameIn(names);
-		return this;
-	}
+//	@Override
+//	@Transactional
+//	public ProjectService delete(Optional<ProjectModel> proModel) {
+//		proModel.ifPresent((model) -> {
+//			projectRepo.delete(model);
+//			projectRepo.flush();
+//		});
+//		if(!proModel.isPresent())
+//			log.error("Trying to delete empty Optional<ProjectModel>");
+//		return this;
+//	}
+//
+//	@Override
+//	@Transactional
+//	public ProjectService delete(String name) {
+//		projectRepo.deleteByName(name);
+//		projectRepo.flush();
+//		return this;
+//	}
+//	
+//	@Override
+//	@Transactional
+//	public ProjectService deleteAllByNames(List<String> names){
+//		projectRepo.deleteByNameIn(names);
+//		return this;
+//	}
 
 	@Override
 	@Transactional(readOnly = true)
@@ -101,9 +101,9 @@ public class ProjectServiceImpl implements ProjectService{
 	}
 
 	@Override
-	public ProjectModel getNew(ProjectType type, Set<AlgorithmModel> algorithms,
+	public ProjectModel getNew(Account account, ProjectType type, Set<AlgorithmModel> algorithms,
 			Properties properties, String projectName) {
-		return new ProjectModel(type, algorithms, properties, projectName);
+		return new ProjectModel(account, type, algorithms, properties, projectName);
 	}
 
 }

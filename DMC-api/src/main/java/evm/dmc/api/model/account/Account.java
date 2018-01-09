@@ -82,7 +82,7 @@ public class Account implements Serializable {
 	protected Role role = Role.USER;
 	
 	@Setter(AccessLevel.NONE) 
-	private Instant created;
+	private Instant created = Instant.now();
 	
 	@OneToMany(mappedBy="account", fetch = FetchType.EAGER,
 			cascade = CascadeType.ALL, orphanRemoval = true)
@@ -90,12 +90,10 @@ public class Account implements Serializable {
 //	private List<ProjectModel> projects = new LinkedList<>();
 
     public Account() {
-    	this.created = Instant.now();
     }
     
     public Account(String name) {
     	this.userName = name;
-    	this.created = Instant.now();
     }
 
 	public Account(String username, String password, String email, 

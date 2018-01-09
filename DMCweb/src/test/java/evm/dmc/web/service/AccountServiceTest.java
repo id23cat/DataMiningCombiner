@@ -24,7 +24,7 @@ import org.springframework.transaction.annotation.Transactional;
 import evm.dmc.api.model.account.Account;
 import evm.dmc.api.model.account.Role;
 import evm.dmc.web.controllers.SignInController;
-import evm.dmc.web.service.AccountService;
+import evm.dmc.web.service.impls.AccountService;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest

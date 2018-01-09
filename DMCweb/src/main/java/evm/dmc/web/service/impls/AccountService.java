@@ -1,4 +1,4 @@
-package evm.dmc.web.service;
+package evm.dmc.web.service.impls;
 
 import java.util.Collections;
 
@@ -72,10 +72,12 @@ public class AccountService implements UserDetailsService {
 	}
 
 	@Override
+	@Transactional(readOnly = true)
 	public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
 		return createUser(getAccountByName(username));
 	}
 	
+	@Transactional(readOnly = true)
 	public Account getAccountByName(String username) throws UsernameNotFoundException {
 		return  accountRepository.findByUserName(username).orElseThrow(() -> new UsernameNotFoundException(username));
 	}
@@ -84,6 +86,7 @@ public class AccountService implements UserDetailsService {
 		SecurityContextHolder.getContext().setAuthentication(authenticate(account));
 	}
 	
+	@Transactional
 	public void delete(Account account) {
 		accountRepository.delete(account);
 	}
@@ -92,6 +95,7 @@ public class AccountService implements UserDetailsService {
 		return new UsernamePasswordAuthenticationToken(createUser(account), null, Collections.singleton(createAuthority(account)));
 	}
 	
+	@Transactional
 	private User createUser(Account account) {
 		return new User(account.getUserName(), account.getPassword(), Collections.singleton(createAuthority(account)));
 	}
