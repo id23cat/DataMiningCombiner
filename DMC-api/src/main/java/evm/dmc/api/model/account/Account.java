@@ -2,7 +2,9 @@ package evm.dmc.api.model.account;
 
 import java.io.Serializable;
 import java.time.Instant;
+import java.util.Arrays;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
@@ -35,6 +37,7 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.Setter;
 import lombok.ToString;
+import lombok.extern.slf4j.Slf4j;
 
 @Entity
 @Data
@@ -42,6 +45,7 @@ import lombok.ToString;
 @Inheritance(strategy=InheritanceType.SINGLE_TABLE)
 @EqualsAndHashCode(exclude={"projects"})
 @ToString(exclude="projects")
+@Slf4j
 public class Account implements Serializable {
 	@Transient
 	private static final String NOT_BLANK_MESSAGE = "{error.emptyField}";
@@ -84,8 +88,8 @@ public class Account implements Serializable {
 	@Setter(AccessLevel.NONE) 
 	private Instant created = Instant.now();
 	
-	@OneToMany(mappedBy="account", fetch = FetchType.EAGER,
-			cascade = CascadeType.ALL, orphanRemoval = true)
+	@OneToMany(mappedBy="account", fetch = FetchType.LAZY,
+			orphanRemoval = true, cascade = CascadeType.ALL) //{CascadeType.REMOVE, CascadeType.PERSIST}, 
 	private Set<ProjectModel> projects = new HashSet<>();
 //	private List<ProjectModel> projects = new LinkedList<>();
 
@@ -124,10 +128,31 @@ public class Account implements Serializable {
 		return this;
 	}
 	
-	public Account removeProject(ProjectModel project) {
+	public void removeProject(ProjectModel project) {
 		projects.remove(project);
 		project.setAccount(null);
-		return this;
+//		return this;
+	}
+	
+	public void removeProjectByName(String name) {
+////		for(ProjectModel proj: projects) {
+//		for(Iterator<ProjectModel> iter =  projects.iterator(); iter.hasNext();) {
+//			ProjectModel proj = iter.next();
+//			if(proj.getName().equals(name)) {
+//				projects.remove(proj);
+//				log.debug("Project {} removed", name);
+//			}
+//		}
+		projects.removeIf((proj) -> proj.getName().equals(name));
+	}
+	
+	public void removeProjectsByNames(String names[]) {
+//		projects.forEach((proj) -> {if( nameContainsOneOf(proj.getName(), names) ) removeProject(proj);});
+		projects.removeIf((proj) -> nameContainsOneOf(proj.getName(), names));
+	}
+	
+	private static boolean nameContainsOneOf(String name, String[] names) {
+		return Arrays.stream(names).anyMatch(name :: contains);
 	}
 
 }

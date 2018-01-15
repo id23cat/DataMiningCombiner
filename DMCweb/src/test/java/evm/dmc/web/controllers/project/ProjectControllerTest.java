@@ -39,7 +39,7 @@ import evm.dmc.config.SecurityConfig;
 import evm.dmc.web.service.ProjectService;
 import evm.dmc.web.service.RequestPath;
 import evm.dmc.web.service.Views;
-import evm.dmc.web.service.impls.AccountService;
+import evm.dmc.web.service.AccountService;
 import lombok.extern.slf4j.Slf4j;
 
 @RunWith(SpringRunner.class)
@@ -112,7 +112,7 @@ public class ProjectControllerTest {
 	@Test
 	@WithMockUser("Alex")
 	public final void testGetNonExistingProject() throws Exception {
-		Mockito.when(projServ.getByName(any(String.class)))
+		Mockito.when(projServ.getByNameAndAccount(any(String.class), any(Account.class)))
 			.thenReturn(Optional.empty());
 		mockMvc.perform(get(RequestPath.project+"/nonextproj"))
 			.andExpect(status().isOk())
@@ -123,7 +123,7 @@ public class ProjectControllerTest {
 	@Test
 	@WithMockUser("Alex")
 	public final void testGetProjectWithEmptyAlgorithmsSet() throws Exception {
-		Mockito.when(projServ.getByName(proj.getName()))
+		Mockito.when(projServ.getByNameAndAccount(any(String.class), any(Account.class)))
 			.thenReturn(Optional.of(proj));
 		mockMvc.perform(get(RequestPath.project+"/"+proj.getName()))
 			.andExpect(status().isOk())

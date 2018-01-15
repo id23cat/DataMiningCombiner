@@ -15,6 +15,9 @@ spring:
   datasource:
     url: jdbc:h2:mem:testdmc
 
+hibernate: 
+  dialect: org.hibernate.dialect.H2Dialect
+
 
 # Logging Configuration
 logging:
@@ -23,11 +26,15 @@ logging:
   level:
     org.springframework.test: WARN
     org.springframework.web: WARN
-    evm.dmc.web: DEBUG
-    evm.dmc.service: DEBUG
     org.springframework.data: DEBUG
+    org.springframework.transaction: TRACE
     org.hibernate.SQL: TRACE
     org.hibernate.type.descriptor.sql.BasicBinder: TRACE
+    evm.dmc.web: DEBUG
+    evm.dmc.api: DEBUG
+    evm.dmc.service: DEBUG
+
+
 
 dmc:
   security:

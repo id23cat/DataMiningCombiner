@@ -24,7 +24,7 @@ import evm.dmc.utils.MessageHelper;
 import evm.dmc.web.exceptions.UserNotExistsException;
 import evm.dmc.web.service.RequestPath;
 import evm.dmc.web.service.Views;
-import evm.dmc.web.service.impls.AccountService;
+import evm.dmc.web.service.AccountService;
 
 @Controller
 @RequestMapping

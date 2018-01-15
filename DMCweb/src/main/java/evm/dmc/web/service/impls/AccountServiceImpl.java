@@ -3,6 +3,7 @@ package evm.dmc.web.service.impls;
 import java.util.Collections;
 
 import javax.annotation.PostConstruct;
+import javax.persistence.EntityManager;
 
 import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.slf4j.Logger;
@@ -32,16 +33,20 @@ import evm.dmc.api.model.account.Role;
 import evm.dmc.model.repositories.AccountRepository;
 import evm.dmc.web.controllers.SignInController;
 import evm.dmc.web.exceptions.UserNotExistsException;
+import evm.dmc.web.service.AccountService;
 
 
 @Service
 //@Scope(proxyMode = ScopedProxyMode.TARGET_CLASS)
 @Scope(value = ConfigurableBeanFactory.SCOPE_SINGLETON)
-public class AccountService implements UserDetailsService {
+public class AccountServiceImpl implements AccountService {
 	private static final Logger logger = LoggerFactory.getLogger(SignInController.class);
 	
 	@Autowired
     private AccountRepository accountRepository;
+	
+	@Autowired
+	private EntityManager em;
 	
 	@Autowired
 	private PasswordEncoder passwordEncoder;
@@ -64,6 +69,7 @@ public class AccountService implements UserDetailsService {
 		save(new AccountExt(admuser, admpass, ADMIN_EMAIL, ADMIN_FIRSTNAME, ADMIN_LASTNAME, Role.ADMIN));
 	}
 	
+	@Override
 	@Transactional
 	public Account save(Account account) {
 		account.setPassword(passwordEncoder.encode(account.getPassword()));
@@ -77,18 +83,32 @@ public class AccountService implements UserDetailsService {
 		return createUser(getAccountByName(username));
 	}
 	
+	@Override
 	@Transactional(readOnly = true)
 	public Account getAccountByName(String username) throws UsernameNotFoundException {
 		return  accountRepository.findByUserName(username).orElseThrow(() -> new UsernameNotFoundException(username));
 	}
 	
+	@Override
 	public void signin(Account account) {
 		SecurityContextHolder.getContext().setAuthentication(authenticate(account));
 	}
 	
+	@Override
 	@Transactional
 	public void delete(Account account) {
 		accountRepository.delete(account);
+	}
+	
+	@Override
+	public void refresh(Account account) {
+		em.refresh(account);
+	}
+	
+	@Override
+	@Transactional
+	public Account merge(Account account) {
+		return em.merge(account);
 	}
 	
 	private Authentication authenticate(Account account) {

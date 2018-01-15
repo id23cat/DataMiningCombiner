@@ -31,14 +31,14 @@ import evm.dmc.api.model.ProjectModel;
 import evm.dmc.api.model.account.Account;
 import evm.dmc.web.controllers.CheckboxBean;
 import evm.dmc.web.service.ProjectService;
-import evm.dmc.web.service.impls.AccountService;
+import evm.dmc.web.service.AccountService;
 import lombok.extern.slf4j.Slf4j;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest
 @DataJpaTest
 @ActiveProfiles({"test", "devH2"})
-@Transactional
+//@Transactional
 @Rollback
 @ComponentScan( basePackages = { "evm.dmc.web", "evm.dmc.core", "evm.dmc.service", "evm.dmc.model"})
 @Slf4j
@@ -72,6 +72,7 @@ public class ProjectControllerJpaTest {
 	private static final String PROJ_2 = "test2";
 
 	@Test
+	@Transactional
 	public final void testPostAddProject() {
 		final String NEW_PROJ = "Unit0";
 		Account account = accService.getAccountByName("idcat");
@@ -85,27 +86,29 @@ public class ProjectControllerJpaTest {
 		
 		controller.postAddProject(account, newProj, bindingResult, ra);
 		
+		account = accService.merge(account);
 		assertThat(NEW_PROJ, anyOf(
 				account.getProjects()
 				.stream()
 				.map((prj)->equalTo(prj.getName()))
 				.collect(Collectors.toList())));
 		
-		Optional<ProjectModel> proj =  projectService.getByName(NEW_PROJ);
+		Optional<ProjectModel> proj =  projectService.getByNameAndAccount(NEW_PROJ, account);
 		assertTrue(proj.isPresent());
 		assertThat(proj.get().getAccount(), equalTo(account));
 	}
 
 	@Test
-	@Transactional
+//	@Transactional
 	@Rollback
 	public final void testPostDelProjedct() {
 		Account account = accService.getAccountByName("idcat");
-		ProjectModel removeProj = projectService.getByName(PROJ_0).get();
+		ProjectModel removeProj = projectService.getByNameAndAccount(PROJ_0, account).get();
 		CheckboxBean bean = new CheckboxBean();
 		bean.setNames(Arrays.array(PROJ_0));
 		
 		controller.postDelProjedct(account, bean, bindingResult, ra);
+//		controller.postDelProjedct(account, account.getProjects(), bean, bindingResult, ra);
 		
 		assertThat(projectService.getAll().collect(Collectors.toList()), not(hasItem(removeProj)));
 		assertThat(account.getProjects(), not(hasItem(removeProj)));

@@ -29,7 +29,7 @@ import evm.dmc.api.model.ProjectType;
 import evm.dmc.api.model.account.Account;
 import evm.dmc.web.exceptions.ProjectNotFoundException;
 import evm.dmc.web.service.ProjectService;
-import evm.dmc.web.service.impls.AccountService;
+import evm.dmc.web.service.AccountService;
 import lombok.extern.slf4j.Slf4j;
 
 @RunWith(SpringRunner.class)
@@ -71,7 +71,7 @@ public class ProjectServiceTest {
 	@Test
 	public final void testGetByName() throws ProjectNotFoundException {
 		assertNotNull(projectService);
-		assertThat(projectService.getByName(PROJECTNAME_1)
+		assertThat(projectService.getByName(PROJECTNAME_1).findFirst()
 				.orElseThrow(() -> new ProjectNotFoundException())
 				.getName(), equalTo(PROJECTNAME_1));
 	}
@@ -81,6 +81,8 @@ public class ProjectServiceTest {
 		long initCount = projectService.getAll().count();
 		projectService.save(Optional.of(projectService.getNew(account, ProjectType.SIMPLEST_PROJECT, null, null, "TestTest")));
 		assertThat(projectService.getAll().count(), equalTo(initCount + 1L));
+		
+		assertThat(projectService.getAll().count(), equalTo((long)projectService.getAllAsList().size()));
 	}
 	
 	@Test
@@ -93,7 +95,7 @@ public class ProjectServiceTest {
 			log.debug("Exception: {}", ex); 
 		}
 		
-		assertThat(projectService.getByName(name).get().getName(), equalTo(name));
+		assertThat(projectService.getByName(name).findFirst().get().getName(), equalTo(name));
 	}
 	
 //	@Test

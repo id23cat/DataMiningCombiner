@@ -14,15 +14,20 @@ import evm.dmc.api.model.account.Account;
 public interface ProjectService {
 	ProjectService save(Optional<ProjectModel> proModel);
 	
-//	ProjectService delete(Optional<ProjectModel> proModel);
-//	ProjectService delete(String name);
-//	ProjectService deleteAllByNames(List<String> names);
+	ProjectService delete(Optional<ProjectModel> proModel);
+	ProjectService delete(String name);
+	ProjectService deleteAllByNames(List<String> names);
 	
 	Stream<ProjectModel> getAll();
-	Optional<ProjectModel> getByName(String name);
+	List<ProjectModel> getAllAsList();
+	Set<ProjectModel> getAllAsSet();
+	
+	Stream<ProjectModel> getByName(String name);
+	Optional<ProjectModel> getByNameAndAccount(String name, Account account);
 	
 	Stream<ProjectModel> getByAccount(Account account);
-	Set<ProjectModel> getSetByAccount(Account account);
+	Set<ProjectModel> getByAccountAsSet(Account account);
+	List<ProjectModel> getByAccountAsList(Account account);
 	
 	Set<String> getNamesByAccount(Account account);
 	

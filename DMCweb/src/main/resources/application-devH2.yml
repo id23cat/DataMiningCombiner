@@ -19,9 +19,11 @@ logging:
     org.springframework.web: ERROR
     org.springframework.security: WARN
     org.springframework.data: DEBUG
+    org.springframework.transaction: TRACE
     org.hibernate.SQL: DEBUG
     org.hibernate.type.descriptor.sql.BasicBinder: TRACE
     evm.dmc.web: DEBUG
+    evm.dmc.api: DEBUG
 
 views2:
   showtable: /showtable/table

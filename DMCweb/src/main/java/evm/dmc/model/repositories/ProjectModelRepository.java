@@ -16,14 +16,21 @@ import evm.dmc.api.model.account.Account;
 public interface ProjectModelRepository extends JpaRepository<ProjectModel, Long> {
 	public final static String FIND_ALL = "SELECT p FROM ProjectModel p";
 	
-//	@Modifying
-//	@Transactional
-//	Long deleteByName(String name);
-//	
-//	Long deleteByNameIn(List<String> name);
+	@Modifying
+	@Transactional
+	Long deleteByName(String name);
 	
-	Optional<ProjectModel> findByName(String name);
+	@Modifying
+	@Transactional
+	Long deleteByNameIn(List<String> name);
 	
+	@Transactional(readOnly = true)
+	Stream<ProjectModel> findByName(String name);
+	
+	@Transactional(readOnly = true)
+	Optional<ProjectModel> findByNameAndAccount(String name, Account account);
+	
+	@Transactional(readOnly = true)
 	Stream<ProjectModel> findAllByAccount(Account account);
 	
 	@Query(FIND_ALL)

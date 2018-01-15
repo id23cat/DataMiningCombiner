@@ -20,25 +20,10 @@
 			th:action="${@requestPath.delProject}"
 			th:object="${backBean}"
 			>
-			<!-- th:object="${deleteProjects}" -->
 			<div class="col-sm-4 form-group">
-				<!-- <ul> -->
-				<!-- <div th:each="name : ${projects.namesSet}"> -->
 				<div th:each="project, stat : ${projectsSet}">
 					<h4>
-						<!-- <select hidden=true th:field="*{projects[__${stat.index}__].projectName}">
-							<option th:value="${project.projectName}"></option>
-						</select> -->
-						<!-- <select hidden=true th:field="*{projects[__${stat.index}__].id}">
-							<option th:value="${project.id}"></option>
-						</select> -->
-						
-						<!-- <input type="checkbox" th:field="*{projects[__${stat.index}__]}" th:value="${project.projectName}"/> -->
-						<!-- <input type="checkbox" th:field="*{projects[__${stat.index}__].projectName}" th:value="${project.projectName}"/> -->
-						<!-- <input type="checkbox" th:field="*{projects[__${stat.index}__].checked}" th:value="${project.projectName}"/> -->
 						<input type="checkbox" th:field="*{names}" th:value="${project.name}"/>
-						<!-- <input type="checkbox" /> -->
-						<!-- <input type="checkbox" th:field="*{namesSet}" th:value="false" /> -->
 						
 						<a href=/project/name th:href="@{{base}/{name}(base=${base}, name=${project.name})}">
 							<span th:text="${project.name}">Project name</span>
@@ -46,7 +31,9 @@
 					</h4>
 				</div>
 				<!-- </ul> -->
-				<button id="deleteButton" class="btn btn-primary" type="submit" disabled>Delete</button>
+				<div th:if="${not #lists.isEmpty(projectsSet)}">
+					<button id="deleteButton" class="btn btn-primary" type="submit" disabled>Delete</button>
+				</div>
 			</div>
 			
 		</form>
