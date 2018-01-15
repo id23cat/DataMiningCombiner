@@ -71,22 +71,22 @@ public class ProjectModel implements Serializable {
 	@NotNull
 	private ProjectType projectType = ProjectType.SIMPLEST_PROJECT;
 	
-//	@ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-//	@JoinTable(name = "project_algorithm", 
-//			joinColumns = @JoinColumn(name = "project_id", referencedColumnName = "id"),
-//			inverseJoinColumns = @JoinColumn(name = "algorithm_id", referencedColumnName = "id"))
-////	@OneToMany(mappedBy="parentProject", fetch = FetchType.LAZY,
-////			cascade = CascadeType.ALL, orphanRemoval = true)
-//	private Set<AlgorithmModel> algorithms = new HashSet<>();
+	@ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+	@JoinTable(name = "project_algorithm", 
+			joinColumns = @JoinColumn(name = "project_id", referencedColumnName = "id"),
+			inverseJoinColumns = @JoinColumn(name = "algorithm_id", referencedColumnName = "id"))
+//	@OneToMany(mappedBy="parentProject", fetch = FetchType.LAZY,
+//			cascade = CascadeType.ALL, orphanRemoval = true)
+	private Set<AlgorithmModel> algorithms = new HashSet<>();
 	
 //	@Transient
 //	private Properties properties = new Properties();
 	
-//	@ElementCollection
-//	@MapKeyColumn(name = "property")
-//	@Column(name = "value")
-//	@CollectionTable(name = "projectProps")
-//	private Map<String, String> propertiesMap = new HashMap<>();
+	@ElementCollection
+	@MapKeyColumn(name = "property")
+	@Column(name = "value")
+	@CollectionTable(name = "projectProps")
+	private Map<String, String> propertiesMap = new HashMap<>();
 	
 	@NotBlank(message = ProjectModel.NOT_BLANK_MESSAGE)
 	@Column(nullable = false)
@@ -101,26 +101,26 @@ public class ProjectModel implements Serializable {
 	
 	public ProjectModel(Account acc, ProjectType type, Set<AlgorithmModel> algorithms, Properties properties, String projectName){
 		this.projectType = type;
-//		if(algorithms != null  && !algorithms.isEmpty())
-//			this.algorithms =  new HashSet<>(algorithms);
-//		if(this.propertiesMap != null && properties != null && !properties.isEmpty())
-//			setProperties(properties);
+		if(algorithms != null  && !algorithms.isEmpty())
+			this.algorithms =  new HashSet<>(algorithms);
+		if(this.propertiesMap != null && properties != null && !properties.isEmpty())
+			setProperties(properties);
 		this.name = projectName;
 		acc.addProject(this);
 		this.account = acc;
 	}
 	
-//	public ProjectModel addAlgorithm(AlgorithmModel algorithm){
-//		algorithms.add(algorithm);
-//		algorithm.getDependentProjects().add(this);
-//		return this;
-//	}
+	public ProjectModel addAlgorithm(AlgorithmModel algorithm){
+		algorithms.add(algorithm);
+		algorithm.getDependentProjects().add(this);
+		return this;
+	}
 	
-//	public ProjectModel removeAlgorithm(AlgorithmModel algorithm) {
-//		algorithms.remove(algorithm);
-//		algorithm.getDependentProjects().remove(this);
-//		return this;
-//	}
+	public ProjectModel removeAlgorithm(AlgorithmModel algorithm) {
+		algorithms.remove(algorithm);
+		algorithm.getDependentProjects().remove(this);
+		return this;
+	}
 	
 //	@PreRemove
 //	public void removeProject() {
@@ -128,18 +128,18 @@ public class ProjectModel implements Serializable {
 //		log.debug("===PreDeleting procedure");
 //	}
 	
-//	public Properties getProperties() {
-//		Properties props = new Properties();
-//		props.putAll(propertiesMap);
-//		return props;
-//	}
+	public Properties getProperties() {
+		Properties props = new Properties();
+		props.putAll(propertiesMap);
+		return props;
+	}
 	
-//	public void setProperties(Properties prop) {
-////		prop.stringPropertyNames().parallelStream().map((name)->propMap.put(name, prop.getProperty(name)));
-////		propMap.prop.entrySet()
-//		for(String name: prop.stringPropertyNames()) {
-//			propertiesMap.put(name, prop.getProperty(name));
-//		}
-//	}
+	public void setProperties(Properties prop) {
+//		prop.stringPropertyNames().parallelStream().map((name)->propMap.put(name, prop.getProperty(name)));
+//		propMap.prop.entrySet()
+		for(String name: prop.stringPropertyNames()) {
+			propertiesMap.put(name, prop.getProperty(name));
+		}
+	}
 
 }

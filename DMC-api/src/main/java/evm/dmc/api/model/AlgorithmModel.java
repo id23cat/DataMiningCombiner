@@ -56,11 +56,11 @@ public class AlgorithmModel implements Serializable {
 	
 	private FunctionDstModel dataDestination = null;
 	
-//	@ManyToMany(mappedBy = "algorithms", cascade = {CascadeType.ALL})
-//	private Set<ProjectModel> dependentProjects = new HashSet<>();
-////	@ManyToOne(fetch = FetchType.LAZY)
-////	@JoinColumn(name = "parent_project_id")
-////	private ProjectModel parentProject;
+	@ManyToMany(mappedBy = "algorithms", cascade = {CascadeType.ALL})
+	private Set<ProjectModel> dependentProjects = new HashSet<>();
+//	@ManyToOne(fetch = FetchType.LAZY)
+//	@JoinColumn(name = "parent_project_id")
+//	private ProjectModel parentProject;
 
 	private boolean shared = false;
 	

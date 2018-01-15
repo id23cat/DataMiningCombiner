@@ -77,7 +77,7 @@ public class ProjectController {
 //		model.addAttribute("projectsSet", account.getProjects().stream().collect(Collectors.toList()));
 		
 		List<ProjectModel> projectsSet = projectService.getByAccountAsList(account);
-		projectsSet.sort(Comparator.comparing(ProjectModel::getName));
+		projectsSet.sort(Comparator.comparing(ProjectModel::getName, String.CASE_INSENSITIVE_ORDER));
 		
 		model.addAttribute("projectsSet", projectsSet);
 		model.addAttribute("newProject", projectService.getNew());
@@ -110,7 +110,7 @@ public class ProjectController {
 		ProjectModel project = optProject.get();
 		model.addAttribute(currentProject, project);
 		
-		Set<AlgorithmModel> algSet = Sets.newHashSet(); //project.getAlgorithms(); 
+		Set<AlgorithmModel> algSet = project.getAlgorithms(); 
 		if(algSet.isEmpty()){
 			return views.getProject().getNewAlg();
 		}else
@@ -131,12 +131,12 @@ public class ProjectController {
 		}
 		log.debug("Registering new project {}", project.getName());
 
+		account = accountService.merge(account);
 		account.addProject(project);
-		accountService.merge(account);
+		accountService.save(account);
 		
-//		project.setAccount(account);
-//		projectService.save(Optional.of(project));
 		return "redirect:" + RequestPath.project + "/" + project.getName();
+//		return "redirect:" + RequestPath.project;
 	}
 	
 	@PostMapping(RequestPath.delete)
