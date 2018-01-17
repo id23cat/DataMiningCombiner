@@ -15,6 +15,7 @@ import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 
 import org.apache.tomcat.util.buf.StringUtils;
@@ -33,8 +34,11 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.SessionAttribute;
 import org.springframework.web.bind.annotation.SessionAttributes;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+import org.springframework.web.servlet.view.RedirectView;
+import org.springframework.web.util.UriComponentsBuilder;
 
 import evm.dmc.api.model.AlgorithmModel;
 import evm.dmc.api.model.ProjectModel;
@@ -69,6 +73,11 @@ public class ProjectController {
 			return accountService.getAccountByName(authentication.getName());
 	}
 	
+	@ModelAttribute("backBean")
+	public CheckboxBean backingBeanForCheckboxes() {
+		return new CheckboxBean();
+	}
+	
 	@Transactional(readOnly = true)
 	@GetMapping
 	public String getProjectsList(@ModelAttribute("account") Account account, Model model) {
@@ -81,7 +90,7 @@ public class ProjectController {
 		
 		model.addAttribute("projectsSet", projectsSet);
 		model.addAttribute("newProject", projectService.getNew());
-		model.addAttribute("backBean", new CheckboxBean());
+//		model.addAttribute("backBean", new CheckboxBean());
 		
 		return views.getProject().getMain();
 	}
@@ -95,11 +104,12 @@ public class ProjectController {
 	 * Open selected or newly created project
 	 */
 	@GetMapping(value="{projectName}")
+	@Transactional(readOnly = true)
 	public String getProject(@PathVariable String projectName,
 							@ModelAttribute("account") Account account,
-							Model model) 
+							Model model, 
+							HttpServletRequest request) 
 									throws ProjectNotFoundException {
-		String currentProject = "currentProject";
 		log.debug("Request for project {}", projectName);
 		Optional<ProjectModel> optProject = projectService.getByNameAndAccount(projectName, account);
 		if(!optProject.isPresent()){
@@ -108,26 +118,30 @@ public class ProjectController {
 		}
 		
 		ProjectModel project = optProject.get();
-		model.addAttribute(currentProject, project);
 		
-		Set<AlgorithmModel> algSet = project.getAlgorithms(); 
-		if(algSet.isEmpty()){
-			return views.getProject().getNewAlg();
-		}else
-			model.addAttribute("alggorithmsSet", algSet);
-			return views.getProject().getAlgorithmsList();
+		log.debug("Current project: {}", project.getId()+project.getName());
+		
+		Set<AlgorithmModel> algSet = project.getAlgorithms();
+		
+		model.addAttribute("currentProject", project);
+		model.addAttribute("algorithmsSet", algSet);
+		model.addAttribute("algBasePath", String.format("%s%s", request.getServletPath(), RequestPath.algorithm));
+		log.debug("algBasePath : {}", String.format("%s%s", request.getServletPath(), RequestPath.algorithm));
+		model.addAttribute("newAlgorithm", new AlgorithmModel());
+		return views.getProject().getAlgorithmsList();
 		
 	}
 	
 	@PostMapping(RequestPath.add)
 	@Transactional
-	public String postAddProject(@ModelAttribute("account") Account account, 
+	public RedirectView postAddProject(@ModelAttribute("account") Account account, 
 						@Valid @ModelAttribute("newProject") ProjectModel project,
 						BindingResult bindingResult, RedirectAttributes ra) {
 		if(bindingResult.hasErrors()) {
 			log.debug("Invalid new project property: {}", bindingResult);
 			
-			return views.getProject().getMain();
+//			return views.getProject().getMain();
+			new RedirectView(RequestPath.project);
 		}
 		log.debug("Registering new project {}", project.getName());
 
@@ -135,13 +149,13 @@ public class ProjectController {
 		account.addProject(project);
 		accountService.save(account);
 		
-		return "redirect:" + RequestPath.project + "/" + project.getName();
-//		return "redirect:" + RequestPath.project;
+//		return "redirect:" + RequestPath.project + "/" + project.getName();
+		return new RedirectView(RequestPath.project + "/" + project.getName());
 	}
 	
 	@PostMapping(RequestPath.delete)
 	@Transactional
-	public String postDelProjedct(
+	public RedirectView postDelProjedct(
 			@ModelAttribute("account") Account account,
 			@ModelAttribute("backBean") CheckboxBean bean,
 			BindingResult bindingResult, RedirectAttributes ra
@@ -152,8 +166,50 @@ public class ProjectController {
 		projectService.deleteAllByNames(Arrays.asList(bean.getNames()));
 		
 		log.debug("==============redirect===================");
-		return "redirect:" + RequestPath.project;
+		return new RedirectView(RequestPath.project);
 	}
 	
 	
+	/**
+	 * @param project
+	 * @param algorithm
+	 * @return
+	 * 
+	 * Handles request to /project/algorithm/add
+	 */
+	@PostMapping(RequestPath.addAlgorithm)
+	@Transactional
+	public RedirectView postAddAlgorithm(
+			@SessionAttribute("currentProject") ProjectModel project,
+			@Valid @ModelAttribute("newAlgorithm") AlgorithmModel algorithm
+			) {
+		log.debug("Adding algorithm: {}" ,algorithm.getName());
+		log.debug("Project: {}", project.getId() + project.getName());
+		
+		project = projectService.merge(project);
+		project.addAlgorithm(algorithm);
+
+		return new RedirectView(String.format("%s/%s", RequestPath.project, project.getName()));
+	}
+	
+	@PostMapping(RequestPath.delAlgorithm)
+	@Transactional
+	public RedirectView postDelAlgorithm(
+			@SessionAttribute("currentProject") ProjectModel project,
+			@ModelAttribute("backBean") CheckboxBean bean
+			) {
+		
+		project = projectService.merge(project);
+		
+		project.getAlgorithms().removeIf((alg) -> nameContainsOneOf(alg.getName(), bean.getNames()));
+		
+		projectService.save(Optional.of(project));
+		
+		return new RedirectView(String.format("%s/%s", RequestPath.project, project.getName()));
+	}
+	
+	private static boolean nameContainsOneOf(String name, String[] names) {
+		return Arrays.stream(names).anyMatch(name :: contains);
+	}
+
 }

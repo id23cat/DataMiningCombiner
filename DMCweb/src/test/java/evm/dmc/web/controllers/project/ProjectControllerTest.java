@@ -5,11 +5,14 @@ import static org.mockito.Matchers.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.model;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.redirectedUrl;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.view;
 
+import java.util.Collections;
 import java.util.Optional;
 
+import org.assertj.core.util.Arrays;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -32,6 +35,7 @@ import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
 
+import evm.dmc.api.model.AlgorithmModel;
 import evm.dmc.api.model.ProjectModel;
 import evm.dmc.api.model.ProjectType;
 import evm.dmc.api.model.account.Account;
@@ -39,6 +43,7 @@ import evm.dmc.config.SecurityConfig;
 import evm.dmc.web.service.ProjectService;
 import evm.dmc.web.service.RequestPath;
 import evm.dmc.web.service.Views;
+import evm.dmc.web.controllers.CheckboxBean;
 import evm.dmc.web.service.AccountService;
 import lombok.extern.slf4j.Slf4j;
 
@@ -102,12 +107,6 @@ public class ProjectControllerTest {
 			;
 	}
 	
-//	@Test
-//	@WithMockUser("Alex")
-//	public final void testPostAddProject() throws Exception {
-//		mockMvc.perform(MockMvcRequestBuilderUtils.postForm(RequestPath.addProject, proj))
-//				.andExpect(status().isOk());
-//	}
 	
 	@Test
 	@WithMockUser("Alex")
@@ -125,10 +124,53 @@ public class ProjectControllerTest {
 	public final void testGetProjectWithEmptyAlgorithmsSet() throws Exception {
 		Mockito.when(projServ.getByNameAndAccount(any(String.class), any(Account.class)))
 			.thenReturn(Optional.of(proj));
+		
 		mockMvc.perform(get(RequestPath.project+"/"+proj.getName()))
 			.andExpect(status().isOk())
+//			.andExpect(view().name(views.getProject().getNewAlg()))
 			.andExpect(view().name(views.getProject().getNewAlg()))
+			.andExpect(model().attribute("algorithmsSet", Collections.EMPTY_SET))
+			.andExpect(model().attribute("currentProject", proj))
+			.andExpect(model().attributeExists("newAlgorithm"))
 		;
+		
+	}
+	
+	@Test
+	@WithMockUser("Alex")
+	public final void testGetProjectWithNotEmptyAlgorithmsSet() throws Exception {
+		AlgorithmModel alg = new AlgorithmModel();
+		alg.setName("Algorithm0");
+		proj.addAlgorithm(alg);
+		
+		Mockito.when(projServ.getByNameAndAccount(proj.getName(), acc))
+			.thenReturn(Optional.of(proj));
+		
+		mockMvc.perform(get(RequestPath.project+"/"+proj.getName()))
+			.andExpect(status().isOk())
+			.andExpect(view().name(views.getProject().getAlgorithmsList()))
+			.andExpect(model().attribute("algorithmsSet", proj.getAlgorithms()))
+		;
+	}
+	
+	@Test
+	@WithMockUser("Alex")
+	public final void testPostDelAlgorithm() throws Exception {
+		AlgorithmModel algorithm = new AlgorithmModel();
+		algorithm.setName("testAlg0");
+		
+		proj.getAlgorithms().add(algorithm);
+		Mockito.when(projServ.merge(proj))
+			.thenReturn(proj);
+		
+		mockMvc
+			.perform(post(RequestPath.projDelAlgorithm)
+					.sessionAttr("currentProject", proj)
+					.sessionAttr("backBean", new CheckboxBean(Arrays.array(algorithm.getName()))))
+			.andExpect(redirectedUrl(String.format("/%s/%s", RequestPath.project, proj.getName())))
+			.andExpect(status().isFound())
+		;
+			
 	}
 
 }

@@ -135,14 +135,7 @@ public class Account implements Serializable {
 	}
 	
 	public void removeProjectByName(String name) {
-////		for(ProjectModel proj: projects) {
-//		for(Iterator<ProjectModel> iter =  projects.iterator(); iter.hasNext();) {
-//			ProjectModel proj = iter.next();
-//			if(proj.getName().equals(name)) {
-//				projects.remove(proj);
-//				log.debug("Project {} removed", name);
-//			}
-//		}
+
 		projects.removeIf((proj) -> proj.getName().equals(name));
 	}
 	

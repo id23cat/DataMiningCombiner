@@ -22,9 +22,16 @@ public  final  class RequestPath {
 	@Getter public static final String delete="/delete";
 	@Getter public static final String addProject = project + add;
 	@Getter public static final String delProject = project + delete;
-	@Getter public static final String newAlg = project + "/newalg";
+//	@Getter public static final String newAlg = project + "/newalg";
 	
 	@Getter public static final String algorithm = "/algorithm";
+	
+	@Getter public static final String delAlgorithm = algorithm + delete;
+	@Getter public static final String projDelAlgorithm = project + delAlgorithm;
+	@Getter public static final String addAlgorithm = algorithm + add;
+	@Getter public static final String projAddAlgorithm = project + addAlgorithm;
+	
+	
 	
 	@Getter public static final String erAccDenied = "/errors/accessDenied";
 	@Getter public static final String erNotFound = "/errors/notFound";

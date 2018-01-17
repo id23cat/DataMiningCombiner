@@ -18,6 +18,7 @@ import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.OrderColumn;
 import javax.persistence.Table;
+import javax.persistence.UniqueConstraint;
 
 import org.hibernate.validator.constraints.Length;
 import org.hibernate.validator.constraints.NotBlank;
@@ -28,7 +29,9 @@ import lombok.Setter;
 
 @Data
 @Entity
-@Table(name="Algorithm")
+@Table(name="Algorithm"
+//	,uniqueConstraints={@UniqueConstraint(columnNames = {"parentProject_id", "name"})}
+)
 public class AlgorithmModel implements Serializable {
 	
 	/**
@@ -58,6 +61,7 @@ public class AlgorithmModel implements Serializable {
 	
 	@ManyToMany(mappedBy = "algorithms", cascade = {CascadeType.ALL})
 	private Set<ProjectModel> dependentProjects = new HashSet<>();
+
 //	@ManyToOne(fetch = FetchType.LAZY)
 //	@JoinColumn(name = "parent_project_id")
 //	private ProjectModel parentProject;

@@ -47,11 +47,6 @@
 			var checkboxes = $("input[type='checkbox']"), submitButt = $("#deleteButton");
 
 			checkboxes.click(function() {
-				console.log("Checkbox clicked");
-				//console.log(checkboxes);
-				//console.log(submitButt);
-				//submitButt.attr("disabled", !checkboxes.is(":checked"));
-				//submitButt.attr("disabled", false);
 				if(checkboxes.is(":checked")) {
 					submitButt.attr("disabled", false);
 				} else {

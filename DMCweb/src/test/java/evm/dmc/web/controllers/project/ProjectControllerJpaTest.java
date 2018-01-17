@@ -113,5 +113,6 @@ public class ProjectControllerJpaTest {
 		assertThat(projectService.getAll().collect(Collectors.toList()), not(hasItem(removeProj)));
 		assertThat(account.getProjects(), not(hasItem(removeProj)));
 	}
+	
 
 }

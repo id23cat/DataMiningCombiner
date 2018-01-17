@@ -14,6 +14,8 @@ import evm.dmc.api.model.account.Account;
 public interface ProjectService {
 	ProjectService save(Optional<ProjectModel> proModel);
 	
+	ProjectModel merge(ProjectModel project);
+	
 	ProjectService delete(Optional<ProjectModel> proModel);
 	ProjectService delete(String name);
 	ProjectService deleteAllByNames(List<String> names);

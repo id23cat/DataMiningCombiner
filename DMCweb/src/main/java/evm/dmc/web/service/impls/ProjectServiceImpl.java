@@ -9,6 +9,8 @@ import java.util.stream.Collector;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+import javax.persistence.EntityManager;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -26,6 +28,9 @@ import lombok.extern.slf4j.Slf4j;
 public class ProjectServiceImpl implements ProjectService{
 	@Autowired
 	private ProjectModelRepository projectRepo;
+	
+	@Autowired
+	private EntityManager em;
 
 	@Override
 	@Transactional
@@ -34,6 +39,11 @@ public class ProjectServiceImpl implements ProjectService{
 		if(!proModel.isPresent())
 			log.warn("Trying to save empty ProjectModel");
 		return this;
+	}
+	
+	@Override
+	public ProjectModel merge(ProjectModel project) {
+		return em.merge(project);
 	}
 
 	@Override
