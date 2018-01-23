@@ -187,7 +187,7 @@ public class ProjectController {
 		log.debug("Project: {}", project.getId() + project.getName());
 		
 		project = projectService.merge(project);
-		project.addAlgorithm(algorithm);
+		project.assignAlgorithm(algorithm);
 
 		return new RedirectView(String.format("%s/%s", RequestPath.project, project.getName()));
 	}

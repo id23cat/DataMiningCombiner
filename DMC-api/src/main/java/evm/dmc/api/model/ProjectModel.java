@@ -116,6 +116,17 @@ public class ProjectModel implements Serializable {
 		return this;
 	}
 	
+	/**
+	 * Differs from addAlgorithm by setting this project as parent
+	 * @param algorithm
+	 * @return this
+	 */
+	public ProjectModel assignAlgorithm(AlgorithmModel algorithm) {
+		addAlgorithm(algorithm);
+		algorithm.setParentProject(this);
+		return this;
+	}
+	
 	public ProjectModel removeAlgorithm(AlgorithmModel algorithm) {
 		algorithms.remove(algorithm);
 		algorithm.getDependentProjects().remove(this);

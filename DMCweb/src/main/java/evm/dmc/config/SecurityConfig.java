@@ -41,7 +41,10 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 			RequestPath.home,
 			RequestPath.signin,
 			RequestPath.about,
-			"/test"
+			
+			// Only for development period
+			"/test",
+			"/h2-console/**"
 	};
 	
 	private static final String[] ADMIN_MATCHERS = {

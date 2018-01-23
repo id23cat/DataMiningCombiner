@@ -16,12 +16,13 @@ security:
 logging:
   level:
     org.springframework: ERROR
-    org.springframework.web: ERROR
+    org.springframework.web: DEBUG
     org.springframework.security: WARN
     org.springframework.data: DEBUG
-    org.springframework.transaction: TRACE
+    org.springframework.transaction: DEBUG
+    org.springframework.webflow: TRACE
     org.hibernate.SQL: DEBUG
-    org.hibernate.type.descriptor.sql.BasicBinder: TRACE
+    org.hibernate.type.descriptor.sql.BasicBinder: DEBUG
     evm.dmc.web: DEBUG
     evm.dmc.api: DEBUG
 

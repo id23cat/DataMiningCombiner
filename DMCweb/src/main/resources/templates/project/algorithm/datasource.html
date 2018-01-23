@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layouts/sidebarlayout}">
+
+<head>
+	<title>New algorithm: data source</title>
+	<!-- Custom styles for this template -->
+	<link href="#" th:href="@{/css/simple-sidebar.css}" rel="stylesheet">
+	
+</head>
+<body>
+	<!-- Insert page content into the layouts/sidebarpage.html -->
+	<th:block layout:fragment="sidebar_pagecontent">
+		<form method="post" 
+			enctype="multipart/form-data" 
+			th:action="${sourceUpload}">
+			
+			
+		 	<h3>Select source data file</h3>
+
+			<div class="btn btn-default btn-file " data-text="Select file">
+					<input type="file" class="btn" th:id="fileSelect" name="file">
+			</div>
+			<input type="submit" class="btn btn-primary" value="Upload" th:id="upload-button" disabled/>
+			<script>
+			$(function() {
+				var fileSelect = $("input[type='file']"), submitButt = $("#upload-button");
+	
+				fileSelect.change(function() {
+					if(fileSelect.val()) {
+						submitButt.attr("disabled", false);
+					} else {
+						submitButt.attr("disabled", true);
+					}
+				});
+			});
+			</script>
+			
+		 	<ul class="pager">
+				<li><a th:href="@{/testing/UID/project/12/newalg?step=function_datapreview}">Next</a></li>
+			</ul>
+		</form>
+	</th:block>
+
+	<!-- Insert bar content into the layouts/sidebarpage.html -->
+	<th:block layout:fragment="sidebar_barcontent">
+		<ul class="sidebar-nav">
+			<li class="sidebar-brand">Algorithm flow</li>
+			<li><a href="#">File source</a></li>
+			
+		</ul>
+	</th:block>
+</body>
+
+</html>

@@ -7,6 +7,7 @@ import java.util.List;
 import java.util.Set;
 
 import javax.persistence.CascadeType;
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
@@ -62,10 +63,11 @@ public class AlgorithmModel implements Serializable {
 	@ManyToMany(mappedBy = "algorithms", cascade = {CascadeType.ALL})
 	private Set<ProjectModel> dependentProjects = new HashSet<>();
 
-//	@ManyToOne(fetch = FetchType.LAZY)
-//	@JoinColumn(name = "parent_project_id")
-//	private ProjectModel parentProject;
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "parent_project_id")
+	private ProjectModel parentProject;
 
+	@Column(columnDefinition="boolean default false")
 	private boolean shared = false;
 	
 	public AlgorithmModel addFunction(FunctionModel func) {
@@ -76,6 +78,18 @@ public class AlgorithmModel implements Serializable {
 	public AlgorithmModel delFunction(FunctionModel func) {
 		this.functions.remove(func);
 		return this;
+	}
+	
+	public FunctionModel newFunction() {
+		return new FunctionModel();
+	}
+	
+	public FunctionSrcModel newSource() {
+		return new FunctionSrcModel();
+	}
+	
+	public FunctionDstModel newDestination() {
+		return new FunctionDstModel();
 	}
 
 }

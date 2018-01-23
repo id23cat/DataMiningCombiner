@@ -35,5 +35,7 @@ public interface ProjectService {
 	
 	ProjectModel getNew();
 	ProjectModel getNew(Account account, ProjectType type, Set<AlgorithmModel> algorithms, Properties properties, String projectName);
+	
+	AlgorithmModel getNewAlgorithm();
 
 }

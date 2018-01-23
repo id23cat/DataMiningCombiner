@@ -23,7 +23,7 @@ import evm.dmc.model.repositories.ProjectModelRepository;
 import evm.dmc.web.service.ProjectService;
 import lombok.extern.slf4j.Slf4j;
 
-@Service
+@Service("projectService")
 @Slf4j
 public class ProjectServiceImpl implements ProjectService{
 	@Autowired
@@ -150,6 +150,11 @@ public class ProjectServiceImpl implements ProjectService{
 		return new ProjectModel(account, type, algorithms, properties, projectName);
 	}
 	
+	@Override
+	public AlgorithmModel getNewAlgorithm() {
+		return new AlgorithmModel();
+	}
+	
 	public static <T extends Collection<ProjectModel>> T getAsCollection(Stream<ProjectModel> stream, 
 			Collector<ProjectModel,?,T> collector) {
 		T projectsCollection = stream.collect(collector);
@@ -157,4 +162,5 @@ public class ProjectServiceImpl implements ProjectService{
 		return projectsCollection;
 	}
 
+	
 }

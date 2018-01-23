@@ -31,6 +31,9 @@ public  final  class RequestPath {
 	@Getter public static final String addAlgorithm = algorithm + add;
 	@Getter public static final String projAddAlgorithm = project + addAlgorithm;
 	
+	@Getter public static final String setSource = "/setsrc";
+	
+	@Getter public static final String algorithmWozard = "/project/algorithm";
 	
 	
 	@Getter public static final String erAccDenied = "/errors/accessDenied";

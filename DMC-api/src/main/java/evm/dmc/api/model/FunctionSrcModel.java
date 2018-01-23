@@ -19,6 +19,8 @@ public class FunctionSrcModel extends FunctionModel {
 
 	public final static String SRC_PROPERTY_NAME = "source";
 	
+	private String description;
+	
 	private String source = null;
 	
 	@Enumerated(EnumType.STRING)

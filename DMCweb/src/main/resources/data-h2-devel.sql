@@ -9,3 +9,8 @@ INSERT INTO PROJECT(name, project_type, account_id, created)
 			VALUES ('test1', 'SIMPLEST_PROJECT', (SELECT id FROM ACCOUNT WHERE user_name='idcat'), CURRENT_TIMESTAMP());
 INSERT INTO PROJECT(name, project_type, account_id, created)
 			VALUES ('test2', 'SIMPLEST_PROJECT', (SELECT id FROM ACCOUNT WHERE user_name='idcat'), CURRENT_TIMESTAMP());
+			
+INSERT INTO ALGORITHM(name,	PARENT_PROJECT_ID)
+			VALUES('alg1', (SELECT id FROM PROJECT WHERE name='test0'));
+INSERT INTO PROJECT_ALGORITHM (project_id, algorithm_id)
+			VALUES((SELECT id FROM PROJECT WHERE name='test0'), (SELECT id FROM ALGORITHM WHERE name='alg1'));

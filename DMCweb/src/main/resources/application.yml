@@ -59,6 +59,7 @@ dmc:
     admin:
       username: admin
       password: adminpass
+  fileroot: userFiles
 
     
 
