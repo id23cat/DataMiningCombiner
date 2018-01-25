@@ -34,7 +34,7 @@ import lombok.extern.slf4j.Slf4j;
 @SessionAttributes({"account", "currentProject"})
 @Slf4j
 public class AlgorithmController {
-	private final static String BASE_URL = RequestPath.project+"/{projectName}"+RequestPath.algorithm+"/{algName}";
+	public final static String BASE_URL = RequestPath.project+"/{projectName}"+RequestPath.algorithm+"/{algName}";
 	
 	@Autowired
 	private FileStorageService fileService;
@@ -51,6 +51,7 @@ public class AlgorithmController {
 										.filter((alg) -> alg.getName().equals(algName))
 										.findAny();
 		
+		// if algorithm is empty (new algorithm)
 		if(algorithm.orElseThrow(AlgorithmNotFoundException::new).getFunctions().isEmpty()) {
 			log.debug("-== Emty algorithm selected. Running wizard: {}", RequestPath.algorithmWozard);
 			return "redirect:" + RequestPath.algorithmWozard;
@@ -76,7 +77,7 @@ public class AlgorithmController {
 			RedirectAttributes ra) {
 		fileService.store(FileStorageService.relativePath(account, project), file);
 		
-		
+		log.debug("-== Receiving file: {}", file.getName());
 		UriComponents uriComponents = UriComponentsBuilder.fromPath(BASE_URL)
 										.buildAndExpand(project.getName(), algName);
 		return new RedirectView(uriComponents.toUriString());
