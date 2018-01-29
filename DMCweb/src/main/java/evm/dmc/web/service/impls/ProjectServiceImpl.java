@@ -20,6 +20,7 @@ import evm.dmc.api.model.ProjectModel;
 import evm.dmc.api.model.ProjectType;
 import evm.dmc.api.model.account.Account;
 import evm.dmc.model.repositories.ProjectModelRepository;
+import evm.dmc.web.exceptions.EntityNotFoundException;
 import evm.dmc.web.service.ProjectService;
 import lombok.extern.slf4j.Slf4j;
 
@@ -35,32 +36,42 @@ public class ProjectServiceImpl implements ProjectService{
 	@Override
 	@Transactional
 	public ProjectService save(Optional<ProjectModel> proModel) {
-		proModel.ifPresent((model) -> projectRepo.saveAndFlush(model));
+		proModel.ifPresent((model) -> save(model));
 		if(!proModel.isPresent())
 			log.warn("Trying to save empty ProjectModel");
 		return this;
 	}
 	
 	@Override
-	public ProjectModel merge(ProjectModel project) {
-		return em.merge(project);
+	@Transactional
+	public ProjectService save(ProjectModel proModel) {
+		projectRepo.save(proModel);
+		return this;
 	}
+	
 
 	@Override
 	@Transactional
 	public ProjectService delete(Optional<ProjectModel> proModel) {
 		proModel.ifPresent((model) -> {
-			projectRepo.delete(model);
-			projectRepo.flush();
+			delete(model);
 		});
 		if(!proModel.isPresent())
 			log.error("Trying to delete empty Optional<ProjectModel>");
 		return this;
 	}
+	
+	@Override
+	@Transactional
+	public ProjectService delete(ProjectModel proModel) {
+		projectRepo.delete(proModel);
+//		projectRepo.flush();
+		return this;
+	}
 
 	@Override
 	@Transactional
-	public ProjectService delete(String name) {
+	public ProjectService deleteByName(String name) {
 		projectRepo.deleteByName(name);
 		projectRepo.flush();
 		return this;
@@ -155,12 +166,50 @@ public class ProjectServiceImpl implements ProjectService{
 		return new AlgorithmModel();
 	}
 	
+	@Override
+	@Transactional
+	public AlgorithmModel assignAlgorithm(ProjectModel project, AlgorithmModel algorithm) {
+		
+		project = merge(project);
+		
+		project.assignAlgorithm(algorithm);
+		save(project);
+		
+		return findAgorithmbyName(project, algorithm.getName())
+				.orElseThrow(
+						() -> new EntityNotFoundException(String.format("Algorithm with name [%s] not found", algorithm.getName()))
+				);
+	}
+	
+	@Override
+	@Transactional
+	public ProjectModel delAlgorithmsByNames(ProjectModel project, String[] names) {
+		project = merge(project);
+//		project.getAlgorithms().removeIf((alg) -> nameContainsOneOf(alg.getName(), bean.getNames()));
+		project.removeAlgorithmsByNames(names);
+		
+		save(project);
+		
+		return project;
+	}
+	
 	public static <T extends Collection<ProjectModel>> T getAsCollection(Stream<ProjectModel> stream, 
 			Collector<ProjectModel,?,T> collector) {
 		T projectsCollection = stream.collect(collector);
 		stream.close();
 		return projectsCollection;
 	}
+	
+	
+	public Optional<AlgorithmModel> findAgorithmbyName(ProjectModel project, String algName) {
+		return project.getAlgorithms().stream().filter(prj -> prj.getName().equals(algName)).findAny();
+	}
+	
+//	@Override
+	private ProjectModel merge(ProjectModel project) {
+		return em.merge(project);
+	}
+
 
 	
 }

@@ -19,6 +19,7 @@ public  final  class RequestPath {
 	
 	@Getter public static final String project ="/project";
 	@Getter public static final String add ="/add";
+	@Getter public static final String assign ="/assign";
 	@Getter public static final String delete="/delete";
 	@Getter public static final String addProject = project + add;
 	@Getter public static final String delProject = project + delete;
@@ -28,12 +29,14 @@ public  final  class RequestPath {
 	
 	@Getter public static final String delAlgorithm = algorithm + delete;
 	@Getter public static final String projDelAlgorithm = project + delAlgorithm;
-	@Getter public static final String addAlgorithm = algorithm + add;
-	@Getter public static final String projAddAlgorithm = project + addAlgorithm;
+//	@Getter public static final String addAlgorithm = algorithm + add;
+//	@Getter public static final String projAddAlgorithm = project + addAlgorithm;
+	@Getter public static final String assignAlgorithm = algorithm + assign;
+	@Getter public static final String projAssignAlgorithm = project + assignAlgorithm;
 	
 	@Getter public static final String setSource = "/setsrc";
 	
-	@Getter public static final String algorithmWozard = "/project/algorithm";
+	@Getter public static final String algorithmWozard = "/project/algorithm/wizard";
 	
 	
 	@Getter public static final String erAccDenied = "/errors/accessDenied";

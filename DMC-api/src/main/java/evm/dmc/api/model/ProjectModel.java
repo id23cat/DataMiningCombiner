@@ -2,11 +2,14 @@ package evm.dmc.api.model;
 
 import java.io.Serializable;
 import java.time.Instant;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.Map;
 import java.util.Properties;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 import javax.persistence.CascadeType;
 import javax.persistence.CollectionTable;
@@ -74,7 +77,8 @@ public class ProjectModel implements Serializable {
 	@ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
 	@JoinTable(name = "project_algorithm", 
 			joinColumns = @JoinColumn(name = "project_id", referencedColumnName = "id"),
-			inverseJoinColumns = @JoinColumn(name = "algorithm_id", referencedColumnName = "id"))
+			inverseJoinColumns = @JoinColumn(name = "algorithm_id", referencedColumnName = "id")
+	)
 //	@OneToMany(mappedBy="parentProject", fetch = FetchType.LAZY,
 //			cascade = CascadeType.ALL, orphanRemoval = true)
 	private Set<AlgorithmModel> algorithms = new HashSet<>();
@@ -110,25 +114,50 @@ public class ProjectModel implements Serializable {
 		this.account = acc;
 	}
 	
-	public ProjectModel addAlgorithm(AlgorithmModel algorithm){
-		algorithms.add(algorithm);
-		algorithm.getDependentProjects().add(this);
-		return this;
-	}
+//	public ProjectModel addAlgorithm(AlgorithmModel algorithm){
+//		algorithms.add(algorithm);
+//		algorithm.getDependentProjects().add(this);
+//		return this;
+//	}
 	
 	/**
 	 * Differs from addAlgorithm by setting this project as parent
 	 * @param algorithm
 	 * @return this
 	 */
-	public ProjectModel assignAlgorithm(AlgorithmModel algorithm) {
-		addAlgorithm(algorithm);
+	public AlgorithmModel assignAlgorithm(AlgorithmModel algorithm) {
+		algorithms.add(algorithm);
 		algorithm.setParentProject(this);
-		return this;
+		return algorithm;
 	}
 	
 	public ProjectModel removeAlgorithm(AlgorithmModel algorithm) {
+		removeAlgorithmLinkToThis(algorithm);
 		algorithms.remove(algorithm);
+		return this;
+	}
+	
+	public ProjectModel removeAlgorithmsByNames(String[] names) {
+//		for(Iterator<AlgorithmModel> iter = algorithms.iterator(); iter.hasNext();) {
+//			
+//			if(Arrays.stream(names).anyMatch(iter.alg.getName() :: contains)){
+//				removeAlgorithm(alg);
+//			}
+//		}
+		
+		algorithms.removeIf( alg -> {
+				if(!Arrays.stream(names).anyMatch(alg.getName() :: contains)) {
+					return false;
+				}
+				removeAlgorithmLinkToThis(alg);
+				return true;
+		});
+
+		return this;
+	}
+	
+	
+	private ProjectModel removeAlgorithmLinkToThis(AlgorithmModel algorithm) {
 		algorithm.getDependentProjects().remove(this);
 		return this;
 	}

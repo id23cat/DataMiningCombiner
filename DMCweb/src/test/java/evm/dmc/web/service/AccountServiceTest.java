@@ -3,75 +3,68 @@ package evm.dmc.web.service;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.CoreMatchers.notNullValue;
+import static org.hamcrest.Matchers.*;
 import static org.junit.Assert.*;
 
+import java.util.Arrays;
+import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-import org.jfree.util.Log;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.boot.test.autoconfigure.orm.jpa.TestEntityManager;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.context.TestConfiguration;
+import org.springframework.context.annotation.ComponentScan;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.test.annotation.Rollback;
-import org.springframework.test.context.ContextConfiguration;
-import org.springframework.test.context.TestExecutionListeners;
+import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.transaction.annotation.Transactional;
 
 import evm.dmc.api.model.ProjectModel;
 import evm.dmc.api.model.account.Account;
 import evm.dmc.api.model.account.Role;
-import evm.dmc.web.controllers.SignInController;
 import evm.dmc.web.service.AccountService;
 import lombok.extern.slf4j.Slf4j;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest
-//@Transactional
-//@Rollback
-//@TestExecutionListeners({ DependencyInjectionTestExecutionListener.class,
-//    DirtiesContextTestExecutionListener.class,
-//   TransactionalTestExecutionListener.class,
-//    DbUnitTestExecutionListener.class })
+@DataJpaTest
+@ActiveProfiles({"test", "devH2"})
+@ComponentScan( basePackages = { "evm.dmc.web", "evm.dmc.core", "evm.dmc.service", "evm.dmc.model"})
+@Rollback
 @Slf4j
 public class AccountServiceTest {
-	private static final Logger logger = LoggerFactory.getLogger(AccountServiceTest.class);
+	
+	@Autowired
+    private TestEntityManager entityManager;
 	
 	@Autowired 
-	private AccountService userService;
+	private AccountService accountService;
 	
 	@Autowired
 	private ProjectService projectService;
 	
 	
 	@Test
-	@Transactional
-	@Rollback
 	public final void testInitializedEntities() {
-		UserDetails user = userService.loadUserByUsername("id23cat");
+		UserDetails user = accountService.loadUserByUsername("id23cat");
 		assertThat(user.getUsername()).isEqualTo("id23cat");
 		
-		user = userService.loadUserByUsername("admin");
+		user = accountService.loadUserByUsername("admin");
 		assertThat(user.getUsername()).isEqualTo("admin");
 	}
 
 	@Test
-	@Transactional
-	@Rollback
 	public final void testSave() {
-		userService.save(new Account("user", "password2", "user@mail.org", "UUser", "Just"));
+		accountService.save(new Account("user", "password2", "user@mail.org", "UUser", "Just"));
 		
-		UserDetails user = userService.loadUserByUsername("user");
+		UserDetails user = accountService.loadUserByUsername("user");
 		
 		assertThat(user.getUsername()).isEqualTo("user");
 		assertThat(user.getAuthorities().stream().findFirst().get()).isEqualTo(new SimpleGrantedAuthority(Role.USER.toString()));
@@ -79,31 +72,26 @@ public class AccountServiceTest {
 	}
 
 	@Test
-	@Transactional
-	@Rollback
 	public final void testLoadUserByUsername() {
-		userService.save(new Account("user1", "password1", "user1@mail.org", "UUser1", "Just1"));
-		userService.save(new Account("user2", "password2", "user2@mail.org", "UUser2", "Just2"));
+		accountService.save(new Account("user1", "password1", "user1@mail.org", "UUser1", "Just1"));
+		accountService.save(new Account("user2", "password2", "user2@mail.org", "UUser2", "Just2"));
 		
-		assertThat( userService.loadUserByUsername("user1").getUsername()).isEqualTo("user1");
-		assertThat( userService.loadUserByUsername("user2").getUsername()).isEqualTo("user2");
-		assertThat( userService.loadUserByUsername("id23cat").getUsername()).isEqualTo("id23cat");
+		assertThat( accountService.loadUserByUsername("user1").getUsername()).isEqualTo("user1");
+		assertThat( accountService.loadUserByUsername("user2").getUsername()).isEqualTo("user2");
+		assertThat( accountService.loadUserByUsername("id23cat").getUsername()).isEqualTo("id23cat");
 	}
 
 	@Test(expected = UsernameNotFoundException.class )
-	@Transactional
-	@Rollback
 	public final void testDelete() {
-		userService.save(new Account("user", "password2", "user@mail.org", "UUser", "Just"));
+		accountService.save(new Account("user", "password2", "user@mail.org", "UUser", "Just"));
 		Account acc = loadAccount("user");
-		userService.delete(acc);
-		userService.getAccountByName("user");
+		accountService.delete(acc);
+		accountService.getAccountByName("user");
 	}
 	
 	
 	// Integration with ProjectService
 	@Test
-	@Transactional
 	public final void testProjectsSetAccess() {
 		log.debug("======= begin test =====");
 		
@@ -130,9 +118,68 @@ public class AccountServiceTest {
 		log.debug("======= finish test ======");
 	}
 	
-	@Transactional(readOnly = true)
-	public final Account loadAccount(String name) {
-		return userService.getAccountByName(name);
+	@Test
+	public final void testAddProject() throws Exception {
+		Account account = loadAccount("id23cat");
+		
+		ProjectModel project = new ProjectModel();
+		project.setName("testProject");
+		
+		project = accountService.addProject(account, project);
+		
+		log.debug("Persisted project: {}", project);
+		
+		ProjectModel persistedProject = entityManager.find(ProjectModel.class, project.getId());
+		
+//		ProjectModel persistedProject = projectService.getByNameAndAccount(project.getName(), account).orElseThrow(Exception::new);
+		
+		assertThat(account.getProjects(), hasItem(persistedProject));
+	}
+	
+	@Test
+	public final void testDelProject() {
+		Account account = loadAccount("id23cat");
+		
+		ProjectModel delProject =  account.getProjects().stream().findAny().get();
+		log.debug("Project for deleteion: {}", delProject);
+		
+//		log.debug("Projects before deletion {}", projectService.getByAccount(account).collect(Collectors.toList()));
+		accountService.delProject(account, delProject);
+//		log.debug("Projects after deletion {}", projectService.getByAccount(account).collect(Collectors.toList()));
+		
+		
+		assertFalse(accountService.findProjectByName(account, delProject.getName()).isPresent());
+		
+		assertThat(projectService.getByAccount(account).collect(Collectors.toList()), not(hasItem(delProject)));
+		
+		ProjectModel deletedProject = entityManager.find(ProjectModel.class, delProject.getId());
+		assertNull(deletedProject);
+		
+	}
+	
+	@Test
+	public final void testDelProjectsByNames() {
+		Account account = loadAccount("id23cat");
+		List<String> names = account.getProjects().stream().map(proj -> proj.getName()).collect(Collectors.toList());
+		
+		log.debug("Selected names: {}", names);
+		
+		String safeName = names.remove(0);
+		
+		log.debug("Project that avoids deleteion", safeName);
+		
+		accountService.delProjectsByNames(account, names.toArray(new String[0]));
+		
+		assertThat(account.getProjects().size(), equalTo(1));
+		assertThat(account.getProjects().stream().findFirst().get().getName(), equalTo(safeName));
+		
+		assertThat(projectService.getByAccount(account).count(), equalTo(1L)); 
+		assertThat(projectService.getByAccount(account).findFirst().get().getName(), equalTo(safeName)); 
+		
+	}
+	
+	private final Account loadAccount(String name) {
+		return accountService.getAccountByName(name);
 	}
 
 }

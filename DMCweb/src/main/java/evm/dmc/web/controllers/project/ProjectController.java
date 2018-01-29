@@ -18,7 +18,6 @@ import java.util.stream.Stream;
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 
-import org.apache.tomcat.util.buf.StringUtils;
 import org.assertj.core.util.Lists;
 import org.assertj.core.util.Sets;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,6 +25,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.Model;
+import org.springframework.util.StringUtils;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.Errors;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -59,14 +59,23 @@ import lombok.extern.slf4j.Slf4j;
 @SessionAttributes({"account", "currentProject"})
 @Slf4j
 public class ProjectController {
-	@Autowired
+//	@Autowired
 	private AccountService accountService;
 	
-	@Autowired
+//	@Autowired
 	private ProjectService projectService;
 	
-	@Autowired
+//	@Autowired
 	private Views views;
+	
+	public ProjectController(@Autowired AccountService accService, 
+			@Autowired ProjectService prjService, 
+			@Autowired Views views) {
+		this.accountService = accService;
+		this.projectService = prjService;
+		this.views = views;
+		
+	}
 	
 	@ModelAttribute("account")
 	public Account getAccount(Authentication authentication) throws UserNotExistsException {
@@ -78,7 +87,7 @@ public class ProjectController {
 		return new CheckboxBean();
 	}
 	
-	@Transactional(readOnly = true)
+//	@Transactional(readOnly = true)
 	@GetMapping
 	public String getProjectsList(@ModelAttribute("account") Account account, Model model) {
 //		accountService.refresh(account);
@@ -104,7 +113,7 @@ public class ProjectController {
 	 * Open selected or newly created project
 	 */
 	@GetMapping(value="{projectName}")
-	@Transactional(readOnly = true)
+//	@Transactional(readOnly = true)
 	public String getProject(@PathVariable String projectName,
 							@ModelAttribute("account") Account account,
 							Model model, 
@@ -133,7 +142,7 @@ public class ProjectController {
 	}
 	
 	@PostMapping(RequestPath.add)
-	@Transactional
+//	@Transactional
 	public RedirectView postAddProject(@ModelAttribute("account") Account account, 
 						@Valid @ModelAttribute("newProject") ProjectModel project,
 						BindingResult bindingResult, RedirectAttributes ra) {
@@ -145,16 +154,14 @@ public class ProjectController {
 		}
 		log.debug("Registering new project {}", project.getName());
 
-		account = accountService.merge(account);
-		account.addProject(project);
-		accountService.save(account);
+		accountService.addProject(account, project);
 		
 //		return "redirect:" + RequestPath.project + "/" + project.getName();
 		return new RedirectView(RequestPath.project + "/" + project.getName());
 	}
 	
 	@PostMapping(RequestPath.delete)
-	@Transactional
+//	@Transactional
 	public RedirectView postDelProjedct(
 			@ModelAttribute("account") Account account,
 			@ModelAttribute("backBean") CheckboxBean bean,
@@ -163,7 +170,8 @@ public class ProjectController {
 		log.debug("BackBean: {}", Arrays.stream(bean.getNames()).collect(Collectors.toList()));
 		
 		
-		projectService.deleteAllByNames(Arrays.asList(bean.getNames()));
+//		projectService.deleteAllByNames(Arrays.asList(bean.getNames()));
+		accountService.delProjectsByNames(account, bean.getNames());
 		
 		log.debug("==============redirect===================");
 		return new RedirectView(RequestPath.project);
@@ -177,39 +185,30 @@ public class ProjectController {
 	 * 
 	 * Handles request to /project/algorithm/add
 	 */
-	@PostMapping(RequestPath.addAlgorithm)
-	@Transactional
-	public RedirectView postAddAlgorithm(
+	@PostMapping(RequestPath.assignAlgorithm)
+	public RedirectView postAssignAlgorithm(
 			@SessionAttribute("currentProject") ProjectModel project,
 			@Valid @ModelAttribute("newAlgorithm") AlgorithmModel algorithm
 			) {
 		log.debug("Adding algorithm: {}" ,algorithm.getName());
 		log.debug("Project: {}", project.getId() + project.getName());
 		
-		project = projectService.merge(project);
-		project.assignAlgorithm(algorithm);
+		projectService.assignAlgorithm(project, algorithm);
 
 		return new RedirectView(String.format("%s/%s", RequestPath.project, project.getName()));
 	}
 	
 	@PostMapping(RequestPath.delAlgorithm)
-	@Transactional
 	public RedirectView postDelAlgorithm(
 			@SessionAttribute("currentProject") ProjectModel project,
 			@ModelAttribute("backBean") CheckboxBean bean
 			) {
+		log.debug("Selected algorithms for deleteion:{}", StringUtils.arrayToCommaDelimitedString(bean.getNames()));
+		log.debug("Project for deletion in: {}", project);
 		
-		project = projectService.merge(project);
-		
-		project.getAlgorithms().removeIf((alg) -> nameContainsOneOf(alg.getName(), bean.getNames()));
-		
-		projectService.save(Optional.of(project));
+		projectService.delAlgorithmsByNames(project, bean.getNames());
 		
 		return new RedirectView(String.format("%s/%s", RequestPath.project, project.getName()));
 	}
 	
-	private static boolean nameContainsOneOf(String name, String[] names) {
-		return Arrays.stream(names).anyMatch(name :: contains);
-	}
-
 }

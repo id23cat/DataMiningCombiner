@@ -40,7 +40,7 @@ public class Views {
 	public static class Project {
 		private String main;
 		private String algorithmsList;
-		private String newAlg;
+		private String wizardBase;
 	}
 
 }

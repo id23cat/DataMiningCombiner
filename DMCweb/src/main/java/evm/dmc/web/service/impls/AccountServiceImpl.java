@@ -1,6 +1,7 @@
 package evm.dmc.web.service.impls;
 
 import java.util.Collections;
+import java.util.Optional;
 
 import javax.annotation.PostConstruct;
 import javax.persistence.EntityManager;
@@ -27,11 +28,13 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import evm.dmc.api.model.ProjectModel;
 import evm.dmc.api.model.account.Account;
 import evm.dmc.api.model.account.AccountExt;
 import evm.dmc.api.model.account.Role;
 import evm.dmc.model.repositories.AccountRepository;
 import evm.dmc.web.controllers.SignInController;
+import evm.dmc.web.exceptions.EntityNotFoundException;
 import evm.dmc.web.exceptions.UserNotExistsException;
 import evm.dmc.web.service.AccountService;
 
@@ -100,14 +103,48 @@ public class AccountServiceImpl implements AccountService {
 		accountRepository.delete(account);
 	}
 	
+	
 	@Override
-	public void refresh(Account account) {
-		em.refresh(account);
+	@Transactional
+	public ProjectModel addProject(Account account, ProjectModel project) {
+		account = merge(account);
+		account.addProject(project);
+		save(account);
+		return findProjectByName(account, project.getName())
+				.orElseThrow(
+						() -> new EntityNotFoundException(String.format("Project with name [%s] not found", project.getName()))
+				);
 	}
 	
 	@Override
 	@Transactional
-	public Account merge(Account account) {
+	public Account delProject(Account account, ProjectModel project) {
+		account = merge(account);
+		account.removeProject(project);
+//		save(account);
+		return account;
+	}
+	
+	@Override
+	@Transactional
+	public Account delProjectsByNames(Account account, String[] names) {
+		account = merge(account);
+		account.removeProjectsByNames(names);
+//		save(account);
+		return account;
+	}
+	
+	@Override
+	public Optional<ProjectModel> findProjectByName(Account account, String name) {
+		return account.getProjects().stream().filter(proj -> proj.getName().equals(name)).findFirst();
+	}
+	
+//	private  void refresh(Account account) {
+//		em.refresh(account);
+//	}
+	
+	@Transactional
+	private Account merge(Account account) {
 		return em.merge(account);
 	}
 	
@@ -123,5 +160,7 @@ public class AccountServiceImpl implements AccountService {
 	private GrantedAuthority createAuthority(Account account) {
 		return new SimpleGrantedAuthority(account.getRole().toString());
 	}
+	
+	
 
 }

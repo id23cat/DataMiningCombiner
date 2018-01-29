@@ -34,6 +34,7 @@ import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
 import evm.dmc.api.model.AlgorithmModel;
 import evm.dmc.api.model.ProjectModel;
@@ -70,14 +71,14 @@ public class ProjectControllerTest {
 	Account acc;
 	ProjectModel proj;
 	
-	 @TestConfiguration
-     static class Config {
-		 @Bean
-		 public ProjectController projectController() {
-			 return new ProjectController();
-		 }
-		 
-     }
+//	 @TestConfiguration
+//     static class Config {
+//		 @Bean
+//		 public ProjectController projectController() {
+//			 return new ProjectController();
+//		 }
+//		 
+//     }
 	
 	@Before
 	public void ensureWiring(){
@@ -128,7 +129,7 @@ public class ProjectControllerTest {
 		mockMvc.perform(get(RequestPath.project+"/"+proj.getName()))
 			.andExpect(status().isOk())
 //			.andExpect(view().name(views.getProject().getNewAlg()))
-			.andExpect(view().name(views.getProject().getNewAlg()))
+			.andExpect(view().name(views.getProject().getAlgorithmsList()))
 			.andExpect(model().attribute("algorithmsSet", Collections.EMPTY_SET))
 			.andExpect(model().attribute("currentProject", proj))
 			.andExpect(model().attributeExists("newAlgorithm"))
@@ -141,7 +142,8 @@ public class ProjectControllerTest {
 	public final void testGetProjectWithNotEmptyAlgorithmsSet() throws Exception {
 		AlgorithmModel alg = new AlgorithmModel();
 		alg.setName("Algorithm0");
-		proj.addAlgorithm(alg);
+		alg.setParentProject(proj);
+		proj.getAlgorithms().add(alg);
 		
 		Mockito.when(projServ.getByNameAndAccount(proj.getName(), acc))
 			.thenReturn(Optional.of(proj));
@@ -159,15 +161,17 @@ public class ProjectControllerTest {
 		AlgorithmModel algorithm = new AlgorithmModel();
 		algorithm.setName("testAlg0");
 		
+		algorithm.setParentProject(proj);
 		proj.getAlgorithms().add(algorithm);
-		Mockito.when(projServ.merge(proj))
-			.thenReturn(proj);
+
 		
 		mockMvc
-			.perform(post(RequestPath.projDelAlgorithm)
-					.sessionAttr("currentProject", proj)
-					.sessionAttr("backBean", new CheckboxBean(Arrays.array(algorithm.getName()))))
-			.andExpect(redirectedUrl(String.format("/%s/%s", RequestPath.project, proj.getName())))
+			.perform(
+					MockMvcRequestBuilders
+						.post(RequestPath.projDelAlgorithm)
+						.sessionAttr("currentProject", proj)
+						.param("names", algorithm.getName()))
+			.andExpect(redirectedUrl(String.format("%s/%s", RequestPath.project, proj.getName())))
 			.andExpect(status().isFound())
 		;
 			

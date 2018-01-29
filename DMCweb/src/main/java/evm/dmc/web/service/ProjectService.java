@@ -13,11 +13,13 @@ import evm.dmc.api.model.account.Account;
 
 public interface ProjectService {
 	ProjectService save(Optional<ProjectModel> proModel);
+	ProjectService save(ProjectModel proModel);
 	
-	ProjectModel merge(ProjectModel project);
+//	ProjectModel merge(ProjectModel project);
 	
 	ProjectService delete(Optional<ProjectModel> proModel);
-	ProjectService delete(String name);
+	ProjectService delete(ProjectModel proModel);
+	ProjectService deleteByName(String name);
 	ProjectService deleteAllByNames(List<String> names);
 	
 	Stream<ProjectModel> getAll();
@@ -32,6 +34,10 @@ public interface ProjectService {
 	List<ProjectModel> getByAccountAsList(Account account);
 	
 	Set<String> getNamesByAccount(Account account);
+	
+	AlgorithmModel assignAlgorithm(ProjectModel project, AlgorithmModel algorithm);
+	
+	ProjectModel delAlgorithmsByNames(ProjectModel project, String[] names);
 	
 	ProjectModel getNew();
 	ProjectModel getNew(Account account, ProjectType type, Set<AlgorithmModel> algorithms, Properties properties, String projectName);
