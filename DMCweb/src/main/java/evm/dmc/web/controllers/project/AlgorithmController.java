@@ -1,5 +1,6 @@
 package evm.dmc.web.controllers.project;
 
+import java.util.LinkedHashMap;
 import java.util.Optional;
 
 import javax.servlet.http.HttpServletRequest;
@@ -27,6 +28,7 @@ import evm.dmc.api.model.account.Account;
 import evm.dmc.web.exceptions.AlgorithmNotFoundException;
 import evm.dmc.web.service.FileStorageService;
 import evm.dmc.web.service.RequestPath;
+import evm.dmc.web.service.Views;
 import lombok.extern.slf4j.Slf4j;
 
 @Controller
@@ -39,6 +41,9 @@ public class AlgorithmController {
 	@Autowired
 	private FileStorageService fileService;
 	
+	@Autowired
+	private Views views;
+	
 	@GetMapping
 	public String getAlgorithm(
 			@PathVariable("projectName") String projectName,
@@ -46,15 +51,24 @@ public class AlgorithmController {
 			@SessionAttribute("currentProject") ProjectModel project,
 			Model model,
 			HttpServletRequest request) throws AlgorithmNotFoundException {
-		Optional<AlgorithmModel> algorithm = project.getAlgorithms()
+		AlgorithmModel algorithm = project.getAlgorithms()
 										.stream()
 										.filter((alg) -> alg.getName().equals(algName))
-										.findAny();
+										.findAny()
+										.orElseThrow(AlgorithmNotFoundException::new);
 		
 		// if algorithm is empty (new algorithm)
-		if(algorithm.orElseThrow(AlgorithmNotFoundException::new).getFunctions().isEmpty()) {
+		if(algorithm.getFunctions().isEmpty()) {
 			log.debug("-== Emty algorithm selected. Running wizard: {}", RequestPath.algorithmWozard);
-			return "redirect:" + RequestPath.algorithmWozard;
+			
+			model.addAttribute("algorithm", algorithm);
+			model.addAttribute("pagesMap", new LinkedHashMap<String,String>());
+			
+//			return "redirect:" + RequestPath.algorithmWozard;
+			UriComponents uriComponents = UriComponentsBuilder.fromPath(BASE_URL).path(RequestPath.setSource)
+					.buildAndExpand(project.getName(), algName);
+			model.addAttribute("sourceUpload", uriComponents.toUriString());
+			return views.project.wizard.datasource;
 		}
 //		else {
 //			return String.format("redirect:" + RequestPath.project + "/" + projectName);
@@ -80,6 +94,8 @@ public class AlgorithmController {
 		log.debug("-== Receiving file: {}", file.getName());
 		UriComponents uriComponents = UriComponentsBuilder.fromPath(BASE_URL)
 										.buildAndExpand(project.getName(), algName);
+		
+		log.debug("-== Saving complete");
 		return new RedirectView(uriComponents.toUriString());
 	}
 

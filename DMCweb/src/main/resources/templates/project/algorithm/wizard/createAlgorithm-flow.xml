@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<flow xmlns="http://www.springframework.org/schema/webflow"
+	  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	  xsi:schemaLocation="
+	  	http://www.springframework.org/schema/webflow
+	  	http://www.springframework.org/schema/webflow/spring-webflow-2.0.xsd">
+
+ 	<on-start>
+		<evaluate expression="externalContext.requestMap.algorithm" result="flowScope.algorithm" />
+		<evaluate expression="externalContext.sessionMap.currentProject" result="flowScope.project" />
+		<evaluate expression="externalContext.sessionMap.account" result="flowScope.account" />
+		<evaluate expression="externalContext.sessionMap.fileStorageService" result="flowScope.fileService" />
+		<evaluate expression="views.project.wizardBase" result="flowScope.basePath" />
+	</on-start>
+
+	<!-- <var name="filesrc" /> -->
+ 	<view-state id="dataSource" view="#{flowScope.basePath}/datasource"	model="algorithm">
+		<!-- <binder>
+			<binding property="name" required="true" />
+			<binding property="email" required="true" />
+			<binding property="username" required="true" />
+			<binding property="uiPassword" required="true" />
+			<binding property="verifyPassword" required="true" />
+		</binder> -->
+
+		<transition on="upload" to="dataPreview">
+			<evaluate expression="flowScope.fileService.store(flowScope.fileService.relativePath(flowScope.account, flowScope.project), file)" />
+		</transition>
+		<transition on="next" to="dataPreview">
+			<!-- <evaluate expression="clinicService.saveUser(user)" result="flowScope.user" />
+			<evaluate expression="clinicService.createUserProfile(user)" result="flowScope.userProfile" />
+			<set name="flashScope.statusMessage" value="resourceBundle.userSaved1 + ' ' + user.username + ' ' + resourceBundle.userSaved2" />
+			<set name="flashScope.statusMessageClass" value="'alert-success'" /> -->
+		</transition>
+		<transition on="cancel" to="login" bind="false">
+			<!-- <set name="flashScope.statusMessage" value="resourceBundle.userCreationCanceled" />
+			<set name="flashScope.statusMessageClass" value="'alert-danger'" /> -->
+		</transition>
+	</view-state>
+
+ 	<!-- <view-state id="dataPreview" view="#{flowScope.basePath}/dataPreview" model="userProfile"> -->
+ 	<!-- <view-state id="dataPreview" view="#{flowScope.basePath}/function_datapreview"> -->
+ 	<view-state id="dataPreview" view="#{flowScope.basePath}/function_datapreview">
+		<!-- <binder>
+			<binding property="name" required="true" />
+			<binding property="address" required="true" />
+			<binding property="address2" />
+			<binding property="city" required="true" />
+			<binding property="state" required="true" />
+			<binding property="zip" required="true" />
+			<binding property="phone" required="true" />
+		</binder> -->
+
+		<transition on="saveUser" to="login" history="discard">
+			<evaluate expression="clinicService.saveUser(user)" result="flowScope.user" />
+			<set name="flashScope.statusMessage" value="resourceBundle.userProfileUpdated1 + ' ' + user.username + ' ' + resourceBundle.userProfileUpdated2" />
+			<set name="flashScope.statusMessageClass" value="'alert-success'" />
+		</transition>
+		<transition on="cancel" to="login" bind="false" history="discard">
+			<set name="flashScope.statusMessage" value="resourceBundle.profileUpdateCanceled" />
+			<set name="flashScope.statusMessageClass" value="'alert-warning'" />
+		</transition>
+	</view-state>
+
+	<end-state id="login" view="externalRedirect:/project/#{flowScope.projectName}">
+		<!-- <output name="statusMessage" value="flashScope.statusMessage" />
+		<output name="statusMessageClass" value="flashScope.statusMessageClass" /> -->
+	</end-state>
+
+</flow>

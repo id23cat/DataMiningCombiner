@@ -16,7 +16,9 @@ views:
   project:
     main: "project/list"
     algorithmsList: "project/algorithm/algslist"
-    newAlg: "project/algorithm/new"
+    wizardBase: "project/algorithm/wizard"
+    wizard:
+      datasource: "project/algorithm/wizard/datasource"
   testing:
     testindex:  testing/testindex
     hello:  testing/hello?name=Alex

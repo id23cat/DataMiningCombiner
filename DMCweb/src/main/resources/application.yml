@@ -18,6 +18,10 @@ spring:
 #    url: jdbc:h2:mem:dmc
 #    username: sa
 #    password: sa
+  http:
+    multipart:
+      max-file-size: 1024Mb
+      max-request-size: 1024Mb
     
   mvc:
     favicon:
