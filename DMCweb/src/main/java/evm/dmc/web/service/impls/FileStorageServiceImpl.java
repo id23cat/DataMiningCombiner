@@ -6,6 +6,9 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
+import java.util.Arrays;
+import java.util.List;
+import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,7 +22,10 @@ import org.springframework.web.multipart.MultipartFile;
 import evm.dmc.config.FileStorageConfig;
 import evm.dmc.web.exceptions.StorageException;
 import evm.dmc.web.exceptions.StorageFileNotFoundException;
+import evm.dmc.web.exceptions.UnsupportedFileTypeException;
 import evm.dmc.web.service.FileStorageService;
+import evm.dmc.web.service.data.DataPreview;
+import evm.dmc.web.service.data.DataPreviewImpl;
 import lombok.extern.slf4j.Slf4j;
 
 @Service
@@ -27,16 +33,24 @@ import lombok.extern.slf4j.Slf4j;
 public class FileStorageServiceImpl implements FileStorageService {
 
     private final Path rootLocation;
+    private int previewLinesCount;
+    private final static String[] extensions = {"csv"};
 
     @Autowired
     public FileStorageServiceImpl(FileStorageConfig properties) {
         this.rootLocation = Paths.get(properties.getLocation());
+        this.previewLinesCount = properties.getPreviewLinesCount();
     }
 
     @Override
-    public void store(Path relativePath, MultipartFile file) {
+    public DataPreview store(Path relativePath, MultipartFile file) {
         String filename = StringUtils.cleanPath(file.getOriginalFilename());
         Path currLocation = this.rootLocation.resolve(relativePath);
+       
+        // check matching any applicable extension listed in this.extensions
+        Arrays.stream(extensions)
+        .filter(ext -> StringUtils.getFilenameExtension(filename).toLowerCase().equals(ext))
+        .findFirst().orElseThrow(() -> new UnsupportedFileTypeException(String.format("Uncknown file extension %s", filename)));
         
         try {
             Files.createDirectories(currLocation);
@@ -55,14 +69,18 @@ public class FileStorageServiceImpl implements FileStorageService {
                         "Cannot store file with relative path outside current directory "
                                 + filename);
             }
-     
-            log.debug("Saving file: {}", currLocation.resolve(filename));
-            Files.copy(file.getInputStream(), currLocation.resolve(filename),
+            
+            Path destinationPath =  currLocation.resolve(filename);
+            log.debug("Saving file: {}", destinationPath);
+            Files.copy(file.getInputStream(), destinationPath,
                     StandardCopyOption.REPLACE_EXISTING);
+            
+            return getPreview(destinationPath, this.previewLinesCount);
         }
         catch (IOException e) {
             throw new StorageException("Failed to store file " + filename, e);
         }
+        
     }
 
     @Override
@@ -117,6 +135,34 @@ public class FileStorageServiceImpl implements FileStorageService {
         catch (IOException e) {
             throw new StorageException("Could not initialize storage", e);
         }
+    }
+    
+    private DataPreview getPreview(Path path, int linesCount) {
+    	
+    	String extension = StringUtils.getFilenameExtension(path.getFileName().toString()).toLowerCase();
+    	
+    	switch(extension) {
+    		case "csv":
+    			return getCsvPreview(path, linesCount);
+    		
+    	}
+    	
+    	throw new UnsupportedFileTypeException(String.format("Uncknown file extension .%s", extension));
+    }
+    
+    private DataPreview getCsvPreview(Path path, int linesCount) {
+    	DataPreview data = null;
+    	try(Stream<String> stream = Files.lines(path)) {
+    		List<String> lines = stream.limit(linesCount + 1).collect(Collectors.toList());	// +1 for headerLine
+    		log.debug("lines count limit: {}", previewLinesCount);
+    		log.debug("List of lines: {}", lines.toArray());
+    		data = new DataPreviewImpl(lines);
+    		
+    	} catch (IOException e) {
+    		throw new StorageFileNotFoundException(String.format("File %s", path.toString()), e);
+    	}
+    	
+    	return data;
     }
 
 }

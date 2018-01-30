@@ -5,6 +5,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import evm.dmc.api.model.ProjectModel;
 import evm.dmc.api.model.account.Account;
+import evm.dmc.web.service.data.DataPreview;
 
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -14,7 +15,7 @@ public interface FileStorageService {
 
     void init();
 
-    void store(Path relativePath, MultipartFile file);
+    DataPreview store(Path relativePath, MultipartFile file);
 
     Stream<Path> loadAll(Path relativePath);
 

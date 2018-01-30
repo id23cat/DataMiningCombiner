@@ -15,5 +15,8 @@ public class FileStorageConfig {
      */
 	@Value("${dmc.fileroot: upload-dir}")
     private String location = "upload-dir";
+	
+	@Value("${dmc.previewLinesCount: 7}")
+	private int previewLinesCount = 5;
 
 }

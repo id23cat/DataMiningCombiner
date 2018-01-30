@@ -13,6 +13,7 @@ import java.nio.file.Path;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.ArgumentCaptor;
+import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.boot.autoconfigure.security.SecurityAutoConfiguration;
@@ -66,7 +67,9 @@ public class AlgorithmControllerTest {
 		
 		ArgumentCaptor<Path> pathCapture = ArgumentCaptor.forClass(Path.class);
 		ArgumentCaptor<MultipartFile> fileCaptor = ArgumentCaptor.forClass(MultipartFile.class);
-		doNothing().when(fileService).store(pathCapture.capture(), fileCaptor.capture());
+		Mockito
+			.when(fileService.store(pathCapture.capture(), fileCaptor.capture()))
+			.thenReturn(null);
 		
 		UriComponents uriComponents = UriComponentsBuilder.fromPath(AlgorithmController.BASE_URL)
 				.path(RequestPath.setSource)
