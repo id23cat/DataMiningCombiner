@@ -24,8 +24,8 @@ import evm.dmc.web.testing.ShowTableController;
 @RequestMapping("/testing/{userId}/project/{projId}/")
 //@RequestMapping("/{userId}/createalg")
 public class CreateAlgorithmController {
-//	private static final Logger logger = LoggerFactory.getLogger(CreateAlgorithmController.class);
-//	private static final String PREFIX = "testing/algorithm/";
+	private static final Logger logger = LoggerFactory.getLogger(CreateAlgorithmController.class);
+	private static final String PREFIX = "testing/algorithm/";
 //	Project project;
 //
 //	
@@ -52,20 +52,20 @@ public class CreateAlgorithmController {
 //		return "testing/createalg";
 //	}
 //	
-//	@GetMapping(value = "newalg")
-//	public String getAlgCreatingPage(@RequestParam("step") CreateAlgStep step) {
-//		logger.debug("inside getAlgCreatingPage: {}", step);
-//
-////		switch(step){
-////		case DATASOURCE : return addPrefix(step.getName());
-////		case FUNCTION :	return addPrefix(step.getName());
-////		case DATADEST : return addPrefix(step.getName());
-////		}
-//		
-//		return addPrefix(step.getName());
-//		
-////		return "index";
-//	}
+	@GetMapping(value = "newalg")
+	public String getAlgCreatingPage(@RequestParam("step") CreateAlgStep step) {
+		logger.debug("inside getAlgCreatingPage: {}", step);
+
+		switch(step){
+		case DATASOURCE : return addPrefix(step.getName());
+		case FUNCTION :	return addPrefix(step.getName());
+		case DATADEST : return addPrefix(step.getName());
+		}
+		
+		return addPrefix(step.getName());
+		
+//		return "index";
+	}
 //	
 //	@GetMapping("viewalg{id}")
 //	public String getViewAlgPage(@PathVariable String id ) {
@@ -75,9 +75,9 @@ public class CreateAlgorithmController {
 //		
 //	}
 //	
-//	private String addPrefix(String view) {
-//		return PREFIX + view;
-//	}
+	private String addPrefix(String view) {
+		return PREFIX + view;
+	}
 //	
 //	@Component
 //	public class StringToCreateStepConverter

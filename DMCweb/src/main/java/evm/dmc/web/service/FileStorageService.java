@@ -20,6 +20,8 @@ public interface FileStorageService {
     Stream<Path> loadAll(Path relativePath);
 
     Path load(Path relativePath, String filename);
+    
+    DataPreview loadDataPreview(Path relativePath, String filename);
 
     Resource loadAsResource(Path relativePath, String filename);
 

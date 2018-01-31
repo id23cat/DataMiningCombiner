@@ -28,13 +28,14 @@ public class MvcConfig extends WebMvcConfigurerAdapter {
 		registry.addViewController(RequestPath.userHome).setViewName(views.getUserHome());
 		registry.addViewController(RequestPath.adminHome).setViewName(views.getAdminHome());
 
-		// Test page
-		registry.addViewController("/test").setViewName("test");
-
 		// Errors pages
 		registry.addViewController(RequestPath.erAccDenied).setViewName(views.getErrors().getAccessDenied());
 		registry.addViewController(RequestPath.erNotFound).setViewName(views.getErrors().getNotFound());
 
+		// Test page
+		registry.addViewController("/test").setViewName("test");
+		registry.addViewController("/datasource").setViewName("testing/algorithm/datasource");
+		registry.addViewController("/datapreview").setViewName("testing/algorithm/function_datapreview");
 	}
 
 	// Validation & messages

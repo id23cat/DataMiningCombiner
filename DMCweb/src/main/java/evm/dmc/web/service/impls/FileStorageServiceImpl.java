@@ -47,6 +47,7 @@ public class FileStorageServiceImpl implements FileStorageService {
         String filename = StringUtils.cleanPath(file.getOriginalFilename());
         Path currLocation = this.rootLocation.resolve(relativePath);
        
+        log.trace("Current location: {}", currLocation);
         // check matching any applicable extension listed in this.extensions
         Arrays.stream(extensions)
         .filter(ext -> StringUtils.getFilenameExtension(filename).toLowerCase().equals(ext))
@@ -100,6 +101,12 @@ public class FileStorageServiceImpl implements FileStorageService {
     @Override
     public Path load(Path relativePath, String filename) {
         return rootLocation.resolve(relativePath).resolve(filename);
+    }
+    
+    @Override
+    public DataPreview loadDataPreview(Path relativePath, String filename) {
+    	Path file = load(relativePath, filename);
+    	return getPreview(file, previewLinesCount);
     }
 
     @Override

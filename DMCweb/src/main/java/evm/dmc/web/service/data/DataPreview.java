@@ -22,6 +22,7 @@ public interface DataPreview {
 	List<String> getAllLines();
 	String getDataLine(Integer line);
 	List<String> getDataItems(Integer line);
+	List<String> getDataItems(String line);
 	Integer getLinesCount();
 	
 	DataPreview setDelimiter(String delimiter);

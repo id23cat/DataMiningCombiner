@@ -45,7 +45,13 @@
 			});
 			</script>
 			
-			
+			<div th:if="${previewData != null}" >
+				I wonder, if variable exists...
+				
+				<div th:insert="fragments/datapreview :: dataPreview(${previewData})">
+			 	</div>
+		 	</div>
+
 			
 		 	<ul class="pager">
 				<li><a class="btn btn-info" role="button" th:href="@{${flowExecutionUrl}(_eventId='prev')}" >Previous</a></li>

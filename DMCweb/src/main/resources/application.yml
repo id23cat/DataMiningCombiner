@@ -64,6 +64,7 @@ dmc:
       username: admin
       password: adminpass
   fileroot: userFiles
+  previewLinesCount: 7
 
     
 

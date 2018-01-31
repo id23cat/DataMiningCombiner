@@ -56,7 +56,12 @@ public class DataPreviewImpl implements DataPreview {
 
 	@Override
 	public List<String> getDataItems(Integer line) {
-		return stringToStreamOfWords(dataLines.get(line),delimiters).collect(Collectors.toList());
+		return getDataItems(dataLines.get(line));
+	}
+	
+	@Override
+	public List<String> getDataItems(String line) {
+		return stringToStreamOfWords(line, delimiters).collect(Collectors.toList());
 	}
 
 	@Override

@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+	  xmlns:dt="http://www.thymeleaf.org/dandelion/datatables"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layouts/sidebarlayout}">
+      
+<head>
+	<link rel="stylesheet" th:href="@{/webjars/bootstrap/3.3.7/css/bootstrap.min.css}">
+  	<script th:src="@{/webjars/jquery/3.2.1/jquery.min.js}"></script>
+  	<script th:src="@{/webjars/bootstrap/3.3.7/js/bootstrap.min.js}"></script>
+  	<link th:href="@{/css/core.css}" rel="stylesheet" media="screen" />
+</head>
+
+<body>
+	<!-- Preview data using DataPreview instance -->
+	<div th:fragment="dataPreview(preview)">
+		<div class="table-responsive">
+			<table class="table table-bordered " dt:table="true"> <!-- table-fixed -->
+				<thead class="head">
+				<!-- 	<th:block th:each="item : ${preview.getHeaderItems()}">		 -->	
+					<tr>
+						<th:block th:each="item : ${preview.getHeaderItems()}">
+							<th th:text=${item.name}>Header item</th>
+						</th:block>
+					</tr>
+				</thead>
+				<tbody>
+					<tr th:each="line, iter : ${preview.getAllLines()}">
+						<th:block th:each="item : ${preview.getDataItems(line)}">
+							<td th:text=${item}>Data item</td>
+						</th:block>
+					</tr>
+				</tbody>
+			</table>
+					
+		</div>
+	</div>
+	
+<body>
+</html>
