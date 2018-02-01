@@ -35,6 +35,7 @@ public  final  class RequestPath {
 	@Getter public static final String projAssignAlgorithm = project + assignAlgorithm;
 	
 	@Getter public static final String setSource = "/setsrc";
+	@Getter public static final String setSourceAttributes = "/setsrcattr";
 	
 	@Getter public static final String algorithmWozard = "/project/algorithm/wizard";
 	

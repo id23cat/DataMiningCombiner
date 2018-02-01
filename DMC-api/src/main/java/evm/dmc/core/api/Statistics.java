@@ -3,8 +3,6 @@ package evm.dmc.core.api;
 import java.util.Map;
 import java.util.Set;
 
-import evm.dmc.core.api.back.AttributeType;
-
 public class Statistics {
 	AttributeType type;
 	String attrName;

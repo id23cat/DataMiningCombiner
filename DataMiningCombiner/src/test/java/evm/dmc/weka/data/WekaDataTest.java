@@ -36,9 +36,9 @@ import java.util.Random;
 
 import evm.dmc.DataMiningCombinerApplicationTests;
 import evm.dmc.api.model.DataModel;
+import evm.dmc.core.api.AttributeType;
 import evm.dmc.core.api.Data;
 import evm.dmc.core.api.Statistics;
-import evm.dmc.core.api.back.AttributeType;
 import evm.dmc.core.api.back.CSVLoader;
 import evm.dmc.core.api.exceptions.DataOperationException;
 import evm.dmc.weka.DMCWekaConfig;

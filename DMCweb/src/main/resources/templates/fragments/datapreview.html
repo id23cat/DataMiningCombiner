@@ -14,14 +14,40 @@
 <body>
 	<!-- Preview data using DataPreview instance -->
 	<div th:fragment="dataPreview(preview)">
+	<form method="post"
+			th:action="${@requestPath.delProject}"
+			th:object="${backBean}"
+			>
 		<div class="table-responsive">
-			<table class="table table-bordered " dt:table="true"> <!-- table-fixed -->
+			<table class="table table-bordered " > <!-- table-fixed -->
 				<thead class="head">
 				<!-- 	<th:block th:each="item : ${preview.getHeaderItems()}">		 -->	
 					<tr>
 						<th:block th:each="item : ${preview.getHeaderItems()}">
-							<th th:text=${item.name}>Header item</th>
+							<th >
+								<span th:text=${item.name}></span>
+								<br>
+								
+								<!-- <span class="input-group-addon " > -->
+									<input type="checkbox" />
+									 <!-- th:field="*{name}" -->
+									 <!-- <div class="col-xs-1"> -->
+									 <br>
+									 <!-- <input type="number" step="0.01" value="1" style="width:40px;"/> -->
+									<!--  </div> -->
+								<!-- </span> -->
+								
+								
+	                					 
+							</th>
 						</th:block>
+					</tr>
+						<th:block th:each="item : ${preview.getHeaderItems()}">
+							<th>
+								 <input type="number" step="0.1" value="1" style="width:55px;" />  <!-- th:field="*{names}" th:value="${project.name}" -->
+							</th>
+						</th:block>
+					<tr>
 					</tr>
 				</thead>
 				<tbody>
@@ -34,6 +60,7 @@
 			</table>
 					
 		</div>
+	</form>
 	</div>
 	
 <body>

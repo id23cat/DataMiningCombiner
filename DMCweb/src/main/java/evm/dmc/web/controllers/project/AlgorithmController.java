@@ -1,10 +1,15 @@
 package evm.dmc.web.controllers.project;
 
 import java.nio.file.Paths;
+import java.util.Collections;
 import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
@@ -28,6 +33,7 @@ import org.springframework.web.util.UriComponentsBuilder;
 import evm.dmc.api.model.AlgorithmModel;
 import evm.dmc.api.model.ProjectModel;
 import evm.dmc.api.model.account.Account;
+import evm.dmc.web.controllers.CheckboxNamesBean;
 import evm.dmc.web.exceptions.AlgorithmNotFoundException;
 import evm.dmc.web.exceptions.ProjectNotFoundException;
 import evm.dmc.web.exceptions.UserNotExistsException;
@@ -37,6 +43,7 @@ import evm.dmc.web.service.ProjectService;
 import evm.dmc.web.service.RequestPath;
 import evm.dmc.web.service.Views;
 import evm.dmc.web.service.data.DataPreview;
+import evm.dmc.web.service.data.DataPreview.HeaderItem;
 import lombok.extern.slf4j.Slf4j;
 
 @Controller
@@ -80,6 +87,15 @@ public class AlgorithmController {
 		
 	}
 	
+//	@ModelAttribute("headerItems")
+//	public DataPreview.ItemsList modelDataPreviewArray(@ModelAttribute(name="previewData") Optional<DataPreview> preview) {
+//		if(preview.isPresent()){
+//			log.trace("-== PreviewData is present");
+//			return new DataPreview.ItemsList(preview.get().getHeaderItems());
+//		}
+//		return null;// new DataPreview.ItemsList();
+//	}
+	
 	
 	@GetMapping
 	public String getAlgorithm(
@@ -104,15 +120,27 @@ public class AlgorithmController {
 			model.addAttribute("pagesMap", new LinkedHashMap<String,String>());
 			
 //			return "redirect:" + RequestPath.algorithmWozard;
-			UriComponents uriComponents = UriComponentsBuilder.fromPath(BASE_URL).path(RequestPath.setSource)
+			UriComponents srcUploadUri = UriComponentsBuilder.fromPath(BASE_URL).path(RequestPath.setSource)
 					.buildAndExpand(project.getName(), algName);
-			model.addAttribute("sourceUpload", uriComponents.toUriString());
+			model.addAttribute("sourceUploadURI", srcUploadUri.toUriString());
 			
-//			{ // for debug reasons only
-//				log.warn("-== Debugging section: is needed to remove");
-//				model.addAttribute("previewData", fileService.loadDataPreview(Paths.get("idcat","proj0"), "telecom_churn.csv"));
-//				
-//			}
+			UriComponents srcAttribUri = UriComponentsBuilder.fromPath(BASE_URL).path(RequestPath.setSourceAttributes)
+					.buildAndExpand(project.getName(), algName);
+			model.addAttribute("sourceAttributesURI", srcAttribUri.toUriString());
+			
+			if(preview.isPresent()) {
+				model.addAttribute("previewData", preview.get());
+				model.addAttribute("headerItems", new DataPreview.ItemsList(preview.get().getHeaderItems()));
+			}
+			
+			{ // for debug reasons only
+				log.warn("-== Debugging section: is needed to remove");
+				DataPreview prev = fileService.loadDataPreview(Paths.get("idcat","proj0"), "telecom_churn.csv");
+				model.addAttribute("previewData", prev);
+				model.addAttribute("headerItems", new DataPreview.ItemsList(prev.getHeaderItems()));
+//				model.addAttribute("headerItems", new DataPreview.ItemsList());
+				
+			}
 			
 			return views.project.wizard.datasource;
 		}
@@ -135,6 +163,7 @@ public class AlgorithmController {
 			@SessionAttribute("currentProject") ProjectModel project,
 			@PathVariable("algName") String algName,
 			RedirectAttributes ra) {
+		
 		DataPreview preview = fileService.store(FileStorageService.relativePath(account, project), file);
 		ra.addFlashAttribute("previewData", preview);
 		
@@ -143,6 +172,23 @@ public class AlgorithmController {
 										.buildAndExpand(project.getName(), algName);
 		
 		log.debug("-== Saving complete");
+		return new RedirectView(uriComponents.toUriString());
+	}
+	
+	@PostMapping(RequestPath.setSourceAttributes)
+	public RedirectView postSourceAttribytes(
+			@Valid @ModelAttribute("headerItems") DataPreview.ItemsList attributes, 
+			@PathVariable("projectName") String projName,
+			@PathVariable("algName") String algName) {
+		
+		List<HeaderItem> selectedItems = attributes.getItems().stream()
+												.filter((item) -> {return item.isChecked();})
+												.collect(Collectors.toList());
+		log.debug("-== Getting data attributes comlete");
+		log.trace("SelectedItems: {}", selectedItems.size());
+		log.trace("Items: {}", selectedItems);
+		UriComponents uriComponents = UriComponentsBuilder.fromPath(BASE_URL)
+				.buildAndExpand(projName, algName);
 		return new RedirectView(uriComponents.toUriString());
 	}
 

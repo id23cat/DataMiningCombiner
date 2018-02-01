@@ -23,7 +23,7 @@ logging:
     org.springframework.webflow: TRACE
     org.hibernate.SQL: DEBUG
     org.hibernate.type.descriptor.sql.BasicBinder: DEBUG
-    evm.dmc.web: DEBUG
+    evm.dmc.web: TRACE
     evm.dmc.api: DEBUG
 
 views2:

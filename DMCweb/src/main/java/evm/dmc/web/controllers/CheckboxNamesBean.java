@@ -3,12 +3,12 @@ package evm.dmc.web.controllers;
 import lombok.Data;
 
 @Data
-public class CheckboxBean {
+public class CheckboxNamesBean {
 	private String[] names = null;
 	
-	public CheckboxBean() {}
+	public CheckboxNamesBean() {}
 
-	public CheckboxBean(String[] names) {
+	public CheckboxNamesBean(String[] names) {
 		this.names = names;
 	}
 	

@@ -43,7 +43,7 @@ import org.springframework.web.util.UriComponentsBuilder;
 import evm.dmc.api.model.AlgorithmModel;
 import evm.dmc.api.model.ProjectModel;
 import evm.dmc.api.model.account.Account;
-import evm.dmc.web.controllers.CheckboxBean;
+import evm.dmc.web.controllers.CheckboxNamesBean;
 import evm.dmc.web.exceptions.ProjectNotFoundException;
 import evm.dmc.web.exceptions.UserNotExistsException;
 import evm.dmc.web.service.ProjectService;
@@ -83,8 +83,8 @@ public class ProjectController {
 	}
 	
 	@ModelAttribute("backBean")
-	public CheckboxBean backingBeanForCheckboxes() {
-		return new CheckboxBean();
+	public CheckboxNamesBean backingBeanForCheckboxes() {
+		return new CheckboxNamesBean();
 	}
 	
 //	@Transactional(readOnly = true)
@@ -164,7 +164,7 @@ public class ProjectController {
 //	@Transactional
 	public RedirectView postDelProjedct(
 			@ModelAttribute("account") Account account,
-			@ModelAttribute("backBean") CheckboxBean bean,
+			@ModelAttribute("backBean") CheckboxNamesBean bean,
 			BindingResult bindingResult, RedirectAttributes ra
 			) {
 		log.debug("BackBean: {}", Arrays.stream(bean.getNames()).collect(Collectors.toList()));
@@ -201,7 +201,7 @@ public class ProjectController {
 	@PostMapping(RequestPath.delAlgorithm)
 	public RedirectView postDelAlgorithm(
 			@SessionAttribute("currentProject") ProjectModel project,
-			@ModelAttribute("backBean") CheckboxBean bean
+			@ModelAttribute("backBean") CheckboxNamesBean bean
 			) {
 		log.debug("Selected algorithms for deleteion:{}", StringUtils.arrayToCommaDelimitedString(bean.getNames()));
 		log.debug("Project for deletion in: {}", project);

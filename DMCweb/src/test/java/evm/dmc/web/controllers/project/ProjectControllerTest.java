@@ -44,7 +44,7 @@ import evm.dmc.config.SecurityConfig;
 import evm.dmc.web.service.ProjectService;
 import evm.dmc.web.service.RequestPath;
 import evm.dmc.web.service.Views;
-import evm.dmc.web.controllers.CheckboxBean;
+import evm.dmc.web.controllers.CheckboxNamesBean;
 import evm.dmc.web.service.AccountService;
 import lombok.extern.slf4j.Slf4j;
 
