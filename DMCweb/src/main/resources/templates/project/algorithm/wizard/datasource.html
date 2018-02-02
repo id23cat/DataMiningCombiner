@@ -84,10 +84,20 @@
 									<th>
 										<span th:text=${item.name}></span>
 										<br>
+											<select class="form-control"
+												th:id="'type_' + ${stat.index}"		
+												th:field="*{items[__${stat.index}__].type}"										 
+											>
+												<option th:each="type: ${T(evm.dmc.core.api.AttributeType).values()}"
+													th:value="${type}"
+													th:text="${type}"
+												>
+											</select>
+										<br>
 											<input type="checkbox"
 												th:id="'chkbx_' + ${stat.index}"
-												th:field="*{items[__${stat.index}__].checked}" 
-												th:value="item.checked"/> 
+												th:field="*{items[__${stat.index}__].name}" 
+												th:value="${item.name}"/> 
 											<!-- <input type="checkbox" th:field="*{items}" th:value="item"/> -->
 										<br>
 											<input type="number"																							
