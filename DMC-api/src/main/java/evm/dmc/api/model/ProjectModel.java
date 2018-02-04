@@ -6,6 +6,7 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
 import java.util.Properties;
 import java.util.Set;
@@ -37,6 +38,7 @@ import javax.validation.constraints.NotNull;
 import org.hibernate.validator.constraints.NotBlank;
 
 import evm.dmc.api.model.account.Account;
+import evm.dmc.api.model.data.MetaData;
 import lombok.AccessLevel;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -98,6 +100,9 @@ public class ProjectModel implements Serializable {
 	
 	@Setter(AccessLevel.NONE) 
 	private Instant created = Instant.now();
+	
+	@OneToMany()
+	private List<MetaData> dataSources;
 	
 	public ProjectModel() {
 		super();

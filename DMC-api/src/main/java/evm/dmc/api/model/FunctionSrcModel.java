@@ -5,6 +5,7 @@ import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
 import javax.validation.constraints.NotNull;
 
+import evm.dmc.core.api.back.data.DataSrcDstType;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 

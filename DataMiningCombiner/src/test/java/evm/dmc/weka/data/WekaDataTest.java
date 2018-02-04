@@ -35,11 +35,11 @@ import java.util.Arrays;
 import java.util.Random;
 
 import evm.dmc.DataMiningCombinerApplicationTests;
-import evm.dmc.api.model.DataModel;
 import evm.dmc.core.api.AttributeType;
 import evm.dmc.core.api.Data;
 import evm.dmc.core.api.Statistics;
 import evm.dmc.core.api.back.CSVLoader;
+import evm.dmc.core.api.back.data.DataModel;
 import evm.dmc.core.api.exceptions.DataOperationException;
 import evm.dmc.weka.DMCWekaConfig;
 import evm.dmc.weka.WekaFramework;

@@ -1,4 +1,4 @@
-package evm.dmc.api.model;
+package evm.dmc.core.api.back.data;
 
 public class DataChart extends DataInfo {
 

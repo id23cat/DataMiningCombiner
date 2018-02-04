@@ -15,12 +15,12 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
-import evm.dmc.api.model.DataModel;
 import evm.dmc.core.DataFactory;
 import evm.dmc.core.api.AttributeType;
 import evm.dmc.core.api.Data;
 import evm.dmc.core.api.Statistics;
 import evm.dmc.core.api.back.HasMultiAttributes;
+import evm.dmc.core.api.back.data.DataModel;
 import evm.dmc.core.api.exceptions.DataOperationException;
 import evm.dmc.core.api.exceptions.IndexOutOfRange;
 import evm.dmc.core.data.HasMultiInstaces;

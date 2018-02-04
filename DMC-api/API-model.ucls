@@ -28,8 +28,8 @@
       <operations public="true" package="true" protected="true" private="true" static="true"/>    
     </display>  
   </enumeration>  
-  <class id="4" language="java" name="evm.dmc.api.model.DataStatistics" project="DMC-api" 
-    file="/DMC-api/src/main/java/evm/dmc/api/model/DataStatistics.java" binary="false" corner="BOTTOM_RIGHT">    
+  <class id="4" language="java" name="evm.dmc.core.api.back.data.DataStatistics" project="DMC-api" 
+    file="/DMC-api/src/main/java/evm/dmc/core/api/back/data/DataStatistics.java" binary="false" corner="BOTTOM_RIGHT">    
     <position height="-1" width="-1" x="164" y="619"/>    
     <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
       sort-features="false" accessors="true" visibility="true">      
@@ -46,8 +46,8 @@
       <operations public="true" package="true" protected="true" private="true" static="true"/>    
     </display>  
   </enumeration>  
-  <class id="6" language="java" name="evm.dmc.api.model.DataChart" project="DMC-api" 
-    file="/DMC-api/src/main/java/evm/dmc/api/model/DataChart.java" binary="false" corner="BOTTOM_RIGHT">    
+  <class id="6" language="java" name="evm.dmc.core.api.back.data.DataChart" project="DMC-api" 
+    file="/DMC-api/src/main/java/evm/dmc/core/api/back/data/DataChart.java" binary="false" corner="BOTTOM_RIGHT">    
     <position height="-1" width="-1" x="337" y="574"/>    
     <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
       sort-features="false" accessors="true" visibility="true">      
@@ -73,8 +73,8 @@
       <operations public="true" package="true" protected="true" private="true" static="true"/>    
     </display>  
   </class>  
-  <class id="9" language="java" name="evm.dmc.api.model.DataModel" project="DMC-api" 
-    file="/DMC-api/src/main/java/evm/dmc/api/model/DataModel.java" binary="false" corner="BOTTOM_RIGHT">    
+  <class id="9" language="java" name="evm.dmc.core.api.back.data.DataModel" project="DMC-api" 
+    file="/DMC-api/src/main/java/evm/dmc/core/api/back/data/DataModel.java" binary="false" corner="BOTTOM_RIGHT">    
     <position height="-1" width="-1" x="537" y="691"/>    
     <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
       sort-features="false" accessors="true" visibility="true">      
@@ -82,8 +82,8 @@
       <operations public="true" package="true" protected="true" private="true" static="true"/>    
     </display>  
   </class>  
-  <enumeration id="10" language="java" name="evm.dmc.api.model.DataSrcDstType" project="DMC-api" 
-    file="/DMC-api/src/main/java/evm/dmc/api/model/DataSrcDstType.java" binary="false" corner="BOTTOM_RIGHT">    
+  <enumeration id="10" language="java" name="evm.dmc.core.api.back.data.DataSrcDstType" project="DMC-api" 
+    file="/DMC-api/src/main/java/evm/dmc/core/api/back/data/DataSrcDstType.java" binary="false" corner="BOTTOM_RIGHT">    
     <position height="-1" width="-1" x="1127" y="1500"/>    
     <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
       sort-features="false" accessors="true" visibility="true">      
@@ -100,8 +100,8 @@
       <operations public="true" package="true" protected="true" private="true" static="true"/>    
     </display>  
   </class>  
-  <class id="12" language="java" name="evm.dmc.api.model.DataInfo" project="DMC-api" 
-    file="/DMC-api/src/main/java/evm/dmc/api/model/DataInfo.java" binary="false" corner="BOTTOM_RIGHT">    
+  <class id="12" language="java" name="evm.dmc.core.api.back.data.DataInfo" project="DMC-api" 
+    file="/DMC-api/src/main/java/evm/dmc/core/api/back/data/DataInfo.java" binary="false" corner="BOTTOM_RIGHT">    
     <position height="-1" width="-1" x="364" y="241"/>    
     <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
       sort-features="false" accessors="true" visibility="true">      
@@ -118,143 +118,143 @@
       <operations public="true" package="true" protected="true" private="true" static="true"/>    
     </display>  
   </class>  
-  <generalization id="14">    
-    <end type="SOURCE" refId="6"/>    
-    <end type="TARGET" refId="12"/>  
-  </generalization>  
-  <association id="15">    
-    <end type="SOURCE" refId="1" navigable="false">      
-      <attribute id="16" name="functions">        
-        <position height="0" width="0" x="0" y="0"/>      
-      </attribute>      
-      <multiplicity id="17" minimum="0" maximum="2147483647">        
-        <position height="0" width="0" x="0" y="0"/>      
-      </multiplicity>    
-    </end>    
-    <end type="TARGET" refId="11" navigable="true"/>    
-    <display labels="true" multiplicity="true"/>  
-  </association>  
-  <association id="18">    
-    <end type="SOURCE" refId="7" navigable="false">      
-      <attribute id="19" name="typeSrcDst">        
-        <position height="0" width="0" x="0" y="0"/>      
-      </attribute>      
-      <multiplicity id="20" minimum="0" maximum="1">        
-        <position height="0" width="0" x="0" y="0"/>      
-      </multiplicity>    
-    </end>    
-    <end type="TARGET" refId="10" navigable="true"/>    
-    <display labels="true" multiplicity="true"/>  
-  </association>  
-  <association id="21">    
-    <end type="SOURCE" refId="8" navigable="false">      
-      <attribute id="22" name="dataDestination">        
-        <position height="0" width="0" x="0" y="0"/>      
-      </attribute>      
-      <multiplicity id="23" minimum="0" maximum="1">        
-        <position height="0" width="0" x="0" y="0"/>      
-      </multiplicity>    
-    </end>    
-    <end type="TARGET" refId="2" navigable="true"/>    
-    <display labels="true" multiplicity="true"/>  
-  </association>  
-  <generalization id="24">    
-    <end type="SOURCE" refId="7"/>    
-    <end type="TARGET" refId="11"/>  
-  </generalization>  
-  <association id="25">    
-    <end type="SOURCE" refId="1" navigable="false">      
-      <attribute id="26" name="type">        
-        <position height="0" width="0" x="0" y="0"/>      
-      </attribute>      
-      <multiplicity id="27" minimum="0" maximum="1">        
-        <position height="0" width="0" x="0" y="0"/>      
-      </multiplicity>    
-    </end>    
-    <end type="TARGET" refId="5" navigable="true"/>    
-    <display labels="true" multiplicity="true"/>  
-  </association>  
-  <association id="28">    
-    <end type="SOURCE" refId="11" navigable="false">      
-      <attribute id="29" name="type">        
-        <position height="0" width="0" x="0" y="0"/>      
-      </attribute>      
-      <multiplicity id="30" minimum="0" maximum="1">        
-        <position height="0" width="0" x="0" y="0"/>      
-      </multiplicity>    
-    </end>    
-    <end type="TARGET" refId="3" navigable="true"/>    
-    <display labels="true" multiplicity="true"/>  
-  </association>  
-  <association id="31">    
-    <end type="SOURCE" refId="2" navigable="false">      
-      <attribute id="32" name="typeSrcDst">        
-        <position height="0" width="0" x="0" y="0"/>      
-      </attribute>      
-      <multiplicity id="33" minimum="0" maximum="1">        
-        <position height="0" width="0" x="0" y="0"/>      
-      </multiplicity>    
-    </end>    
-    <end type="TARGET" refId="10" navigable="true"/>    
-    <display labels="true" multiplicity="true"/>  
-  </association>  
-  <generalization id="34">    
-    <end type="SOURCE" refId="2"/>    
-    <end type="TARGET" refId="11"/>  
-  </generalization>  
-  <association id="35">    
-    <end type="SOURCE" refId="8" navigable="false">      
-      <attribute id="36" name="dataSource">        
-        <position height="0" width="0" x="0" y="0"/>      
-      </attribute>      
-      <multiplicity id="37" minimum="0" maximum="1">        
-        <position height="0" width="0" x="0" y="0"/>      
-      </multiplicity>    
-    </end>    
-    <end type="TARGET" refId="7" navigable="true"/>    
-    <display labels="true" multiplicity="true"/>  
-  </association>  
-  <generalization id="38">    
-    <end type="SOURCE" refId="4"/>    
-    <end type="TARGET" refId="12"/>  
-  </generalization>  
-  <association id="39">    
-    <end type="SOURCE" refId="12" navigable="false">      
-      <attribute id="40" name="data">        
-        <position height="0" width="0" x="0" y="0"/>      
-      </attribute>      
-      <multiplicity id="41" minimum="0" maximum="1">        
-        <position height="0" width="0" x="0" y="0"/>      
-      </multiplicity>    
-    </end>    
-    <end type="TARGET" refId="9" navigable="true"/>    
-    <display labels="true" multiplicity="true"/>  
-  </association>  
-  <association id="42">    
-    <end type="SOURCE" refId="8" navigable="false">      
-      <attribute id="43" name="functions">        
-        <position height="0" width="0" x="0" y="0"/>      
-      </attribute>      
-      <multiplicity id="44" minimum="0" maximum="2147483647">        
-        <position height="0" width="0" x="0" y="0"/>      
-      </multiplicity>    
-    </end>    
-    <end type="TARGET" refId="11" navigable="true"/>    
-    <display labels="true" multiplicity="true"/>  
-  </association>  
-  <association id="45">    
+  <association id="14">    
     <bendpoint x="453" y="962"/>    
     <end type="SOURCE" refId="11" navigable="false">      
-      <attribute id="46" name="framework">        
+      <attribute id="15" name="framework">        
         <position height="0" width="0" x="0" y="0"/>      
       </attribute>      
-      <multiplicity id="47" minimum="0" maximum="1">        
+      <multiplicity id="16" minimum="0" maximum="1">        
         <position height="0" width="0" x="0" y="0"/>      
       </multiplicity>    
     </end>    
     <end type="TARGET" refId="1" navigable="true"/>    
     <display labels="true" multiplicity="true"/>  
   </association>  
+  <association id="17">    
+    <end type="SOURCE" refId="2" navigable="false">      
+      <attribute id="18" name="typeSrcDst">        
+        <position height="0" width="0" x="0" y="0"/>      
+      </attribute>      
+      <multiplicity id="19" minimum="0" maximum="1">        
+        <position height="0" width="0" x="0" y="0"/>      
+      </multiplicity>    
+    </end>    
+    <end type="TARGET" refId="10" navigable="true"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <association id="20">    
+    <end type="SOURCE" refId="11" navigable="false">      
+      <attribute id="21" name="type">        
+        <position height="0" width="0" x="0" y="0"/>      
+      </attribute>      
+      <multiplicity id="22" minimum="0" maximum="1">        
+        <position height="0" width="0" x="0" y="0"/>      
+      </multiplicity>    
+    </end>    
+    <end type="TARGET" refId="3" navigable="true"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <association id="23">    
+    <end type="SOURCE" refId="8" navigable="false">      
+      <attribute id="24" name="dataSource">        
+        <position height="0" width="0" x="0" y="0"/>      
+      </attribute>      
+      <multiplicity id="25" minimum="0" maximum="1">        
+        <position height="0" width="0" x="0" y="0"/>      
+      </multiplicity>    
+    </end>    
+    <end type="TARGET" refId="7" navigable="true"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <generalization id="26">    
+    <end type="SOURCE" refId="2"/>    
+    <end type="TARGET" refId="11"/>  
+  </generalization>  
+  <association id="27">    
+    <end type="SOURCE" refId="8" navigable="false">      
+      <attribute id="28" name="dataDestination">        
+        <position height="0" width="0" x="0" y="0"/>      
+      </attribute>      
+      <multiplicity id="29" minimum="0" maximum="1">        
+        <position height="0" width="0" x="0" y="0"/>      
+      </multiplicity>    
+    </end>    
+    <end type="TARGET" refId="2" navigable="true"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <association id="30">    
+    <end type="SOURCE" refId="7" navigable="false">      
+      <attribute id="31" name="typeSrcDst">        
+        <position height="0" width="0" x="0" y="0"/>      
+      </attribute>      
+      <multiplicity id="32" minimum="0" maximum="1">        
+        <position height="0" width="0" x="0" y="0"/>      
+      </multiplicity>    
+    </end>    
+    <end type="TARGET" refId="10" navigable="true"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <generalization id="33">    
+    <end type="SOURCE" refId="4"/>    
+    <end type="TARGET" refId="12"/>  
+  </generalization>  
+  <generalization id="34">    
+    <end type="SOURCE" refId="7"/>    
+    <end type="TARGET" refId="11"/>  
+  </generalization>  
+  <association id="35">    
+    <end type="SOURCE" refId="1" navigable="false">      
+      <attribute id="36" name="functions">        
+        <position height="0" width="0" x="0" y="0"/>      
+      </attribute>      
+      <multiplicity id="37" minimum="0" maximum="2147483647">        
+        <position height="0" width="0" x="0" y="0"/>      
+      </multiplicity>    
+    </end>    
+    <end type="TARGET" refId="11" navigable="true"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <association id="38">    
+    <end type="SOURCE" refId="8" navigable="false">      
+      <attribute id="39" name="functions">        
+        <position height="0" width="0" x="0" y="0"/>      
+      </attribute>      
+      <multiplicity id="40" minimum="0" maximum="2147483647">        
+        <position height="0" width="0" x="0" y="0"/>      
+      </multiplicity>    
+    </end>    
+    <end type="TARGET" refId="11" navigable="true"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <association id="41">    
+    <end type="SOURCE" refId="12" navigable="false">      
+      <attribute id="42" name="data">        
+        <position height="0" width="0" x="0" y="0"/>      
+      </attribute>      
+      <multiplicity id="43" minimum="0" maximum="1">        
+        <position height="0" width="0" x="0" y="0"/>      
+      </multiplicity>    
+    </end>    
+    <end type="TARGET" refId="9" navigable="true"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <association id="44">    
+    <end type="SOURCE" refId="1" navigable="false">      
+      <attribute id="45" name="type">        
+        <position height="0" width="0" x="0" y="0"/>      
+      </attribute>      
+      <multiplicity id="46" minimum="0" maximum="1">        
+        <position height="0" width="0" x="0" y="0"/>      
+      </multiplicity>    
+    </end>    
+    <end type="TARGET" refId="5" navigable="true"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <generalization id="47">    
+    <end type="SOURCE" refId="6"/>    
+    <end type="TARGET" refId="12"/>  
+  </generalization>  
   <classifier-display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
     sort-features="false" accessors="true" visibility="true">    
     <attributes public="true" package="true" protected="true" private="true" static="true"/>    

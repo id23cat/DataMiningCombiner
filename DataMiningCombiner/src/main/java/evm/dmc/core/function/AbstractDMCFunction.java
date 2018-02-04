@@ -7,12 +7,12 @@ import java.util.Properties;
 
 import javax.annotation.PostConstruct;
 
-import evm.dmc.api.model.DataModel;
 import evm.dmc.api.model.FunctionModel;
 import evm.dmc.api.model.FunctionType;
 import evm.dmc.core.annotations.Function;
 import evm.dmc.core.api.DMCFunction;
 import evm.dmc.core.api.Data;
+import evm.dmc.core.api.back.data.DataModel;
 import evm.dmc.core.api.exceptions.DataOperationException;
 
 /**

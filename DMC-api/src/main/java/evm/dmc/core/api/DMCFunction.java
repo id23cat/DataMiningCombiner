@@ -6,11 +6,11 @@ import org.springframework.context.annotation.Scope;
 import java.util.List;
 import java.util.Optional;
 
-import evm.dmc.api.model.DataModel;
 import evm.dmc.api.model.FunctionModel;
 import evm.dmc.core.api.Data;
 import evm.dmc.core.api.back.FrameworkContext;
 import evm.dmc.core.api.back.HasNameAndDescription;
+import evm.dmc.core.api.back.data.DataModel;
 import evm.dmc.core.api.exceptions.DataOperationException;
 
 @Scope("prototype")

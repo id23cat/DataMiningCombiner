@@ -3,8 +3,8 @@ package evm.dmc.core.data;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Service;
 
-import evm.dmc.api.model.DataModel;
 import evm.dmc.core.api.Data;
+import evm.dmc.core.api.back.data.DataModel;
 
 @Service
 @Scope("prototype")

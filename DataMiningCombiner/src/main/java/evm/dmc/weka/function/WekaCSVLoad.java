@@ -14,7 +14,6 @@ import java.util.List;
 import java.util.Optional;
 import java.util.Properties;
 
-import evm.dmc.api.model.DataSrcDstType;
 import evm.dmc.api.model.FunctionModel;
 import evm.dmc.api.model.FunctionSrcModel;
 import evm.dmc.api.model.FunctionType;
@@ -24,6 +23,7 @@ import evm.dmc.core.api.DMCDataLoader;
 import evm.dmc.core.api.DMCFunction;
 import evm.dmc.core.api.Data;
 import evm.dmc.core.api.back.CSVLoader;
+import evm.dmc.core.api.back.data.DataSrcDstType;
 import evm.dmc.core.api.exceptions.LoadDataException;
 import evm.dmc.core.function.AbstractDMCFunction;
 import evm.dmc.weka.WekaFW;

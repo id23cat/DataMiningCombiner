@@ -14,7 +14,6 @@ import java.util.List;
 import java.util.Optional;
 import java.util.Properties;
 
-import evm.dmc.api.model.DataSrcDstType;
 import evm.dmc.api.model.FunctionDstModel;
 import evm.dmc.api.model.FunctionModel;
 import evm.dmc.api.model.FunctionType;
@@ -24,6 +23,7 @@ import evm.dmc.core.api.DMCDataSaver;
 import evm.dmc.core.api.DMCFunction;
 import evm.dmc.core.api.Data;
 import evm.dmc.core.api.back.CSVSaver;
+import evm.dmc.core.api.back.data.DataSrcDstType;
 import evm.dmc.core.api.exceptions.StoreDataException;
 import evm.dmc.core.exceptions.UncheckedStoringException;
 import evm.dmc.core.function.AbstractDMCFunction;
