@@ -43,10 +43,10 @@ import static org.hamcrest.Matchers.*;
  *
  */
 @Slf4j
-public class FileStorageServiceTest {
+public class DataStorageServiceTest {
 
     private FileStorageConfig properties = new FileStorageConfig();
-    private FileStorageService service;
+    private DataStorageService service;
     
     private Account acccount = new Account();
 	private ProjectModel project = new ProjectModel();
@@ -63,13 +63,13 @@ public class FileStorageServiceTest {
         acccount.setUserName("user1");
         project.setName("project1");
         
-        relativePath = FileStorageService.relativePath(acccount, project);
+        relativePath = DataStorageService.relativePath(acccount, project);
     }
     
     @Test
     public void relativePathTest() {
     	
-    	assertThat(FileStorageService.relativePath(acccount, project).toString())
+    	assertThat(DataStorageService.relativePath(acccount, project).toString())
     	.isEqualTo(String.format("%s/%s", acccount.getUserName(), project.getName()));
     }
 

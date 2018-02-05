@@ -33,7 +33,7 @@ import evm.dmc.web.exceptions.AlgorithmNotFoundException;
 import evm.dmc.web.exceptions.ProjectNotFoundException;
 import evm.dmc.web.exceptions.UserNotExistsException;
 import evm.dmc.web.service.AccountService;
-import evm.dmc.web.service.FileStorageService;
+import evm.dmc.web.service.DataStorageService;
 import evm.dmc.web.service.ProjectService;
 import evm.dmc.web.service.RequestPath;
 import evm.dmc.web.service.Views;
@@ -63,7 +63,7 @@ public class AlgorithmController {
 	
 	
 	@Autowired
-	private FileStorageService fileService;
+	private DataStorageService fileService;
 	
 	@Autowired
 	private ProjectService projectService;
@@ -141,14 +141,13 @@ public class AlgorithmController {
 				model.addAttribute(MODEL_HeaderItems, new DataPreview.ItemsList(preview.get().getHeaderItems()));
 			}
 			
-			{ // for debug reasons only
-				log.warn("-== Debugging section: is needed to remove");
-				DataPreview prev = fileService.loadDataPreview(Paths.get("idcat","proj0"), "telecom_churn.csv");
-				model.addAttribute(MODEL_PreviewData, prev);
-//				model.addAttribute("headerItems", new DataPreview.ItemsList(prev.getHeaderItems()));
-				model.addAttribute(MODEL_HeaderItems, new DataPreview.ItemsList());
-				
-			}
+//			{ // for debug reasons only
+//				log.warn("-== Debugging section: is needed to remove");
+//				DataPreview prev = fileService.loadDataPreview(Paths.get("idcat","proj0"), "telecom_churn.csv");
+//				model.addAttribute(MODEL_PreviewData, prev);
+//				model.addAttribute(MODEL_HeaderItems, new DataPreview.ItemsList());
+//				
+//			}
 			
 			return views.project.wizard.datasource;
 		}
@@ -167,7 +166,7 @@ public class AlgorithmController {
 			@PathVariable(PATH_AlgName) String algName,
 			RedirectAttributes ra) {
 		
-		DataPreview preview = fileService.store(FileStorageService.relativePath(account, project), file);
+		DataPreview preview = fileService.store(DataStorageService.relativePath(account, project), file);
 		ra.addFlashAttribute(MODEL_PreviewData, preview);
 		
 		log.debug("-== Receiving file: {}", file.getName());

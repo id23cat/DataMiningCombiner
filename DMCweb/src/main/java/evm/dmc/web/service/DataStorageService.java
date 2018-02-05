@@ -5,15 +5,18 @@ import org.springframework.web.multipart.MultipartFile;
 
 import evm.dmc.api.model.ProjectModel;
 import evm.dmc.api.model.account.Account;
+import evm.dmc.api.model.data.MetaData;
 import evm.dmc.web.service.data.DataPreview;
 
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.stream.Stream;
 
-public interface FileStorageService {
+public interface DataStorageService {
 
     void init();
+    
+    MetaData save(Account account, ProjectModel project, MultipartFile file);
 
     DataPreview store(Path relativePath, MultipartFile file);
 
@@ -36,5 +39,9 @@ public interface FileStorageService {
    static  Path relativePath(Account account, ProjectModel project) {
 	   return Paths.get(account.getUserName(), project.getName());
 	}
+   
+   static Path relativePath(String accountName, String projectName) {
+	   return Paths.get(accountName, projectName);
+   }
 
 }

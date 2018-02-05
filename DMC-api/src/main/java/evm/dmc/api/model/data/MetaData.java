@@ -19,6 +19,7 @@ import javax.persistence.ManyToOne;
 import javax.persistence.MapKeyColumn;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
+import javax.validation.constraints.NotNull;
 
 import evm.dmc.api.model.ProjectModel;
 import evm.dmc.api.model.converters.StringListConverter;
@@ -48,6 +49,7 @@ public class MetaData implements Serializable {
 	 * what project this data belongs to
 	 */
 	@ManyToOne
+	@NotNull
 	private ProjectModel project;
 
 	@ElementCollection
@@ -68,5 +70,10 @@ public class MetaData implements Serializable {
 
 	@OneToOne(cascade = CascadeType.ALL)
 	@JoinColumn(name = "storage_id")
-	private DataStorage storage;
+	private DataStorageModel storage;
+	
+	public void setStorage(DataStorageModel storage) {
+		storage.setMeta(this);
+		this.storage = storage;
+	}
 }

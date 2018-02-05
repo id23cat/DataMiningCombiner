@@ -34,7 +34,7 @@ import org.springframework.web.util.UriComponentsBuilder;
 
 import evm.dmc.api.model.ProjectModel;
 import evm.dmc.api.model.account.Account;
-import evm.dmc.web.service.FileStorageService;
+import evm.dmc.web.service.DataStorageService;
 import evm.dmc.web.service.RequestPath;
 import evm.dmc.web.service.Views;
 import lombok.extern.slf4j.Slf4j;
@@ -48,7 +48,7 @@ import lombok.extern.slf4j.Slf4j;
 public class AlgorithmControllerTest {
 	
 	@MockBean
-	FileStorageService fileService;
+	DataStorageService fileService;
 	
 	@Autowired
 	MockMvc mockMvc;

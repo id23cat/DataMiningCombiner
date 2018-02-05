@@ -11,6 +11,8 @@ import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+import javax.transaction.Transactional;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.UrlResource;
@@ -19,19 +21,27 @@ import org.springframework.util.FileSystemUtils;
 import org.springframework.util.StringUtils;
 import org.springframework.web.multipart.MultipartFile;
 
+import evm.dmc.api.model.ProjectModel;
+import evm.dmc.api.model.account.Account;
+import evm.dmc.api.model.data.DataStorageModel;
+import evm.dmc.api.model.data.MetaData;
 import evm.dmc.config.FileStorageConfig;
+import evm.dmc.core.api.back.data.DataSrcDstType;
+import evm.dmc.model.repositories.MetaDataRepository;
 import evm.dmc.web.exceptions.StorageException;
 import evm.dmc.web.exceptions.StorageFileNotFoundException;
 import evm.dmc.web.exceptions.UnsupportedFileTypeException;
-import evm.dmc.web.service.FileStorageService;
+import evm.dmc.web.service.DataStorageService;
 import evm.dmc.web.service.data.DataPreview;
 import evm.dmc.web.service.data.DataPreviewImpl;
 import lombok.extern.slf4j.Slf4j;
 
 @Service
 @Slf4j
-public class FileStorageServiceImpl implements FileStorageService {
-
+public class FileStorageServiceImpl implements DataStorageService {
+	@Autowired
+	MetaDataRepository repository;
+	
     private final Path rootLocation;
     private int previewLinesCount;
     private final static String[] extensions = {"csv"};
@@ -40,6 +50,25 @@ public class FileStorageServiceImpl implements FileStorageService {
     public FileStorageServiceImpl(FileStorageConfig properties) {
         this.rootLocation = Paths.get(properties.getLocation());
         this.previewLinesCount = properties.getPreviewLinesCount();
+    }
+    
+    @Override
+    @Transactional
+    public MetaData save(Account account, ProjectModel project, MultipartFile file) {
+    	MetaData meta = getMetaData(account, project, StringUtils.cleanPath(file.getOriginalFilename()), 
+    			DataSrcDstType.LOCAL_FS, "");
+    	repository.save(meta);
+    	DataPreview preview;
+    	try {
+    		preview = store(DataStorageService.relativePath(account, project), file);
+    	} catch(StorageException exc) {
+    		repository.delete(meta);
+    		throw exc;
+    	}
+    	
+    	meta.setPreview(preview.getAllLines());
+    	
+    	return meta;
     }
 
     @Override
@@ -171,5 +200,31 @@ public class FileStorageServiceImpl implements FileStorageService {
     	
     	return data;
     }
-
+    
+    private DataStorageModel getDataStorageModel(String accountName, String projectName, String fileName, DataSrcDstType type) {
+    	DataStorageModel storageDesc = new DataStorageModel();
+    	String filename = StringUtils.cleanPath(fileName);
+    	Path currLocation = this.rootLocation.resolve(DataStorageService.relativePath(accountName, projectName));
+    	Path destinationPath =  currLocation.resolve(filename);
+    	
+    	storageDesc.setStorageType(type);
+    	storageDesc.setUri(destinationPath.toUri());
+    	
+    	return storageDesc;
+    }
+    
+    private MetaData getMetaData(Account account, ProjectModel project, String fileName,
+    		DataSrcDstType type, String description) {
+    	DataStorageModel dataStore = getDataStorageModel(account.getUserName(), project.getName(),
+    			StringUtils.cleanPath(fileName), DataSrcDstType.LOCAL_FS);
+	    
+    	MetaData meta = new MetaData();
+	    meta.setName(fileName);
+	    meta.setDescription(description);
+		meta.setStorage(dataStore);
+		meta.setHasHeader(true);
+		project.addMetaData(meta);
+		
+		return meta;
+    }
 }

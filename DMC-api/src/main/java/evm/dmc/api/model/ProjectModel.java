@@ -101,7 +101,7 @@ public class ProjectModel implements Serializable {
 	@Setter(AccessLevel.NONE) 
 	private Instant created = Instant.now();
 	
-	@OneToMany()
+	@OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
 	private List<MetaData> dataSources;
 	
 	public ProjectModel() {
@@ -185,6 +185,11 @@ public class ProjectModel implements Serializable {
 		for(String name: prop.stringPropertyNames()) {
 			propertiesMap.put(name, prop.getProperty(name));
 		}
+	}
+	
+	public synchronized void addMetaData(MetaData meta) {
+		meta.setProject(this);
+		this.dataSources.add(meta);
 	}
 
 }
