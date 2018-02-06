@@ -21,13 +21,30 @@ import java.util.Random;
 
 import org.junit.Before;
 import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
+import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
+import org.springframework.boot.test.autoconfigure.orm.jpa.TestEntityManager;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.ComponentScan;
+import org.springframework.context.annotation.Import;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.http.MediaType;
 import org.springframework.mock.web.MockMultipartFile;
+import org.springframework.test.annotation.Rollback;
+import org.springframework.test.context.ActiveProfiles;
+import org.springframework.test.context.junit4.SpringRunner;
+import org.springframework.transaction.annotation.Transactional;
 
 import evm.dmc.api.model.ProjectModel;
 import evm.dmc.api.model.account.Account;
+import evm.dmc.api.model.account.Role;
+import evm.dmc.api.model.data.MetaData;
 import evm.dmc.config.FileStorageConfig;
+import evm.dmc.model.repositories.AccountRepository;
+import evm.dmc.model.repositories.MetaDataRepository;
 import evm.dmc.web.exceptions.StorageException;
 import evm.dmc.web.exceptions.UnsupportedFileTypeException;
 import evm.dmc.web.service.data.DataPreview;
@@ -42,35 +59,63 @@ import static org.hamcrest.Matchers.*;
  * @author Dave Syer
  *
  */
+@RunWith(SpringRunner.class)
+@SpringBootTest
+@DataJpaTest
+@ActiveProfiles({"test", "devH2"})
+@ComponentScan( basePackages = { "evm.dmc.web", "evm.dmc.core", "evm.dmc.service", "evm.dmc.model", "evm.dmc.web.service"})
+@Rollback
 @Slf4j
 public class DataStorageServiceTest {
-
-    private FileStorageConfig properties = new FileStorageConfig();
+    
+    @Autowired
+    private	MetaDataRepository metaDataRepository;
+    
     private DataStorageService service;
     
-    private Account acccount = new Account();
+//    @Autowired
+//    private TestEntityManager entityManager;
+    
+    @Autowired
+    AccountRepository accRepo;
+    
+    @Autowired
+    ProjectService projectService;
+    
+    
+    private Account account = new Account();
 	private ProjectModel project = new ProjectModel();
 	
 	private Path relativePath;
+	private String realFilename = "telecom.csv";
+	private ClassPathResource realResource = new ClassPathResource(realFilename, getClass());
+	
+	
 
     @Before
+    @Transactional
     public void init() {
-        properties.setLocation("target/files/" + Math.abs(new Random().nextLong()));
+    	FileStorageConfig properties = new FileStorageConfig();
+		properties.setLocation("target/files/" + Math.abs(new Random().nextLong()));
         properties.setPreviewLinesCount(5);
-        service = new FileStorageServiceImpl(properties);
-        service.init();
         
-        acccount.setUserName("user1");
-        project.setName("project1");
+        service = new FileStorageServiceImpl(properties, metaDataRepository, projectService);
         
-        relativePath = DataStorageService.relativePath(acccount, project);
+        account = accRepo.findByUserName("id23cat").get();
+        assertNotNull(account);
+//        account.setUserName("user1");
+//        project.setName("project1");
+        project = account.getProjects().stream().findFirst().get();
+        assertNotNull(project);
+        
+        relativePath = DataStorageService.relativePath(account, project);
     }
     
     @Test
     public void relativePathTest() {
     	
-    	assertThat(DataStorageService.relativePath(acccount, project).toString())
-    	.isEqualTo(String.format("%s/%s", acccount.getUserName(), project.getName()));
+    	assertThat(DataStorageService.relativePath(account, project).toString())
+    	.isEqualTo(String.format("%s/%s", account.getUserName(), project.getName()));
     }
 
     @Test
@@ -79,17 +124,17 @@ public class DataStorageServiceTest {
     }
 
     @Test
-    public void saveAndLoadValidFile() throws IOException {
+    public void storeAndLoadValidFile() throws IOException {
 //      service.store(relativePath, new MockMultipartFile("foo", "foo.txt", MediaType.TEXT_PLAIN_VALUE,
 //      "Hello World".getBytes()));
-    	String filename = "telecom.csv";
-    	ClassPathResource resource = new ClassPathResource(filename, getClass());
+//    	String filename = "telecom.csv";
+//    	ClassPathResource resource = new ClassPathResource(filename, getClass());
 
-		MockMultipartFile file = new MockMultipartFile("file", filename, 
-				MediaType.TEXT_PLAIN_VALUE, resource.getInputStream());
+		MockMultipartFile file = new MockMultipartFile("file", realFilename, 
+				MediaType.TEXT_PLAIN_VALUE, realResource.getInputStream());
 		
 		DataPreview preview = service.store(relativePath, file);
-        assertThat(service.load(relativePath, "telecom.csv")).exists();
+        assertThat(service.load(relativePath, realFilename)).exists();
         assertNotNull(preview);
         assertThat(preview.getHeaderLine(), not(isEmptyString()));
         log.debug("Header line: {}", preview.getHeaderItems());
@@ -99,7 +144,7 @@ public class DataStorageServiceTest {
     }
     
     @Test(expected = UnsupportedFileTypeException.class)
-    public void saveAndLoadInvalidFile() throws IOException {
+    public void storeAndLoadInvalidFile() throws IOException {
     	String filename = "testupload.txt";
     	ClassPathResource resource = new ClassPathResource(filename, getClass());
 
@@ -109,15 +154,25 @@ public class DataStorageServiceTest {
     }
 
     @Test(expected = StorageException.class)
-    public void saveNotPermitted() {
+    public void storeNotPermitted() {
         service.store(relativePath, new MockMultipartFile("foo", "../foo.txt",
                 MediaType.TEXT_PLAIN_VALUE, "Hello World".getBytes()));
     }
 
     @Test
-    public void savePermitted() {
+    public void storePermitted() {
         service.store(relativePath, new MockMultipartFile("foo", "bar/../foo.csv",
                 MediaType.TEXT_PLAIN_VALUE, "Hello World".getBytes()));
+    }
+    
+    @Test
+    public void testSave() throws IOException {
+    	MockMultipartFile file = new MockMultipartFile("file", realFilename, 
+				MediaType.TEXT_PLAIN_VALUE, realResource.getInputStream());
+    	
+    	MetaData meta = service.saveData(account, project, file);
+    	assertNotNull(meta);
+    	assertNotNull(meta.getId());
     }
 
 }

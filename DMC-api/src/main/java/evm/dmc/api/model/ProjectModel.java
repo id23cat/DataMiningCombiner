@@ -101,7 +101,7 @@ public class ProjectModel implements Serializable {
 	@Setter(AccessLevel.NONE) 
 	private Instant created = Instant.now();
 	
-	@OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
+	@OneToMany(mappedBy = "project" ,cascade = CascadeType.ALL, orphanRemoval = true)
 	private List<MetaData> dataSources;
 	
 	public ProjectModel() {

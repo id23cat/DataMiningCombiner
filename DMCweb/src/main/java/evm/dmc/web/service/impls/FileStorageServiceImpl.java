@@ -11,6 +11,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+import javax.annotation.PostConstruct;
 import javax.transaction.Transactional;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,6 +33,7 @@ import evm.dmc.web.exceptions.StorageException;
 import evm.dmc.web.exceptions.StorageFileNotFoundException;
 import evm.dmc.web.exceptions.UnsupportedFileTypeException;
 import evm.dmc.web.service.DataStorageService;
+import evm.dmc.web.service.ProjectService;
 import evm.dmc.web.service.data.DataPreview;
 import evm.dmc.web.service.data.DataPreviewImpl;
 import lombok.extern.slf4j.Slf4j;
@@ -39,25 +41,41 @@ import lombok.extern.slf4j.Slf4j;
 @Service
 @Slf4j
 public class FileStorageServiceImpl implements DataStorageService {
-	@Autowired
 	MetaDataRepository repository;
+	
+	private ProjectService projectService;
 	
     private final Path rootLocation;
     private int previewLinesCount;
     private final static String[] extensions = {"csv"};
 
     @Autowired
-    public FileStorageServiceImpl(FileStorageConfig properties) {
+    public FileStorageServiceImpl(FileStorageConfig properties, MetaDataRepository repository, ProjectService projectService) {
         this.rootLocation = Paths.get(properties.getLocation());
         this.previewLinesCount = properties.getPreviewLinesCount();
+        this.projectService = projectService;
+        init();
+    }
+    
+//    @Override
+//    @PostConstruct
+    private void init() {
+        try {
+            Files.createDirectories(rootLocation);
+        }
+        catch (IOException e) {
+            throw new StorageException("Could not initialize storage", e);
+        }
     }
     
     @Override
     @Transactional
-    public MetaData save(Account account, ProjectModel project, MultipartFile file) {
-    	MetaData meta = getMetaData(account, project, StringUtils.cleanPath(file.getOriginalFilename()), 
+    public MetaData saveData(Account account, ProjectModel project, MultipartFile file) {
+    	MetaData meta = getMetaData(account.getUserName(), project.getName(), StringUtils.cleanPath(file.getOriginalFilename()), 
     			DataSrcDstType.LOCAL_FS, "");
-    	repository.save(meta);
+    	
+    	meta = projectService.addDataStorage(project, meta);
+    	
     	DataPreview preview;
     	try {
     		preview = store(DataStorageService.relativePath(account, project), file);
@@ -163,16 +181,6 @@ public class FileStorageServiceImpl implements DataStorageService {
         FileSystemUtils.deleteRecursively(currLocation.toFile());
     }
 
-    @Override
-    public void init() {
-        try {
-            Files.createDirectories(rootLocation);
-        }
-        catch (IOException e) {
-            throw new StorageException("Could not initialize storage", e);
-        }
-    }
-    
     private DataPreview getPreview(Path path, int linesCount) {
     	
     	String extension = StringUtils.getFilenameExtension(path.getFileName().toString()).toLowerCase();
@@ -205,7 +213,10 @@ public class FileStorageServiceImpl implements DataStorageService {
     	DataStorageModel storageDesc = new DataStorageModel();
     	String filename = StringUtils.cleanPath(fileName);
     	Path currLocation = this.rootLocation.resolve(DataStorageService.relativePath(accountName, projectName));
+    	
+    	log.debug("Current location: {}", currLocation.toString());
     	Path destinationPath =  currLocation.resolve(filename);
+    	log.debug("Destination path: {}", destinationPath);
     	
     	storageDesc.setStorageType(type);
     	storageDesc.setUri(destinationPath.toUri());
@@ -213,9 +224,9 @@ public class FileStorageServiceImpl implements DataStorageService {
     	return storageDesc;
     }
     
-    private MetaData getMetaData(Account account, ProjectModel project, String fileName,
+    private MetaData getMetaData(String accountName, String projectName, String fileName,
     		DataSrcDstType type, String description) {
-    	DataStorageModel dataStore = getDataStorageModel(account.getUserName(), project.getName(),
+    	DataStorageModel dataStore = getDataStorageModel(accountName, projectName,
     			StringUtils.cleanPath(fileName), DataSrcDstType.LOCAL_FS);
 	    
     	MetaData meta = new MetaData();
@@ -223,7 +234,6 @@ public class FileStorageServiceImpl implements DataStorageService {
 	    meta.setDescription(description);
 		meta.setStorage(dataStore);
 		meta.setHasHeader(true);
-		project.addMetaData(meta);
 		
 		return meta;
     }

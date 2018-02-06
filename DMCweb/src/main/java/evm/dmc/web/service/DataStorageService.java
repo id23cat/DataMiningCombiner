@@ -14,9 +14,11 @@ import java.util.stream.Stream;
 
 public interface DataStorageService {
 
-    void init();
+//    void init();
     
-    MetaData save(Account account, ProjectModel project, MultipartFile file);
+    MetaData saveData(Account account, ProjectModel project, MultipartFile file);
+    
+//    MetaData save(MetaData meta)
 
     DataPreview store(Path relativePath, MultipartFile file);
 

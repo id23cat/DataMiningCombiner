@@ -18,68 +18,68 @@ import org.springframework.webflow.security.SecurityFlowExecutionListener;
 import lombok.extern.slf4j.Slf4j;
 
 
-@Configuration
-public class WebFlowConfig extends AbstractFlowConfiguration {
-
-	@Autowired
-	private MvcConfig webMvcConfig;
-
-	@Autowired
-	private List<ViewResolver> viewResolvers;
-
-	// @Autowired
-	// private MvcViewFactoryCreator mvcViewFactoryCreator;
-
-	@Bean
-	public FlowExecutor flowExecutor() {
-		return getFlowExecutorBuilder(flowRegistry())
-				.addFlowExecutionListener(new SecurityFlowExecutionListener(), "*")
-				.build();
-	}
-
-	@Bean
-	public FlowDefinitionRegistry flowRegistry() {
-		return getFlowDefinitionRegistryBuilder(flowBuilderServices())
-				.setBasePath("classpath*:/templates")
-				.addFlowLocationPattern("/**/*-flow.xml").build();
-	}
-
-	@Bean
-	public FlowBuilderServices flowBuilderServices() {
-		return getFlowBuilderServicesBuilder()
-				.setViewFactoryCreator(mvcViewFactoryCreator())
-				.setValidator(webMvcConfig.validator())
-				.setDevelopmentMode(true).build();
-	}
-
-	@Bean
-	public MvcViewFactoryCreator mvcViewFactoryCreator() {
-
-		MvcViewFactoryCreator factoryCreator = new MvcViewFactoryCreator();
-		factoryCreator.setViewResolvers(viewResolvers);
-		factoryCreator.setUseSpringBeanBinding(true);
-		return factoryCreator;
-	}
-
-	// @Bean
-	// public LocalValidatorFactoryBean validator() {
-	// return new LocalValidatorFactoryBean();
-	// }
-	
-	@Bean
-	public FlowHandlerMapping flowHandlerMapping() {
-		FlowHandlerMapping handlerMapping = new FlowHandlerMapping();
-		handlerMapping.setOrder(-1);
-		handlerMapping.setFlowRegistry(this.flowRegistry());
-		return handlerMapping;
-	}
-
-	@Bean
-	public FlowHandlerAdapter flowHandlerAdapter() {
-		FlowHandlerAdapter handlerAdapter = new FlowHandlerAdapter();
-		handlerAdapter.setFlowExecutor(this.flowExecutor());
-		handlerAdapter.setSaveOutputToFlashScopeOnRedirect(true);
-		return handlerAdapter;
-	}
-
-}
+//@Configuration
+//public class WebFlowConfig extends AbstractFlowConfiguration {
+//
+//	@Autowired
+//	private MvcConfig webMvcConfig;
+//
+//	@Autowired
+//	private List<ViewResolver> viewResolvers;
+//
+//	// @Autowired
+//	// private MvcViewFactoryCreator mvcViewFactoryCreator;
+//
+//	@Bean
+//	public FlowExecutor flowExecutor() {
+//		return getFlowExecutorBuilder(flowRegistry())
+//				.addFlowExecutionListener(new SecurityFlowExecutionListener(), "*")
+//				.build();
+//	}
+//
+//	@Bean
+//	public FlowDefinitionRegistry flowRegistry() {
+//		return getFlowDefinitionRegistryBuilder(flowBuilderServices())
+//				.setBasePath("classpath*:/templates")
+//				.addFlowLocationPattern("/**/*-flow.xml").build();
+//	}
+//
+//	@Bean
+//	public FlowBuilderServices flowBuilderServices() {
+//		return getFlowBuilderServicesBuilder()
+//				.setViewFactoryCreator(mvcViewFactoryCreator())
+//				.setValidator(webMvcConfig.validator())
+//				.setDevelopmentMode(true).build();
+//	}
+//
+//	@Bean
+//	public MvcViewFactoryCreator mvcViewFactoryCreator() {
+//
+//		MvcViewFactoryCreator factoryCreator = new MvcViewFactoryCreator();
+//		factoryCreator.setViewResolvers(viewResolvers);
+//		factoryCreator.setUseSpringBeanBinding(true);
+//		return factoryCreator;
+//	}
+//
+//	// @Bean
+//	// public LocalValidatorFactoryBean validator() {
+//	// return new LocalValidatorFactoryBean();
+//	// }
+//	
+//	@Bean
+//	public FlowHandlerMapping flowHandlerMapping() {
+//		FlowHandlerMapping handlerMapping = new FlowHandlerMapping();
+//		handlerMapping.setOrder(-1);
+//		handlerMapping.setFlowRegistry(this.flowRegistry());
+//		return handlerMapping;
+//	}
+//
+//	@Bean
+//	public FlowHandlerAdapter flowHandlerAdapter() {
+//		FlowHandlerAdapter handlerAdapter = new FlowHandlerAdapter();
+//		handlerAdapter.setFlowExecutor(this.flowExecutor());
+//		handlerAdapter.setSaveOutputToFlashScopeOnRedirect(true);
+//		return handlerAdapter;
+//	}
+//
+//}

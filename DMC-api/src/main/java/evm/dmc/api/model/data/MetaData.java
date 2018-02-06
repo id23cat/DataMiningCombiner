@@ -1,6 +1,8 @@
 package evm.dmc.api.model.data;
 
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -48,15 +50,16 @@ public class MetaData implements Serializable {
 	/**
 	 * what project this data belongs to
 	 */
-	@ManyToOne
-	@NotNull
+	@ManyToOne(cascade = CascadeType.ALL)
+//	@NotNull
+	@JoinColumn(name = "project_id")
 	private ProjectModel project;
 
 	@ElementCollection
 	@MapKeyColumn(name = "ATTR_NAME")
 	@Column(name = "ATTRIBUTE")
 	@CollectionTable(name = "DATA_ATTRIBUTES", joinColumns=@JoinColumn(name="METADATA_ID"))
-	private Map<String, DataAttribute> attributes;
+	private Map<String, DataAttribute> attributes = new HashMap<>();
 	
 	@Column
 //	@Column(columnDefinition = "TEXT")
@@ -64,7 +67,7 @@ public class MetaData implements Serializable {
 //	@Convert(converter = StringListConverter.class)
 	@ElementCollection
 	@CollectionTable(name = "PREVIEW_DATA", joinColumns=@JoinColumn(name="METADATA_ID"))
-	private List<String> preview;
+	private List<String> preview = new ArrayList<>();
 	
 	private boolean hasHeader = true;
 

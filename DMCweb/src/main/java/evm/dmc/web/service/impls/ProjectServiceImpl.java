@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.Properties;
 import java.util.Set;
+import java.util.function.Predicate;
 import java.util.stream.Collector;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -19,6 +20,7 @@ import evm.dmc.api.model.AlgorithmModel;
 import evm.dmc.api.model.ProjectModel;
 import evm.dmc.api.model.ProjectType;
 import evm.dmc.api.model.account.Account;
+import evm.dmc.api.model.data.MetaData;
 import evm.dmc.model.repositories.ProjectModelRepository;
 import evm.dmc.web.exceptions.EntityNotFoundException;
 import evm.dmc.web.service.ProjectService;
@@ -26,7 +28,7 @@ import lombok.extern.slf4j.Slf4j;
 
 @Service("projectService")
 @Slf4j
-public class ProjectServiceImpl implements ProjectService{
+public class ProjectServiceImpl implements ProjectService {
 	@Autowired
 	private ProjectModelRepository projectRepo;
 	
@@ -177,7 +179,9 @@ public class ProjectServiceImpl implements ProjectService{
 		
 		return findAgorithmbyName(project, algorithm.getName())
 				.orElseThrow(
-						() -> new EntityNotFoundException(String.format("Algorithm with name [%s] not found", algorithm.getName()))
+						() -> new EntityNotFoundException(
+								String.format("Algorithm with name [%s] not found",
+										algorithm.getName()))
 				);
 	}
 	
@@ -193,6 +197,22 @@ public class ProjectServiceImpl implements ProjectService{
 		return project;
 	}
 	
+	@Override
+	@Transactional
+	public MetaData addDataStorage(ProjectModel project, MetaData data) {
+		project = merge(project);
+		project.addMetaData(data);
+		save(project);
+		return findMetaDataByName(project, data.getName())
+				.orElseThrow(
+						() -> new EntityNotFoundException(
+								new StringBuilder("MetaData with name ")
+									.append(data.getName())
+									.append(" not found")
+									.toString())
+				);
+	}
+	
 	public static <T extends Collection<ProjectModel>> T getAsCollection(Stream<ProjectModel> stream, 
 			Collector<ProjectModel,?,T> collector) {
 		T projectsCollection = stream.collect(collector);
@@ -202,7 +222,13 @@ public class ProjectServiceImpl implements ProjectService{
 	
 	
 	public Optional<AlgorithmModel> findAgorithmbyName(ProjectModel project, String algName) {
-		return project.getAlgorithms().stream().filter(prj -> prj.getName().equals(algName)).findAny();
+		return project.getAlgorithms().stream()
+				.filter(prj -> prj.getName().equals(algName)).findAny();
+	}
+	
+	public Optional<MetaData> findMetaDataByName(ProjectModel project, String dataName) {
+		return project.getDataSources().stream()
+				.filter(data -> data.getName().equals(dataName)).findAny();
 	}
 	
 //	@Override

@@ -26,13 +26,14 @@ logging:
   level:
     org.springframework.test: WARN
     org.springframework.web: WARN
-    org.springframework.data: DEBUG
+    org.springframework.data: TRACE
     org.springframework.transaction: TRACE
     org.hibernate.SQL: TRACE
     org.hibernate.type.descriptor.sql.BasicBinder: TRACE
+    org.hibernate.type: TRACE
     evm.dmc.web: DEBUG
     evm.dmc.api: DEBUG
-    evm.dmc.service: DEBUG
+    evm.dmc.web.service: TRACE
 
 
 

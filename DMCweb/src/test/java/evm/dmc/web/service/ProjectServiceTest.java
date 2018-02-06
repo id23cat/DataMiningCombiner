@@ -55,10 +55,12 @@ public class ProjectServiceTest {
 	
 	Account account;
 	
+	private static String userName = "devel";
+	
 	@Before
 	public void init() {
 //		Account account = new Account("id42cat", "password", "id42cat@mail.sm", "Alex", "Demidchuk");
-		account = accService.getAccountByName("idcat");
+		account = accService.getAccountByName(userName);
 		log.debug("Account ID: {}", account.getId());
 		account.addProject(projectService.getNew(account, ProjectType.SIMPLEST_PROJECT, null, null, PROJECTNAME_1));
 		account.addProject(projectService.getNew(account, ProjectType.SIMPLEST_PROJECT, null, null, PROJECTNAME_2));

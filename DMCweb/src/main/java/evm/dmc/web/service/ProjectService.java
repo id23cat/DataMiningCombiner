@@ -10,6 +10,7 @@ import evm.dmc.api.model.AlgorithmModel;
 import evm.dmc.api.model.ProjectModel;
 import evm.dmc.api.model.ProjectType;
 import evm.dmc.api.model.account.Account;
+import evm.dmc.api.model.data.MetaData;
 
 public interface ProjectService {
 	ProjectService save(Optional<ProjectModel> proModel);
@@ -43,5 +44,7 @@ public interface ProjectService {
 	ProjectModel getNew(Account account, ProjectType type, Set<AlgorithmModel> algorithms, Properties properties, String projectName);
 	
 	AlgorithmModel getNewAlgorithm();
+	
+	MetaData addDataStorage(ProjectModel project, MetaData data);
 
 }
