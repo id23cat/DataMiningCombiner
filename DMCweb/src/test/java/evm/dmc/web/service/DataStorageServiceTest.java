@@ -23,13 +23,9 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
-import org.springframework.boot.test.autoconfigure.orm.jpa.TestEntityManager;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
-import org.springframework.context.annotation.Import;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.http.MediaType;
 import org.springframework.mock.web.MockMultipartFile;
@@ -40,7 +36,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import evm.dmc.api.model.ProjectModel;
 import evm.dmc.api.model.account.Account;
-import evm.dmc.api.model.account.Role;
 import evm.dmc.api.model.data.MetaData;
 import evm.dmc.config.FileStorageConfig;
 import evm.dmc.model.repositories.AccountRepository;
@@ -90,14 +85,14 @@ public class DataStorageServiceTest {
 	private String realFilename = "telecom.csv";
 	private ClassPathResource realResource = new ClassPathResource(realFilename, getClass());
 	
-	
+	private static final int PREVIEW_LINES_COUNT = 5;
 
     @Before
     @Transactional
     public void init() {
     	FileStorageConfig properties = new FileStorageConfig();
 		properties.setLocation("target/files/" + Math.abs(new Random().nextLong()));
-        properties.setPreviewLinesCount(5);
+        properties.setPreviewLinesCount(PREVIEW_LINES_COUNT);
         
         service = new FileStorageServiceImpl(properties, metaDataRepository, projectService);
         
@@ -173,6 +168,8 @@ public class DataStorageServiceTest {
     	MetaData meta = service.saveData(account, project, file);
     	assertNotNull(meta);
     	assertNotNull(meta.getId());
+    	assertThat(meta.getPreview(), not(empty()));
+    	assertThat(meta.getPreview().size(), equalTo(PREVIEW_LINES_COUNT));
     }
 
 }

@@ -1,6 +1,8 @@
 package evm.dmc.api.model.data;
 
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.persistence.Embeddable;
 import javax.persistence.Entity;
@@ -15,12 +17,14 @@ import javax.persistence.Transient;
 import evm.dmc.core.api.AttributeType;
 import lombok.AccessLevel;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @Data
 //@Entity
 //@Table(name="DATA_ATTRIBUTE")
 @Embeddable
+@NoArgsConstructor(force = true)
 public class DataAttribute {
 
 	private String name;
@@ -32,7 +36,10 @@ public class DataAttribute {
 	private Boolean checked = true;
 	
 	@Transient
-	private String[] preview;
+	private List<String> lines = new ArrayList<>();
 
-
+	public DataAttribute(String name, String value) {
+		this.name = name;
+		lines.add(value);
+	}
 }

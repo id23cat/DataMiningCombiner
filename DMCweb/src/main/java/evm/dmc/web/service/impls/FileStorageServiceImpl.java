@@ -70,7 +70,8 @@ public class FileStorageServiceImpl implements DataStorageService {
     
     @Override
     @Transactional
-    public MetaData saveData(Account account, ProjectModel project, MultipartFile file) {
+    public MetaData saveData(Account account, ProjectModel project, MultipartFile file) 
+    		throws StorageException {
     	MetaData meta = getMetaData(account.getUserName(), project.getName(), StringUtils.cleanPath(file.getOriginalFilename()), 
     			DataSrcDstType.LOCAL_FS, "");
     	
@@ -90,7 +91,8 @@ public class FileStorageServiceImpl implements DataStorageService {
     }
 
     @Override
-    public DataPreview store(Path relativePath, MultipartFile file) {
+    public DataPreview store(Path relativePath, MultipartFile file)
+    		throws StorageException {
         String filename = StringUtils.cleanPath(file.getOriginalFilename());
         Path currLocation = this.rootLocation.resolve(relativePath);
        
@@ -132,7 +134,7 @@ public class FileStorageServiceImpl implements DataStorageService {
     }
 
     @Override
-    public Stream<Path> loadAll(Path relativePath) {
+    public Stream<Path> loadAll(Path relativePath) throws StorageException {
     	Path currLocation = this.rootLocation.resolve(relativePath);
         try {
             return Files.walk(currLocation, 1)
@@ -157,7 +159,8 @@ public class FileStorageServiceImpl implements DataStorageService {
     }
 
     @Override
-    public Resource loadAsResource(Path relativePath, String filename) {
+    public Resource loadAsResource(Path relativePath, String filename)
+    	throws StorageFileNotFoundException {
         try {
             Path file = load(relativePath, filename);
             Resource resource = new UrlResource(file.toUri());
