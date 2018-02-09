@@ -4,6 +4,7 @@ import static org.junit.Assert.*;
 import static org.hamcrest.Matchers.*;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.StringJoiner;
 
@@ -11,12 +12,14 @@ import org.junit.Before;
 import org.junit.Test;
 
 import evm.dmc.api.model.data.DataAttribute;
+import evm.dmc.api.model.data.MetaData;
+import evm.dmc.core.api.AttributeType;
 import evm.dmc.web.exceptions.DataStructureException;
-import evm.dmc.web.service.impls.PreviewParser;
+import evm.dmc.web.service.impls.CsvPreviewParser;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
-public class PreviewParserTest {
+public class CsvPreviewParserTest {
 	String header;
 	List<String> withHeader;
 	List<String> dataLines;
@@ -53,7 +56,7 @@ public class PreviewParserTest {
 		
 		log.debug("Generated collection: {}",dataLines);
 		
-		List<DataAttribute> attrs = PreviewParser.getAttributes(withHeader, ",;\t|", true);
+		List<DataAttribute> attrs = CsvPreviewParser.getAttributes(withHeader, ",;\t|", true);
 		
 		assertThat(attrs.size(), equalTo(attrsCount));
 		assertThat(attrs.get(0).getName(), equalTo("head1"));
@@ -71,7 +74,7 @@ public class PreviewParserTest {
 		
 		log.debug("Generated collection: {}",dataLines);
 		
-		List<DataAttribute> attrs = PreviewParser.getAttributes(dataLines, delimiter, false);
+		List<DataAttribute> attrs = CsvPreviewParser.getAttributes(dataLines, delimiter, false);
 		
 		assertThat(attrs.size(), equalTo(attrsCount));
 		assertThat(attrs.get(0).getName(), equalTo("0"));
@@ -88,7 +91,7 @@ public class PreviewParserTest {
 		
 		log.debug("Generated collection: {}",dataLines);
 		
-		List<DataAttribute> attrs = PreviewParser.getAttributes(withHeader, ",", true);
+		List<DataAttribute> attrs = CsvPreviewParser.getAttributes(withHeader, ",", true);
 		
 		assertThat(attrs.size(), equalTo(1));
 		
@@ -106,6 +109,72 @@ public class PreviewParserTest {
 		
 		dataLines.add(joiner.toString());
 		
-		PreviewParser.getAttributes(dataLines, delimiter, false);
+		CsvPreviewParser.getAttributes(dataLines, delimiter, false);
+	}
+	
+	@Test
+	public final void testRestorePreviewAttributes() {
+		MetaData mdata = new MetaData();
+		mdata.setHasHeader(true);
+		mdata.setName("TestData");
+		mdata.setPreview(withHeader);
+		
+		CsvPreviewParser.restorePreviewAttributes(mdata);
+		
+		assertNotNull(mdata.getAttributes());
+		assertThat(mdata.getAttributes().size(), equalTo(attrsCount));
+		
+		DataAttribute head1 = mdata.getAttributes().get("head1");
+		assertThat(head1.getLines().size(), equalTo(linesCount));
+		assertThat(head1.getLines().get(2), equalTo("3"));
+		
+		DataAttribute head3 = mdata.getAttributes().get("head3");
+		assertThat(head3.getLines().get(1), equalTo("6"));
+		
+	}
+	
+	@Test
+	public final void testRestorePreviewAttributesWithExistsAttrs() {
+		MetaData mdata = new MetaData();
+		mdata.setHasHeader(true);
+		mdata.setName("TestData");
+		mdata.setPreview(withHeader);
+		
+		DataAttribute attr1 = new DataAttribute();
+		attr1.setName("head1");
+		attr1.setType(AttributeType.NOMINAL);
+		attr1.setMultiplier(1.4);
+		
+		DataAttribute attr2 = new DataAttribute();
+		attr2.setName("head2");
+		attr2.setType(AttributeType.DATE);
+		attr2.setMultiplier(-123.2);
+		
+		DataAttribute attr3 = new DataAttribute();
+		attr3.setName("head3");
+		attr3.setType(AttributeType.STRING);
+		attr3.setMultiplier(0.7);
+		
+		DataAttribute attr4 = new DataAttribute();
+		attr4.setName("head4");
+		attr4.setType(AttributeType.NUMERIC);
+		attr4.setMultiplier(42.);
+		
+		List<DataAttribute> list = Arrays.asList(attr1, attr2, attr3,attr4);
+		mdata.setAttributesAsList(list);
+		
+		// call method to be tested
+		CsvPreviewParser.restorePreviewAttributes(mdata);
+		
+		DataAttribute head1 = mdata.getAttributes().get("head1");
+		assertThat(head1.getType(), equalTo(attr1.getType()));
+		assertThat(head1.getMultiplier(), equalTo(attr1.getMultiplier()));
+		assertThat(head1.getLines().size(), equalTo(linesCount));
+		assertThat(head1.getLines().get(2), equalTo("3"));
+		
+		DataAttribute head2 = mdata.getAttributes().get("head2");
+		assertThat(head2.getType(), equalTo(attr2.getType()));
+		assertThat(head2.getMultiplier(), equalTo(attr2.getMultiplier()));
+		assertThat(head2.getLines().get(1), equalTo("4"));
 	}
 }

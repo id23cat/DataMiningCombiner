@@ -3,6 +3,7 @@ package evm.dmc.web.service.impls;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.Iterator;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Optional;
@@ -14,12 +15,29 @@ import java.util.stream.Stream;
 import org.springframework.util.StringUtils;
 
 import evm.dmc.api.model.data.DataAttribute;
+import evm.dmc.api.model.data.MetaData;
 import evm.dmc.web.exceptions.DataStructureException;
 
-public class PreviewParser {
+public class CsvPreviewParser {
 
-	public PreviewParser() {
+	public CsvPreviewParser() {
 		// TODO Auto-generated constructor stub
+	}
+	
+	/**
+	 * @param mdata object must contain preview List<String>
+	 * @return
+	 */
+	public static MetaData restorePreviewAttributes(MetaData mdata) {
+		List<DataAttribute> attrs = getAttributes(mdata.getPreview(),
+				mdata.getDelimiter(), 
+				mdata.isHasHeader());
+		if(mdata.getAttributes().isEmpty()) {
+			mdata.setAttributesAsList(attrs);
+		} else {
+			mdata.setAttributesPreview(attrs);
+		}
+		return mdata;
 	}
 	
 	/**
@@ -31,12 +49,13 @@ public class PreviewParser {
 	public static List<DataAttribute> getAttributes(List<String> lines, 
 			String delimiters, 
 			boolean hasHeader) throws DataStructureException {
-//		String headerLine = null;
+		List<String> copyLines = new LinkedList<String>(lines);
+//		Collections.copy(copyLines, lines);
 		List<DataAttribute> dataAtrrs = null;
 		AtomicInteger counter = new AtomicInteger(0);
 		Iterator<String> headerIterator; 
 		if(hasHeader) {
-			List<String> headerLine = streamLine(lines.remove(0), delimiters)
+			List<String> headerLine = streamLine(copyLines.remove(0), delimiters)
 					.collect(Collectors.toList());
 			
 			headerIterator = headerLine.iterator();
@@ -46,7 +65,7 @@ public class PreviewParser {
 		
 		try {
 		// process first line of data with creating DataAttribute objects
-		String firstLine = lines.remove(0);
+		String firstLine = copyLines.remove(0);
 		
 		dataAtrrs = streamLine(firstLine, delimiters)
 				.map(word -> createAttribute(word, headerIterator, counter))
@@ -55,7 +74,7 @@ public class PreviewParser {
 		// process rest lines of data
 		
 		// Each iterator for one line
-		List<Iterator<String>> listlist = lines.stream()
+		List<Iterator<String>> listlist = copyLines.stream()
 				.map(
 						line -> streamLine(line, delimiters).collect(Collectors.toList()).iterator()
 						)
@@ -90,7 +109,7 @@ public class PreviewParser {
 	}
 	
 	private static DataAttribute addToAttribute(String word, DataAttribute attr) {
-		attr.getLines().add(word);
+		attr.addLine(word);
 		return attr;
 	}
 	

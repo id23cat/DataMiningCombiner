@@ -48,6 +48,7 @@ public class FileStorageServiceImpl implements DataStorageService {
     private final Path rootLocation;
     private int previewLinesCount;
     private final static String[] extensions = {"csv"};
+    
 
     @Autowired
     public FileStorageServiceImpl(FileStorageConfig properties, MetaDataRepository repository, ProjectService projectService) {
@@ -87,7 +88,7 @@ public class FileStorageServiceImpl implements DataStorageService {
     	
     	meta.setPreview(preview.getAllLines());
     	
-    	return meta;
+    	return CsvPreviewParser.restorePreviewAttributes(meta);
     }
 
     @Override

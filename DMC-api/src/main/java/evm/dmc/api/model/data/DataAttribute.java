@@ -2,6 +2,7 @@ package evm.dmc.api.model.data;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import javax.persistence.Embeddable;
@@ -32,7 +33,7 @@ public class DataAttribute {
 	@Enumerated(EnumType.STRING)
 	private AttributeType type;
 	
-	private Float multiplier = 1.0F;
+	private Double multiplier = 1.0;
 	private Boolean checked = true;
 	
 	@Transient
@@ -41,5 +42,16 @@ public class DataAttribute {
 	public DataAttribute(String name, String value) {
 		this.name = name;
 		lines.add(value);
+	}
+	
+	/**
+	 * @return unmodifiable List
+	 */
+	public List<String> getLines() {
+		return Collections.unmodifiableList(lines);
+	}
+	
+	public synchronized void addLine(String line) {
+		lines.add(line);
 	}
 }

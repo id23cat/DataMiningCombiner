@@ -2,6 +2,7 @@ package evm.dmc.api.model.data;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -59,6 +60,8 @@ public class MetaData implements Serializable {
 	@MapKeyColumn(name = "ATTR_NAME")
 	@Column(name = "ATTRIBUTE")
 	@CollectionTable(name = "DATA_ATTRIBUTES", joinColumns=@JoinColumn(name="METADATA_ID"))
+//	@Setter
+//	@Getter
 	private Map<String, DataAttribute> attributes = new HashMap<>();
 	
 	@Column
@@ -69,6 +72,10 @@ public class MetaData implements Serializable {
 	@CollectionTable(name = "PREVIEW_DATA", joinColumns=@JoinColumn(name="METADATA_ID"))
 	private List<String> preview = new ArrayList<>();
 	
+	// delimiter for preview
+	// also can be used for parsing data files instead of storage.delimiter
+	private String delimiter = ",;\t|";
+	
 	private boolean hasHeader = true;
 
 	@OneToOne(cascade = CascadeType.ALL)
@@ -78,5 +85,29 @@ public class MetaData implements Serializable {
 	public void setStorage(DataStorageModel storage) {
 		storage.setMeta(this);
 		this.storage = storage;
+	}
+	
+	/**
+	 * @return unmodifiable List
+	 */
+	public List<String> getPreview() {
+		return Collections.unmodifiableList(preview);
+	}
+	
+	/**
+	 * Creates new content of Attributes map, using argument list
+	 * @param list
+	 */
+	public void setAttributesAsList(List<DataAttribute> list) {
+		list.stream().forEach(attr -> attributes.put(attr.getName(), attr));
+	}
+	
+	/**
+	 * Copies preview values to existing attributes
+	 * Names of attributes must match
+	 * @param list
+	 */
+	public void setAttributesPreview(List<DataAttribute> list) {
+		list.stream().forEach(attr -> attributes.get(attr.getName()).setLines(attr.getLines()));
 	}
 }
