@@ -199,7 +199,7 @@ public class ProjectServiceImpl implements ProjectService {
 	
 	@Override
 	@Transactional
-	public MetaData addDataStorage(ProjectModel project, MetaData data) {
+	public MetaData persistNewData(ProjectModel project, MetaData data) {
 		project = merge(project);
 		project.addMetaData(data);
 		save(project);

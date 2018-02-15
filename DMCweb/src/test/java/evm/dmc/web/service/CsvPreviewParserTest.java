@@ -5,6 +5,7 @@ import static org.hamcrest.Matchers.*;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.List;
 import java.util.StringJoiner;
 
@@ -21,8 +22,7 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public class CsvPreviewParserTest {
 	String header;
-	List<String> withHeader;
-	List<String> dataLines;
+	MetaData metaData;
 	String delimiter = ";";
 	
 	int attrsCount = 4;
@@ -31,13 +31,10 @@ public class CsvPreviewParserTest {
 	@Before
 	public void init() {
 		StringJoiner joiner = new StringJoiner(delimiter);
-		dataLines = new ArrayList<>();
+		List<String> dataLines = new ArrayList<>();
 		// set header line
 		joiner.add("head1").add("head2").add("head3").add("head4");
 		header = joiner.toString();
-		
-		withHeader = new ArrayList<>();
-		withHeader.add(header);
 		
 		// set data lines
 		for(int i=0; i<linesCount; i++) {
@@ -47,7 +44,23 @@ public class CsvPreviewParserTest {
 			}
 			dataLines.add(joiner.toString());
 		}
-		withHeader.addAll(dataLines);
+		metaData = new MetaData();
+		metaData.setPreview(dataLines);
+	}
+	
+	@Test
+	public final void testCreatePreviewAttributes() {
+		log.debug("Generated collection: {}", metaData.getPreview());
+		CsvPreviewParser.createPreviewAttributes(metaData, header);
+		<DataAttribute> attrs = metaData.getAttributes().values();
+		assertThat(attrs.size(), equalTo(attrsCount));
+		assertThat(attrs.get(0).getName(), equalTo("head1"));
+		assertThat(attrs.get(3).getName(), equalTo("head4"));
+		
+		assertThat(attrs.get(0).getLines().get(0), equalTo("1"));
+		assertThat(attrs.get(0).getLines().get(1), equalTo("2"));
+		assertThat(attrs.get(0).getLines().get(2), equalTo("3"));
+		assertThat(attrs.get(1).getLines().get(2), equalTo("6"));
 	}
 
 	@Test
@@ -161,7 +174,7 @@ public class CsvPreviewParserTest {
 		attr4.setMultiplier(42.);
 		
 		List<DataAttribute> list = Arrays.asList(attr1, attr2, attr3,attr4);
-		mdata.setAttributesAsList(list);
+		mdata.setAttributesCollection(list);
 		
 		// call method to be tested
 		CsvPreviewParser.restorePreviewAttributes(mdata);

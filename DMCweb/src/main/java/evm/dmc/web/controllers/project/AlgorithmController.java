@@ -29,6 +29,7 @@ import org.springframework.web.util.UriComponentsBuilder;
 import evm.dmc.api.model.AlgorithmModel;
 import evm.dmc.api.model.ProjectModel;
 import evm.dmc.api.model.account.Account;
+import evm.dmc.api.model.data.MetaData;
 import evm.dmc.web.exceptions.AlgorithmNotFoundException;
 import evm.dmc.web.exceptions.ProjectNotFoundException;
 import evm.dmc.web.exceptions.UserNotExistsException;
@@ -50,7 +51,7 @@ public class AlgorithmController {
 	public final static String SESSION_Account = "account";
 	public final static String SESSION_CurrProject = "currentProject";
 	
-	public final static String MODEL_PreviewData = "previewData";
+	public final static String MODEL_MetaData = "metaData";
 	public final static String MODEL_Algorithm = "algorithm";
 	public final static String MODEL_PagesMap = "pagesMap";
 	public final static String MODEL_HeaderItems = "headerItems";
@@ -111,7 +112,7 @@ public class AlgorithmController {
 			@PathVariable(PATH_ProjectName) String projectName,
 			@PathVariable(PATH_AlgName) String algName,
 			@ModelAttribute(SESSION_CurrProject) ProjectModel project,
-			@ModelAttribute(MODEL_PreviewData) Optional<DataPreview> preview, 
+			@ModelAttribute(MODEL_MetaData) Optional<MetaData> preview, 
 			Model model,
 			HttpServletRequest request) throws AlgorithmNotFoundException {
 		AlgorithmModel algorithm = project.getAlgorithms()
@@ -137,8 +138,8 @@ public class AlgorithmController {
 			model.addAttribute(MODEL_SrcAttrURI, srcAttribUri.toUriString());
 			
 			if(preview.isPresent()) {
-				model.addAttribute(MODEL_PreviewData, preview.get());
-				model.addAttribute(MODEL_HeaderItems, new DataPreview.ItemsList(preview.get().getHeaderItems()));
+				model.addAttribute(MODEL_MetaData, preview.get());
+//				model.addAttribute(MODEL_HeaderItems, new DataPreview.ItemsList(preview.get().getHeaderItems()));
 			}
 			
 //			{ // for debug reasons only
@@ -166,8 +167,9 @@ public class AlgorithmController {
 			@PathVariable(PATH_AlgName) String algName,
 			RedirectAttributes ra) {
 		
-		DataPreview preview = fileService.store(DataStorageService.relativePath(account, project), file);
-		ra.addFlashAttribute(MODEL_PreviewData, preview);
+//		DataPreview preview = fileService.store(DataStorageService.relativePath(account, project), file);
+		MetaData preview = fileService.saveData(account, project, file);
+		ra.addFlashAttribute(MODEL_MetaData, preview);
 		
 		log.debug("-== Receiving file: {}", file.getName());
 		UriComponents uriComponents = UriComponentsBuilder.fromPath(BASE_URL)

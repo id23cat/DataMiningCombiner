@@ -1,6 +1,11 @@
 package evm.dmc.web.exceptions;
 
-public class FrameworkNotFoundException extends Throwable {
+public class FrameworkNotFoundException extends RuntimeException {
+
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 8935412243515578391L;
 
 	public FrameworkNotFoundException() {
 		// TODO Auto-generated constructor stub

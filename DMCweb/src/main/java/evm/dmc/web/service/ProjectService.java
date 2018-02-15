@@ -45,6 +45,6 @@ public interface ProjectService {
 	
 	AlgorithmModel getNewAlgorithm();
 	
-	MetaData addDataStorage(ProjectModel project, MetaData data);
+	MetaData persistNewData(ProjectModel project, MetaData data);
 
 }

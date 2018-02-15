@@ -27,6 +27,8 @@ public class DataStorageModel implements Serializable {
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
+	public static final String DEFAULT_DELIMITER = ",;\t|";
+	public static final boolean DEFAULT_HASHEADER = true;
 	
 	@Id
 	@GeneratedValue(strategy=GenerationType.IDENTITY)
@@ -44,5 +46,7 @@ public class DataStorageModel implements Serializable {
 	@NotNull
 	private URI uri;
 	
-	private String delimiter = ",;\t|";
+	private String delimiter = DEFAULT_DELIMITER;
+	
+	private boolean hasHeader = DEFAULT_HASHEADER;
 }

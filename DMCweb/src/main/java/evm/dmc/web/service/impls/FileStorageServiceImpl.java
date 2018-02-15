@@ -6,8 +6,18 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collection;
+import java.util.HashSet;
+import java.util.LinkedList;
 import java.util.List;
+import java.util.Optional;
+import java.util.Set;
+import java.util.StringJoiner;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Future;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -24,43 +34,59 @@ import org.springframework.web.multipart.MultipartFile;
 
 import evm.dmc.api.model.ProjectModel;
 import evm.dmc.api.model.account.Account;
+import evm.dmc.api.model.data.DataAttribute;
 import evm.dmc.api.model.data.DataStorageModel;
 import evm.dmc.api.model.data.MetaData;
+import evm.dmc.api.model.datapreview.DataPreview;
 import evm.dmc.config.FileStorageConfig;
+import evm.dmc.core.api.AttributeType;
 import evm.dmc.core.api.back.data.DataSrcDstType;
 import evm.dmc.model.repositories.MetaDataRepository;
 import evm.dmc.web.exceptions.StorageException;
 import evm.dmc.web.exceptions.StorageFileNotFoundException;
 import evm.dmc.web.exceptions.UnsupportedFileTypeException;
+import evm.dmc.web.service.DataPreviewService;
 import evm.dmc.web.service.DataStorageService;
+import evm.dmc.web.service.MetaDataService;
 import evm.dmc.web.service.ProjectService;
-import evm.dmc.web.service.data.DataPreview;
-import evm.dmc.web.service.data.DataPreviewImpl;
 import lombok.extern.slf4j.Slf4j;
 
 @Service
 @Slf4j
 public class FileStorageServiceImpl implements DataStorageService {
-	MetaDataRepository repository;
+	@Autowired 
+	FileStorageConfig properties;
 	
-	private ProjectService projectService;
+	@Autowired
+	private ExecutorService executorService;
 	
-    private final Path rootLocation;
+	@Autowired
+	private MetaDataService metaDataService;
+	
+    private Path rootLocation;
+    
     private int previewLinesCount;
-    private final static String[] extensions = {"csv"};
+    
+   
+    private final static String[] EXTENSIONS = {"csv"};
     
 
     @Autowired
-    public FileStorageServiceImpl(FileStorageConfig properties, MetaDataRepository repository, ProjectService projectService) {
-        this.rootLocation = Paths.get(properties.getLocation());
-        this.previewLinesCount = properties.getPreviewLinesCount();
-        this.projectService = projectService;
+    public FileStorageServiceImpl(FileStorageConfig properties, MetaDataService metaDataService,
+    		ExecutorService executorService) {
+    	this.properties = properties;
+    	this.metaDataService = metaDataService;
+    	this.executorService = executorService;
+    	
         init();
     }
     
 //    @Override
 //    @PostConstruct
     private void init() {
+    	this.rootLocation = Paths.get(properties.getLocation());
+    	this.previewLinesCount = properties.getPreviewLinesCount();
+    	
         try {
             Files.createDirectories(rootLocation);
         }
@@ -69,71 +95,79 @@ public class FileStorageServiceImpl implements DataStorageService {
         }
     }
     
+    protected Runnable storeData(Path destinationPath, MultipartFile file)
+    	throws StorageException {
+    	return new Runnable() {
+    		private Path destinationPath;
+    		private MultipartFile file;
+    		Runnable init(Path destinationPath, MultipartFile file) {
+    			this.destinationPath = destinationPath;
+    			this.file = file;
+    			return this;
+    		}
+
+			@Override
+			public void run() {
+		            log.debug("Saving file: {}", destinationPath);
+		            
+		            // saving
+		            try {
+						Files.copy(file.getInputStream(), destinationPath,
+						        StandardCopyOption.REPLACE_EXISTING);
+					} catch (IOException e) {
+						throw new StorageException("Failed to save file " + destinationPath, e);
+					}
+				
+			}
+    	}.init(destinationPath, file);
+    }
+    
+   
+    
     @Override
     @Transactional
     public MetaData saveData(Account account, ProjectModel project, MultipartFile file) 
-    		throws StorageException {
-    	MetaData meta = getMetaData(account.getUserName(), project.getName(), StringUtils.cleanPath(file.getOriginalFilename()), 
-    			DataSrcDstType.LOCAL_FS, "");
+    		throws UnsupportedFileTypeException, StorageException {
+    	// 1. Check filepath, extension and non-empty data 
+    	checkFile(file);	// throws UnsupportedFileTypeException, StorageException
     	
-    	meta = projectService.addDataStorage(project, meta);
     	
-    	DataPreview preview;
+    	String filename = StringUtils.cleanPath(file.getOriginalFilename());
+    	Path relativePath = DataStorageService.relativePath(account, project);
+    	Path currLocation = this.rootLocation.resolve(relativePath);
+    	Path destinationPath =  currLocation.resolve(filename);
+    	
+    	// 2. Create MetaData 
+    	MetaData meta = metaDataService.getMetaData(project, destinationPath, 
+    			DataSrcDstType.LOCAL_FS, "", DataStorageModel.DEFAULT_DELIMITER, DataStorageModel.DEFAULT_HASHEADER);
+    	
+    	// 3. Save file in separate thread
+    	Future<?> saveDataFuture = executorService.submit(storeData(destinationPath, file)); // throws StorageException
+    	
+    	// 4. Get preview and persist it
+    	DataPreview preview = metaDataService.persistPreview(meta, getPreview(meta, previewLinesCount));
+    	
+    	// 5. Generate DataAttributes and persist it
+    	meta = metaDataService.generateAndPersistAttrubutes(meta, preview);
+    	
     	try {
-    		preview = store(DataStorageService.relativePath(account, project), file);
-    	} catch(StorageException exc) {
-    		repository.delete(meta);
-    		throw exc;
-    	}
+			saveDataFuture.get();
+		} catch (InterruptedException | ExecutionException e) {
+			
+			throw new StorageException("Exception in storage thread", e.getCause());
+		}
     	
-    	meta.setPreview(preview.getAllLines());
-    	
-    	return CsvPreviewParser.restorePreviewAttributes(meta);
+    	return meta;
     }
-
+    
     @Override
-    public DataPreview store(Path relativePath, MultipartFile file)
-    		throws StorageException {
-        String filename = StringUtils.cleanPath(file.getOriginalFilename());
-        Path currLocation = this.rootLocation.resolve(relativePath);
-       
-        log.trace("Current location: {}", currLocation);
-        // check matching any applicable extension listed in this.extensions
-        Arrays.stream(extensions)
-        .filter(ext -> StringUtils.getFilenameExtension(filename).toLowerCase().equals(ext))
-        .findFirst().orElseThrow(() -> new UnsupportedFileTypeException(String.format("Uncknown file extension %s", filename)));
-        
-        try {
-            Files.createDirectories(currLocation);
-        }
-        catch (IOException e) {
-            throw new StorageException("Could not initialize storage", e);
-        }
-        
-        try {
-            if (file.isEmpty()) {
-                throw new StorageException("Failed to store empty file " + filename);
-            }
-            if (filename.contains("..")) {
-                // This is a security check
-                throw new StorageException(
-                        "Cannot store file with relative path outside current directory "
-                                + filename);
-            }
-            
-            Path destinationPath =  currLocation.resolve(filename);
-            log.debug("Saving file: {}", destinationPath);
-            Files.copy(file.getInputStream(), destinationPath,
-                    StandardCopyOption.REPLACE_EXISTING);
-            
-            return getPreview(destinationPath, this.previewLinesCount);
-        }
-        catch (IOException e) {
-            throw new StorageException("Failed to store file " + filename, e);
-        }
-        
+    public List<String> getPreview(MetaData meta, int lineCount) {
+    	List<String> preview = getPreview(Paths.get(meta.getStorage().getUri()), lineCount,
+    			meta.getStorage().isHasHeader());
+    	
+    	return preview;
     }
-
+    
     @Override
     public Stream<Path> loadAll(Path relativePath) throws StorageException {
     	Path currLocation = this.rootLocation.resolve(relativePath);
@@ -146,17 +180,6 @@ public class FileStorageServiceImpl implements DataStorageService {
             throw new StorageException("Failed to read stored files", e);
         }
 
-    }
-
-    @Override
-    public Path load(Path relativePath, String filename) {
-        return rootLocation.resolve(relativePath).resolve(filename);
-    }
-    
-    @Override
-    public DataPreview loadDataPreview(Path relativePath, String filename) {
-    	Path file = load(relativePath, filename);
-    	return getPreview(file, previewLinesCount);
     }
 
     @Override
@@ -185,60 +208,52 @@ public class FileStorageServiceImpl implements DataStorageService {
         FileSystemUtils.deleteRecursively(currLocation.toFile());
     }
 
-    private DataPreview getPreview(Path path, int linesCount) {
-    	
-    	String extension = StringUtils.getFilenameExtension(path.getFileName().toString()).toLowerCase();
-    	
-    	switch(extension) {
-    		case "csv":
-    			return getCsvPreview(path, linesCount);
-    		
-    	}
-    	
-    	throw new UnsupportedFileTypeException(String.format("Uncknown file extension .%s", extension));
-    }
-    
-    private DataPreview getCsvPreview(Path path, int linesCount) {
-    	DataPreview data = null;
-    	try(Stream<String> stream = Files.lines(path)) {
-    		List<String> lines = stream.limit(linesCount + 1).collect(Collectors.toList());	// +1 for headerLine
-    		log.debug("lines count limit: {}", previewLinesCount);
-    		log.debug("List of lines: {}", lines.toArray());
-    		data = new DataPreviewImpl(lines);
-    		
-    	} catch (IOException e) {
-    		throw new StorageFileNotFoundException(String.format("File %s", path.toString()), e);
-    	}
-    	
-    	return data;
-    }
-    
-    private DataStorageModel getDataStorageModel(String accountName, String projectName, String fileName, DataSrcDstType type) {
-    	DataStorageModel storageDesc = new DataStorageModel();
-    	String filename = StringUtils.cleanPath(fileName);
-    	Path currLocation = this.rootLocation.resolve(DataStorageService.relativePath(accountName, projectName));
-    	
-    	log.debug("Current location: {}", currLocation.toString());
-    	Path destinationPath =  currLocation.resolve(filename);
-    	log.debug("Destination path: {}", destinationPath);
-    	
-    	storageDesc.setStorageType(type);
-    	storageDesc.setUri(destinationPath.toUri());
-    	
-    	return storageDesc;
-    }
-    
-    private MetaData getMetaData(String accountName, String projectName, String fileName,
-    		DataSrcDstType type, String description) {
-    	DataStorageModel dataStore = getDataStorageModel(accountName, projectName,
-    			StringUtils.cleanPath(fileName), DataSrcDstType.LOCAL_FS);
-	    
-    	MetaData meta = new MetaData();
-	    meta.setName(fileName);
-	    meta.setDescription(description);
-		meta.setStorage(dataStore);
-		meta.setHasHeader(true);
-		
-		return meta;
-    }
+
+	@Override
+	public Path load(Path relativePath, String filename) {
+		return rootLocation.resolve(relativePath).resolve(filename);
+	}
+	
+	private void checkFile(MultipartFile file) throws UnsupportedFileTypeException, StorageException {
+		String filename = StringUtils.cleanPath(file.getOriginalFilename());
+		Arrays.stream(EXTENSIONS).filter(ext -> StringUtils.getFilenameExtension(filename).toLowerCase().equals(ext))
+				.findFirst().orElseThrow(
+						() -> new UnsupportedFileTypeException(String.format("Unknown file extension %s", filename)));
+
+		if (file.isEmpty()) {
+			throw new StorageException("Failed to store empty file " + filename);
+		}
+		if (filename.contains("..")) {
+			// This is a security check
+			throw new StorageException("Cannot store file with relative path outside current directory " + filename);
+		}
+	}
+
+	private List<String> getCsvPreview(Path path, int linesCount, boolean hasHeader) {
+		int readLines = hasHeader ? linesCount + 1 : linesCount;
+		List<String> lines;
+		try (Stream<String> stream = Files.lines(path)) {
+			lines = stream.limit(readLines).collect(Collectors.toCollection(ArrayList::new));
+
+		} catch (IOException e) {
+			throw new StorageFileNotFoundException(String.format("File %s", path.toString()), e);
+		}
+
+		return lines;
+	}
+
+	protected List<String> getPreview(Path path, int linesCount, boolean hasHeader) {
+
+		String extension = StringUtils.getFilenameExtension(path.getFileName().toString()).toLowerCase();
+
+		switch (extension) {
+		case "csv":
+			return getCsvPreview(path, linesCount, hasHeader);
+
+		}
+
+		throw new UnsupportedFileTypeException(String.format("Uncknown file extension .%s", extension));
+	}
+	
+
 }

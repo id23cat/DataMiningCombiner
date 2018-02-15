@@ -169,7 +169,9 @@ public class DataStorageServiceTest {
     	assertNotNull(meta);
     	assertNotNull(meta.getId());
     	assertThat(meta.getPreview(), not(empty()));
-    	assertThat(meta.getPreview().size(), equalTo(PREVIEW_LINES_COUNT));
+    	assertThat(meta.getPreview().size(), equalTo(PREVIEW_LINES_COUNT+1)); // header line + data lines 
+    	assertThat(meta.getDataLinesCount(), equalTo(PREVIEW_LINES_COUNT));
+    	assertThat(meta.getAttributes().get("State").getLines(), contains("KS", "OH", "NJ", "OH", "OK"));
     }
 
 }

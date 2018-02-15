@@ -31,7 +31,7 @@ public class DataAttribute {
 	private String name;
 	
 	@Enumerated(EnumType.STRING)
-	private AttributeType type;
+	private AttributeType type = AttributeType.STRING;
 	
 	private Double multiplier = 1.0;
 	private Boolean checked = true;
@@ -39,6 +39,10 @@ public class DataAttribute {
 	@Transient
 	private List<String> lines = new ArrayList<>();
 
+	public DataAttribute(String name) {
+		this.name = name;
+	}
+	
 	public DataAttribute(String name, String value) {
 		this.name = name;
 		lines.add(value);

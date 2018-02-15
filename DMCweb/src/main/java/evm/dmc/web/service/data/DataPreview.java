@@ -6,6 +6,7 @@ import java.util.List;
 import evm.dmc.core.api.AttributeType;
 import lombok.Data;
 
+@Deprecated
 public interface DataPreview {
 	@Data
 	public class ItemsList {

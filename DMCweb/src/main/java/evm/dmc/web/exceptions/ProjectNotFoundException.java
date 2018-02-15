@@ -1,6 +1,6 @@
 package evm.dmc.web.exceptions;
 
-public class ProjectNotFoundException extends Exception {
+public class ProjectNotFoundException extends RuntimeException {
 	/**
 	 * 
 	 */

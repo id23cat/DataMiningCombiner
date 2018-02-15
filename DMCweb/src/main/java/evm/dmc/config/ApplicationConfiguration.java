@@ -1,5 +1,8 @@
 package evm.dmc.config;
 
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
@@ -18,5 +21,8 @@ public class ApplicationConfiguration {
         return new Service(properties.getMessage());
     }
 	
-	
+	@Bean
+	public ExecutorService executorService() {
+		return Executors.newCachedThreadPool();
+	}
 }

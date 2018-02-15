@@ -10,6 +10,7 @@ import java.util.stream.Stream;
 
 import org.springframework.util.StringUtils;
 
+@Deprecated
 public class DataPreviewImpl implements DataPreview {
 	String header;
 	List<String> dataLines = new ArrayList<>();

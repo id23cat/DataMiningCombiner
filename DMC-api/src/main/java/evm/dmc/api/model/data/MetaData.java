@@ -2,10 +2,14 @@ package evm.dmc.api.model.data;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
+import java.util.stream.Collectors;
 
 import javax.persistence.CascadeType;
 import javax.persistence.CollectionTable;
@@ -24,12 +28,19 @@ import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
 
+import org.springframework.util.StringUtils;
+
 import evm.dmc.api.model.ProjectModel;
 import evm.dmc.api.model.converters.StringListConverter;
 import lombok.AccessLevel;
 import lombok.Data;
+import lombok.Getter;
 import lombok.Setter;
 
+/**
+ * @author id23cat
+ *
+ */
 @Data
 @Entity
 @Table(name="METADATA")
@@ -38,6 +49,7 @@ public class MetaData implements Serializable {
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
+	public static final String DUPLICATION_POSTFIX = "-DUP";
 	
 	@Id
 	@GeneratedValue(strategy=GenerationType.IDENTITY)
@@ -52,7 +64,7 @@ public class MetaData implements Serializable {
 	 * what project this data belongs to
 	 */
 	@ManyToOne(cascade = CascadeType.ALL)
-//	@NotNull
+	@NotNull
 	@JoinColumn(name = "project_id")
 	private ProjectModel project;
 
@@ -60,23 +72,26 @@ public class MetaData implements Serializable {
 	@MapKeyColumn(name = "ATTR_NAME")
 	@Column(name = "ATTRIBUTE")
 	@CollectionTable(name = "DATA_ATTRIBUTES", joinColumns=@JoinColumn(name="METADATA_ID"))
-//	@Setter
-//	@Getter
+	@Setter(AccessLevel.PROTECTED)
+	@Getter
 	private Map<String, DataAttribute> attributes = new HashMap<>();
 	
-	@Column
-//	@Column(columnDefinition = "TEXT")
-	@Lob
-//	@Convert(converter = StringListConverter.class)
-	@ElementCollection
-	@CollectionTable(name = "PREVIEW_DATA", joinColumns=@JoinColumn(name="METADATA_ID"))
-	private List<String> preview = new ArrayList<>();
+//	@Column
+////	@Column(columnDefinition = "TEXT")
+//	@Lob
+////	@Convert(converter = StringListConverter.class)
+//	@ElementCollection
+//	@CollectionTable(name = "PREVIEW_DATA", joinColumns=@JoinColumn(name="METADATA_ID"))
+//	private List<String> preview = new ArrayList<>();
+	
+	private Long previewId;
+	
 	
 	// delimiter for preview
 	// also can be used for parsing data files instead of storage.delimiter
-	private String delimiter = ",;\t|";
+//	private String previewDelimiter = DEFAULT_DELIMITER;
 	
-	private boolean hasHeader = true;
+//	
 
 	@OneToOne(cascade = CascadeType.ALL)
 	@JoinColumn(name = "storage_id")
@@ -87,27 +102,14 @@ public class MetaData implements Serializable {
 		this.storage = storage;
 	}
 	
-	/**
-	 * @return unmodifiable List
-	 */
-	public List<String> getPreview() {
-		return Collections.unmodifiableList(preview);
-	}
+//	/**
+//	 * @return unmodifiable List
+//	 */
+//	public List<String> getPreview() {
+//		return Collections.unmodifiableList(preview);
+//	}
 	
-	/**
-	 * Creates new content of Attributes map, using argument list
-	 * @param list
-	 */
-	public void setAttributesAsList(List<DataAttribute> list) {
-		list.stream().forEach(attr -> attributes.put(attr.getName(), attr));
-	}
 	
-	/**
-	 * Copies preview values to existing attributes
-	 * Names of attributes must match
-	 * @param list
-	 */
-	public void setAttributesPreview(List<DataAttribute> list) {
-		list.stream().forEach(attr -> attributes.get(attr.getName()).setLines(attr.getLines()));
-	}
+	
+	
 }

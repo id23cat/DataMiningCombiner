@@ -49,14 +49,14 @@
 			</script>
 		</form>
 			
-		<div th:if="${previewData != null}" class="form-group">
+		<div th:if="${metaData != null}" class="form-group">
 			I wonder, if variable exists...
 				
 			<!-- <div th:insert="fragments/datapreview :: dataPreview(${previewData})"></div> -->
 			
 			<form method="post"
 			th:action="${sourceAttributesURI}"
-			th:object="${headerItems}"
+			th:object="${metaData}"
 			>
 				<div class="control-group">
 					<input type="submit" class="btn btn-primary" value="Submit" th:id="attr-button"/>
@@ -80,13 +80,13 @@
 						<thead class="head">
 						<!-- 	<th:block th:each="item : ${preview.getHeaderItems()}">		 -->	
 							<tr>
-								<th:block th:each="item, stat : ${previewData.getHeaderItems()}">
+								<th:block th:each="attr, stat : ${metaData.getAttributes().values()}">
 									<th>
-										<span th:text=${item.name}></span>
+										<span th:text=${attr.getName()}></span>
 										<br>
 											<select class="form-control"
 												th:id="'type_' + ${stat.index}"		
-												th:field="*{items[__${stat.index}__].type}"										 
+												th:field="*{attributes.get(__${attr.name}__).type}"										 
 											>
 												<option th:each="type: ${T(evm.dmc.core.api.AttributeType).values()}"
 													th:value="${type}"
@@ -96,14 +96,14 @@
 										<br>
 											<input type="checkbox"
 												th:id="'chkbx_' + ${stat.index}"
-												th:field="*{items[__${stat.index}__].name}" 
-												th:value="${item.name}"/> 
+												th:field="*{attributes.get(__${attr.name}__).checked}" 
+												th:value="${attr.checked}"/> 
 											<!-- <input type="checkbox" th:field="*{items}" th:value="item"/> -->
 										<br>
 											<input type="number"																							
 												th:id="'num_' + ${stat.index}"
-												th:field="*{items[__${stat.index}__].multiplicator}"
-												th:value="${item.multiplicator}" 
+												th:field="*{attributes.get(__${attr.name}__).multiplier}" 
+												th:value="${attr.multiplier}" 
 												step="0.1" 
 												style="width:55px;" />
 									</th>
@@ -116,9 +116,9 @@
 							</th:block> -->
 						</thead>
 						<tbody>
-							<tr th:each="line, iter : ${previewData.getAllLines()}">
-								<th:block th:each="item : ${previewData.getDataItems(line)}">
-									<td th:text=${item}>Data item</td>
+							<tr th:each="line, iter : ${metaData.preview}">
+								<th:block th:each="attr : ${metaData.attributes.value}">
+									<td th:text=${attr.lines.get(__${iter.index}__)}>Data item</td>
 								</th:block>
 							</tr>
 						</tbody>

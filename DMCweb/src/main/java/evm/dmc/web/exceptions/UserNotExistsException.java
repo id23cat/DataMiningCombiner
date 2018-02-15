@@ -1,6 +1,6 @@
 package evm.dmc.web.exceptions;
 
-public class UserNotExistsException extends Exception {
+public class UserNotExistsException extends RuntimeException {
 	/**
 	 * 
 	 */
