@@ -26,7 +26,7 @@ public interface DataPreviewService {
 	static DataPreview newDataPreview(String header, List<String> data) {
 		DataPreview preview = new DataPreview();
 		preview.setHeader(header);
-		preview.setHeader(header);
+		preview.setData(data);
 		return preview;
 	}
 

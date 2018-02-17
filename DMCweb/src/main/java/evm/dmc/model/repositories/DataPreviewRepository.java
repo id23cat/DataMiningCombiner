@@ -1,18 +1,17 @@
 package evm.dmc.model.repositories;
 
 import java.util.Collection;
+import java.util.Set;
 
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
 
 import evm.dmc.api.model.datapreview.DataPreview;
 
 public interface DataPreviewRepository extends JpaRepository<DataPreview, Long>{
-	public interface MetaDataId {
-		Long getMetaDataId();
-	}
-	
 	DataPreview findByMetaDataId(Long metaDataId);
 	
-	Collection<MetaDataId> findAllDistinct();
+	@Query("SELECT DISTINCT preview.metaDataId FROM DataPreview preview")
+	Set<Long> findDistinctMetaDataId();
 
 }

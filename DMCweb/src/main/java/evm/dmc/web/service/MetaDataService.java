@@ -3,6 +3,7 @@ package evm.dmc.web.service;
 import java.nio.file.Path;
 import java.util.Arrays;
 import java.util.List;
+import java.util.StringJoiner;
 import java.util.stream.Stream;
 
 import org.springframework.util.StringUtils;
@@ -30,7 +31,7 @@ public interface MetaDataService {
 	MetaData generateAndPersistAttrubutes(MetaData meta, DataPreview preview);
 	
 	List<DataAttribute> getDataAttributes(DataPreview preview);
-
+	
 	public static DataStorageModel newDataStorageModel(Path fullFilePath,
 			DataSrcDstType type, String delimiter, boolean hasHeader) {
 		DataStorageModel storageDesc = new DataStorageModel();
@@ -58,5 +59,17 @@ public interface MetaDataService {
 	
 	public static List<String> listLine(String line, String delimiters) {
 		return Arrays.asList(StringUtils.tokenizeToStringArray(line, delimiters));
+	}
+	
+	public static String getActiveDelimiters(String testLine, String delimiters) {
+		int size = delimiters.length();
+		StringJoiner joiner = new StringJoiner("");
+		testLine = testLine.trim();
+		for(int i=0; i<size; i++) {
+			String symbol = String.valueOf(delimiters.charAt(i));
+			if(StringUtils.tokenizeToStringArray(testLine, symbol).length > 1)
+				joiner.add(symbol);
+		}
+		return joiner.toString();
 	}
 }

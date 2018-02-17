@@ -34,6 +34,7 @@ import evm.dmc.api.model.ProjectModel;
 import evm.dmc.api.model.converters.StringListConverter;
 import lombok.AccessLevel;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -44,6 +45,7 @@ import lombok.Setter;
 @Data
 @Entity
 @Table(name="METADATA")
+@EqualsAndHashCode(exclude={"storage"})
 public class MetaData implements Serializable {
 	/**
 	 * 

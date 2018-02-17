@@ -4,11 +4,11 @@ import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashSet;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 import java.util.StringJoiner;
-import java.util.concurrent.ExecutorService;
 import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -92,7 +92,8 @@ public class MetaDataServiceImpl implements MetaDataService{
     }
     
 	@Override
-	@Transactional(propagation=Propagation.NESTED, isolation=Isolation.READ_COMMITTED)
+//	@Transactional(propagation=Propagation.NESTED, isolation=Isolation.READ_COMMITTED)
+	@Transactional(propagation=Propagation.REQUIRES_NEW, isolation=Isolation.READ_COMMITTED)
     public DataPreview persistPreview(MetaData meta, List<String> previewLines) {
 		DataPreview preview = getPreview(previewLines, 
 				meta.getStorage().isHasHeader(), meta.getStorage().getDelimiter());
@@ -132,8 +133,11 @@ public class MetaDataServiceImpl implements MetaDataService{
 		List<String> dataLines = new ArrayList<>(preview.getData());
 		for (DataAttribute attribute : attributes) {
 			for (int i = 0; i < dataLines.size(); i++) {
-				String[] res = StringUtils.split(dataLines.get(i), preview.getDelimiter());
-				attribute.addLine(res[0]);
+				String[] res = Optional.ofNullable(
+						StringUtils.split(dataLines.get(i), preview.getDelimiter()))
+						.orElse(new String[]{dataLines.get(i),""});
+				
+				attribute.addLine(res[0].trim());
 				dataLines.set(i, res[1]);
 			}
 			attribute.setType(tryToPrdictType(attribute.getLines()));
@@ -142,8 +146,10 @@ public class MetaDataServiceImpl implements MetaDataService{
 		return attributes;
 	}
 	
+//	@Override
 	private DataPreview getPreview(List<String> lines, boolean hasHeader, String delimiter) {
 		String headerLine;
+		delimiter = MetaDataService.getActiveDelimiters(lines.get(0), delimiter);
 		if(hasHeader) {
 			headerLine = lines.remove(0);
 		} else { // generate indexes
@@ -151,7 +157,7 @@ public class MetaDataServiceImpl implements MetaDataService{
 			String currentDelimiter = String.valueOf(delimiter.charAt(0));
 			StringJoiner joiner = new StringJoiner(currentDelimiter);
 			
-			for(int i=0; i<size; size++){
+			for(int i=0; i<size; i++){
 				joiner.add(String.valueOf(i));
 			}
 			headerLine = joiner.toString();
@@ -189,12 +195,13 @@ public class MetaDataServiceImpl implements MetaDataService{
     	if(isNominal(data))
     		type = AttributeType.NOMINAL;
     	
-    	List<AttributeType> types = new ArrayList<>(data.size());
+    	List<AttributeType> types = new LinkedList<>();
     	for(int i=0; i<data.size(); i++) {
-    		if(org.apache.commons.lang3.StringUtils.isNumeric(data.get(i))){
-    			types.set(i, AttributeType.NUMERIC);
-    		} else if(data.get(i).matches("[0-9:-]+")) {
-    			types.set(i, AttributeType.DATE);
+    		String value = data.get(i);
+    		if(isNumeric(value)){
+    			types.add(AttributeType.NUMERIC);
+    		} else if(isDate(value)) {
+    			types.add(AttributeType.DATE);
     		}
     	}
     	
@@ -209,6 +216,16 @@ public class MetaDataServiceImpl implements MetaDataService{
     private boolean isNominal(List<String> data) {
     	Set<String> set = new HashSet<>(data);
     	return ! (set.size() == data.size());
+    }
+    
+    private boolean isNumeric(String data) {
+    	if(data.contains(":") || data.contains("-"))
+    		return false;
+    	return data.matches("[+-]?[\\d.+]+");
+    }
+    
+    private boolean isDate(String data) {
+    	return data.matches("[0-9:-]+");
     }
 
 }
