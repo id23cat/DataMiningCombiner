@@ -37,6 +37,7 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
+import lombok.ToString;
 
 /**
  * @author id23cat
@@ -45,7 +46,8 @@ import lombok.Setter;
 @Data
 @Entity
 @Table(name="METADATA")
-@EqualsAndHashCode(exclude={"storage"})
+//@EqualsAndHashCode(exclude={"storage"})
+//@ToString(exclude={"storage"})
 public class MetaData implements Serializable {
 	/**
 	 * 
@@ -95,7 +97,7 @@ public class MetaData implements Serializable {
 	
 //	
 
-	@OneToOne(cascade = CascadeType.ALL)
+	@OneToOne(cascade = CascadeType.ALL, optional = false)
 	@JoinColumn(name = "storage_id")
 	private DataStorageModel storage;
 	

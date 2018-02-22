@@ -38,6 +38,7 @@
         <dmcombiner.version>${version}</dmcombiner.version>
         <DMC-api.version>${version}</DMC-api.version>
         <assertj-core.version>3.8.0</assertj-core.version>
+        <junit-addons.version>1.4</junit-addons.version>
         
 	</properties>
 	
@@ -171,6 +172,15 @@
 			<artifactId>spring-boot-starter-test</artifactId>
 			<scope>test</scope>
 		</dependency>
+		
+		<!-- https://mvnrepository.com/artifact/junit-addons/junit-addons -->
+		<dependency>
+		    <groupId>junit-addons</groupId>
+		    <artifactId>junit-addons</artifactId>
+		    <version>${junit-addons.version}</version>
+		    <scope>test</scope>
+		</dependency>
+		
 		
 		
 		<!-- Tomcat embedded container -->

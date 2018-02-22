@@ -11,6 +11,9 @@ import java.util.Set;
 import java.util.StringJoiner;
 import java.util.stream.Collectors;
 
+import javax.persistence.EntityManager;
+
+import org.jfree.util.Log;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Isolation;
@@ -29,8 +32,10 @@ import evm.dmc.model.repositories.MetaDataRepository;
 import evm.dmc.web.service.DataPreviewService;
 import evm.dmc.web.service.MetaDataService;
 import evm.dmc.web.service.ProjectService;
+import lombok.extern.slf4j.Slf4j;
 
 @Service
+@Slf4j
 public class MetaDataServiceImpl implements MetaDataService{
 	
 	private MetaDataRepository metaDataRepository;
@@ -38,6 +43,9 @@ public class MetaDataServiceImpl implements MetaDataService{
 	private ProjectService projectService;
 	
 	private DataPreviewService previewService;
+	
+	@Autowired
+	EntityManager em;
 	
 	
 	@Autowired
@@ -105,24 +113,30 @@ public class MetaDataServiceImpl implements MetaDataService{
     }
 	
 	@Override
-	@Transactional(propagation=Propagation.NESTED, isolation=Isolation.READ_COMMITTED)
+//	@Transactional(propagation=Propagation.NESTED, isolation=Isolation.READ_COMMITTED)
+	@Transactional(propagation=Propagation.REQUIRES_NEW, isolation=Isolation.READ_COMMITTED)
 	public MetaData generateAndPersistAttrubutes(MetaData meta, DataPreview preview) {
 		// Construct DataAttributes
     	List<DataAttribute> attributes = getDataAttributes(preview);
     	
+    	log.debug("Persisting attributes: {}", attributes);
+    	log.debug(" to metaData: {}", meta);
     	// store meta data
     	return persistAttrubutes(meta, attributes);
 	}
 	
 	@Override
+	@Transactional
 	public MetaData persistAttrubutes(MetaData meta, List<DataAttribute> attributes) {
+//		em.merge(meta);
     	if(meta.getAttributes().size() == attributes.size()) {
     		setAttributesPreview(meta, attributes);
     	} else {
     		setAttributesCollection(meta, attributes);
     	}
-    	
+    	log.debug("Persisting attributes in: {}", meta);
     	return save(meta);
+//    	return meta;
     }
     
 	@Override

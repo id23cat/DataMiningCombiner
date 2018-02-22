@@ -2,6 +2,7 @@ package evm.dmc.web.service;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Stream;
 
 import org.springframework.util.StringUtils;
@@ -10,10 +11,14 @@ import evm.dmc.api.model.data.MetaData;
 import evm.dmc.api.model.datapreview.DataPreview;
 
 public interface DataPreviewService {
-	DataPreview getByMetaDataId(Long metaDataId);
-	DataPreview getForMetaData(MetaData mdata);
+	Optional<DataPreview> getByMetaDataId(Long metaDataId);
+	Optional<DataPreview> getForMetaData(MetaData mdata);
 	
 	DataPreview save(DataPreview preview);
+	
+	DataPreview delete(DataPreview preview);
+	
+	void deleteByMetaDataId(Long mid);
 	
 	static Stream<String> streamLine(String line, String delimiters) {
 		return Arrays.stream(StringUtils.tokenizeToStringArray(line, delimiters));

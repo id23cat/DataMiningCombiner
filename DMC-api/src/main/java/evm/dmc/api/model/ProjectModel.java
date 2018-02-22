@@ -6,6 +6,7 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Properties;
@@ -51,8 +52,8 @@ import lombok.ToString;
 @Table(name="PROJECT"
 	,uniqueConstraints={@UniqueConstraint(columnNames = {"account_id", "name"})}
 )
-@EqualsAndHashCode(exclude={"algorithms"})
-@ToString(exclude="algorithms")
+@EqualsAndHashCode(exclude={"algorithms", "dataSources"})
+@ToString(exclude={"algorithms", "dataSources"})
 public class ProjectModel implements Serializable {
 	/**
 	 * 
@@ -102,7 +103,7 @@ public class ProjectModel implements Serializable {
 	private Instant created = Instant.now();
 	
 	@OneToMany(mappedBy = "project" ,cascade = CascadeType.ALL, orphanRemoval = true)
-	private List<MetaData> dataSources;
+	private List<MetaData> dataSources = new LinkedList<>();
 	
 	public ProjectModel() {
 		super();

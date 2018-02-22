@@ -21,23 +21,22 @@ import java.util.stream.Stream;
 
 public interface DataStorageService {
 
-//    void init();
-    
     MetaData saveData(Account account, ProjectModel project, MultipartFile file)
     	throws UnsupportedFileTypeException, StorageException;
     
+    MetaData saveDataSerial(Account account, ProjectModel project, MultipartFile file)
+        	throws UnsupportedFileTypeException, StorageException;
+    
 
-    Stream<Path> loadAll(Path relativePath) throws StorageException;
-
-    Path load(Path relativePath, String filename);
+    Path path(MetaData metaData);
     
     
     List<String> getPreview(MetaData meta, int lineCount);
 
-    Resource loadAsResource(Path relativePath, String filename)
+    Resource loadAsResource(MetaData metaData)
     		throws StorageFileNotFoundException;
 
-    void deleteAll(Path relativePath);
+    void deleteAll(ProjectModel project);
     
     /**
      * Combine userName from account and projectName to relative path: {userNmae}/{projectName}/

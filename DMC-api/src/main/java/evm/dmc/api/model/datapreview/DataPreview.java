@@ -1,5 +1,6 @@
 package evm.dmc.api.model.datapreview;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -24,7 +25,12 @@ import lombok.Setter;
 @Table(name="DATA_PREVIEW")
 @Immutable
 @Data
-public class DataPreview {
+public class DataPreview implements Serializable {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 2667573835860510658L;
+
 	public static final String DEFAULT_DELIMITER = ",;\t|";
 	
 	@Id
@@ -36,6 +42,7 @@ public class DataPreview {
 	@NotNull
 	private Long metaDataId;
 	
+	@Lob
 	private String header;
 	
 	@Column

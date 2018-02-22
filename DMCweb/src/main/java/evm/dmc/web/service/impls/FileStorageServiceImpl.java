@@ -1,23 +1,38 @@
 package evm.dmc.web.service.impls;
 
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
+import java.io.FileWriter;
 import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.Writer;
 import java.net.MalformedURLException;
+import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
+import java.nio.file.StandardOpenOption;
+import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 import java.util.StringJoiner;
+import java.util.concurrent.ArrayBlockingQueue;
+import java.util.concurrent.BlockingQueue;
+import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Future;
+import java.util.concurrent.LinkedBlockingQueue;
+import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -54,13 +69,13 @@ import lombok.extern.slf4j.Slf4j;
 @Service
 @Slf4j
 public class FileStorageServiceImpl implements DataStorageService {
-	@Autowired 
+//	@Autowired 
 	FileStorageConfig properties;
 	
-	@Autowired
+//	@Autowired
 	private ExecutorService executorService;
 	
-	@Autowired
+//	@Autowired
 	private MetaDataService metaDataService;
 	
     private Path rootLocation;
@@ -95,33 +110,217 @@ public class FileStorageServiceImpl implements DataStorageService {
         }
     }
     
-    protected Runnable storeData(Path destinationPath, MultipartFile file)
+    private long getTimeMs() {
+    	return System.nanoTime();
+    }
+    
+    protected Callable<Path> storeData(Path destinationPath, MultipartFile file, BlockingQueue<Path> queue)
     	throws StorageException {
-    	return new Runnable() {
+    	return new Callable<Path>() {
     		private Path destinationPath;
     		private MultipartFile file;
-    		Runnable init(Path destinationPath, MultipartFile file) {
+    		BlockingQueue<Path> queue;
+    		
+    		Callable<Path> init(Path destinationPath, MultipartFile file, BlockingQueue<Path> queue) {
     			this.destinationPath = destinationPath;
     			this.file = file;
+    			this.queue = queue;
     			return this;
     		}
 
 			@Override
-			public void run() {
+			public Path call() throws StorageException {
 		            log.debug("Saving file: {}", destinationPath);
-		            
+		            log.trace("Start download:{}", getTimeMs());
+		            		            
 		            // saving
 		            try {
+		            	Files.createDirectories(destinationPath);
+		            	queue.offer(destinationPath);
 						Files.copy(file.getInputStream(), destinationPath,
 						        StandardCopyOption.REPLACE_EXISTING);
 					} catch (IOException e) {
 						throw new StorageException("Failed to save file " + destinationPath, e);
 					}
+					return destinationPath;
 				
 			}
-    	}.init(destinationPath, file);
+    	}.init(destinationPath, file, queue);
     }
     
+    
+	/**
+	 * @param destinationPath where to save file
+	 * @param file data
+	 * @param preview empty list after return have to contain preview lines
+	 * @return future of thread that saves file to directory
+	 */
+	protected Future<Path> saveFile(Path destinationPath, MultipartFile file, List<String> preview) {
+		BlockingQueue<List<String>> previewQueue = new ArrayBlockingQueue<>(1);
+		BlockingQueue<String> dataQueue = new LinkedBlockingQueue<>();
+		
+		Callable<Path> fileSaver = getFileSaver(destinationPath, dataQueue);
+		Callable<Void> fileDownloader = getFileDownloader(file, dataQueue, previewQueue, previewLinesCount);
+		
+		executorService.submit(fileDownloader);
+		Future<Path> saver = executorService.submit(fileSaver);
+		
+		try {
+			preview.addAll(previewQueue.take());
+		} catch (InterruptedException e) {
+			Thread.currentThread().interrupt();
+		}
+		
+		return saver;
+	}
+	
+	private Callable<Path> getFileSaver(Path destinationPath, BlockingQueue<String> queue) {
+
+		return new Callable<Path>() {
+			private Path destinationPath;
+			private BlockingQueue<String> queue;
+
+			Callable<Path> init(Path destinationPath, BlockingQueue<String> queue) {
+				this.destinationPath = destinationPath;
+				this.queue = queue;
+				return this;
+			}
+
+			@Override
+			public Path call() throws StorageException {
+				boolean interrupted = false;
+				log.debug("Saving file: {}", destinationPath);
+				log.trace("Start download:{}", getTimeMs());
+				try {
+					Files.createDirectories(destinationPath.getParent());
+					Files.deleteIfExists(destinationPath);
+				} catch (IOException e) {
+					new StorageException("Can not create file: " + destinationPath, e);
+				}
+				try(BufferedWriter writer = Files.newBufferedWriter(destinationPath, StandardCharsets.UTF_8, 
+						StandardOpenOption.CREATE,
+						StandardOpenOption.WRITE,
+						StandardOpenOption.TRUNCATE_EXISTING)) {				
+					while(true) {
+						try {
+							
+							String line = queue.poll(properties.getFileWaitTimeoutMS(), TimeUnit.MILLISECONDS);
+							if(line == null)
+								break;		// file ends
+							
+							writer.write(line);
+							writer.newLine();
+							
+						} catch (InterruptedException e) {
+							interrupted = true;
+						}
+					}
+				} catch (IOException e) {
+					throw new StorageException("Failed to open file " + destinationPath, e);
+				} finally {
+					if(interrupted) {
+						Thread.currentThread().interrupt();
+					}
+				}
+
+				return destinationPath;
+
+			}
+		}.init(destinationPath, queue);
+	}
+	
+	private Callable<Void> getFileDownloader(MultipartFile file, 
+			BlockingQueue<String> dataQueue, 
+			BlockingQueue<List<String>> previewQueue, int linesCount) {
+		
+		return new Callable<Void>() {
+			private MultipartFile file;
+			private BlockingQueue<String> dataQueue;
+			private BlockingQueue<List<String>> previewQueue;
+			private int linesCount;
+			
+			public Callable<Void> init(MultipartFile file, 
+					BlockingQueue<String> dataQueue, 
+					BlockingQueue<List<String>> previewQueue, int linesCount) {
+				this.file = file;
+				this.dataQueue = dataQueue;
+				this.previewQueue = previewQueue;
+				this.linesCount = linesCount;
+				return this;
+			}
+			
+			@Override
+			public Void call() throws StorageException {
+				List<String> preview = new ArrayList<>(linesCount);
+				int counter = linesCount;
+				boolean getPreview = true;
+				
+				try(BufferedReader in = new BufferedReader(new InputStreamReader(file.getInputStream()))) {
+					while(in.ready()) {
+						String line = in.readLine();
+						dataQueue.add(line);
+						
+						if(getPreview){
+							if(counter > 0) {
+								preview.add(line);
+								counter--;
+							} else {
+								log.trace("TRACE: contructed preview list size: {}", preview.size());
+								previewQueue.offer(preview);
+								getPreview = false;
+							}
+						}
+						
+					}
+					
+					log.trace("TRACE: File has been downloaded correctly: {}", file.getName());
+				} catch (IOException e) {
+					new StorageException("Failed to download file " + file.getName(), e);
+				}
+				
+				return null;
+			}
+			
+		}.init(file, dataQueue, previewQueue, linesCount);
+	}
+    
+    protected boolean waitForFile(BlockingQueue<Path> queue) {
+    	int counter = properties.getRetriesCount();
+    	Path path = null;
+    	boolean interrupted = false;
+    	try {
+	    	for(;counter > 0; counter --) {
+	    		try {
+					path = queue.poll(properties.getFileWaitTimeoutMS(), TimeUnit.MILLISECONDS);
+				} catch (InterruptedException e) {
+					interrupted = true;
+//					Thread.currentThread().interrupt();
+//		    		throw new StorageException("Waiting for starting file download was interrupted" ,ex);
+				}
+	    		log.trace("Waiting queue: {}", String.format("count: %d, path=%s, time=%s", counter, path, getTimeMs()));
+	    		if(path != null)
+	    			break;
+	    	}
+    	
+	    	for(; counter > 0; counter --) {
+	    		log.trace("Check file exists: {}", getTimeMs());
+	    		if(Files.exists(path)) {
+					return true;
+				}
+	    		try {
+					Thread.sleep(properties.getFileWaitTimeoutMS());
+				} catch (InterruptedException e) {
+					interrupted = true;
+//					Thread.currentThread().interrupt();
+//		    		throw new StorageException("Waiting for starting file download was interrupted" ,ex);
+				}
+	    	}
+    	} finally {
+    		if(interrupted)
+    			Thread.currentThread().interrupt();
+    	}
+    	return false;
+    }
    
     
     @Override
@@ -141,21 +340,87 @@ public class FileStorageServiceImpl implements DataStorageService {
     	MetaData meta = metaDataService.getMetaData(project, destinationPath, 
     			DataSrcDstType.LOCAL_FS, "", DataStorageModel.DEFAULT_DELIMITER, DataStorageModel.DEFAULT_HASHEADER);
     	
-    	// 3. Save file in separate thread
-    	Future<?> saveDataFuture = executorService.submit(storeData(destinationPath, file)); // throws StorageException
+    	List<String> previewList = new ArrayList<>(previewLinesCount);
+    	
+    	// 3. Save file
+    	Future<Path> saveDataFuture = saveFile(destinationPath, file, previewList);
+    	
+    	log.debug("DEBUG: preview list: {}", previewList.toArray());
     	
     	// 4. Get preview and persist it
-    	DataPreview preview = metaDataService.persistPreview(meta, getPreview(meta, previewLinesCount));
+    	DataPreview preview = metaDataService.persistPreview(meta, previewList);
     	
     	// 5. Generate DataAttributes and persist it
     	meta = metaDataService.generateAndPersistAttrubutes(meta, preview);
     	
     	try {
+    		log.trace("Wait for get:{}", getTimeMs());
 			saveDataFuture.get();
-		} catch (InterruptedException | ExecutionException e) {
-			
+		} catch ( ExecutionException e) {
 			throw new StorageException("Exception in storage thread", e.getCause());
+		} catch ( InterruptedException e ) {
+			Thread.currentThread().interrupt();
+			throw new StorageException("Waiting for finishing file download was interrupted", e);
 		}
+
+    	return meta;
+    }
+    
+    @Override
+    @Transactional
+    public MetaData saveDataSerial(Account account, ProjectModel project, MultipartFile file) 
+    		throws UnsupportedFileTypeException, StorageException {
+    	long startTime;
+    	// 1. Check filepath, extension and non-empty data 
+    	checkFile(file);	// throws UnsupportedFileTypeException, StorageException
+    	
+    	
+    	String filename = StringUtils.cleanPath(file.getOriginalFilename());
+    	Path relativePath = DataStorageService.relativePath(account, project);
+    	Path currLocation = this.rootLocation.resolve(relativePath);
+    	Path destinationPath =  currLocation.resolve(filename);
+    	
+    	// 2. Create MetaData 
+    	MetaData meta = metaDataService.getMetaData(project, destinationPath, 
+    			DataSrcDstType.LOCAL_FS, "", DataStorageModel.DEFAULT_DELIMITER, DataStorageModel.DEFAULT_HASHEADER);
+    	
+    	startTime = getTimeMs();
+
+    	BlockingQueue<Path> queue = new ArrayBlockingQueue<>(1);
+    	// 3. Save file in separate thread
+    	Future<?> saveDataFuture = executorService.submit(storeData(destinationPath, file, queue)); // throws StorageException
+    	
+    	try {
+			saveDataFuture.get();
+		} catch ( ExecutionException e) {
+			throw new StorageException("Exception in storage thread", e.getCause());
+		} catch ( InterruptedException e ) {
+			Thread.currentThread().interrupt();
+			throw new StorageException("Waiting for finishing file download was interrupted", e);
+		}
+    	
+    	
+    	if(waitForFile(queue)) {
+	    	
+	    	// 4. Get preview and persist it
+	    	DataPreview preview = metaDataService.persistPreview(meta, getPreview(meta, previewLinesCount));
+	    	
+	    	// 5. Generate DataAttributes and persist it
+	    	meta = metaDataService.generateAndPersistAttrubutes(meta, preview);
+    	}
+    	
+    	try {
+    		log.trace("Wait for get:{}", getTimeMs());
+			saveDataFuture.get();
+		} catch ( ExecutionException e) {
+			throw new StorageException("Exception in storage thread", e.getCause());
+		} catch ( InterruptedException e ) {
+			Thread.currentThread().interrupt();
+			throw new StorageException("Waiting for finishing file download was interrupted", e);
+		}
+    	
+
+    	log.trace("TRACE: Elapsed time (ms): {}", (getTimeMs() - startTime) / 1000000);
     	
     	return meta;
     }
@@ -168,50 +433,36 @@ public class FileStorageServiceImpl implements DataStorageService {
     	return preview;
     }
     
+    
     @Override
-    public Stream<Path> loadAll(Path relativePath) throws StorageException {
-    	Path currLocation = this.rootLocation.resolve(relativePath);
-        try {
-            return Files.walk(currLocation, 1)
-                    .filter(path -> !path.equals(this.rootLocation))
-                    .map(path -> currLocation.relativize(path));
-        }
-        catch (IOException e) {
-            throw new StorageException("Failed to read stored files", e);
-        }
-
-    }
-
-    @Override
-    public Resource loadAsResource(Path relativePath, String filename)
+    public Resource loadAsResource(MetaData metaData)
     	throws StorageFileNotFoundException {
+    	Path file = path(metaData);
         try {
-            Path file = load(relativePath, filename);
             Resource resource = new UrlResource(file.toUri());
             if (resource.exists() || resource.isReadable()) {
                 return resource;
             }
             else {
                 throw new StorageFileNotFoundException(
-                        "Could not read file: " + filename);
+                        "Could not read file: " + file);
 
             }
         }
         catch (MalformedURLException e) {
-            throw new StorageFileNotFoundException("Could not read file: " + filename, e);
+            throw new StorageFileNotFoundException("Could not read file: " + file, e);
         }
     }
 
     @Override
-    public void deleteAll(Path relativePath) {
-    	Path currLocation = this.rootLocation.resolve(relativePath);
-        FileSystemUtils.deleteRecursively(currLocation.toFile());
+    public void deleteAll(ProjectModel project) {
+        FileSystemUtils.deleteRecursively(projectPath(project.getAccount(), project).toFile());
     }
 
 
 	@Override
-	public Path load(Path relativePath, String filename) {
-		return rootLocation.resolve(relativePath).resolve(filename);
+	public Path path(MetaData metaData) {
+		return Paths.get(metaData.getStorage().getUri());
 	}
 	
 	private void checkFile(MultipartFile file) throws UnsupportedFileTypeException, StorageException {
@@ -236,14 +487,15 @@ public class FileStorageServiceImpl implements DataStorageService {
 			lines = stream.limit(readLines).collect(Collectors.toCollection(ArrayList::new));
 
 		} catch (IOException e) {
-			throw new StorageFileNotFoundException(String.format("File %s", path.toString()), e);
+			throw new StorageFileNotFoundException(
+					String.format("Attempt to read preview lines has failed: %s", path.toString()), e);
 		}
 
 		return lines;
 	}
 
 	protected List<String> getPreview(Path path, int linesCount, boolean hasHeader) {
-
+		log.debug("Getting preview from: {}", path);
 		String extension = StringUtils.getFilenameExtension(path.getFileName().toString()).toLowerCase();
 
 		switch (extension) {
@@ -255,5 +507,8 @@ public class FileStorageServiceImpl implements DataStorageService {
 		throw new UnsupportedFileTypeException(String.format("Uncknown file extension .%s", extension));
 	}
 	
+	private Path projectPath(Account account, ProjectModel project) {
+		return this.rootLocation.resolve(DataStorageService.relativePath(account, project));
+	}
 
 }

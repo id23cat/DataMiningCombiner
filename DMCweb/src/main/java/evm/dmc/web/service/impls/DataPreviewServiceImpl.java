@@ -1,7 +1,10 @@
 package evm.dmc.web.service.impls;
 
+import java.util.Optional;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Isolation;
 import org.springframework.transaction.annotation.Transactional;
 
 import evm.dmc.api.model.data.MetaData;
@@ -16,21 +19,35 @@ public class DataPreviewServiceImpl implements DataPreviewService {
 
 	@Override
 	@Transactional(readOnly=true)
-	public DataPreview getByMetaDataId(Long metaDataId) {
+	public Optional<DataPreview> getByMetaDataId(Long metaDataId) {
 		return repo.findByMetaDataId(metaDataId);
 	}
 
 	@Override
 	@Transactional(readOnly=true)
-	public DataPreview getForMetaData(MetaData mdata) {
+	public Optional<DataPreview> getForMetaData(MetaData mdata) {
 		return repo.findByMetaDataId(mdata.getId());
 	}
 
 	@Override
-	@Transactional
+	@Transactional(isolation=Isolation.READ_UNCOMMITTED)
 	public DataPreview save(DataPreview preview) {
-		
+		// care about metaDataId uniqueness
+		if(preview.getId() == null && repo.findByMetaDataId(preview.getMetaDataId()).isPresent())
+			repo.deleteByMetaDataId(preview.getMetaDataId());
 		return repo.save(preview);
 	}
-
+	
+	@Override
+	@Transactional
+	public DataPreview delete(DataPreview preview) {
+		repo.delete(preview);
+		return null;
+	}
+	
+	@Override
+	@Transactional
+	public void deleteByMetaDataId(Long mid) {
+		repo.deleteByMetaDataId(mid);
+	}
 }

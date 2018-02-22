@@ -63,8 +63,13 @@ dmc:
     admin:
       username: admin
       password: adminpass
-  fileroot: userFiles
-  previewLinesCount: 7
+  datastorage:
+    root: userFiles
+    preview:
+      linesCount: 7
+      retriesCount: 3
+      fileWaitTimeoutMS: 500
+    
 
     
 
