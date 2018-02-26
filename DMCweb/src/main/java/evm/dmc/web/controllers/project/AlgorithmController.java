@@ -52,8 +52,10 @@ public class AlgorithmController {
 	public final static String SESSION_CurrProject = "currentProject";
 	
 	public final static String MODEL_MetaData = "metaData";
+	public final static String MODEL_Preview = "preview";
 	public final static String MODEL_Algorithm = "algorithm";
 	public final static String MODEL_PagesMap = "pagesMap";
+	public final static String MODEL_HasHeader = "hasHeader";
 	public final static String MODEL_HeaderItems = "headerItems";
 	public final static String MODEL_SrcAttrURI = "sourceAttributesURI";
 	public final static String MODEL_SrcUploadURI = "sourceUploadURI";
@@ -64,7 +66,7 @@ public class AlgorithmController {
 	
 	
 	@Autowired
-	private DataStorageService fileService;
+	private DataStorageService metaDataService;
 	
 	@Autowired
 	private ProjectService projectService;
@@ -112,7 +114,7 @@ public class AlgorithmController {
 			@PathVariable(PATH_ProjectName) String projectName,
 			@PathVariable(PATH_AlgName) String algName,
 			@ModelAttribute(SESSION_CurrProject) ProjectModel project,
-			@ModelAttribute(MODEL_MetaData) Optional<MetaData> preview, 
+			@ModelAttribute(MODEL_MetaData) Optional<MetaData> metaData, 
 			Model model,
 			HttpServletRequest request) throws AlgorithmNotFoundException {
 		AlgorithmModel algorithm = project.getAlgorithms()
@@ -123,12 +125,8 @@ public class AlgorithmController {
 		
 		// if algorithm is empty (new algorithm)
 		if(algorithm.getFunctions().isEmpty()) {
-			log.debug("-== Emty algorithm selected. Running wizard: {}", RequestPath.algorithmWozard);
+//			log.debug("-== Emty algorithm selected. Running wizard: {}", RequestPath.algorithmWozard);
 			
-			
-//			model.addAttribute(MODEL_Algorithm, algorithm);
-//			model.addAttribute(MODEL_PagesMap, new LinkedHashMap<String,String>());
-//			return "redirect:" + RequestPath.algorithmWozard;
 			UriComponents srcUploadUri = UriComponentsBuilder.fromPath(BASE_URL).path(RequestPath.setSource)
 					.buildAndExpand(project.getName(), algName);
 			model.addAttribute(MODEL_SrcUploadURI, srcUploadUri.toUriString());
@@ -137,11 +135,15 @@ public class AlgorithmController {
 					.buildAndExpand(project.getName(), algName);
 			model.addAttribute(MODEL_SrcAttrURI, srcAttribUri.toUriString());
 			
-			if(preview.isPresent()) {
-				model.addAttribute(MODEL_MetaData, preview.get());
+			HasHeaderCheckbox hasHeader = new HasHeaderCheckbox();
+			
+			if(metaData.isPresent()) {
+				model.addAttribute(MODEL_MetaData, metaData.get());
+				model.addAttribute(MODEL_Preview, metaDataService.getPreview(metaData.get()));
+				hasHeader.setHasHeader(metaData.get().getStorage().isHasHeader());
 //				model.addAttribute(MODEL_HeaderItems, new DataPreview.ItemsList(preview.get().getHeaderItems()));
 			}
-			
+			model.addAttribute(MODEL_HasHeader, hasHeader);
 //			{ // for debug reasons only
 //				log.warn("-== Debugging section: is needed to remove");
 //				DataPreview prev = fileService.loadDataPreview(Paths.get("idcat","proj0"), "telecom_churn.csv");
@@ -165,11 +167,13 @@ public class AlgorithmController {
 			@SessionAttribute(SESSION_Account) Account account,
 			@SessionAttribute(SESSION_CurrProject) ProjectModel project,
 			@PathVariable(PATH_AlgName) String algName,
+			@ModelAttribute(MODEL_HasHeader) HasHeaderCheckbox hasHeader,
 			RedirectAttributes ra) {
 		
 //		DataPreview preview = fileService.store(DataStorageService.relativePath(account, project), file);
-		MetaData preview = fileService.saveData(account, project, file, true);
-		ra.addFlashAttribute(MODEL_MetaData, preview);
+		log.debug("HasHeader checkbox state: {}", hasHeader.isHasHeader());
+		MetaData metaData = metaDataService.saveData(account, project, file, hasHeader.isHasHeader());
+		ra.addFlashAttribute(MODEL_MetaData, Optional.of(metaData));
 		
 		log.debug("-== Receiving file: {}", file.getName());
 		UriComponents uriComponents = UriComponentsBuilder.fromPath(BASE_URL)

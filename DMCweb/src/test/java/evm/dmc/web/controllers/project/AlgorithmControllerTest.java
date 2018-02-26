@@ -3,12 +3,9 @@ package evm.dmc.web.controllers.project;
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.junit.Assert.*;
 import static org.mockito.Matchers.any;
-import static org.mockito.Matchers.isA;
-import static org.mockito.Mockito.doNothing;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.redirectedUrl;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
-import java.nio.file.Path;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -32,6 +29,7 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.util.UriComponents;
 import org.springframework.web.util.UriComponentsBuilder;
 
+import evm.dmc.api.model.AlgorithmModel;
 import evm.dmc.api.model.ProjectModel;
 import evm.dmc.api.model.account.Account;
 import evm.dmc.api.model.data.MetaData;
@@ -53,10 +51,31 @@ public class AlgorithmControllerTest {
 	
 	@Autowired
 	MockMvc mockMvc;
+	
+	@Autowired
+	Views views;
 
 	@Test
-	public final void testGetAlgorithm() {
-		fail("Not yet implemented"); // TODO
+	@WithMockUser("devel")
+	public final void testGetAlgorithmDefault() throws Exception {
+		String projectName = "testProject";
+		String algName = "testAlg";
+		ProjectModel testProject = new ProjectModel();
+		AlgorithmModel testAlg = new AlgorithmModel();
+		testAlg.setName(algName);
+		
+		testProject.setName(projectName);
+		testProject.assignAlgorithm(testAlg);
+		
+		mockMvc.perform(get(RequestPath.project+"/"+projectName + RequestPath.algorithm+"/"+algName)
+				.sessionAttr(AlgorithmController.SESSION_CurrProject, testProject))
+			.andExpect(status().isOk())
+			.andExpect(view().name(views.project.wizard.datasource))
+			.andExpect(model().attributeExists(
+					AlgorithmController.MODEL_SrcUploadURI,
+					AlgorithmController.MODEL_SrcAttrURI,
+					AlgorithmController.MODEL_HasHeader))
+			;
 	}
 
 	@Test
@@ -94,7 +113,10 @@ public class AlgorithmControllerTest {
 			.andExpect(status().isFound())
 			.andExpect(redirectedUrl(UriComponentsBuilder.fromPath(AlgorithmController.BASE_URL)
 						.buildAndExpand("tesrpr", "testalg")
-						.toUriString()));
+						.toUriString()))
+			.andExpect(flash().attributeExists(
+					AlgorithmController.MODEL_MetaData))
+			;
 			
 		log.debug("File Path: {}", accCaptor.getValue());
 		log.debug("File name {}", fileCaptor.getValue().getOriginalFilename());
