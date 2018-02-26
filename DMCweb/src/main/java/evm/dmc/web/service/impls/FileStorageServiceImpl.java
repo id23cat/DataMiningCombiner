@@ -22,6 +22,7 @@ import java.util.Collections;
 import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
 import java.util.StringJoiner;
@@ -43,6 +44,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.UrlResource;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.UnexpectedRollbackException;
 import org.springframework.util.FileSystemUtils;
 import org.springframework.util.StringUtils;
 import org.springframework.web.multipart.MultipartFile;
@@ -110,57 +112,115 @@ public class FileStorageServiceImpl implements DataStorageService {
         }
     }
     
-    private long getTimeMs() {
-    	return System.nanoTime();
-    }
-    
-    protected Callable<Path> storeData(Path destinationPath, MultipartFile file, BlockingQueue<Path> queue)
-    	throws StorageException {
-    	return new Callable<Path>() {
-    		private Path destinationPath;
-    		private MultipartFile file;
-    		BlockingQueue<Path> queue;
-    		
-    		Callable<Path> init(Path destinationPath, MultipartFile file, BlockingQueue<Path> queue) {
-    			this.destinationPath = destinationPath;
-    			this.file = file;
-    			this.queue = queue;
-    			return this;
-    		}
+    @Override
+    @Transactional
+    public MetaData saveData(Account account, ProjectModel project, MultipartFile file, boolean hasHeader) 
+    		throws UnsupportedFileTypeException, StorageException {
+    	// 1. Check file path, extension and non-empty data 
+    	checkFileType(file);	// throws UnsupportedFileTypeException, StorageException
+    	int requiredLinesCount = hasHeader ? previewLinesCount+1 : previewLinesCount;
+    	
+    	String filename = StringUtils.cleanPath(file.getOriginalFilename());
+    	Path relativePath = DataStorageService.relativePath(account, project);
+    	Path currLocation = this.rootLocation.resolve(relativePath);
+    	Path destinationPath =  currLocation.resolve(filename);
+    	
+    	// 2. Create MetaData 
+    	MetaData meta = metaDataService.getMetaData(project, destinationPath, 
+    			DataSrcDstType.LOCAL_FS, "", DataStorageModel.DEFAULT_DELIMITER, hasHeader);
+    	
+    	List<String> previewList = new ArrayList<>();
+    	
+    	// 3. Save file
+    	Future<Path> saveDataFuture = saveFile(destinationPath, file, previewList, requiredLinesCount);
+    	
+    	log.debug("DEBUG: preview list: {}", previewList.toArray());
+    	
+    	try {
+    		// 4. Get preview and persist it
+    		DataPreview preview = metaDataService.createPreview(meta, previewList);
+    		Map<MetaData, DataPreview> map = metaDataService.persistPreview(meta, preview);
+    		meta = map.keySet().iterator().next();
+    		preview = map.get(meta);
 
-			@Override
-			public Path call() throws StorageException {
-		            log.debug("Saving file: {}", destinationPath);
-		            log.trace("Start download:{}", getTimeMs());
-		            		            
-		            // saving
-		            try {
-		            	Files.createDirectories(destinationPath);
-		            	queue.offer(destinationPath);
-						Files.copy(file.getInputStream(), destinationPath,
-						        StandardCopyOption.REPLACE_EXISTING);
-					} catch (IOException e) {
-						throw new StorageException("Failed to save file " + destinationPath, e);
-					}
-					return destinationPath;
-				
-			}
-    	}.init(destinationPath, file, queue);
+    		// 5. Generate DataAttributes and persist it
+    		meta = metaDataService.generateAndPersistAttributes(meta, preview);
+    	} catch(UnexpectedRollbackException ex) {
+    		log.warn("Transavtion was rolled baack: ", ex.getCause());
+    	}
+    	
+    	
+    	try {
+    		log.trace("Wait for get:{}", getTimeMs());
+			saveDataFuture.get();
+		} catch ( ExecutionException e) {
+			throw new StorageException("Exception in storage thread", e.getCause());
+		} catch ( InterruptedException e ) {
+			Thread.currentThread().interrupt();
+			throw new StorageException("Waiting for finishing file download was interrupted", e);
+		}
+
+    	return meta;
+    }
+    
+    @Override
+    public DataPreview getPreview(MetaData meta) {
+    	Optional<DataPreview> optPreview = metaDataService.getPreview(meta);
+    	return optPreview.orElse(metaDataService.createPreview(meta, getPreview(meta, previewLinesCount)));
+    }
+    
+    @Override
+    public List<String> getPreview(MetaData meta, int lineCount) {
+    	List<String> preview = getPreview(Paths.get(meta.getStorage().getUri()), lineCount,
+    			meta.getStorage().isHasHeader());
+    	
+    	return preview;
     }
     
     
+    @Override
+    public Resource loadAsResource(MetaData metaData)
+    	throws StorageFileNotFoundException {
+    	Path file = path(metaData);
+        try {
+            Resource resource = new UrlResource(file.toUri());
+            if (resource.exists() || resource.isReadable()) {
+                return resource;
+            }
+            else {
+                throw new StorageFileNotFoundException(
+                        "Could not read file: " + file);
+
+            }
+        }
+        catch (MalformedURLException e) {
+            throw new StorageFileNotFoundException("Could not read file: " + file, e);
+        }
+    }
+
+    @Override
+    public void deleteAll(ProjectModel project) {
+        FileSystemUtils.deleteRecursively(projectPath(project.getAccount(), project).toFile());
+    }
+
+
+	@Override
+	public Path path(MetaData metaData) {
+		return Paths.get(metaData.getStorage().getUri());
+	}
+	
 	/**
 	 * @param destinationPath where to save file
 	 * @param file data
 	 * @param preview empty list after return have to contain preview lines
 	 * @return future of thread that saves file to directory
 	 */
-	protected Future<Path> saveFile(Path destinationPath, MultipartFile file, List<String> preview) {
+	protected Future<Path> saveFile(Path destinationPath, MultipartFile file, List<String> preview, int linesCount) {
 		BlockingQueue<List<String>> previewQueue = new ArrayBlockingQueue<>(1);
 		BlockingQueue<String> dataQueue = new LinkedBlockingQueue<>();
 		
 		Callable<Path> fileSaver = getFileSaver(destinationPath, dataQueue);
-		Callable<Void> fileDownloader = getFileDownloader(file, dataQueue, previewQueue, previewLinesCount);
+		Callable<Void> fileDownloader = getFileDownloader(file, dataQueue, previewQueue, linesCount);
 		
 		executorService.submit(fileDownloader);
 		Future<Path> saver = executorService.submit(fileSaver);
@@ -174,7 +234,7 @@ public class FileStorageServiceImpl implements DataStorageService {
 		return saver;
 	}
 	
-	private Callable<Path> getFileSaver(Path destinationPath, BlockingQueue<String> queue) {
+	protected Callable<Path> getFileSaver(Path destinationPath, BlockingQueue<String> queue) {
 
 		return new Callable<Path>() {
 			private Path destinationPath;
@@ -229,7 +289,7 @@ public class FileStorageServiceImpl implements DataStorageService {
 		}.init(destinationPath, queue);
 	}
 	
-	private Callable<Void> getFileDownloader(MultipartFile file, 
+	protected Callable<Void> getFileDownloader(MultipartFile file, 
 			BlockingQueue<String> dataQueue, 
 			BlockingQueue<List<String>> previewQueue, int linesCount) {
 		
@@ -265,7 +325,7 @@ public class FileStorageServiceImpl implements DataStorageService {
 								preview.add(line);
 								counter--;
 							} else {
-								log.trace("TRACE: contructed preview list size: {}", preview.size());
+								log.trace("TRACE: constructed preview list size: {}", preview.size());
 								previewQueue.offer(preview);
 								getPreview = false;
 							}
@@ -275,7 +335,7 @@ public class FileStorageServiceImpl implements DataStorageService {
 					
 					log.trace("TRACE: File has been downloaded correctly: {}", file.getName());
 				} catch (IOException e) {
-					new StorageException("Failed to download file " + file.getName(), e);
+					throw new StorageException("Failed to download file " + file.getName(), e);
 				}
 				
 				return null;
@@ -283,189 +343,8 @@ public class FileStorageServiceImpl implements DataStorageService {
 			
 		}.init(file, dataQueue, previewQueue, linesCount);
 	}
-    
-    protected boolean waitForFile(BlockingQueue<Path> queue) {
-    	int counter = properties.getRetriesCount();
-    	Path path = null;
-    	boolean interrupted = false;
-    	try {
-	    	for(;counter > 0; counter --) {
-	    		try {
-					path = queue.poll(properties.getFileWaitTimeoutMS(), TimeUnit.MILLISECONDS);
-				} catch (InterruptedException e) {
-					interrupted = true;
-//					Thread.currentThread().interrupt();
-//		    		throw new StorageException("Waiting for starting file download was interrupted" ,ex);
-				}
-	    		log.trace("Waiting queue: {}", String.format("count: %d, path=%s, time=%s", counter, path, getTimeMs()));
-	    		if(path != null)
-	    			break;
-	    	}
-    	
-	    	for(; counter > 0; counter --) {
-	    		log.trace("Check file exists: {}", getTimeMs());
-	    		if(Files.exists(path)) {
-					return true;
-				}
-	    		try {
-					Thread.sleep(properties.getFileWaitTimeoutMS());
-				} catch (InterruptedException e) {
-					interrupted = true;
-//					Thread.currentThread().interrupt();
-//		    		throw new StorageException("Waiting for starting file download was interrupted" ,ex);
-				}
-	    	}
-    	} finally {
-    		if(interrupted)
-    			Thread.currentThread().interrupt();
-    	}
-    	return false;
-    }
-   
-    
-    @Override
-    @Transactional
-    public MetaData saveData(Account account, ProjectModel project, MultipartFile file) 
-    		throws UnsupportedFileTypeException, StorageException {
-    	// 1. Check filepath, extension and non-empty data 
-    	checkFile(file);	// throws UnsupportedFileTypeException, StorageException
-    	
-    	
-    	String filename = StringUtils.cleanPath(file.getOriginalFilename());
-    	Path relativePath = DataStorageService.relativePath(account, project);
-    	Path currLocation = this.rootLocation.resolve(relativePath);
-    	Path destinationPath =  currLocation.resolve(filename);
-    	
-    	// 2. Create MetaData 
-    	MetaData meta = metaDataService.getMetaData(project, destinationPath, 
-    			DataSrcDstType.LOCAL_FS, "", DataStorageModel.DEFAULT_DELIMITER, DataStorageModel.DEFAULT_HASHEADER);
-    	
-    	List<String> previewList = new ArrayList<>(previewLinesCount);
-    	
-    	// 3. Save file
-    	Future<Path> saveDataFuture = saveFile(destinationPath, file, previewList);
-    	
-    	log.debug("DEBUG: preview list: {}", previewList.toArray());
-    	
-    	// 4. Get preview and persist it
-    	DataPreview preview = metaDataService.persistPreview(meta, previewList);
-    	
-    	// 5. Generate DataAttributes and persist it
-    	meta = metaDataService.generateAndPersistAttrubutes(meta, preview);
-    	
-    	try {
-    		log.trace("Wait for get:{}", getTimeMs());
-			saveDataFuture.get();
-		} catch ( ExecutionException e) {
-			throw new StorageException("Exception in storage thread", e.getCause());
-		} catch ( InterruptedException e ) {
-			Thread.currentThread().interrupt();
-			throw new StorageException("Waiting for finishing file download was interrupted", e);
-		}
-
-    	return meta;
-    }
-    
-    @Override
-    @Transactional
-    public MetaData saveDataSerial(Account account, ProjectModel project, MultipartFile file) 
-    		throws UnsupportedFileTypeException, StorageException {
-    	long startTime;
-    	// 1. Check filepath, extension and non-empty data 
-    	checkFile(file);	// throws UnsupportedFileTypeException, StorageException
-    	
-    	
-    	String filename = StringUtils.cleanPath(file.getOriginalFilename());
-    	Path relativePath = DataStorageService.relativePath(account, project);
-    	Path currLocation = this.rootLocation.resolve(relativePath);
-    	Path destinationPath =  currLocation.resolve(filename);
-    	
-    	// 2. Create MetaData 
-    	MetaData meta = metaDataService.getMetaData(project, destinationPath, 
-    			DataSrcDstType.LOCAL_FS, "", DataStorageModel.DEFAULT_DELIMITER, DataStorageModel.DEFAULT_HASHEADER);
-    	
-    	startTime = getTimeMs();
-
-    	BlockingQueue<Path> queue = new ArrayBlockingQueue<>(1);
-    	// 3. Save file in separate thread
-    	Future<?> saveDataFuture = executorService.submit(storeData(destinationPath, file, queue)); // throws StorageException
-    	
-    	try {
-			saveDataFuture.get();
-		} catch ( ExecutionException e) {
-			throw new StorageException("Exception in storage thread", e.getCause());
-		} catch ( InterruptedException e ) {
-			Thread.currentThread().interrupt();
-			throw new StorageException("Waiting for finishing file download was interrupted", e);
-		}
-    	
-    	
-    	if(waitForFile(queue)) {
-	    	
-	    	// 4. Get preview and persist it
-	    	DataPreview preview = metaDataService.persistPreview(meta, getPreview(meta, previewLinesCount));
-	    	
-	    	// 5. Generate DataAttributes and persist it
-	    	meta = metaDataService.generateAndPersistAttrubutes(meta, preview);
-    	}
-    	
-    	try {
-    		log.trace("Wait for get:{}", getTimeMs());
-			saveDataFuture.get();
-		} catch ( ExecutionException e) {
-			throw new StorageException("Exception in storage thread", e.getCause());
-		} catch ( InterruptedException e ) {
-			Thread.currentThread().interrupt();
-			throw new StorageException("Waiting for finishing file download was interrupted", e);
-		}
-    	
-
-    	log.trace("TRACE: Elapsed time (ms): {}", (getTimeMs() - startTime) / 1000000);
-    	
-    	return meta;
-    }
-    
-    @Override
-    public List<String> getPreview(MetaData meta, int lineCount) {
-    	List<String> preview = getPreview(Paths.get(meta.getStorage().getUri()), lineCount,
-    			meta.getStorage().isHasHeader());
-    	
-    	return preview;
-    }
-    
-    
-    @Override
-    public Resource loadAsResource(MetaData metaData)
-    	throws StorageFileNotFoundException {
-    	Path file = path(metaData);
-        try {
-            Resource resource = new UrlResource(file.toUri());
-            if (resource.exists() || resource.isReadable()) {
-                return resource;
-            }
-            else {
-                throw new StorageFileNotFoundException(
-                        "Could not read file: " + file);
-
-            }
-        }
-        catch (MalformedURLException e) {
-            throw new StorageFileNotFoundException("Could not read file: " + file, e);
-        }
-    }
-
-    @Override
-    public void deleteAll(ProjectModel project) {
-        FileSystemUtils.deleteRecursively(projectPath(project.getAccount(), project).toFile());
-    }
-
-
-	@Override
-	public Path path(MetaData metaData) {
-		return Paths.get(metaData.getStorage().getUri());
-	}
 	
-	private void checkFile(MultipartFile file) throws UnsupportedFileTypeException, StorageException {
+	private void checkFileType(MultipartFile file) throws UnsupportedFileTypeException, StorageException {
 		String filename = StringUtils.cleanPath(file.getOriginalFilename());
 		Arrays.stream(EXTENSIONS).filter(ext -> StringUtils.getFilenameExtension(filename).toLowerCase().equals(ext))
 				.findFirst().orElseThrow(
@@ -478,20 +357,6 @@ public class FileStorageServiceImpl implements DataStorageService {
 			// This is a security check
 			throw new StorageException("Cannot store file with relative path outside current directory " + filename);
 		}
-	}
-
-	private List<String> getCsvPreview(Path path, int linesCount, boolean hasHeader) {
-		int readLines = hasHeader ? linesCount + 1 : linesCount;
-		List<String> lines;
-		try (Stream<String> stream = Files.lines(path)) {
-			lines = stream.limit(readLines).collect(Collectors.toCollection(ArrayList::new));
-
-		} catch (IOException e) {
-			throw new StorageFileNotFoundException(
-					String.format("Attempt to read preview lines has failed: %s", path.toString()), e);
-		}
-
-		return lines;
 	}
 
 	protected List<String> getPreview(Path path, int linesCount, boolean hasHeader) {
@@ -507,8 +372,26 @@ public class FileStorageServiceImpl implements DataStorageService {
 		throw new UnsupportedFileTypeException(String.format("Uncknown file extension .%s", extension));
 	}
 	
+	private List<String> getCsvPreview(Path path, int linesCount, boolean hasHeader) {
+		int readLines = hasHeader ? linesCount + 1 : linesCount;
+		List<String> lines;
+		try (Stream<String> stream = Files.lines(path)) {
+			lines = stream.limit(readLines).collect(Collectors.toCollection(ArrayList::new));
+
+		} catch (IOException e) {
+			throw new StorageFileNotFoundException(
+					String.format("Attempt to read preview lines has failed: %s", path.toString()), e);
+		}
+
+		return lines;
+	}
+
 	private Path projectPath(Account account, ProjectModel project) {
 		return this.rootLocation.resolve(DataStorageService.relativePath(account, project));
 	}
+	
+	private long getTimeMs() {
+    	return System.nanoTime();
+    }
 
 }

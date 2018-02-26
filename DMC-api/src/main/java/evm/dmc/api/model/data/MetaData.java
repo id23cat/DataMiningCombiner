@@ -28,6 +28,7 @@ import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
 
+import org.springframework.data.annotation.Version;
 import org.springframework.util.StringUtils;
 
 import evm.dmc.api.model.ProjectModel;
@@ -100,6 +101,9 @@ public class MetaData implements Serializable {
 	@OneToOne(cascade = CascadeType.ALL, optional = false)
 	@JoinColumn(name = "storage_id")
 	private DataStorageModel storage;
+	
+	@Version
+    private Long version;
 	
 	public void setStorage(DataStorageModel storage) {
 		storage.setMeta(this);

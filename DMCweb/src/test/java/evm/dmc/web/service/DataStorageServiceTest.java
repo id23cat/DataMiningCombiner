@@ -19,6 +19,8 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.nio.file.attribute.PosixFilePermissions;
 import java.util.Random;
 import java.util.concurrent.ExecutorService;
 
@@ -42,6 +44,7 @@ import org.springframework.transaction.annotation.Transactional;
 import evm.dmc.api.model.ProjectModel;
 import evm.dmc.api.model.account.Account;
 import evm.dmc.api.model.data.MetaData;
+import evm.dmc.api.model.datapreview.DataPreview;
 import evm.dmc.config.FileStorageConfig;
 import evm.dmc.model.repositories.AccountRepository;
 import evm.dmc.model.repositories.MetaDataRepository;
@@ -72,8 +75,8 @@ public class DataStorageServiceTest {
     @Autowired
     private	MetaDataService metaDataService;
     
-//    @Autowired
-//    DataPreviewService previewService;
+    @Autowired
+    DataPreviewService previewService;
     
 //    @Autowired
     private DataStorageService service;
@@ -99,8 +102,14 @@ public class DataStorageServiceTest {
 	FileStorageConfig properties;
 	
     @Before
-    @Transactional
+//    @Transactional
     public void init() {
+//    	try {
+//			Files.createFile(Paths.get("111.txt"));
+//		} catch (IOException e) {
+//			// TODO Auto-generated catch block
+//			e.printStackTrace();
+//		}
     	properties = new FileStorageConfig();
 		properties.setLocation(destRoot + Math.abs(new Random().nextLong())+File.separator);
         properties.setPreviewLinesCount(PREVIEW_LINES_COUNT);
@@ -128,65 +137,33 @@ public class DataStorageServiceTest {
 
     @Test
     public void storeAndLoadValidFile() throws IOException {
-//      service.store(relativePath, new MockMultipartFile("foo", "foo.txt", MediaType.TEXT_PLAIN_VALUE,
-//      "Hello World".getBytes()));
-//    	String filename = "telecom.csv";
-//    	ClassPathResource resource = new ClassPathResource(filename, getClass());
-
     	
     	MetaData metaData = null;
     	File sourceFile = realResource.getFile();
     	File destFile = new File(properties.getLocation() + 
     			DataStorageService.relativePath(account, project).toString(),
     			realFilename);
-		for(int i=0; i<50; i++) {
+//		for(int i=0; i<50; i++) {
 			MockMultipartFile file = new MockMultipartFile("file", realFilename, 
 					MediaType.TEXT_PLAIN_VALUE, realResource.getInputStream());
-			metaData = service.saveData(account, project, file);
-		}
-    	
+			
+			metaData = service.saveData(account, project, file, true);
+//		}
+		assertNotNull(metaData);
 		junitx.framework.FileAssert.assertEquals(sourceFile, new File(metaData.getStorage().getUri()));
 		log.debug("SourceFile: {}", sourceFile);
 		log.debug("SourceFile size: {}", Files.size(sourceFile.toPath()));
 		log.debug("DestFile: {}", destFile);
 		log.debug("DestFile size: {}", Files.size(destFile.toPath()));
 
-		assertNotNull(metaData);
-			
-			
-//		MetaData metaData = null;
-//		for(int i=0; i<100; i++) {
-//			MockMultipartFile file = new MockMultipartFile("file"+i, realFilename, 
-//					MediaType.TEXT_PLAIN_VALUE, realResource.getInputStream());
-//			metaData = service.saveData(account, project, file);
-//		}
-//		assertNotNull(metaData);
-//        assertThat(service.path(metaData)).exists();
-        
-        
-        
-//        assertThat(preview.getHeaderLine(), not(isEmptyString()));
+        DataPreview preview = previewService.getForMetaData(metaData).orElseThrow( IllegalArgumentException::new);
+        assertThat(preview.getHeader(), not(isEmptyString()));
 //        log.debug("Header line: {}", preview.getHeaderItems());
-//        assertThat(preview.getLinesCount(), equalTo(5));
+        assertThat(preview.getData().size(), equalTo(PREVIEW_LINES_COUNT));
 //        log.debug("Data lines: 0 {}", preview.getDataItems(0));
 //        log.debug("Data lines: 1 {}", preview.getDataItems(1));
     }
     
-    @Test
-    public void storeAndLoadValidFileSerial() throws IOException {
-    	
-		MetaData metaData = null;
-		for(int i=0; i<100; i++) {
-			MockMultipartFile file = new MockMultipartFile("file"+i, realFilename, 
-					MediaType.TEXT_PLAIN_VALUE, realResource.getInputStream());
-			metaData = service.saveDataSerial(account, project, file);
-		}
-		assertNotNull(metaData);
-        assertThat(service.path(metaData)).exists();
-        
-    }
-    
-    @Ignore
     @Test(expected = UnsupportedFileTypeException.class)
     public void storeAndLoadInvalidFile() throws IOException {
     	String filename = "testupload.txt";
@@ -194,36 +171,16 @@ public class DataStorageServiceTest {
 
 		MockMultipartFile file = new MockMultipartFile("file", filename,
 				MediaType.TEXT_PLAIN_VALUE, resource.getInputStream());
-		service.store(relativePath, file);
+		
+		service.saveData(account, project, file, true);
     }
 
-    @Ignore
     @Test(expected = StorageException.class)
     public void storeNotPermitted() {
-        service.store(relativePath, new MockMultipartFile("foo", "../foo.txt",
-                MediaType.TEXT_PLAIN_VALUE, "Hello World".getBytes()));
+        service.saveData(account, project, new MockMultipartFile("foo", "../foo.txt",
+                MediaType.TEXT_PLAIN_VALUE, "Hello World".getBytes()), false);
     }
 
-    @Ignore
-    @Test
-    public void storePermitted() {
-        service.store(relativePath, new MockMultipartFile("foo", "bar/../foo.csv",
-                MediaType.TEXT_PLAIN_VALUE, "Hello World".getBytes()));
-    }
     
-    @Ignore
-    @Test
-    public void testSave() throws IOException {
-    	MockMultipartFile file = new MockMultipartFile("file", realFilename, 
-				MediaType.TEXT_PLAIN_VALUE, realResource.getInputStream());
-    	
-    	MetaData meta = service.saveData(account, project, file);
-    	assertNotNull(meta);
-    	assertNotNull(meta.getId());
-    	assertThat(meta.getPreview(), not(empty()));
-    	assertThat(meta.getPreview().size(), equalTo(PREVIEW_LINES_COUNT+1)); // header line + data lines 
-    	assertThat(meta.getDataLinesCount(), equalTo(PREVIEW_LINES_COUNT));
-    	assertThat(meta.getAttributes().get("State").getLines(), contains("KS", "OH", "NJ", "OH", "OK"));
-    }
 
 }

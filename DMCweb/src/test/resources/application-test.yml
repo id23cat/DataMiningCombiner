@@ -27,7 +27,8 @@ logging:
     org.springframework.test: WARN
     org.springframework.web: WARN
     org.springframework.data: TRACE
-    org.springframework.transaction: TRACE
+    org.springframework.transaction: DEBUG
+    org.springframework.orm.jpa: DEBUG
     org.hibernate.SQL: TRACE
     org.hibernate.type.descriptor.sql.BasicBinder: TRACE
     org.hibernate.type: TRACE

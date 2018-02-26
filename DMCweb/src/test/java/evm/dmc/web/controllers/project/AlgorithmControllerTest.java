@@ -34,6 +34,7 @@ import org.springframework.web.util.UriComponentsBuilder;
 
 import evm.dmc.api.model.ProjectModel;
 import evm.dmc.api.model.account.Account;
+import evm.dmc.api.model.data.MetaData;
 import evm.dmc.web.service.DataStorageService;
 import evm.dmc.web.service.RequestPath;
 import evm.dmc.web.service.Views;
@@ -65,11 +66,13 @@ public class AlgorithmControllerTest {
 
 		MockMultipartFile file = new MockMultipartFile("file", resource.getInputStream());
 		
-		ArgumentCaptor<Path> pathCapture = ArgumentCaptor.forClass(Path.class);
+		ArgumentCaptor<Account> accCaptor = ArgumentCaptor.forClass(Account.class);
+		ArgumentCaptor<ProjectModel> projCaptor = ArgumentCaptor.forClass(ProjectModel.class);
 		ArgumentCaptor<MultipartFile> fileCaptor = ArgumentCaptor.forClass(MultipartFile.class);
 		Mockito
-			.when(fileService.store(pathCapture.capture(), fileCaptor.capture()))
-			.thenReturn(null);
+			.when(fileService.saveData(accCaptor.capture(), projCaptor.capture(), 
+					fileCaptor.capture(), any(boolean.class)))
+			.thenReturn(new MetaData());
 		
 		UriComponents uriComponents = UriComponentsBuilder.fromPath(AlgorithmController.BASE_URL)
 				.path(RequestPath.setSource)
@@ -93,9 +96,10 @@ public class AlgorithmControllerTest {
 						.buildAndExpand("tesrpr", "testalg")
 						.toUriString()));
 			
-		log.debug("File Path: {}", pathCapture.getValue());
+		log.debug("File Path: {}", accCaptor.getValue());
 		log.debug("File name {}", fileCaptor.getValue().getOriginalFilename());
-		assertThat(pathCapture.getValue().toString(), equalTo("Alex/tesrpr"));
+		assertThat(accCaptor.getValue().getUserName(), equalTo("Alex"));
+		assertThat(projCaptor.getValue().getName(), equalTo("tesrpr"));
 	}
 
 }

@@ -168,7 +168,7 @@ public class AlgorithmController {
 			RedirectAttributes ra) {
 		
 //		DataPreview preview = fileService.store(DataStorageService.relativePath(account, project), file);
-		MetaData preview = fileService.saveData(account, project, file);
+		MetaData preview = fileService.saveData(account, project, file, true);
 		ra.addFlashAttribute(MODEL_MetaData, preview);
 		
 		log.debug("-== Receiving file: {}", file.getName());

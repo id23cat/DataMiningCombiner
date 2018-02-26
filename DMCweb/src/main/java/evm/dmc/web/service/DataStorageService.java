@@ -21,15 +21,12 @@ import java.util.stream.Stream;
 
 public interface DataStorageService {
 
-    MetaData saveData(Account account, ProjectModel project, MultipartFile file)
+    MetaData saveData(Account account, ProjectModel project, MultipartFile file, boolean hasHeader)
     	throws UnsupportedFileTypeException, StorageException;
     
-    MetaData saveDataSerial(Account account, ProjectModel project, MultipartFile file)
-        	throws UnsupportedFileTypeException, StorageException;
-    
-
     Path path(MetaData metaData);
     
+    DataPreview getPreview(MetaData meta);
     
     List<String> getPreview(MetaData meta, int lineCount);
 

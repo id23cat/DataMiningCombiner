@@ -3,9 +3,11 @@ package evm.dmc.web.service.impls;
 import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
 import java.util.StringJoiner;
@@ -90,6 +92,11 @@ public class MetaDataServiceImpl implements MetaDataService{
     	
     	return meta;
     }
+	
+	@Override
+	public Optional<DataPreview> getPreview(MetaData meta) {
+		return previewService.getForMetaData(meta);
+	}
     
 	@Override
     @Transactional
@@ -100,43 +107,77 @@ public class MetaDataServiceImpl implements MetaDataService{
     }
     
 	@Override
-//	@Transactional(propagation=Propagation.NESTED, isolation=Isolation.READ_COMMITTED)
-	@Transactional(propagation=Propagation.REQUIRES_NEW, isolation=Isolation.READ_COMMITTED)
-    public DataPreview persistPreview(MetaData meta, List<String> previewLines) {
+//	@Transactional
+    public DataPreview createPreview(MetaData meta, List<String> previewLines) {
+//		meta = em.merge(meta);
 		DataPreview preview = getPreview(previewLines, 
 				meta.getStorage().isHasHeader(), meta.getStorage().getDelimiter());
 		
     	preview.setMetaDataId(meta.getId());
-    	preview = previewService.save(preview);
-    	meta.setPreviewId(preview.getId());
+//    	meta.setPreviewId(preview.getId());
+    	
+//    	meta = metaDataRepository.save(meta);
+//    	preview = previewService.save(preview);
+//    	Map<MetaData, DataPreview> map = new HashMap<>();
+//    	map.put(meta, preview);
     	return preview;
     }
 	
 	@Override
+	@Transactional
+	public Map<MetaData, DataPreview> persistPreview(MetaData meta, DataPreview preview) {
+		Map<MetaData, DataPreview> map = new HashMap<>();
+		map.put(meta,  preview);
+		
+		return persistPreview(map);
+	}
+	
+	@Override
+	@Transactional
+	public Map<MetaData, DataPreview> persistPreview(Map<MetaData, DataPreview> map) {
+		MetaData meta = map.keySet().iterator().next();
+		DataPreview preview = map.get(meta);
+		map.remove(meta);
+		
+		em.merge(meta);
+		preview.setMetaDataId(meta.getId());
+		preview = previewService.save(preview);
+		
+		meta.setPreviewId(preview.getId());
+    	meta = metaDataRepository.save(meta);
+    	
+    	map.put(meta, preview);
+    	return map;
+	}
+	
+	@Override
 //	@Transactional(propagation=Propagation.NESTED, isolation=Isolation.READ_COMMITTED)
-	@Transactional(propagation=Propagation.REQUIRES_NEW, isolation=Isolation.READ_COMMITTED)
-	public MetaData generateAndPersistAttrubutes(MetaData meta, DataPreview preview) {
+//	@Transactional(propagation=Propagation.REQUIRES_NEW, isolation=Isolation.READ_COMMITTED)
+	@Transactional
+	public MetaData generateAndPersistAttributes(MetaData meta, DataPreview preview) {
 		// Construct DataAttributes
     	List<DataAttribute> attributes = getDataAttributes(preview);
     	
     	log.debug("Persisting attributes: {}", attributes);
     	log.debug(" to metaData: {}", meta);
     	// store meta data
-    	return persistAttrubutes(meta, attributes);
+    	return persistAttributes(meta, attributes);
 	}
 	
 	@Override
+//	@Transactional(propagation=Propagation.REQUIRES_NEW)
 	@Transactional
-	public MetaData persistAttrubutes(MetaData meta, List<DataAttribute> attributes) {
-//		em.merge(meta);
+	public MetaData persistAttributes(MetaData meta, List<DataAttribute> attributes) {
+		meta = em.merge(meta);
     	if(meta.getAttributes().size() == attributes.size()) {
     		setAttributesPreview(meta, attributes);
     	} else {
     		setAttributesCollection(meta, attributes);
     	}
     	log.debug("Persisting attributes in: {}", meta);
-    	return save(meta);
-//    	return meta;
+//    	em.
+    	meta = save(meta);
+    	return meta;
     }
     
 	@Override

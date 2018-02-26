@@ -114,7 +114,7 @@ public class MetaDataServiceTest {
 		metaData.getStorage().setHasHeader(false);
 		metaData = metaDataService.persistMetadata(metaData, project);
 		
-		DataPreview preview = metaDataService.persistPreview(metaData, data);
+		DataPreview preview = metaDataService.createPreview(metaData, data);
 		
 		assertNotNull(preview);
 		log.debug("Generated header: {}", preview.getHeader());
@@ -133,7 +133,7 @@ public class MetaDataServiceTest {
 		data.add(0, defaultHeader);
 		metaData = metaDataService.persistMetadata(metaData, project);
 		
-		DataPreview preview = metaDataService.persistPreview(metaData, data);
+		DataPreview preview = metaDataService.createPreview(metaData, data);
 		
 		assertNotNull(preview);
 		log.debug("Generated header: {}", preview.getHeader());
@@ -164,7 +164,7 @@ public class MetaDataServiceTest {
 		
 		assertTrue(metaData.getAttributes().isEmpty());
 		
-		metaData = metaDataService.persistAttrubutes(metaData, attrs);
+		metaData = metaDataService.persistAttributes(metaData, attrs);
 		assertThat(metaData.getAttributes().size(), equalTo(attrs.size()));
 		
 		assertThat(metaData.getAttributes().keySet(), hasItems("h1", "h2", "h5", "h8", "h9"));

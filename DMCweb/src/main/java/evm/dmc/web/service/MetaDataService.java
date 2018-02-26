@@ -3,6 +3,8 @@ package evm.dmc.web.service;
 import java.nio.file.Path;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Map;
+import java.util.Optional;
 import java.util.StringJoiner;
 import java.util.stream.Stream;
 
@@ -22,13 +24,18 @@ public interface MetaDataService {
 	MetaData getMetaData(ProjectModel project, Path fullFilePath,
     		DataSrcDstType type, String description, String delimiter, boolean hasHeader);
 	
+	Optional<DataPreview> getPreview(MetaData meta);
+	
 	MetaData persistMetadata(MetaData meta, ProjectModel project);
 	
-	DataPreview persistPreview(MetaData meta, List<String> previewLines);
+	DataPreview createPreview(MetaData meta, List<String> previewLines);
 	
-	MetaData persistAttrubutes(MetaData meta, List<DataAttribute> attributes);
+	Map<MetaData, DataPreview> persistPreview(MetaData meta, DataPreview preview);
+	Map<MetaData, DataPreview> persistPreview(Map<MetaData, DataPreview> map);
 	
-	MetaData generateAndPersistAttrubutes(MetaData meta, DataPreview preview);
+	MetaData persistAttributes(MetaData meta, List<DataAttribute> attributes);
+	
+	MetaData generateAndPersistAttributes(MetaData meta, DataPreview preview);
 	
 	List<DataAttribute> getDataAttributes(DataPreview preview);
 	
