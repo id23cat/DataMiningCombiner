@@ -6,6 +6,7 @@ import static org.mockito.Matchers.any;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
+import java.util.Optional;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -32,7 +33,10 @@ import org.springframework.web.util.UriComponentsBuilder;
 import evm.dmc.api.model.AlgorithmModel;
 import evm.dmc.api.model.ProjectModel;
 import evm.dmc.api.model.account.Account;
+import evm.dmc.api.model.data.DataStorageModel;
 import evm.dmc.api.model.data.MetaData;
+import evm.dmc.api.model.datapreview.DataPreview;
+import evm.dmc.config.SecurityConfig;
 import evm.dmc.web.service.DataStorageService;
 import evm.dmc.web.service.RequestPath;
 import evm.dmc.web.service.Views;
@@ -47,7 +51,13 @@ import lombok.extern.slf4j.Slf4j;
 public class AlgorithmControllerTest {
 	
 	@MockBean
-	DataStorageService fileService;
+	DataStorageService metaDataService;
+	
+	@MockBean
+	MetaData metaData;
+	
+	@MockBean
+	DataStorageModel dataStorage;
 	
 	@Autowired
 	MockMvc mockMvc;
@@ -56,7 +66,7 @@ public class AlgorithmControllerTest {
 	Views views;
 
 	@Test
-	@WithMockUser("devel")
+	@WithMockUser("Alex")
 	public final void testGetAlgorithmDefault() throws Exception {
 		String projectName = "testProject";
 		String algName = "testAlg";
@@ -68,7 +78,8 @@ public class AlgorithmControllerTest {
 		testProject.assignAlgorithm(testAlg);
 		
 		mockMvc.perform(get(RequestPath.project+"/"+projectName + RequestPath.algorithm+"/"+algName)
-				.sessionAttr(AlgorithmController.SESSION_CurrProject, testProject))
+				.sessionAttr(AlgorithmController.SESSION_CurrProject, testProject)
+				.sessionAttr(AlgorithmController.SESSION_Account, new Account("Alex")))
 			.andExpect(status().isOk())
 			.andExpect(view().name(views.project.wizard.datasource))
 			.andExpect(model().attributeExists(
@@ -77,6 +88,42 @@ public class AlgorithmControllerTest {
 					AlgorithmController.MODEL_HasHeader))
 			;
 	}
+	
+//	@Test
+//	@WithMockUser("Alex")
+//	public final void testGetAlgorithmWithMetaData() throws Exception {
+//		String projectName = "testProject";
+//		String algName = "testAlg";
+//		ProjectModel testProject = new ProjectModel();
+//		AlgorithmModel testAlg = new AlgorithmModel();
+//		
+//		testAlg.setName(algName);
+//		
+//		testProject.setName(projectName);
+//		testProject.assignAlgorithm(testAlg);
+//		
+//		Mockito.when(dataStorage.isHasHeader()).thenReturn(true);
+//		Mockito.when(metaData.getStorage()).thenReturn(dataStorage);
+//		Optional<MetaData> optMetaData = Optional.of(metaData);
+//		
+//		Mockito
+//		.when(metaDataService.getPreview(any(MetaData.class)))
+//		.thenReturn(new DataPreview());
+//		
+//		mockMvc.perform(get(RequestPath.project+"/"+projectName + RequestPath.algorithm+"/"+algName)
+//				.sessionAttr(AlgorithmController.SESSION_CurrProject, testProject)
+//				.sessionAttr(AlgorithmController.SESSION_Account, new Account("Alex"))
+//				.sessionAttr(AlgorithmController.MODEL_MetaData, optMetaData))
+//			.andExpect(status().isOk())
+//			.andExpect(view().name(views.project.wizard.datasource))
+////			.andExpect(model().attribute(AlgorithmController.MODEL_MetaData, metaData))
+//			.andExpect(model().attributeExists(
+//					AlgorithmController.MODEL_SrcUploadURI,
+//					AlgorithmController.MODEL_SrcAttrURI,
+//					AlgorithmController.MODEL_HasHeader,
+//					AlgorithmController.MODEL_Preview))
+//			;
+//	}
 
 	@Test
 	@WithMockUser("Alex")
@@ -89,7 +136,7 @@ public class AlgorithmControllerTest {
 		ArgumentCaptor<ProjectModel> projCaptor = ArgumentCaptor.forClass(ProjectModel.class);
 		ArgumentCaptor<MultipartFile> fileCaptor = ArgumentCaptor.forClass(MultipartFile.class);
 		Mockito
-			.when(fileService.saveData(accCaptor.capture(), projCaptor.capture(), 
+			.when(metaDataService.saveData(accCaptor.capture(), projCaptor.capture(), 
 					fileCaptor.capture(), any(boolean.class)))
 			.thenReturn(new MetaData());
 		
