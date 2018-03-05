@@ -24,6 +24,8 @@ public interface DataStorageService {
     MetaData saveData(Account account, ProjectModel project, MultipartFile file, boolean hasHeader)
     	throws UnsupportedFileTypeException, StorageException;
     
+    MetaData save(MetaData metaData);
+    
     Path path(MetaData metaData);
     
     DataPreview getPreview(MetaData meta);

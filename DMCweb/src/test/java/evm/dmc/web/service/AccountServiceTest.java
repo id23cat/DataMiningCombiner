@@ -8,6 +8,7 @@ import static org.junit.Assert.*;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -160,15 +161,17 @@ public class AccountServiceTest {
 	@Test
 	public final void testDelProjectsByNames() {
 		Account account = loadAccount("id23cat");
-		List<String> names = account.getProjects().stream().map(proj -> proj.getName()).collect(Collectors.toList());
+		Set<String> names = account.getProjects().stream().map(proj -> proj.getName()).collect(Collectors.toSet());
+		assertThat(projectService.getByAccount(account).count(), equalTo(3L));
 		
 		log.debug("Selected names: {}", names);
 		
-		String safeName = names.remove(0);
+		String safeName = names.iterator().next();
+		names.remove(safeName);
 		
-		log.debug("Project that avoids deleteion", safeName);
+		log.debug("Set for deleteion: {}", names);
 		
-		accountService.delProjectsByNames(account, names.toArray(new String[0]));
+		accountService.delProjectsByNames(account, names);
 		
 		assertThat(account.getProjects().size(), equalTo(1));
 		assertThat(account.getProjects().stream().findFirst().get().getName(), equalTo(safeName));

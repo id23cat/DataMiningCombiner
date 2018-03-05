@@ -40,9 +40,9 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import org.springframework.web.servlet.view.RedirectView;
 import org.springframework.web.util.UriComponentsBuilder;
 
-import evm.dmc.api.model.AlgorithmModel;
 import evm.dmc.api.model.ProjectModel;
 import evm.dmc.api.model.account.Account;
+import evm.dmc.api.model.algorithm.Algorithm;
 import evm.dmc.web.controllers.CheckboxNamesBean;
 import evm.dmc.web.exceptions.ProjectNotFoundException;
 import evm.dmc.web.exceptions.UserNotExistsException;
@@ -130,13 +130,13 @@ public class ProjectController {
 		
 		log.debug("Current project: {}", project.getId()+project.getName());
 		
-		Set<AlgorithmModel> algSet = project.getAlgorithms();
+		Set<Algorithm> algSet = project.getAlgorithms();
 		
 		model.addAttribute("currentProject", project);
 		model.addAttribute("algorithmsSet", algSet);
 		model.addAttribute("algBasePath", String.format("%s%s", request.getServletPath(), RequestPath.algorithm));
 		log.debug("algBasePath : {}", String.format("%s%s", request.getServletPath(), RequestPath.algorithm));
-		model.addAttribute("newAlgorithm", new AlgorithmModel());
+		model.addAttribute("newAlgorithm", projectService.getNewAlgorithm());
 		return views.getProject().getAlgorithmsList();
 		
 	}
@@ -171,7 +171,7 @@ public class ProjectController {
 		
 		
 //		projectService.deleteAllByNames(Arrays.asList(bean.getNames()));
-		accountService.delProjectsByNames(account, bean.getNames());
+		projectService.deleteByAccountAndNames(account, new HashSet<String>(Arrays.asList(bean.getNames())));
 		
 		log.debug("==============redirect===================");
 		return new RedirectView(RequestPath.project);
@@ -188,7 +188,7 @@ public class ProjectController {
 	@PostMapping(RequestPath.assignAlgorithm)
 	public RedirectView postAssignAlgorithm(
 			@SessionAttribute("currentProject") ProjectModel project,
-			@Valid @ModelAttribute("newAlgorithm") AlgorithmModel algorithm
+			@Valid @ModelAttribute("newAlgorithm") Algorithm algorithm
 			) {
 		log.debug("Adding algorithm: {}" ,algorithm.getName());
 		log.debug("Project: {}", project.getId() + project.getName());
@@ -206,7 +206,7 @@ public class ProjectController {
 		log.debug("Selected algorithms for deleteion:{}", StringUtils.arrayToCommaDelimitedString(bean.getNames()));
 		log.debug("Project for deletion in: {}", project);
 		
-		projectService.delAlgorithmsByNames(project, bean.getNames());
+		projectService.deleteAlgorithms(project, new HashSet<String>(Arrays.asList(bean.getNames())));
 		
 		return new RedirectView(String.format("%s/%s", RequestPath.project, project.getName()));
 	}

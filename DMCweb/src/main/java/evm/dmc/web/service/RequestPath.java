@@ -17,6 +17,8 @@ public  final  class RequestPath {
 	@Getter public static final String auth = "/authenticate";
 	@Getter public static final String logout = "/logout";
 	
+	@Getter public static final String getAll = "/getAll";
+	
 	@Getter public static final String project ="/project";
 	@Getter public static final String add ="/add";
 	@Getter public static final String assign ="/assign";
@@ -26,6 +28,7 @@ public  final  class RequestPath {
 //	@Getter public static final String newAlg = project + "/newalg";
 	
 	@Getter public static final String algorithm = "/algorithm";
+	@Getter public static final String dataset = "/dataset";
 	
 	@Getter public static final String delAlgorithm = algorithm + delete;
 	@Getter public static final String projDelAlgorithm = project + delAlgorithm;

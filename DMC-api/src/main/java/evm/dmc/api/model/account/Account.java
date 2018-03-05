@@ -46,7 +46,6 @@ import lombok.extern.slf4j.Slf4j;
 @Inheritance(strategy=InheritanceType.SINGLE_TABLE)
 @EqualsAndHashCode(exclude={"projects"})
 @ToString(exclude="projects")
-@Slf4j
 public class Account implements Serializable {
 	@Transient
 	private static final String NOT_BLANK_MESSAGE = "{error.emptyField}";
@@ -134,19 +133,19 @@ public class Account implements Serializable {
 		project.setAccount(null);
 //		return this;
 	}
-	
-	public void removeProjectByName(String name) {
-
-		projects.removeIf((proj) -> proj.getName().equals(name));
-	}
-	
-	public void removeProjectsByNames(String names[]) {
-//		projects.forEach((proj) -> {if( nameContainsOneOf(proj.getName(), names) ) removeProject(proj);});
-		projects.removeIf((proj) -> nameContainsOneOf(proj.getName(), names));
-	}
-	
-	private static boolean nameContainsOneOf(String name, String[] names) {
-		return Arrays.stream(names).anyMatch(name :: contains);
-	}
+//	
+//	public void removeProjectByName(String name) {
+//
+//		projects.removeIf((proj) -> proj.getName().equals(name));
+//	}
+//	
+//	public void removeProjectsByNames(String names[]) {
+////		projects.forEach((proj) -> {if( nameContainsOneOf(proj.getName(), names) ) removeProject(proj);});
+//		projects.removeIf((proj) -> nameContainsOneOf(proj.getName(), names));
+//	}
+//	
+//	private static boolean nameContainsOneOf(String name, String[] names) {
+//		return Arrays.stream(names).anyMatch(name :: contains);
+//	}
 
 }

@@ -1,5 +1,6 @@
 package evm.dmc.web.controllers.project;
 
+import static evm.dmc.web.service.AlgorithmService.getNewAlgorithm;
 import static org.junit.Assert.*;
 import static org.mockito.Matchers.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
@@ -36,16 +37,17 @@ import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
-import evm.dmc.api.model.AlgorithmModel;
 import evm.dmc.api.model.ProjectModel;
 import evm.dmc.api.model.ProjectType;
 import evm.dmc.api.model.account.Account;
+import evm.dmc.api.model.algorithm.Algorithm;
 import evm.dmc.config.SecurityConfig;
 import evm.dmc.web.service.ProjectService;
 import evm.dmc.web.service.RequestPath;
 import evm.dmc.web.service.Views;
 import evm.dmc.web.controllers.CheckboxNamesBean;
 import evm.dmc.web.service.AccountService;
+import evm.dmc.web.service.AlgorithmService;
 import lombok.extern.slf4j.Slf4j;
 
 @RunWith(SpringRunner.class)
@@ -94,6 +96,7 @@ public class ProjectControllerTest {
 			.thenReturn(acc);
 		
 		Mockito.when(projServ.getNew()).thenReturn(proj);
+		Mockito.when(projServ.getNewAlgorithm()).thenReturn(AlgorithmService.getNewAlgorithm());
 		
 	}
 	
@@ -140,7 +143,7 @@ public class ProjectControllerTest {
 	@Test
 	@WithMockUser("Alex")
 	public final void testGetProjectWithNotEmptyAlgorithmsSet() throws Exception {
-		AlgorithmModel alg = new AlgorithmModel();
+		Algorithm alg = getNewAlgorithm();
 		alg.setName("Algorithm0");
 		alg.setParentProject(proj);
 		proj.getAlgorithms().add(alg);
@@ -158,7 +161,7 @@ public class ProjectControllerTest {
 	@Test
 	@WithMockUser("Alex")
 	public final void testPostDelAlgorithm() throws Exception {
-		AlgorithmModel algorithm = new AlgorithmModel();
+		Algorithm algorithm = getNewAlgorithm();
 		algorithm.setName("testAlg0");
 		
 		algorithm.setParentProject(proj);

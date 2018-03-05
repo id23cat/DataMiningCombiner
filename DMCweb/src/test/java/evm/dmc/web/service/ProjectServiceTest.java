@@ -5,6 +5,7 @@ import static org.junit.Assert.*;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 import org.junit.Before;
@@ -18,11 +19,14 @@ import org.springframework.context.annotation.ComponentScan;
 import org.springframework.test.annotation.Rollback;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit4.SpringRunner;
+import org.springframework.transaction.annotation.Transactional;
+import org.springframework.transaction.annotation.Propagation;
 
-import evm.dmc.api.model.AlgorithmModel;
 import evm.dmc.api.model.ProjectModel;
 import evm.dmc.api.model.ProjectType;
 import evm.dmc.api.model.account.Account;
+import evm.dmc.api.model.algorithm.Algorithm;
+import evm.dmc.api.model.algorithm.SubAlgorithm;
 import evm.dmc.web.exceptions.ProjectNotFoundException;
 import evm.dmc.web.service.ProjectService;
 import evm.dmc.web.service.AccountService;
@@ -32,7 +36,8 @@ import lombok.extern.slf4j.Slf4j;
 @SpringBootTest
 @DataJpaTest
 @ActiveProfiles({"test", "devH2"})
-@Rollback
+//@Rollback
+//@Transactional(propagation=Propagation.REQUIRES_NEW)
 @ComponentScan( basePackages = { "evm.dmc.web", "evm.dmc.core", "evm.dmc.service", "evm.dmc.model"})
 @Slf4j
 public class ProjectServiceTest {
@@ -94,41 +99,118 @@ public class ProjectServiceTest {
 	
 	@Test
 	public final void testAssignAlgorithm() {
-		AlgorithmModel newAlgorithm = new AlgorithmModel();
+		Algorithm newAlgorithm = AlgorithmService.getNewAlgorithm();
 		newAlgorithm.setName("newTestAlg");
 		
-		AlgorithmModel persistedAlg = projectService
-				.assignAlgorithm(projectService.getByName(PROJECTNAME_1).findFirst().get(), newAlgorithm);
+		ProjectModel project = projectService.getByName(PROJECTNAME_1).findFirst().get();
+		Long id = project.getId();
+		assertNotNull(id);
+		Algorithm persistedAlg = projectService.assignAlgorithm(project, newAlgorithm);
 		
-		AlgorithmModel assertAlg = entityManager.find(AlgorithmModel.class, persistedAlg.getId());
+		assertThat(project.getId(), equalTo(id));
+		assertNotNull(persistedAlg.getId());
+		Algorithm assertAlg = entityManager.find(Algorithm.class, persistedAlg.getId());
 		assertThat(assertAlg, equalTo(persistedAlg));
 	}
 	
 	@Test
-	public final void testDelAlgorithmsByNames() {
-		AlgorithmModel newAlgorithm1 = new AlgorithmModel();
+	public final void testDeleteAlgorithm() {
+		Algorithm newAlgorithm1 = AlgorithmService.getNewAlgorithm();
 		newAlgorithm1.setName("newTestAlg1");
-		AlgorithmModel newAlgorithm2 = new AlgorithmModel();
+		Algorithm newAlgorithm2 = AlgorithmService.getNewAlgorithm();
 		newAlgorithm2.setName("newTestAlg2");
-		AlgorithmModel newAlgorithm3 = new AlgorithmModel();
+		Algorithm newAlgorithm3 = AlgorithmService.getNewAlgorithm();
 		newAlgorithm3.setName("newTestAlg3");
 		
 		ProjectModel project = projectService.getByName(PROJECTNAME_1).findFirst().get();
-		project.assignAlgorithm(newAlgorithm1);
-		project.assignAlgorithm(newAlgorithm2);
-		project.assignAlgorithm(newAlgorithm3);
+		assertThat(project.getAlgorithms().size(), equalTo(0));
 		
-		projectService.save(project);
+		projectService.assignAlgorithm(project, newAlgorithm1);
+		projectService.assignAlgorithm(project, newAlgorithm2);
+		projectService.assignAlgorithm(project, newAlgorithm3);
 		
-		List<String> names = project.getAlgorithms().stream()
-							.map(alg -> alg.getName()).collect(Collectors.toList());
+		assertThat(project.getAlgorithms().size(), equalTo(3));
 		
-		String safeName = names.remove(0);
+		project = projectService.deleteAlgorithm(project, newAlgorithm1);
 		
-		projectService.delAlgorithmsByNames(project, names.toArray(new String[0]));
+		assertThat(project.getAlgorithms().size(), equalTo(2));
+		assertThat(project.getAlgorithms(), hasItems(newAlgorithm2, newAlgorithm3));
+		
+		assertNull(entityManager.find(Algorithm.class, newAlgorithm1.getId()));
+		assertNotNull(entityManager.find(Algorithm.class, newAlgorithm2.getId()));
+		assertNotNull(entityManager.find(Algorithm.class, newAlgorithm3.getId()));
+		
+	}
+	
+	@Test
+	public final void testDeleteAlgorithmWithExistingDependentProject() {
+		Algorithm newAlgorithm1 = AlgorithmService.getNewAlgorithm();
+		newAlgorithm1.setName("newTestAlg1");
+		Algorithm newAlgorithm2 = AlgorithmService.getNewAlgorithm();
+		newAlgorithm2.setName("newTestAlg2");
+		Algorithm newAlgorithm3 = AlgorithmService.getNewAlgorithm();
+		newAlgorithm3.setName("newTestAlg3");
+		
+		ProjectModel project = projectService.getByName(PROJECTNAME_1).findFirst().get();
+		ProjectModel depProject = projectService.getByName(PROJECTNAME_2).findFirst().get();
+		assertThat(project.getAlgorithms().size(), equalTo(0));
+		
+		newAlgorithm1 = projectService.assignAlgorithm(project, newAlgorithm1);
+		newAlgorithm2 = projectService.assignAlgorithm(project, newAlgorithm2);
+		newAlgorithm3 = projectService.assignAlgorithm(project, newAlgorithm3);
+		
+		newAlgorithm1 = projectService.addAlgorithm(depProject, newAlgorithm1);
+		
+		assertThat(project.getAlgorithms().size(), equalTo(3));
+		assertThat(depProject.getAlgorithms(), hasItem(newAlgorithm1));
+		assertThat(newAlgorithm1.getParentProject(), equalTo(project));
+		
+		project = projectService.deleteAlgorithm(project, newAlgorithm1);
+		
+		assertThat(project.getAlgorithms().size(), equalTo(2));
+		assertThat(project.getAlgorithms(), hasItems(newAlgorithm2, newAlgorithm3));
+		assertNotNull(entityManager.find(Algorithm.class, newAlgorithm2.getId()));
+		assertNotNull(entityManager.find(Algorithm.class, newAlgorithm3.getId()));
+		
+		assertThat(depProject.getAlgorithms(), hasItem(newAlgorithm1));
+		assertThat(newAlgorithm1.getParentProject(), equalTo(depProject));
+		assertThat(newAlgorithm1.getDependentProjects(), not(hasItem(depProject)));
+	}
+	
+	@Test
+	public final void testDelAlgorithmsByNames() {
+		Algorithm newAlgorithm1 = AlgorithmService.getNewAlgorithm();
+		newAlgorithm1.setName("newTestAlg1");
+		Algorithm newAlgorithm2 = AlgorithmService.getNewAlgorithm();
+		newAlgorithm2.setName("newTestAlg2");
+		Algorithm newAlgorithm3 = AlgorithmService.getNewAlgorithm();
+		newAlgorithm3.setName("newTestAlg3");
+		
+		ProjectModel project = projectService.getByName(PROJECTNAME_1).findFirst().get();
+		assertThat(project.getAlgorithms().size(), equalTo(0));
+		
+		projectService.assignAlgorithm(project, newAlgorithm1);
+		projectService.assignAlgorithm(project, newAlgorithm2);
+		projectService.assignAlgorithm(project, newAlgorithm3);
+		
+//		projectService.save(project);
+		log.debug("Alg1: {}", newAlgorithm1);
+		
+		assertThat(project.getAlgorithms().size(), equalTo(3));
+		
+		Set<String> names = project.getAlgorithms().stream()
+							.map(alg -> alg.getName()).collect(Collectors.toSet());
+		
+		names.remove(newAlgorithm1.getName());
+		
+		project = projectService.deleteAlgorithms(project, names);
 		
 		assertThat(project.getAlgorithms().size(), equalTo(1));
-		assertThat(project.getAlgorithms().stream().findFirst().get().getName(), equalTo(safeName));
+		assertThat(project.getAlgorithms().stream().findFirst().get(), equalTo(newAlgorithm1));
+		
+		assertNull(entityManager.find(Algorithm.class, newAlgorithm2.getId()));
+		assertNull(entityManager.find(Algorithm.class, newAlgorithm3.getId()));
+		assertNotNull(entityManager.find(Algorithm.class, newAlgorithm1.getId()));
 		
 //		assertThat(projectService.getByAccount(account).count(), equalTo(1L)); 
 //		assertThat(projectService.getByAccount(account).findFirst().get().getName(), equalTo(safeName)); 

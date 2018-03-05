@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
-import evm.dmc.api.model.AlgorithmModel;
+import evm.dmc.api.model.algorithm.Algorithm;
 //import evm.dmc.config.ViewsConfig;
 import evm.dmc.web.testing.ShowTableController;
 

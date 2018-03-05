@@ -1,6 +1,7 @@
 package evm.dmc.web.service;
 
 import java.util.Optional;
+import java.util.Set;
 
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -25,7 +26,7 @@ public interface AccountService extends UserDetailsService {
 	
 	Account delProject(Account account, ProjectModel project);
 	
-	Account delProjectsByNames(Account account, String[] names);
+	Account delProjectsByNames(Account account, Set<String> names);
 
 	Optional<ProjectModel> findProjectByName(Account account, String name);
 }

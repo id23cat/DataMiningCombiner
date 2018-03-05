@@ -26,9 +26,9 @@ import org.springframework.web.servlet.view.RedirectView;
 import org.springframework.web.util.UriComponents;
 import org.springframework.web.util.UriComponentsBuilder;
 
-import evm.dmc.api.model.AlgorithmModel;
 import evm.dmc.api.model.ProjectModel;
 import evm.dmc.api.model.account.Account;
+import evm.dmc.api.model.algorithm.Algorithm;
 import evm.dmc.api.model.data.MetaData;
 import evm.dmc.web.exceptions.AlgorithmNotFoundException;
 import evm.dmc.web.exceptions.ProjectNotFoundException;
@@ -38,8 +38,6 @@ import evm.dmc.web.service.DataStorageService;
 import evm.dmc.web.service.ProjectService;
 import evm.dmc.web.service.RequestPath;
 import evm.dmc.web.service.Views;
-import evm.dmc.web.service.data.DataPreview;
-import evm.dmc.web.service.data.DataPreview.HeaderItem;
 import lombok.extern.slf4j.Slf4j;
 
 @Controller
@@ -66,7 +64,7 @@ public class AlgorithmController {
 	
 	
 	@Autowired
-	private DataStorageService metaDataService;
+	private DataStorageService dataStorageService;
 	
 	@Autowired
 	private ProjectService projectService;
@@ -117,14 +115,14 @@ public class AlgorithmController {
 			@ModelAttribute(MODEL_MetaData) Optional<MetaData> metaData, 
 			Model model,
 			HttpServletRequest request) throws AlgorithmNotFoundException {
-		AlgorithmModel algorithm = project.getAlgorithms()
+		Algorithm algorithm = project.getAlgorithms()
 										.stream()
 										.filter((alg) -> alg.getName().equals(algName))
 										.findAny()
 										.orElseThrow(AlgorithmNotFoundException::new);
 		
 		// if algorithm is empty (new algorithm)
-		if(algorithm.getFunctions().isEmpty()) {
+		if(algorithm.getAlgorithmSteps().isEmpty()) {
 //			log.debug("-== Emty algorithm selected. Running wizard: {}", RequestPath.algorithmWozard);
 			
 			UriComponents srcUploadUri = UriComponentsBuilder.fromPath(BASE_URL).path(RequestPath.setSource)
@@ -139,7 +137,7 @@ public class AlgorithmController {
 			
 			if(metaData.isPresent()) {
 				model.addAttribute(MODEL_MetaData, metaData.get());
-				model.addAttribute(MODEL_Preview, metaDataService.getPreview(metaData.get()));
+				model.addAttribute(MODEL_Preview, dataStorageService.getPreview(metaData.get()));
 				hasHeader.setHasHeader(metaData.get().getStorage().isHasHeader());
 //				model.addAttribute(MODEL_HeaderItems, new DataPreview.ItemsList(preview.get().getHeaderItems()));
 			}
@@ -172,7 +170,7 @@ public class AlgorithmController {
 		
 //		DataPreview preview = fileService.store(DataStorageService.relativePath(account, project), file);
 		log.debug("HasHeader checkbox state: {}", hasHeader.isHasHeader());
-		MetaData metaData = metaDataService.saveData(account, project, file, hasHeader.isHasHeader());
+		MetaData metaData = dataStorageService.saveData(account, project, file, hasHeader.isHasHeader());
 		ra.addFlashAttribute(MODEL_MetaData, Optional.of(metaData));
 		
 		log.debug("-== Receiving file: {}", file.getName());
@@ -185,16 +183,16 @@ public class AlgorithmController {
 	
 	@PostMapping(RequestPath.setSourceAttributes)
 	public RedirectView postSourceAttribytes(
-			@Valid @ModelAttribute(MODEL_HeaderItems) DataPreview.ItemsList attributes, 
+			@Valid @ModelAttribute(MODEL_MetaData) MetaData metaData, 
 			@PathVariable(PATH_ProjectName) String projName,
 			@PathVariable(PATH_AlgName) String algName) {
 		
-		List<HeaderItem> selectedItems = attributes.getItems().stream()
-												.filter((item) -> {return item.isChecked();})
-												.collect(Collectors.toList());
+//		List<HeaderItem> selectedItems = attributes.getItems().stream()
+//												.filter((item) -> {return item.isChecked();})
+//												.collect(Collectors.toList());
+		dataStorageService.save(metaData);
 		log.debug("-== Getting data attributes comlete");
-		log.trace("SelectedItems: {}", selectedItems.size());
-		log.trace("Items: {}", selectedItems);
+		
 		UriComponents uriComponents = UriComponentsBuilder.fromPath(BASE_URL)
 				.buildAndExpand(projName, algName);
 		return new RedirectView(uriComponents.toUriString());

@@ -157,11 +157,18 @@
 		</div>
 
 			
-		 	<ul class="pager">
+		 	<!-- <ul class="pager">
 				<li><a class="btn btn-info" role="button" th:href="@{${flowExecutionUrl}(_eventId='prev')}" >Previous</a></li>
 				<li class="btn btn-danger"><a th:href="@{${flowExecutionUrl}(_eventId='cancel')}" >Cancel</a></li>
 				<li><a th:href="@{${flowExecutionUrl}(_eventId='next')}">Next</a></li>
-			</ul>
+			</ul> -->
+			
+			<!-- <a class="btn btn-warning" role="button" th:href="@{${flowExecutionUrl}(_eventId='cancel')}" >Cancel</a>
+			<div class="btn-group">
+				<a class="btn btn-info disabled" role="button" th:href="@{${flowExecutionUrl}(_eventId='prev')}" >Previous</a>
+				
+				<a class="btn btn-info" role="button" th:href="@{${flowExecutionUrl}(_eventId='next')}">Next</a>
+			</div> -->
 			
 			<a class="btn btn-warning" role="button" th:href="@{${flowExecutionUrl}(_eventId='cancel')}" >Cancel</a>
 			<div class="btn-group">

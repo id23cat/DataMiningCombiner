@@ -209,6 +209,11 @@ public class FileStorageServiceImpl implements DataStorageService {
 		return Paths.get(metaData.getStorage().getUri());
 	}
 	
+	@Override
+	public MetaData save(MetaData metaData) {
+		return metaDataService.save(metaData);
+	}
+	
 	/**
 	 * @param destinationPath where to save file
 	 * @param file data

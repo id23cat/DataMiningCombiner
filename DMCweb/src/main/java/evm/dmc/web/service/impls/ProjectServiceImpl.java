@@ -12,17 +12,24 @@ import java.util.stream.Stream;
 
 import javax.persistence.EntityManager;
 
+import org.assertj.core.internal.Lists;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
-import evm.dmc.api.model.AlgorithmModel;
 import evm.dmc.api.model.ProjectModel;
 import evm.dmc.api.model.ProjectType;
 import evm.dmc.api.model.account.Account;
+import evm.dmc.api.model.algorithm.Algorithm;
+import evm.dmc.api.model.algorithm.SubAlgorithm;
 import evm.dmc.api.model.data.MetaData;
+import evm.dmc.model.repositories.AlgorithmRepository;
+import evm.dmc.model.repositories.MetaDataRepository;
 import evm.dmc.model.repositories.ProjectModelRepository;
 import evm.dmc.web.exceptions.EntityNotFoundException;
+import evm.dmc.web.service.AlgorithmService;
 import evm.dmc.web.service.ProjectService;
 import lombok.extern.slf4j.Slf4j;
 
@@ -33,8 +40,14 @@ public class ProjectServiceImpl implements ProjectService {
 	private ProjectModelRepository projectRepo;
 	
 	@Autowired
+	private AlgorithmRepository algorithmRepository;
+	
+	@Autowired
+	private MetaDataRepository metaDataRepository;
+	
+	@Autowired
 	private EntityManager em;
-
+	
 	@Override
 	@Transactional
 	public ProjectService save(Optional<ProjectModel> proModel) {
@@ -46,9 +59,8 @@ public class ProjectServiceImpl implements ProjectService {
 	
 	@Override
 	@Transactional
-	public ProjectService save(ProjectModel proModel) {
-		projectRepo.save(proModel);
-		return this;
+	public ProjectModel save(ProjectModel proModel) {
+		return projectRepo.save(proModel);
 	}
 	
 
@@ -77,6 +89,14 @@ public class ProjectServiceImpl implements ProjectService {
 		projectRepo.deleteByName(name);
 		projectRepo.flush();
 		return this;
+	}
+	
+	@Override
+	@Transactional
+	public ProjectService deleteByAccountAndNames(Account account, Set<String> names) {
+		projectRepo.deleteByAccountAndNameIn(account, names);
+		return this;
+		
 	}
 	
 	@Override
@@ -147,7 +167,7 @@ public class ProjectServiceImpl implements ProjectService {
 	}
 	
 	@Override
-	@Transactional
+	@Transactional(readOnly = true)
 	public Set<String> getNamesByAccount(Account account) {
 		return getByAccount(account).map((proj) -> {return proj.getName();}).collect(Collectors.toSet());
 	}
@@ -158,41 +178,80 @@ public class ProjectServiceImpl implements ProjectService {
 	}
 
 	@Override
-	public ProjectModel getNew(Account account, ProjectType type, Set<AlgorithmModel> algorithms,
+	public ProjectModel getNew(Account account, ProjectType type, Set<Algorithm> algorithms,
 			Properties properties, String projectName) {
 		return new ProjectModel(account, type, algorithms, properties, projectName);
 	}
 	
 	@Override
-	public AlgorithmModel getNewAlgorithm() {
-		return new AlgorithmModel();
-	}
-	
-	@Override
+//	@Transactional(propagation = Propagation.REQUIRES_NEW)
 	@Transactional
-	public AlgorithmModel assignAlgorithm(ProjectModel project, AlgorithmModel algorithm) {
+	public Algorithm assignAlgorithm(ProjectModel project, Algorithm algorithm) {
 		
 		project = merge(project);
+//		project = save(project);
 		
-		project.assignAlgorithm(algorithm);
-		save(project);
+//		project.assignAlgorithm(algorithm);
+		algorithm.getDependentProjects().remove(project);
+		project.getAlgorithms().add(algorithm);
+		algorithm.setParentProject(project);
 		
-		return findAgorithmbyName(project, algorithm.getName())
-				.orElseThrow(
-						() -> new EntityNotFoundException(
-								String.format("Algorithm with name [%s] not found",
-										algorithm.getName()))
-				);
+		return algorithmRepository.save(algorithm);
 	}
 	
 	@Override
 	@Transactional
-	public ProjectModel delAlgorithmsByNames(ProjectModel project, String[] names) {
+	public Algorithm addAlgorithm(ProjectModel project, Algorithm algorithm) {
+		if(algorithm.getParentProject() == null) {
+			return assignAlgorithm(project, algorithm);
+		}
+		project = merge(project);
+		algorithm.getDependentProjects().add(project);
+		project.getAlgorithms().add(algorithm);
+		
+		return algorithm;
+	}
+	
+	@Override
+	@Transactional
+	@Modifying
+	public ProjectModel deleteAlgorithm(ProjectModel project, Algorithm algorithm) {
+		project = merge(project);
+		Optional<ProjectModel> newParrentProject = algorithm.getDependentProjects().stream().findFirst();
+		project.getAlgorithms().remove(algorithm);
+		log.debug("Algorithms set after removing algorithm: {}", project.getAlgorithms().size());
+//		project = merge(project);
+		if(newParrentProject.isPresent()) {
+			algorithm = assignAlgorithm(newParrentProject.get(), algorithm);
+//		}
+		} else {
+			algorithmRepository.delete(algorithm);
+//			algorithmRepository.flush();
+		}
+		
+//		save(project);
+//		projectRepo.flush();
+		return project;
+	}
+	
+	@Override
+	@Transactional
+	@Modifying
+	public ProjectModel deleteAlgorithms(ProjectModel project, Set<String> names) {
 		project = merge(project);
 //		project.getAlgorithms().removeIf((alg) -> nameContainsOneOf(alg.getName(), bean.getNames()));
-		project.removeAlgorithmsByNames(names);
+//		project.removeAlgorithmsByNames(names);
+		Set<Algorithm> algorithms = algorithmRepository.findByDependentProjectsAndNameIn(project, names);
+		algorithms.addAll(algorithmRepository.findByParentProjectAndNameIn(project, names));
+		log.debug("Algorithmds for deletion: {}", algorithms.stream().map(alg -> alg.getName()).collect(Collectors.toSet()));
 		
-		save(project);
+//		project.getAlgorithms().removeAll(algorithms);
+//		algorithmRepository.delete(algorithms);
+		projectRepo.flush();
+		for(Algorithm alg: algorithms) {
+			deleteAlgorithm(project, alg);
+		}
+//		save(project);
 		
 		return project;
 	}
@@ -202,15 +261,21 @@ public class ProjectServiceImpl implements ProjectService {
 	public MetaData persistNewData(ProjectModel project, MetaData data) {
 		project = merge(project);
 		project.addMetaData(data);
-		save(project);
-		return findMetaDataByName(project, data.getName())
-				.orElseThrow(
-						() -> new EntityNotFoundException(
-								new StringBuilder("MetaData with name ")
-									.append(data.getName())
-									.append(" not found")
-									.toString())
-				);
+//		save(project);
+//		return findMetaDataByName(project, data.getName())
+//				.orElseThrow(
+//						() -> new EntityNotFoundException(
+//								new StringBuilder("MetaData with name ")
+//									.append(data.getName())
+//									.append(" not found")
+//									.toString())
+//				);
+		return metaDataRepository.save(data);
+	}
+	
+	@Override
+	public Algorithm getNewAlgorithm() {
+		return AlgorithmService.getNewAlgorithm();
 	}
 	
 	public static <T extends Collection<ProjectModel>> T getAsCollection(Stream<ProjectModel> stream, 
@@ -221,7 +286,7 @@ public class ProjectServiceImpl implements ProjectService {
 	}
 	
 	
-	public Optional<AlgorithmModel> findAgorithmbyName(ProjectModel project, String algName) {
+	public Optional<Algorithm> findAgorithmbyName(ProjectModel project, String algName) {
 		return project.getAlgorithms().stream()
 				.filter(prj -> prj.getName().equals(algName)).findAny();
 	}
@@ -234,6 +299,9 @@ public class ProjectServiceImpl implements ProjectService {
 //	@Override
 	private ProjectModel merge(ProjectModel project) {
 		return em.merge(project);
+//		if(project.getId() == null)
+//			return null;
+//		return projectRepo.getOne(project.getId());
 	}
 
 

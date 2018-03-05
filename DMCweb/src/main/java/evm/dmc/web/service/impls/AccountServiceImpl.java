@@ -2,6 +2,8 @@ package evm.dmc.web.service.impls;
 
 import java.util.Collections;
 import java.util.Optional;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 import javax.annotation.PostConstruct;
 import javax.persistence.EntityManager;
@@ -49,9 +51,6 @@ public class AccountServiceImpl implements AccountService {
     private AccountRepository accountRepository;
 	
 	@Autowired
-	private EntityManager em;
-	
-	@Autowired
 	private PasswordEncoder passwordEncoder;
 	
 	@Value("${dmc.security.admin.username}")
@@ -76,8 +75,7 @@ public class AccountServiceImpl implements AccountService {
 	@Transactional
 	public Account save(Account account) {
 		account.setPassword(passwordEncoder.encode(account.getPassword()));
-		accountRepository.save(account);
-		return account;
+		return accountRepository.save(account);
 	}
 
 	@Override
@@ -127,10 +125,16 @@ public class AccountServiceImpl implements AccountService {
 	
 	@Override
 	@Transactional
-	public Account delProjectsByNames(Account account, String[] names) {
+	public Account delProjectsByNames(Account account, Set<String> names) {
 		account = merge(account);
-		account.removeProjectsByNames(names);
-//		save(account);
+//		account.removeProjectsByNames(names);
+		Set<ProjectModel> remProjects = account.getProjects().parallelStream()
+			.filter((proj) -> names.contains(proj.getName()))
+			.collect(Collectors.toSet());
+		
+		account.getProjects().removeAll(remProjects);
+//		accountRepository.flush();
+//		return save(account);
 		return account;
 	}
 	
@@ -145,7 +149,8 @@ public class AccountServiceImpl implements AccountService {
 	
 	@Transactional
 	private Account merge(Account account) {
-		return em.merge(account);
+//		return em.merge(account);
+		return accountRepository.getOne(account.getId());
 	}
 	
 	private Authentication authenticate(Account account) {

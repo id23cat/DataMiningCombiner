@@ -6,21 +6,22 @@ import java.util.Properties;
 import java.util.Set;
 import java.util.stream.Stream;
 
-import evm.dmc.api.model.AlgorithmModel;
 import evm.dmc.api.model.ProjectModel;
 import evm.dmc.api.model.ProjectType;
 import evm.dmc.api.model.account.Account;
+import evm.dmc.api.model.algorithm.Algorithm;
 import evm.dmc.api.model.data.MetaData;
 
 public interface ProjectService {
 	ProjectService save(Optional<ProjectModel> proModel);
-	ProjectService save(ProjectModel proModel);
+	ProjectModel save(ProjectModel proModel);
 	
 //	ProjectModel merge(ProjectModel project);
 	
 	ProjectService delete(Optional<ProjectModel> proModel);
 	ProjectService delete(ProjectModel proModel);
 	ProjectService deleteByName(String name);
+	ProjectService deleteByAccountAndNames(Account account, Set<String> names);
 	ProjectService deleteAllByNames(List<String> names);
 	
 	Stream<ProjectModel> getAll();
@@ -36,14 +37,14 @@ public interface ProjectService {
 	
 	Set<String> getNamesByAccount(Account account);
 	
-	AlgorithmModel assignAlgorithm(ProjectModel project, AlgorithmModel algorithm);
-	
-	ProjectModel delAlgorithmsByNames(ProjectModel project, String[] names);
+	Algorithm assignAlgorithm(ProjectModel project, Algorithm algorithm);
+	Algorithm addAlgorithm(ProjectModel project, Algorithm algorithm);
+	ProjectModel deleteAlgorithm(ProjectModel project, Algorithm algorithm);
+	ProjectModel deleteAlgorithms(ProjectModel project, Set<String> names);
 	
 	ProjectModel getNew();
-	ProjectModel getNew(Account account, ProjectType type, Set<AlgorithmModel> algorithms, Properties properties, String projectName);
-	
-	AlgorithmModel getNewAlgorithm();
+	ProjectModel getNew(Account account, ProjectType type, Set<Algorithm> algorithms, Properties properties, String projectName);
+	Algorithm getNewAlgorithm();
 	
 	MetaData persistNewData(ProjectModel project, MetaData data);
 

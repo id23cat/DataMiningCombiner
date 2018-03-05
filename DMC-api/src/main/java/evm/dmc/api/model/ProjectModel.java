@@ -34,17 +34,20 @@ import javax.persistence.PreRemove;
 import javax.persistence.Table;
 import javax.persistence.Transient;
 import javax.persistence.UniqueConstraint;
+import javax.persistence.Version;
 import javax.validation.constraints.NotNull;
 
 import org.hibernate.validator.constraints.NotBlank;
 
 import evm.dmc.api.model.account.Account;
+import evm.dmc.api.model.algorithm.Algorithm;
 import evm.dmc.api.model.data.MetaData;
 import lombok.AccessLevel;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.Setter;
 import lombok.ToString;
+import lombok.experimental.Delegate;
 
 
 @Data
@@ -69,6 +72,9 @@ public class ProjectModel implements Serializable {
 	@Setter(AccessLevel.NONE) 
 	private Long id;
 	
+//	@Version
+//	private Long version;
+	
 	@ManyToOne(cascade = CascadeType.MERGE)	//(optional = false)
 	@JoinColumn(name = "account_id")
 	private Account account;
@@ -84,7 +90,8 @@ public class ProjectModel implements Serializable {
 	)
 //	@OneToMany(mappedBy="parentProject", fetch = FetchType.LAZY,
 //			cascade = CascadeType.ALL, orphanRemoval = true)
-	private Set<AlgorithmModel> algorithms = new HashSet<>();
+//	@Delegate(type=Set.class)
+	private Set<Algorithm> algorithms = new HashSet<>();
 	
 //	@Transient
 //	private Properties properties = new Properties();
@@ -109,7 +116,7 @@ public class ProjectModel implements Serializable {
 		super();
 	}
 	
-	public ProjectModel(Account acc, ProjectType type, Set<AlgorithmModel> algorithms, Properties properties, String projectName){
+	public ProjectModel(Account acc, ProjectType type, Set<Algorithm> algorithms, Properties properties, String projectName){
 		this.projectType = type;
 		if(algorithms != null  && !algorithms.isEmpty())
 			this.algorithms =  new HashSet<>(algorithms);
@@ -131,42 +138,42 @@ public class ProjectModel implements Serializable {
 	 * @param algorithm
 	 * @return this
 	 */
-	public AlgorithmModel assignAlgorithm(AlgorithmModel algorithm) {
-		algorithms.add(algorithm);
-		algorithm.setParentProject(this);
-		return algorithm;
-	}
+//	public Algorithm assignAlgorithm(Algorithm algorithm) {
+//		algorithms.add(algorithm);
+//		algorithm.setParentProject(this);
+//		return algorithm;
+//	}
 	
-	public ProjectModel removeAlgorithm(AlgorithmModel algorithm) {
-		removeAlgorithmLinkToThis(algorithm);
-		algorithms.remove(algorithm);
-		return this;
-	}
+//	public ProjectModel removeAlgorithm(Algorithm algorithm) {
+//		removeAlgorithmLinkToThis(algorithm);
+//		algorithms.remove(algorithm);
+//		return this;
+//	}
 	
-	public ProjectModel removeAlgorithmsByNames(String[] names) {
-//		for(Iterator<AlgorithmModel> iter = algorithms.iterator(); iter.hasNext();) {
-//			
-//			if(Arrays.stream(names).anyMatch(iter.alg.getName() :: contains)){
-//				removeAlgorithm(alg);
-//			}
-//		}
-		
-		algorithms.removeIf( alg -> {
-				if(!Arrays.stream(names).anyMatch(alg.getName() :: contains)) {
-					return false;
-				}
-				removeAlgorithmLinkToThis(alg);
-				return true;
-		});
-
-		return this;
-	}
+//	public ProjectModel removeAlgorithmsByNames(String[] names) {
+////		for(Iterator<AlgorithmModel> iter = algorithms.iterator(); iter.hasNext();) {
+////			
+////			if(Arrays.stream(names).anyMatch(iter.alg.getName() :: contains)){
+////				removeAlgorithm(alg);
+////			}
+////		}
+//		
+//		algorithms.removeIf( alg -> {
+//				if(!Arrays.stream(names).anyMatch(alg.getName() :: contains)) {
+//					return false;
+//				}
+//				removeAlgorithmLinkToThis(alg);
+//				return true;
+//		});
+//
+//		return this;
+//	}
 	
 	
-	private ProjectModel removeAlgorithmLinkToThis(AlgorithmModel algorithm) {
-		algorithm.getDependentProjects().remove(this);
-		return this;
-	}
+//	private ProjectModel removeAlgorithmLinkToThis(Algorithm algorithm) {
+//		algorithm.getDependentProjects().remove(this);
+//		return this;
+//	}
 	
 //	@PreRemove
 //	public void removeProject() {

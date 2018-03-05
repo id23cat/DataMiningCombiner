@@ -1,5 +1,6 @@
 package evm.dmc.web.controllers.project;
 
+import static evm.dmc.web.service.AlgorithmService.getNewAlgorithm;
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.junit.Assert.*;
 import static org.mockito.Matchers.any;
@@ -30,9 +31,9 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.util.UriComponents;
 import org.springframework.web.util.UriComponentsBuilder;
 
-import evm.dmc.api.model.AlgorithmModel;
 import evm.dmc.api.model.ProjectModel;
 import evm.dmc.api.model.account.Account;
+import evm.dmc.api.model.algorithm.Algorithm;
 import evm.dmc.api.model.data.DataStorageModel;
 import evm.dmc.api.model.data.MetaData;
 import evm.dmc.api.model.datapreview.DataPreview;
@@ -71,11 +72,12 @@ public class AlgorithmControllerTest {
 		String projectName = "testProject";
 		String algName = "testAlg";
 		ProjectModel testProject = new ProjectModel();
-		AlgorithmModel testAlg = new AlgorithmModel();
+		Algorithm testAlg = getNewAlgorithm();
 		testAlg.setName(algName);
 		
 		testProject.setName(projectName);
-		testProject.assignAlgorithm(testAlg);
+		testProject.getAlgorithms().add(testAlg);
+		testAlg.setParentProject(testProject);
 		
 		mockMvc.perform(get(RequestPath.project+"/"+projectName + RequestPath.algorithm+"/"+algName)
 				.sessionAttr(AlgorithmController.SESSION_CurrProject, testProject)

@@ -49,7 +49,6 @@ public class MetaDataServiceImpl implements MetaDataService{
 	@Autowired
 	EntityManager em;
 	
-	
 	@Autowired
 	public MetaDataServiceImpl(MetaDataRepository metaDataRepository, ProjectService projectService,
 			DataPreviewService previewService) {
@@ -139,7 +138,7 @@ public class MetaDataServiceImpl implements MetaDataService{
 		DataPreview preview = map.get(meta);
 		map.remove(meta);
 		
-		em.merge(meta);
+		meta = merge(meta);
 		preview.setMetaDataId(meta.getId());
 		preview = previewService.save(preview);
 		
@@ -168,7 +167,7 @@ public class MetaDataServiceImpl implements MetaDataService{
 //	@Transactional(propagation=Propagation.REQUIRES_NEW)
 	@Transactional
 	public MetaData persistAttributes(MetaData meta, List<DataAttribute> attributes) {
-		meta = em.merge(meta);
+		meta = merge(meta);
     	if(meta.getAttributes().size() == attributes.size()) {
     		setAttributesPreview(meta, attributes);
     	} else {
@@ -281,6 +280,11 @@ public class MetaDataServiceImpl implements MetaDataService{
     
     private boolean isDate(String data) {
     	return data.matches("[0-9:-]+");
+    }
+    
+    private MetaData merge(MetaData meta) {
+//    	return metaDataRepository.findOne(meta.getId());
+    	return em.merge(meta);
     }
 
 }
