@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layouts/sidebarlayout}">
+
+<body>
+	<div th:fragment="list(id, title, action, backBean, valuesList, refBase)">
+		<h3>
+			<span th:text="${title}"></span>
+		</h3>
+		<form method="post" 
+			th:action="${action}"
+			th:object="${backBean}">
+			<div class="col-sm-4 form-group">
+				<div th:each="value, stat : ${valuesList}">
+					<h4>
+						<input th:id="${id}+'_'+${value.name}" type="checkbox" 
+							th:field="*{names}"
+							th:value="${value.name}" /> 
+						
+						<a	th:href="@{__${refBase}__/__${value.name}__}">
+							<span th:text="${value.name}">Algorithm name</span>
+						</a>
+						<br>
+					</h4>
+				</div>
+				<!-- </ul> -->
+				<div th:if="${not #lists.isEmpty(valuesList)}">
+					<button th:id="deleteButton" data-toggle="confirmation"
+						class="btn btn-primary" type="submit" disabled>Delete</button>
+					<script>
+						$('[data-toggle="confirmation"]')
+							.confirmation(options)
+					</script>
+				</div>
+
+			</div>
+		</form>
+		<script>
+			$(function() {
+				var checkboxes = $("input[id^='[[${id}]]_']"), submitButt = $("#deleteButton");
+				
+				checkboxes.click(function() {
+					if (checkboxes.is(":checked")) {
+						submitButt.attr("disabled", false);
+					} else {
+						submitButt.attr("disabled", true);
+					}
+				});
+			});
+		</script>
+	</div>
+	
+<body>
+</html>

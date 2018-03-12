@@ -1,9 +1,6 @@
 package evm.dmc.web.controllers.project;
 
-import java.nio.file.Paths;
-import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
@@ -34,6 +31,7 @@ import evm.dmc.web.exceptions.AlgorithmNotFoundException;
 import evm.dmc.web.exceptions.ProjectNotFoundException;
 import evm.dmc.web.exceptions.UserNotExistsException;
 import evm.dmc.web.service.AccountService;
+import evm.dmc.web.service.AlgorithmService;
 import evm.dmc.web.service.DataStorageService;
 import evm.dmc.web.service.ProjectService;
 import evm.dmc.web.service.RequestPath;
@@ -41,13 +39,14 @@ import evm.dmc.web.service.Views;
 import lombok.extern.slf4j.Slf4j;
 
 @Controller
-@RequestMapping(RequestPath.project+"/{projectName}"+RequestPath.algorithm+"/{algName}")
-@SessionAttributes({"account", "currentProject"})
+@RequestMapping(AlgorithmController.BASE_URL)	// /project/{projectName}/algorithm/{algName}
+@SessionAttributes({AlgorithmController.SESSION_Account, AlgorithmController.SESSION_CurrProject})
 @Slf4j
 public class AlgorithmController {
 	public final static String BASE_URL = RequestPath.project+"/{projectName}"+RequestPath.algorithm+"/{algName}";
 	public final static String SESSION_Account = "account";
 	public final static String SESSION_CurrProject = "currentProject";
+	public final static String SESSION_CurrAlgorithm = "currentAlgorithm";
 	
 	public final static String MODEL_MetaData = "metaData";
 	public final static String MODEL_Preview = "preview";
@@ -62,12 +61,14 @@ public class AlgorithmController {
 	public final static String PATH_AlgName = "algName";
 	public final static String PATH_ProjectName = "projectName";
 	
-	
 	@Autowired
 	private DataStorageService dataStorageService;
 	
 	@Autowired
 	private ProjectService projectService;
+	
+	@Autowired
+	private AlgorithmService algorithmService;
 	
 	@Autowired
 	private AccountService accountService;
@@ -86,45 +87,35 @@ public class AlgorithmController {
 			@PathVariable(PATH_ProjectName) String projectName,
 			@ModelAttribute(SESSION_Account) Account account) throws ProjectNotFoundException {
 		log.debug("Call to create currentProject session bean");
-		Optional<ProjectModel> optProject = projectService.getByNameAndAccount(projectName, account);
-		if(!optProject.isPresent()){
-			log.warn("Reqiest for non-existing project {}", projectName);
-			throw new ProjectNotFoundException(String.format("Project with name %s owned by user %s not found", projectName, account.getUserName()));
-		}
-		
-		log.trace("Selected project: {}", optProject.get());
-		return optProject.get();
-		
+		return projectService.getByNameAndAccount(projectName, account)
+				.orElseThrow(() ->
+				new ProjectNotFoundException(String.format("Project with name %s owned by user %s not found", projectName, account.getUserName())));
 	}
 	
-//	@ModelAttribute("headerItems")
-//	public DataPreview.ItemsList modelDataPreviewArray(@ModelAttribute(name="previewData") Optional<DataPreview> preview) {
-//		if(preview.isPresent()){
-//			log.trace("-== PreviewData is present");
-//			return new DataPreview.ItemsList(preview.get().getHeaderItems());
-//		}
-//		return null;// new DataPreview.ItemsList();
-//	}
-	
+	@ModelAttribute(SESSION_CurrAlgorithm)
+	public Algorithm getCurrentAlgorithm(
+			@ModelAttribute(SESSION_CurrProject) ProjectModel project, 
+			@PathVariable(PATH_AlgName) String algName
+			) throws AlgorithmNotFoundException {
+		return algorithmService.getByNameAndParentProject(algName, project)
+				.orElseThrow( () ->
+						new AlgorithmNotFoundException(String.format("Algorithm with name %s not found", algName)));
+	}
 	
 	@GetMapping
 	public String getAlgorithm(
 			@PathVariable(PATH_ProjectName) String projectName,
 			@PathVariable(PATH_AlgName) String algName,
+			@ModelAttribute(SESSION_CurrAlgorithm) Algorithm algorithm,
 			@ModelAttribute(SESSION_CurrProject) ProjectModel project,
 			@ModelAttribute(MODEL_MetaData) Optional<MetaData> metaData, 
 			Model model,
 			HttpServletRequest request) throws AlgorithmNotFoundException {
-		Algorithm algorithm = project.getAlgorithms()
-										.stream()
-										.filter((alg) -> alg.getName().equals(algName))
-										.findAny()
-										.orElseThrow(AlgorithmNotFoundException::new);
 		
+		log.debug("Getting algorithm inners");
 		// if algorithm is empty (new algorithm)
-		if(algorithm.getAlgorithmSteps().isEmpty()) {
-//			log.debug("-== Emty algorithm selected. Running wizard: {}", RequestPath.algorithmWozard);
-			
+		if(algorithm.isSubAlgorithm() && algorithm.getAlgorithmSteps().isEmpty()) {
+			log.debug("Prepare new algorithm");
 			UriComponents srcUploadUri = UriComponentsBuilder.fromPath(BASE_URL).path(RequestPath.setSource)
 					.buildAndExpand(project.getName(), algName);
 			model.addAttribute(MODEL_SrcUploadURI, srcUploadUri.toUriString());
@@ -175,7 +166,7 @@ public class AlgorithmController {
 		
 		log.debug("-== Receiving file: {}", file.getName());
 		UriComponents uriComponents = UriComponentsBuilder.fromPath(BASE_URL)
-										.buildAndExpand(project.getName(), algName);
+				.buildAndExpand(project.getName(), algName);
 		
 		log.debug("-== Saving complete");
 		return new RedirectView(uriComponents.toUriString());
@@ -190,7 +181,10 @@ public class AlgorithmController {
 //		List<HeaderItem> selectedItems = attributes.getItems().stream()
 //												.filter((item) -> {return item.isChecked();})
 //												.collect(Collectors.toList());
-		dataStorageService.save(metaData);
+		log.debug("Saving properties of MetaData: {}", metaData);
+		log.debug("ID: {}", metaData.getId());
+//		log.debug("Selected fields: {}", metaData.getAttributes().)
+//		dataStorageService.save(metaData);
 		log.debug("-== Getting data attributes comlete");
 		
 		UriComponents uriComponents = UriComponentsBuilder.fromPath(BASE_URL)

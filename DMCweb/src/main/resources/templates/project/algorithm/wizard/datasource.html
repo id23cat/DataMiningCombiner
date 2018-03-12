@@ -67,6 +67,7 @@
 			th:action="${sourceAttributesURI}"
 			th:object="${metaData}"
 			>
+				<!-- <span th:inline="*{project}"></span> -->
 				<div class="control-group">
 					<input type="submit" class="btn btn-primary" value="Submit" th:id="attr-button"/>
 					
@@ -83,6 +84,7 @@
 						
 					</div>
 				</div>
+				<div th:value="*{id}" th:field="${metaData.id}"></div>
 				
 				<div class="table-responsive">
 					<table class="table table-bordered "> <!-- table-fixed -->
@@ -99,7 +101,7 @@
 											>
 											<!-- th:field="*{attributes['__name__'].type}" -->
 												<option th:each="type: ${T(evm.dmc.core.api.AttributeType).values()}"
-													th:value="${type}"
+													th:value="*{attributes['__${name}__'].type}"
 													th:text="${type}"
 													th:selected="${type == metaData.attributes['__${name}__'].type}"
 												>
@@ -108,13 +110,13 @@
 											<input type="checkbox"
 												th:id="'chkbx_' + ${stat.index}"
 												th:field="*{attributes['__${name}__'].checked}" 
-												th:value="*{attributes['__${name}__'].checked}"/> 
+												th:value="${metaData.attributes['__${name}__'].checked}"/> 
 											<!-- <input type="checkbox" th:field="*{items}" th:value="item"/> -->
 										<br>
 											<input type="number"																							
 												th:id="'num_' + ${stat.index}"
 												th:field="*{attributes['__${name}__'].multiplier}" 
-												th:value="*{attributes['__${name}__'].multiplier}" 
+												th:value="${metaData.attributes['__${name}__'].multiplier}" 
 												step="0.1" 
 												style="width:55px;" />
 									</th>

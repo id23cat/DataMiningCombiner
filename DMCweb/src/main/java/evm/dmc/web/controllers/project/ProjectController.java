@@ -43,6 +43,7 @@ import org.springframework.web.util.UriComponentsBuilder;
 import evm.dmc.api.model.ProjectModel;
 import evm.dmc.api.model.account.Account;
 import evm.dmc.api.model.algorithm.Algorithm;
+import evm.dmc.api.model.data.MetaData;
 import evm.dmc.web.controllers.CheckboxNamesBean;
 import evm.dmc.web.exceptions.ProjectNotFoundException;
 import evm.dmc.web.exceptions.UserNotExistsException;
@@ -55,10 +56,22 @@ import lombok.extern.java.Log;
 import lombok.extern.slf4j.Slf4j;
 
 @Controller
-@RequestMapping(RequestPath.project)
-@SessionAttributes({"account", "currentProject"})
+@RequestMapping(ProjectController.BASE_URL)		// /project
+@SessionAttributes({ProjectController.SESSION_Account, ProjectController.SESSION_CurrentProject})
 @Slf4j
 public class ProjectController {
+	public static final String BASE_URL = RequestPath.project;
+	public static final String SESSION_Account = "account";
+	public static final String SESSION_CurrentProject = "currentProject";
+	
+	public static final String MODEL_AlgBasePath = "algBasePath";
+	public static final String MODEL_AlgorithmsSet = "algorithmsSet";
+	public static final String MODEL_BackBean = "backBean";
+	public static final String MODEL_DataSet = "dataSet";
+	public static final String MODEL_NewAlgorithm = "newAlgorithm";
+	public static final String MODEL_NewProject = "newProject";
+	public static final String MODEL_ProjectsSet = "projectsSet";
+	
 //	@Autowired
 	private AccountService accountService;
 	
@@ -77,31 +90,25 @@ public class ProjectController {
 		
 	}
 	
-	@ModelAttribute("account")
+	@ModelAttribute(SESSION_Account)
 	public Account getAccount(Authentication authentication) throws UserNotExistsException {
 			return accountService.getAccountByName(authentication.getName());
 	}
 	
-	@ModelAttribute("backBean")
+	@ModelAttribute(MODEL_BackBean)
 	public CheckboxNamesBean backingBeanForCheckboxes() {
 		return new CheckboxNamesBean();
 	}
 	
-//	@Transactional(readOnly = true)
 	@GetMapping
-	public String getProjectsList(@ModelAttribute("account") Account account, Model model) {
-//		accountService.refresh(account);
-//		log.debug("Avaliable projects {}", account.getProjects());
-//		model.addAttribute("projectsSet", account.getProjects().stream().collect(Collectors.toList()));
+	public String getAllProjects(@ModelAttribute(SESSION_Account) Account account, Model model) {
 		
 		List<ProjectModel> projectsSet = projectService.getByAccountAsList(account);
 		projectsSet.sort(Comparator.comparing(ProjectModel::getName, String.CASE_INSENSITIVE_ORDER));
 		
-		model.addAttribute("projectsSet", projectsSet);
-		model.addAttribute("newProject", projectService.getNew());
-//		model.addAttribute("backBean", new CheckboxBean());
-		
-		return views.getProject().getMain();
+		model.addAttribute(MODEL_ProjectsSet, projectsSet);
+		model.addAttribute(MODEL_NewProject, projectService.getNew());
+		return views.getUserHome();
 	}
 	
 	/**
@@ -113,9 +120,8 @@ public class ProjectController {
 	 * Open selected or newly created project
 	 */
 	@GetMapping(value="{projectName}")
-//	@Transactional(readOnly = true)
 	public String getProject(@PathVariable String projectName,
-							@ModelAttribute("account") Account account,
+							@ModelAttribute(SESSION_Account) Account account,
 							Model model, 
 							HttpServletRequest request) 
 									throws ProjectNotFoundException {
@@ -131,46 +137,42 @@ public class ProjectController {
 		log.debug("Current project: {}", project.getId()+project.getName());
 		
 		Set<Algorithm> algSet = project.getAlgorithms();
+		Set<MetaData> dataSet = project.getDataSources();
 		
-		model.addAttribute("currentProject", project);
-		model.addAttribute("algorithmsSet", algSet);
-		model.addAttribute("algBasePath", String.format("%s%s", request.getServletPath(), RequestPath.algorithm));
-		log.debug("algBasePath : {}", String.format("%s%s", request.getServletPath(), RequestPath.algorithm));
-		model.addAttribute("newAlgorithm", projectService.getNewAlgorithm());
-		return views.getProject().getAlgorithmsList();
+		model.addAttribute(SESSION_CurrentProject, project);
+		model.addAttribute(MODEL_AlgorithmsSet, algSet);
+		model.addAttribute(MODEL_DataSet, dataSet);
+		model.addAttribute(MODEL_AlgBasePath, request.getServletPath() + RequestPath.algorithm);
+		log.debug("algBasePath : {}", request.getServletPath() + RequestPath.algorithm);
+		model.addAttribute(MODEL_NewAlgorithm, projectService.getNewAlgorithm());
+		return views.getProject().getMain();
 		
 	}
 	
 	@PostMapping(RequestPath.add)
-//	@Transactional
-	public RedirectView postAddProject(@ModelAttribute("account") Account account, 
-						@Valid @ModelAttribute("newProject") ProjectModel project,
+	public RedirectView postAddProject(@ModelAttribute(SESSION_Account) Account account, 
+						@Valid @ModelAttribute(MODEL_NewProject) ProjectModel project,
 						BindingResult bindingResult, RedirectAttributes ra) {
 		if(bindingResult.hasErrors()) {
 			log.debug("Invalid new project property: {}", bindingResult);
 			
-//			return views.getProject().getMain();
 			new RedirectView(RequestPath.project);
 		}
 		log.debug("Registering new project {}", project.getName());
 
 		accountService.addProject(account, project);
 		
-//		return "redirect:" + RequestPath.project + "/" + project.getName();
 		return new RedirectView(RequestPath.project + "/" + project.getName());
 	}
 	
 	@PostMapping(RequestPath.delete)
-//	@Transactional
 	public RedirectView postDelProjedct(
-			@ModelAttribute("account") Account account,
-			@ModelAttribute("backBean") CheckboxNamesBean bean,
+			@ModelAttribute(SESSION_Account) Account account,
+			@ModelAttribute(MODEL_BackBean) CheckboxNamesBean bean,
 			BindingResult bindingResult, RedirectAttributes ra
 			) {
 		log.debug("BackBean: {}", Arrays.stream(bean.getNames()).collect(Collectors.toList()));
 		
-		
-//		projectService.deleteAllByNames(Arrays.asList(bean.getNames()));
 		projectService.deleteByAccountAndNames(account, new HashSet<String>(Arrays.asList(bean.getNames())));
 		
 		log.debug("==============redirect===================");
@@ -187,8 +189,8 @@ public class ProjectController {
 	 */
 	@PostMapping(RequestPath.assignAlgorithm)
 	public RedirectView postAssignAlgorithm(
-			@SessionAttribute("currentProject") ProjectModel project,
-			@Valid @ModelAttribute("newAlgorithm") Algorithm algorithm
+			@SessionAttribute(SESSION_CurrentProject) ProjectModel project,
+			@Valid @ModelAttribute(MODEL_NewAlgorithm) Algorithm algorithm
 			) {
 		log.debug("Adding algorithm: {}" ,algorithm.getName());
 		log.debug("Project: {}", project.getId() + project.getName());
@@ -200,8 +202,8 @@ public class ProjectController {
 	
 	@PostMapping(RequestPath.delAlgorithm)
 	public RedirectView postDelAlgorithm(
-			@SessionAttribute("currentProject") ProjectModel project,
-			@ModelAttribute("backBean") CheckboxNamesBean bean
+			@SessionAttribute(SESSION_CurrentProject) ProjectModel project,
+			@ModelAttribute(MODEL_BackBean) CheckboxNamesBean bean
 			) {
 		log.debug("Selected algorithms for deleteion:{}", StringUtils.arrayToCommaDelimitedString(bean.getNames()));
 		log.debug("Project for deletion in: {}", project);

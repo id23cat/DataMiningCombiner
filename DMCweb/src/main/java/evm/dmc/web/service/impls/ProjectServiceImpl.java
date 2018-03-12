@@ -30,6 +30,7 @@ import evm.dmc.model.repositories.MetaDataRepository;
 import evm.dmc.model.repositories.ProjectModelRepository;
 import evm.dmc.web.exceptions.EntityNotFoundException;
 import evm.dmc.web.service.AlgorithmService;
+import evm.dmc.web.service.MetaDataService;
 import evm.dmc.web.service.ProjectService;
 import lombok.extern.slf4j.Slf4j;
 
@@ -40,10 +41,10 @@ public class ProjectServiceImpl implements ProjectService {
 	private ProjectModelRepository projectRepo;
 	
 	@Autowired
-	private AlgorithmRepository algorithmRepository;
+	private AlgorithmService algorithmService;
 	
 	@Autowired
-	private MetaDataRepository metaDataRepository;
+	private MetaDataService metaDataService;
 	
 	@Autowired
 	private EntityManager em;
@@ -196,7 +197,7 @@ public class ProjectServiceImpl implements ProjectService {
 		project.getAlgorithms().add(algorithm);
 		algorithm.setParentProject(project);
 		
-		return algorithmRepository.save(algorithm);
+		return algorithmService.save(algorithm);
 	}
 	
 	@Override
@@ -225,7 +226,7 @@ public class ProjectServiceImpl implements ProjectService {
 			algorithm = assignAlgorithm(newParrentProject.get(), algorithm);
 //		}
 		} else {
-			algorithmRepository.delete(algorithm);
+			algorithmService.delete(algorithm);
 //			algorithmRepository.flush();
 		}
 		
@@ -239,15 +240,12 @@ public class ProjectServiceImpl implements ProjectService {
 	@Modifying
 	public ProjectModel deleteAlgorithms(ProjectModel project, Set<String> names) {
 		project = merge(project);
-//		project.getAlgorithms().removeIf((alg) -> nameContainsOneOf(alg.getName(), bean.getNames()));
-//		project.removeAlgorithmsByNames(names);
-		Set<Algorithm> algorithms = algorithmRepository.findByDependentProjectsAndNameIn(project, names);
-		algorithms.addAll(algorithmRepository.findByParentProjectAndNameIn(project, names));
+		Set<Algorithm> algorithms = algorithmService.getByNameAndDependentProject(names, project)
+				.collect(Collectors.toSet());
+		algorithms.addAll(algorithmService.getByNameAndParentProject(names, project).collect(Collectors.toSet()));
 		log.debug("Algorithmds for deletion: {}", algorithms.stream().map(alg -> alg.getName()).collect(Collectors.toSet()));
 		
-//		project.getAlgorithms().removeAll(algorithms);
-//		algorithmRepository.delete(algorithms);
-		projectRepo.flush();
+//		projectRepo.flush();
 		for(Algorithm alg: algorithms) {
 			deleteAlgorithm(project, alg);
 		}
@@ -270,7 +268,7 @@ public class ProjectServiceImpl implements ProjectService {
 //									.append(" not found")
 //									.toString())
 //				);
-		return metaDataRepository.save(data);
+		return metaDataService.save(data);
 	}
 	
 	@Override
@@ -302,6 +300,20 @@ public class ProjectServiceImpl implements ProjectService {
 //		if(project.getId() == null)
 //			return null;
 //		return projectRepo.getOne(project.getId());
+	}
+
+	@Transactional(readOnly = true)
+	@Override
+	public Stream<Algorithm> getAllAlgorithms(ProjectModel project) {
+		project = merge(project);
+		return project.getAlgorithms().stream();
+	}
+
+	@Transactional(readOnly = true)
+	@Override
+	public Stream<MetaData> getAllData(ProjectModel project) {
+		project = merge(project);
+		return project.getDataSources().stream();
 	}
 
 

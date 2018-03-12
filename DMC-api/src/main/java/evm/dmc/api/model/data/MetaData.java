@@ -26,6 +26,7 @@ import javax.persistence.ManyToOne;
 import javax.persistence.MapKeyColumn;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
+import javax.persistence.UniqueConstraint;
 import javax.validation.constraints.NotNull;
 
 import org.springframework.data.annotation.Version;
@@ -46,7 +47,9 @@ import lombok.ToString;
  */
 @Data
 @Entity
-@Table(name="METADATA")
+@Table(name="METADATA"
+	,uniqueConstraints={@UniqueConstraint(columnNames = {"project_id", "name"})}
+)
 //@EqualsAndHashCode(exclude={"storage"})
 //@ToString(exclude={"storage"})
 public class MetaData implements Serializable {
@@ -69,7 +72,6 @@ public class MetaData implements Serializable {
 	 * what project this data belongs to
 	 */
 	@ManyToOne(cascade = CascadeType.ALL)
-	@NotNull
 	@JoinColumn(name = "project_id")
 	private ProjectModel project;
 

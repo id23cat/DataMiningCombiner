@@ -37,6 +37,7 @@ public interface ProjectService {
 	
 	Set<String> getNamesByAccount(Account account);
 	
+	Stream<Algorithm> getAllAlgorithms(ProjectModel project);
 	Algorithm assignAlgorithm(ProjectModel project, Algorithm algorithm);
 	Algorithm addAlgorithm(ProjectModel project, Algorithm algorithm);
 	ProjectModel deleteAlgorithm(ProjectModel project, Algorithm algorithm);
@@ -46,6 +47,7 @@ public interface ProjectService {
 	ProjectModel getNew(Account account, ProjectType type, Set<Algorithm> algorithms, Properties properties, String projectName);
 	Algorithm getNewAlgorithm();
 	
+	Stream<MetaData> getAllData(ProjectModel project);
 	MetaData persistNewData(ProjectModel project, MetaData data);
 
 }

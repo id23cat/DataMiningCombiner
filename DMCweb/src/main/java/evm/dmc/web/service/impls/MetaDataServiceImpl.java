@@ -42,19 +42,16 @@ public class MetaDataServiceImpl implements MetaDataService{
 	
 	private MetaDataRepository metaDataRepository;
 	
-	private ProjectService projectService;
-	
 	private DataPreviewService previewService;
 	
 	@Autowired
 	EntityManager em;
 	
 	@Autowired
-	public MetaDataServiceImpl(MetaDataRepository metaDataRepository, ProjectService projectService,
-			DataPreviewService previewService) {
+	public MetaDataServiceImpl(MetaDataRepository metaDataRepository, DataPreviewService previewService) {
 		super();
 		this.metaDataRepository = metaDataRepository;
-		this.projectService = projectService;
+//		this.projectService = projectService;
 		this.previewService = previewService;
 	}
 
@@ -102,7 +99,8 @@ public class MetaDataServiceImpl implements MetaDataService{
     public MetaData persistMetadata(MetaData meta, ProjectModel project) {
     	meta.setProject(project);
 //    	meta = dataRepository.save(meta);
-    	return projectService.persistNewData(project, meta);
+//    	return projectService.persistNewData(project, meta);
+    	return metaDataRepository.save(meta);
     }
     
 	@Override

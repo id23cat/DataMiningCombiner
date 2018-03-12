@@ -10,8 +10,82 @@
 <body>
 
 <th:block layout:fragment="content">
-	
-	<div class="row" th:with="base=${algBasePath}">
+	<h3>Project: <span th:text="${currentProject.name}">Project Name</span></h3>
+		<div class="container-fluid">
+			<div class="row">
+				<div class="col-sm-6 text-center bg-success">
+					<h3>Algorithms:</h3>
+					<form method="post" th:action="${@requestPath.projDelAlgorithm}"
+						th:object="${backBean}">
+						<div class="col-sm-4 form-group">
+							<div th:each="algorithm, stat : ${algorithmsSet}">
+								<h4>
+									<input type="checkbox" th:field="*{names}"
+										th:value="${algorithm.name}" /> <a
+										href=/project/name/algorithm/algname
+										th:href="@{__${base}__/__${algorithm.name}__}"> <span
+										th:text="${algorithm.name}">Algorithm name</span>
+									</a><br>
+								</h4>
+							</div>
+							<!-- </ul> -->
+							<div th:if="${not #lists.isEmpty(algorithmsSet)}">
+								<button th:id="deleteButton" data-toggle="confirmation"
+									class="btn btn-primary" type="submit" disabled>Delete</button>
+								<script>
+									$('[data-toggle="confirmation"]')
+											.confirmation(options)
+								</script>
+							</div>
+
+						</div>
+
+					</form>
+					<script>
+						$(function() {
+							var checkboxes = $("input[type='checkbox']"), submitButt = $("#deleteButton");
+
+							checkboxes.click(function() {
+								if (checkboxes.is(":checked")) {
+									submitButt.attr("disabled", false);
+								} else {
+									submitButt.attr("disabled", true);
+								}
+							});
+						});
+					</script>
+				</div>
+				<div class="col-xs-12" style="height: 50px;"></div>
+				<div class="form-group">
+					<form method="post" th:action="${@requestPath.projAssignAlgorithm}"
+						th:object="${newAlgorithm}">
+
+						<div class="col-sm-4">
+							<label for="newName" class="control-label">Add new
+								algorithm</label>
+							<div class="alert alert-danger"
+								th:if="${#fields.hasErrors('name')}">
+								<strong>Important!</strong> <span class="help-block"
+									th:if="${#fields.hasErrors('name')}" th:errors="*{name}">Incorrect
+									algorithm name</span>
+							</div>
+							<div class="input-group">
+								<input type="text" class="form-control"
+									placeholder="New algorithm name" th:field="*{name}" /> <span
+									class="input-group-btn">
+									<button class="btn btn-primary" type="submit">Add</button>
+								</span>
+								<!-- <span class="help-block" th:if="${#fields.hasErrors('projectName')}" th:errors="*{projectName}">Incorrect project name</span> -->
+							</div>
+						</div>
+					</form>
+				</div>
+			</div>
+			<div class="col-sm-6 text-center bg-info">
+				<h3>Data setes</h3>
+			</div>
+		</div>
+		<div class="row" th:with="base=${algBasePath}">
 		<h3>Project: <span th:text="${currentProject.name}">Project Name</span></h3>
 		<h3>Algorithms:</h3>
 		<form method="post"

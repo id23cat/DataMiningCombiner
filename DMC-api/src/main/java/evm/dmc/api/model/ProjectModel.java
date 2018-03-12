@@ -110,7 +110,7 @@ public class ProjectModel implements Serializable {
 	private Instant created = Instant.now();
 	
 	@OneToMany(mappedBy = "project" ,cascade = CascadeType.ALL, orphanRemoval = true)
-	private List<MetaData> dataSources = new LinkedList<>();
+	private Set<MetaData> dataSources = new HashSet<>();
 	
 	public ProjectModel() {
 		super();

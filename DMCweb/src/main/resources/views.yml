@@ -4,7 +4,7 @@ views:
   register: register
   signin: signin
   regsign: "register_signin"
-  userHome: userHome
+  userHome: "project/list"
   adminHome: adminHome
   fragments: 
     signin: " :: signinForm"
@@ -14,7 +14,7 @@ views:
     notFound: errors/notFound
     userExists: errors/userExists
   project:
-    main: "project/list"
+    main: "project/project"
     algorithmsList: "project/algorithm/algslist"
     wizardBase: "project/algorithm/wizard"
     wizard:
