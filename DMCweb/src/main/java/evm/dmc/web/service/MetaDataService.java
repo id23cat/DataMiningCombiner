@@ -5,6 +5,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.Set;
 import java.util.StringJoiner;
 import java.util.stream.Stream;
 
@@ -23,6 +24,8 @@ public interface MetaDataService {
 	
 	MetaData getMetaData(ProjectModel project, Path fullFilePath,
     		DataSrcDstType type, String description, String delimiter, boolean hasHeader);
+	
+	Set<MetaData> getForProject(ProjectModel project);
 	
 	Optional<DataPreview> getPreview(MetaData meta);
 	

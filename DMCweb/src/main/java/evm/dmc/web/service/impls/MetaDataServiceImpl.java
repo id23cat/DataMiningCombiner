@@ -89,6 +89,12 @@ public class MetaDataServiceImpl implements MetaDataService{
     	return meta;
     }
 	
+	@Transactional(readOnly=true)
+	@Override
+	public Set<MetaData> getForProject(ProjectModel project) {
+		return metaDataRepository.findByProject(project).collect(Collectors.toSet());
+	}
+	
 	@Override
 	public Optional<DataPreview> getPreview(MetaData meta) {
 		return previewService.getForMetaData(meta);

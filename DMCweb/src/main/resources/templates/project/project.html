@@ -16,11 +16,40 @@
 <div class="container-fluid">
 	<div class="row">
 		<div class="col-sm-6 text-center bg-success">
-			<div id="algList"  
-				th:insert="fragments/deletable_list :: list('alg', 'Algorithms',
-											 ${@requestPath.projDelAlgorithm},
-											 ${backBean}, ${algorithmsSet}, ${algBasePath})">
+			<div class="row">
+				<div id="algList"  
+					th:insert="fragments/deletable_list :: list('alg', 'Algorithms',
+												 ${@requestPath.projDelAlgorithm},
+												 ${backBean}, ${algorithmsSet}, ${algBasePath})">
+				</div>
 			</div>
+			<div class="row">
+				<form method="post" th:action="${@requestPath.projAssignAlgorithm}"
+					th:object="${newAlgorithm}">
+	
+					<div class="col-sm-8">
+						<label for="newName" class="control-label">Add new	algorithm</label>
+						<div class="alert alert-danger"
+							th:if="${#fields.hasErrors('name')}">
+							<strong>Important!</strong> 
+							<span class="help-block"
+								th:if="${#fields.hasErrors('name')}" th:errors="*{name}">
+								Incorrect algorithm name
+							</span>
+						</div>
+						<div class="input-group">
+							<input type="text" 
+								class="form-control"
+								placeholder="New algorithm name" 
+								th:field="*{name}" />
+							<span class="input-group-btn">
+								<button class="btn btn-primary" type="submit">Add</button>
+							</span>
+						</div>
+					</div>
+				</form>
+			</div>
+			
 			<!-- <div class="form-group">
 			<form method="post" th:action="${@requestPath.projAssignAlgorithm}"
 				th:object="${newAlgorithm}">
@@ -47,14 +76,13 @@
 			</div> -->
 		</div>
 		<div class="col-sm-6 text-center bg-info">
-			<div id="dataList"  
-				th:insert="fragments/deletable_list :: list('data', 'Data sets',
-											 ${@requestPath.projDelAlgorithm},
-											 ${backBean}, ${dataSet}, ${algBasePath})">
+			<div th:insert="project/datasourcesList :: datasourcesList">
 			</div>
 		</div>
+		
 	</div>
-</div>	
+</div>
+<a href="proj0/dataset">DataSet</a>
 </th:block>
  
 </body>

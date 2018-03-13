@@ -41,6 +41,8 @@ public class Views {
 		private String main;
 		private String algorithmsList;
 		private String wizardBase;
+		private String datasourcesList;
+		
 		@Getter public final Wizard wizard = new Wizard();
 		
 		@Data

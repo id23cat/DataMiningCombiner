@@ -34,10 +34,13 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.SessionAttribute;
 import org.springframework.web.bind.annotation.SessionAttributes;
+import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import org.springframework.web.servlet.view.RedirectView;
+import org.springframework.web.util.UriComponents;
 import org.springframework.web.util.UriComponentsBuilder;
 
 import evm.dmc.api.model.ProjectModel;
@@ -51,6 +54,7 @@ import evm.dmc.web.service.ProjectService;
 import evm.dmc.web.service.RequestPath;
 import evm.dmc.web.service.Views;
 import evm.dmc.web.service.AccountService;
+import evm.dmc.web.service.DataStorageService;
 import lombok.Data;
 import lombok.extern.java.Log;
 import lombok.extern.slf4j.Slf4j;
@@ -67,10 +71,14 @@ public class ProjectController {
 	public static final String MODEL_AlgBasePath = "algBasePath";
 	public static final String MODEL_AlgorithmsSet = "algorithmsSet";
 	public static final String MODEL_BackBean = "backBean";
-	public static final String MODEL_DataSet = "dataSet";
+	
+	public final static String MODEL_HasHeader = "hasHeader";
 	public static final String MODEL_NewAlgorithm = "newAlgorithm";
 	public static final String MODEL_NewProject = "newProject";
 	public static final String MODEL_ProjectsSet = "projectsSet";
+	
+	@Autowired
+	private DatasetController datasetController;
 	
 //	@Autowired
 	private AccountService accountService;
@@ -137,14 +145,18 @@ public class ProjectController {
 		log.debug("Current project: {}", project.getId()+project.getName());
 		
 		Set<Algorithm> algSet = project.getAlgorithms();
-		Set<MetaData> dataSet = project.getDataSources();
+		
 		
 		model.addAttribute(SESSION_CurrentProject, project);
+		
+		// algorithm attributes
 		model.addAttribute(MODEL_AlgorithmsSet, algSet);
-		model.addAttribute(MODEL_DataSet, dataSet);
 		model.addAttribute(MODEL_AlgBasePath, request.getServletPath() + RequestPath.algorithm);
 		log.debug("algBasePath : {}", request.getServletPath() + RequestPath.algorithm);
 		model.addAttribute(MODEL_NewAlgorithm, projectService.getNewAlgorithm());
+		
+		model = datasetController.addAttributesToModel(model, project);
+			
 		return views.getProject().getMain();
 		
 	}
@@ -166,7 +178,7 @@ public class ProjectController {
 	}
 	
 	@PostMapping(RequestPath.delete)
-	public RedirectView postDelProjedct(
+	public RedirectView postDelProject(
 			@ModelAttribute(SESSION_Account) Account account,
 			@ModelAttribute(MODEL_BackBean) CheckboxNamesBean bean,
 			BindingResult bindingResult, RedirectAttributes ra
@@ -212,5 +224,6 @@ public class ProjectController {
 		
 		return new RedirectView(String.format("%s/%s", RequestPath.project, project.getName()));
 	}
+	
 	
 }

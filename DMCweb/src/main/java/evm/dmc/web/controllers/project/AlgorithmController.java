@@ -151,45 +151,4 @@ public class AlgorithmController {
 		return "project/algorithm/datasource";
 	}
 	
-	@PostMapping(RequestPath.setSource)
-	public RedirectView postSourceFile(@RequestParam(MODEL_PostFile) MultipartFile file,
-			@SessionAttribute(SESSION_Account) Account account,
-			@SessionAttribute(SESSION_CurrProject) ProjectModel project,
-			@PathVariable(PATH_AlgName) String algName,
-			@ModelAttribute(MODEL_HasHeader) HasHeaderCheckbox hasHeader,
-			RedirectAttributes ra) {
-		
-//		DataPreview preview = fileService.store(DataStorageService.relativePath(account, project), file);
-		log.debug("HasHeader checkbox state: {}", hasHeader.isHasHeader());
-		MetaData metaData = dataStorageService.saveData(account, project, file, hasHeader.isHasHeader());
-		ra.addFlashAttribute(MODEL_MetaData, Optional.of(metaData));
-		
-		log.debug("-== Receiving file: {}", file.getName());
-		UriComponents uriComponents = UriComponentsBuilder.fromPath(BASE_URL)
-				.buildAndExpand(project.getName(), algName);
-		
-		log.debug("-== Saving complete");
-		return new RedirectView(uriComponents.toUriString());
-	}
-	
-	@PostMapping(RequestPath.setSourceAttributes)
-	public RedirectView postSourceAttribytes(
-			@Valid @ModelAttribute(MODEL_MetaData) MetaData metaData, 
-			@PathVariable(PATH_ProjectName) String projName,
-			@PathVariable(PATH_AlgName) String algName) {
-		
-//		List<HeaderItem> selectedItems = attributes.getItems().stream()
-//												.filter((item) -> {return item.isChecked();})
-//												.collect(Collectors.toList());
-		log.debug("Saving properties of MetaData: {}", metaData);
-		log.debug("ID: {}", metaData.getId());
-//		log.debug("Selected fields: {}", metaData.getAttributes().)
-//		dataStorageService.save(metaData);
-		log.debug("-== Getting data attributes comlete");
-		
-		UriComponents uriComponents = UriComponentsBuilder.fromPath(BASE_URL)
-				.buildAndExpand(projName, algName);
-		return new RedirectView(uriComponents.toUriString());
-	}
-
 }

@@ -16,6 +16,7 @@ views:
   project:
     main: "project/project"
     algorithmsList: "project/algorithm/algslist"
+    datasourcesList: "project/datasourcesList"
     wizardBase: "project/algorithm/wizard"
     wizard:
       datasource: "project/algorithm/wizard/datasource"
