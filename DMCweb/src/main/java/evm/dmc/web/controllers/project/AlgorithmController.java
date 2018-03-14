@@ -64,19 +64,10 @@ public class AlgorithmController {
 	public final static String PATH_ProjectName = "projectName";
 	
 	@Autowired
-	private DataStorageService dataStorageService;
-	
-//	@Autowired
-//	private ProjectService projectService;
-	
-	@Autowired
 	private AlgorithmService algorithmService;
 	
 	@Autowired
 	private DatasetController datasetController;
-	
-//	@Autowired
-//	private AccountService accountService;
 	
 	@Autowired
 	private Views views;

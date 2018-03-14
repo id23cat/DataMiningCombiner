@@ -11,7 +11,9 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.view;
 
 import java.util.Collections;
+import java.util.HashSet;
 import java.util.Optional;
+import java.util.Set;
 
 import org.assertj.core.util.Arrays;
 import org.junit.Before;
@@ -41,6 +43,7 @@ import evm.dmc.api.model.ProjectModel;
 import evm.dmc.api.model.ProjectType;
 import evm.dmc.api.model.account.Account;
 import evm.dmc.api.model.algorithm.Algorithm;
+import evm.dmc.api.model.data.MetaData;
 import evm.dmc.config.SecurityConfig;
 import evm.dmc.web.service.ProjectService;
 import evm.dmc.web.service.RequestPath;
@@ -48,6 +51,7 @@ import evm.dmc.web.service.Views;
 import evm.dmc.web.controllers.CheckboxNamesBean;
 import evm.dmc.web.service.AccountService;
 import evm.dmc.web.service.AlgorithmService;
+import evm.dmc.web.service.MetaDataService;
 import lombok.extern.slf4j.Slf4j;
 
 @RunWith(SpringRunner.class)
@@ -63,6 +67,9 @@ public class ProjectControllerTest {
 	
 	@MockBean
 	private ProjectService projServ;
+	
+	@MockBean
+	private MetaDataService metaDataService;
 
 	@Autowired
 	MockMvc mockMvc;
@@ -104,10 +111,12 @@ public class ProjectControllerTest {
 	@WithMockUser("Alex")
 	public final void testGetProjectsList() throws Exception {
 		
-		this.mockMvc.perform(get(RequestPath.project))
+		this.mockMvc.perform(get(ProjectController.BASE_URL))
 			.andExpect(status().isOk())
-			.andExpect(view().name(views.getProject().getMain()))
-			.andExpect(model().attributeExists("account", "projectsSet", "newProject", "backBean"))
+			.andExpect(view().name(views.getUserHome()))
+			.andExpect(model().attributeExists(ProjectController.SESSION_Account, 
+					ProjectController.MODEL_ProjectsSet, ProjectController.MODEL_NewProject,
+					ProjectController.MODEL_BackBean))
 			;
 	}
 	
@@ -129,10 +138,16 @@ public class ProjectControllerTest {
 		Mockito.when(projServ.getByNameAndAccount(any(String.class), any(Account.class)))
 			.thenReturn(Optional.of(proj));
 		
-		mockMvc.perform(get(RequestPath.project+"/"+proj.getName()))
+		Set<MetaData> dataSet = new HashSet<>();
+		dataSet.add(new MetaData());
+		Mockito
+			.when(metaDataService.getForProject(proj))
+			.thenReturn(dataSet);
+		
+		mockMvc.perform(get(ProjectController.BASE_URL + "/"+proj.getName()))
 			.andExpect(status().isOk())
 //			.andExpect(view().name(views.getProject().getNewAlg()))
-			.andExpect(view().name(views.getProject().getAlgorithmsList()))
+			.andExpect(view().name(views.getProject().getMain()))
 			.andExpect(model().attribute("algorithmsSet", Collections.EMPTY_SET))
 			.andExpect(model().attribute("currentProject", proj))
 			.andExpect(model().attributeExists("newAlgorithm"))
@@ -153,7 +168,7 @@ public class ProjectControllerTest {
 		
 		mockMvc.perform(get(RequestPath.project+"/"+proj.getName()))
 			.andExpect(status().isOk())
-			.andExpect(view().name(views.getProject().getAlgorithmsList()))
+			.andExpect(view().name(views.getProject().getMain()))
 			.andExpect(model().attribute("algorithmsSet", proj.getAlgorithms()))
 		;
 	}

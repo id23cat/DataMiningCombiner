@@ -4,10 +4,13 @@ import static evm.dmc.web.service.AlgorithmService.getNewAlgorithm;
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.junit.Assert.*;
 import static org.mockito.Matchers.any;
+import static org.mockito.Matchers.eq;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
+import java.util.HashSet;
 import java.util.Optional;
+import java.util.Set;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -27,6 +30,7 @@ import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
+import org.springframework.ui.Model;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.util.UriComponents;
 import org.springframework.web.util.UriComponentsBuilder;
@@ -38,7 +42,9 @@ import evm.dmc.api.model.data.DataStorageModel;
 import evm.dmc.api.model.data.MetaData;
 import evm.dmc.api.model.datapreview.DataPreview;
 import evm.dmc.config.SecurityConfig;
+import evm.dmc.web.service.AlgorithmService;
 import evm.dmc.web.service.DataStorageService;
+import evm.dmc.web.service.MetaDataService;
 import evm.dmc.web.service.RequestPath;
 import evm.dmc.web.service.Views;
 import lombok.extern.slf4j.Slf4j;
@@ -52,45 +58,72 @@ import lombok.extern.slf4j.Slf4j;
 public class AlgorithmControllerTest {
 	
 	@MockBean
-	DataStorageService metaDataService;
+	private AlgorithmService algorithmService;
 	
 	@MockBean
-	MetaData metaData;
+	private MetaData metaData;
 	
 	@MockBean
-	DataStorageModel dataStorage;
+	private MetaDataService metaDataService;
+	
+//	@MockBean
+//	private DatasetController datasetController;
+	
+//	@MockBean
+//	private Model model;
 	
 	@Autowired
-	MockMvc mockMvc;
+	private MockMvc mockMvc;
 	
 	@Autowired
-	Views views;
+	private Views views;
 
 	@Test
 	@WithMockUser("Alex")
 	public final void testGetAlgorithmDefault() throws Exception {
-		String projectName = "testProject";
-		String algName = "testAlg";
+		final String TEST_PROJECT_NAME = "testProject";
+		final String TEST_ALG_NAME = "testAlg";
+		final String TEST_USER_NAME = "Alex";
+		
 		ProjectModel testProject = new ProjectModel();
 		Algorithm testAlg = getNewAlgorithm();
-		testAlg.setName(algName);
 		
-		testProject.setName(projectName);
+		testAlg.setName(TEST_ALG_NAME);
+		
+		testProject.setName(TEST_PROJECT_NAME);
 		testProject.getAlgorithms().add(testAlg);
 		testAlg.setParentProject(testProject);
+		String URL = UriComponentsBuilder.fromPath(AlgorithmController.BASE_URL)
+				.buildAndExpand(TEST_PROJECT_NAME,TEST_ALG_NAME).toString();
 		
-		mockMvc.perform(get(RequestPath.project+"/"+projectName + RequestPath.algorithm+"/"+algName)
-				.sessionAttr(AlgorithmController.SESSION_CurrProject, testProject)
-				.sessionAttr(AlgorithmController.SESSION_Account, new Account("Alex")))
+		Mockito
+			.when(algorithmService.getByNameAndParentProject(TEST_ALG_NAME, testProject))
+			.thenReturn(Optional.of(testAlg));
+		
+		Set<MetaData> dataSet = new HashSet<>();
+		dataSet.add(new MetaData());
+		Mockito
+			.when(metaDataService.getForProject(testProject))
+			.thenReturn(dataSet);
+		
+		
+//		ArgumentCaptor<Model> modelCaptor = ArgumentCaptor.forClass(Model.class);
+//		Mockito
+//			.when(datasetController.addAttributesToModel(modelCaptor.capture(), testProject, Optional.of(metaData)))
+//			.thenReturn(addArguments(modelCaptor.getValue()));
+		
+		mockMvc.perform(get(URL)
+				.sessionAttr(ProjectController.SESSION_CurrentProject, testProject))
 			.andExpect(status().isOk())
 			.andExpect(view().name(views.project.wizard.datasource))
 			.andExpect(model().attributeExists(
-					AlgorithmController.MODEL_SrcUploadURI,
-					AlgorithmController.MODEL_SrcAttrURI,
-					AlgorithmController.MODEL_HasHeader))
+					DatasetController.MODEL_DataUploadURL,
+					DatasetController.MODEL_DataAttributesURL,
+					DatasetController.MODEL_HasHeader))
 			;
 	}
 	
+		
 //	@Test
 //	@WithMockUser("Alex")
 //	public final void testGetAlgorithmWithMetaData() throws Exception {
@@ -127,50 +160,6 @@ public class AlgorithmControllerTest {
 //			;
 //	}
 
-	@Test
-	@WithMockUser("Alex")
-	public final void testPostSourceFile() throws Exception {
-		ClassPathResource resource = new ClassPathResource("testupload.txt", getClass());
-
-		MockMultipartFile file = new MockMultipartFile("file", resource.getInputStream());
-		
-		ArgumentCaptor<Account> accCaptor = ArgumentCaptor.forClass(Account.class);
-		ArgumentCaptor<ProjectModel> projCaptor = ArgumentCaptor.forClass(ProjectModel.class);
-		ArgumentCaptor<MultipartFile> fileCaptor = ArgumentCaptor.forClass(MultipartFile.class);
-		Mockito
-			.when(metaDataService.saveData(accCaptor.capture(), projCaptor.capture(), 
-					fileCaptor.capture(), any(boolean.class)))
-			.thenReturn(new MetaData());
-		
-		UriComponents uriComponents = UriComponentsBuilder.fromPath(AlgorithmController.BASE_URL)
-				.path(RequestPath.setSource)
-				.buildAndExpand("tesrpr", "testalg");
-		
-		log.debug("Request to: {}", uriComponents.toUriString());
-		
-		ProjectModel testProject = new ProjectModel();
-		testProject.setName("tesrpr");
-		
-		
-		this.mockMvc
-			.perform(
-					MockMvcRequestBuilders
-						.fileUpload(uriComponents.toUriString())
-						.file(file)
-						.sessionAttr("account", new Account("Alex"))
-						.sessionAttr("currentProject", testProject))
-			.andExpect(status().isFound())
-			.andExpect(redirectedUrl(UriComponentsBuilder.fromPath(AlgorithmController.BASE_URL)
-						.buildAndExpand("tesrpr", "testalg")
-						.toUriString()))
-			.andExpect(flash().attributeExists(
-					AlgorithmController.MODEL_MetaData))
-			;
-			
-		log.debug("File Path: {}", accCaptor.getValue());
-		log.debug("File name {}", fileCaptor.getValue().getOriginalFilename());
-		assertThat(accCaptor.getValue().getUserName(), equalTo("Alex"));
-		assertThat(projCaptor.getValue().getName(), equalTo("tesrpr"));
-	}
+	
 
 }

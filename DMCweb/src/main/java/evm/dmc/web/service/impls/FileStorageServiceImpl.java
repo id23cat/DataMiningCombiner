@@ -80,7 +80,7 @@ public class FileStorageServiceImpl implements DataStorageService {
 //	@Autowired
 	private MetaDataService metaDataService;
 	
-	@Autowired
+//	@Autowired
 	private ProjectService projectService;
 	
     private Path rootLocation;
@@ -93,10 +93,11 @@ public class FileStorageServiceImpl implements DataStorageService {
 
     @Autowired
     public FileStorageServiceImpl(FileStorageConfig properties, MetaDataService metaDataService,
-    		ExecutorService executorService) {
+    		ExecutorService executorService, ProjectService projectService) {
     	this.properties = properties;
     	this.metaDataService = metaDataService;
     	this.executorService = executorService;
+    	this.projectService = projectService;
     	
         init();
     }

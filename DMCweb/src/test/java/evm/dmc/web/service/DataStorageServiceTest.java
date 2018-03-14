@@ -90,6 +90,9 @@ public class DataStorageServiceTest {
     @Autowired
     private ExecutorService executorService;
     
+    @Autowired
+    private ProjectService projectService;
+    
     private Account account = new Account();
 	private ProjectModel project = new ProjectModel();
 	
@@ -116,7 +119,7 @@ public class DataStorageServiceTest {
         properties.setRetriesCount(3);
         properties.setFileWaitTimeoutMS(500);
         
-        service = new FileStorageServiceImpl(properties, metaDataService, executorService);
+        service = new FileStorageServiceImpl(properties, metaDataService, executorService, projectService);
         
         account = accRepo.findByUserName(USER_NAME).get();
         assertNotNull(account);

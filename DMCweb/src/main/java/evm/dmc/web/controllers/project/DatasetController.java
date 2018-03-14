@@ -56,15 +56,26 @@ public class DatasetController {
 	
 	public final static String PATH_ProjectName = "/{projectName}";
 
-	@Autowired
+//	@Autowired
 	private DataStorageService dataStorageService;
 	
-	@Autowired
+//	@Autowired
 	private MetaDataService metaDataService;
 	
-	@Autowired
+//	@Autowired
 	private Views views;
 	
+	
+	
+	public DatasetController(@Autowired DataStorageService dataStorageService,
+			@Autowired MetaDataService metaDataService, 
+			@Autowired Views views) {
+		super();
+		this.dataStorageService = dataStorageService;
+		this.metaDataService = metaDataService;
+		this.views = views;
+	}
+
 	public Model addAttributesToModel(Model model, ProjectModel project) {
 		Set<MetaData> dataSet = metaDataService.getForProject(project);
 		
