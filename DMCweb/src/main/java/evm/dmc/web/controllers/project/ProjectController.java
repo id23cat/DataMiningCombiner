@@ -65,6 +65,7 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public class ProjectController {
 	public static final String BASE_URL = RequestPath.project;
+	public static final String URL_GetPorject = BASE_URL + ProjectController.PATH_ProjectName;
 	public static final String SESSION_Account = "account";
 	public static final String SESSION_CurrentProject = "currentProject";
 	
@@ -76,6 +77,8 @@ public class ProjectController {
 	public static final String MODEL_NewAlgorithm = "newAlgorithm";
 	public static final String MODEL_NewProject = "newProject";
 	public static final String MODEL_ProjectsSet = "projectsSet";
+	
+	public final static String PATH_ProjectName = "/{projectName}";
 	
 	@Autowired
 	private DatasetController datasetController;
@@ -127,7 +130,7 @@ public class ProjectController {
 	 * 
 	 * Open selected or newly created project
 	 */
-	@GetMapping(value="{projectName}")
+	@GetMapping(value=PATH_ProjectName)
 	public String getProject(@PathVariable String projectName,
 							@ModelAttribute(SESSION_Account) Account account,
 							Model model, 

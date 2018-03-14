@@ -133,6 +133,25 @@ public class ProjectServiceImpl implements ProjectService {
 	}
 	
 	@Override
+	@Transactional(readOnly=true)
+	public Optional<ProjectModel> getById(Long id) {
+		Optional<ProjectModel> optProject = Optional.empty();
+		try {
+			optProject = Optional.ofNullable(projectRepo.findOne(id));
+		} catch (EntityNotFoundException exc) {
+			optProject = Optional.empty();
+		}
+		
+		return optProject;
+	}
+	
+	@Override
+	@Transactional
+	public ProjectModel getOrSave(final ProjectModel project) {
+		return getById(project.getId()).orElseGet(()->{return save(project);});
+	}
+	
+	@Override
 	@Transactional(readOnly = true)
 	public Optional<ProjectModel> getByNameAndAccount(String name, Account account) {
 		return projectRepo.findByNameAndAccount(name, account);

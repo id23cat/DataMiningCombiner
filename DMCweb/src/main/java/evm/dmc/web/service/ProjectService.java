@@ -29,7 +29,9 @@ public interface ProjectService {
 	Set<ProjectModel> getAllAsSet();
 	
 	Stream<ProjectModel> getByName(String name);
+	Optional<ProjectModel> getById(Long id);
 	Optional<ProjectModel> getByNameAndAccount(String name, Account account);
+	ProjectModel getOrSave(ProjectModel project);
 	
 	Stream<ProjectModel> getByAccount(Account account);
 	Set<ProjectModel> getByAccountAsSet(Account account);

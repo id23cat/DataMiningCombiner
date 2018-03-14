@@ -40,23 +40,25 @@ import lombok.extern.slf4j.Slf4j;
 
 @Controller
 @RequestMapping(AlgorithmController.BASE_URL)	// /project/{projectName}/algorithm/{algName}
-@SessionAttributes({AlgorithmController.SESSION_Account, AlgorithmController.SESSION_CurrProject})
+@SessionAttributes({ProjectController.SESSION_Account, 
+	ProjectController.SESSION_CurrentProject,
+	AlgorithmController.SESSION_CurrentAlgorithm})
 @Slf4j
 public class AlgorithmController {
 	public final static String BASE_URL = RequestPath.project+"/{projectName}"+RequestPath.algorithm+"/{algName}";
-	public final static String SESSION_Account = "account";
-	public final static String SESSION_CurrProject = "currentProject";
-	public final static String SESSION_CurrAlgorithm = "currentAlgorithm";
+//	public final static String SESSION_Account = "account";
+//	public final static String SESSION_CurrProject = "currentProject";
+	public final static String SESSION_CurrentAlgorithm = "currentAlgorithm";
 	
-	public final static String MODEL_MetaData = "metaData";
-	public final static String MODEL_Preview = "preview";
+//	public final static String MODEL_MetaData = "metaData";
+//	public final static String MODEL_Preview = "preview";
 	public final static String MODEL_Algorithm = "algorithm";
 	public final static String MODEL_PagesMap = "pagesMap";
-	public final static String MODEL_HasHeader = "hasHeader";
-	public final static String MODEL_HeaderItems = "headerItems";
-	public final static String MODEL_SrcAttrURI = "sourceAttributesURI";
-	public final static String MODEL_SrcUploadURI = "sourceUploadURI";
-	public final static String MODEL_PostFile = "file";
+//	public final static String MODEL_HasHeader = "hasHeader";
+//	public final static String MODEL_HeaderItems = "headerItems";
+//	public final static String MODEL_SrcAttrURI = "sourceAttributesURI";
+//	public final static String MODEL_SrcUploadURI = "sourceUploadURI";
+//	public final static String MODEL_PostFile = "file";
 	
 	public final static String PATH_AlgName = "algName";
 	public final static String PATH_ProjectName = "projectName";
@@ -64,37 +66,40 @@ public class AlgorithmController {
 	@Autowired
 	private DataStorageService dataStorageService;
 	
-	@Autowired
-	private ProjectService projectService;
+//	@Autowired
+//	private ProjectService projectService;
 	
 	@Autowired
 	private AlgorithmService algorithmService;
 	
 	@Autowired
-	private AccountService accountService;
+	private DatasetController datasetController;
+	
+//	@Autowired
+//	private AccountService accountService;
 	
 	@Autowired
 	private Views views;
 	
-	@ModelAttribute(SESSION_Account)
-	public Account getAccount(Authentication authentication) throws UserNotExistsException {
-			log.debug("Call to create account session bean");
-			return accountService.getAccountByName(authentication.getName());
-	}
+//	@ModelAttribute(ProjectController.SESSION_Account)
+//	public Account getAccount(Authentication authentication) throws UserNotExistsException {
+//			log.debug("Call to create account session bean");
+//			return accountService.getAccountByName(authentication.getName());
+//	}
+//	
+//	@ModelAttribute(ProjectController.SESSION_CurrentProject)
+//	public ProjectModel getCurrentProjectInSession(
+//			@PathVariable(PATH_ProjectName) String projectName,
+//			@ModelAttribute(ProjectController.SESSION_Account) Account account) throws ProjectNotFoundException {
+//		log.debug("Call to create currentProject session bean");
+//		return projectService.getByNameAndAccount(projectName, account)
+//				.orElseThrow(() ->
+//				new ProjectNotFoundException(String.format("Project with name %s owned by user %s not found", projectName, account.getUserName())));
+//	}
 	
-	@ModelAttribute(SESSION_CurrProject)
-	public ProjectModel getCurrentProjectInSession(
-			@PathVariable(PATH_ProjectName) String projectName,
-			@ModelAttribute(SESSION_Account) Account account) throws ProjectNotFoundException {
-		log.debug("Call to create currentProject session bean");
-		return projectService.getByNameAndAccount(projectName, account)
-				.orElseThrow(() ->
-				new ProjectNotFoundException(String.format("Project with name %s owned by user %s not found", projectName, account.getUserName())));
-	}
-	
-	@ModelAttribute(SESSION_CurrAlgorithm)
+	@ModelAttribute(SESSION_CurrentAlgorithm)
 	public Algorithm getCurrentAlgorithm(
-			@ModelAttribute(SESSION_CurrProject) ProjectModel project, 
+			@ModelAttribute(ProjectController.SESSION_CurrentProject) ProjectModel project, 
 			@PathVariable(PATH_AlgName) String algName
 			) throws AlgorithmNotFoundException {
 		return algorithmService.getByNameAndParentProject(algName, project)
@@ -106,9 +111,9 @@ public class AlgorithmController {
 	public String getAlgorithm(
 			@PathVariable(PATH_ProjectName) String projectName,
 			@PathVariable(PATH_AlgName) String algName,
-			@ModelAttribute(SESSION_CurrAlgorithm) Algorithm algorithm,
-			@ModelAttribute(SESSION_CurrProject) ProjectModel project,
-			@ModelAttribute(MODEL_MetaData) Optional<MetaData> metaData, 
+			@ModelAttribute(SESSION_CurrentAlgorithm) Algorithm algorithm,
+			@ModelAttribute(ProjectController.SESSION_CurrentProject) ProjectModel project,
+			@ModelAttribute(DatasetController.MODEL_MetaData) Optional<MetaData> metaData, 
 			Model model,
 			HttpServletRequest request) throws AlgorithmNotFoundException {
 		
@@ -116,23 +121,25 @@ public class AlgorithmController {
 		// if algorithm is empty (new algorithm)
 		if(algorithm.isSubAlgorithm() && algorithm.getAlgorithmSteps().isEmpty()) {
 			log.debug("Prepare new algorithm");
-			UriComponents srcUploadUri = UriComponentsBuilder.fromPath(BASE_URL).path(RequestPath.setSource)
-					.buildAndExpand(project.getName(), algName);
-			model.addAttribute(MODEL_SrcUploadURI, srcUploadUri.toUriString());
+//			UriComponents srcUploadUri = UriComponentsBuilder.fromPath(BASE_URL).path(RequestPath.setSource)
+//					.buildAndExpand(project.getName(), algName);
+//			model.addAttribute(MODEL_SrcUploadURI, srcUploadUri.toUriString());
+//			
+//			UriComponents srcAttribUri = UriComponentsBuilder.fromPath(BASE_URL).path(RequestPath.setSourceAttributes)
+//					.buildAndExpand(project.getName(), algName);
+//			model.addAttribute(MODEL_SrcAttrURI, srcAttribUri.toUriString());
+//			
+//			HasHeaderCheckbox hasHeader = new HasHeaderCheckbox();
 			
-			UriComponents srcAttribUri = UriComponentsBuilder.fromPath(BASE_URL).path(RequestPath.setSourceAttributes)
-					.buildAndExpand(project.getName(), algName);
-			model.addAttribute(MODEL_SrcAttrURI, srcAttribUri.toUriString());
+//			if(metaData.isPresent()) {
+//				model.addAttribute(MODEL_MetaData, metaData.get());
+//				model.addAttribute(MODEL_Preview, dataStorageService.getPreview(metaData.get()));
+//				hasHeader.setHasHeader(metaData.get().getStorage().isHasHeader());
+////				model.addAttribute(MODEL_HeaderItems, new DataPreview.ItemsList(preview.get().getHeaderItems()));
+//			}
+//			model.addAttribute(MODEL_HasHeader, hasHeader);
+			model = datasetController.addAttributesToModel(model, project, metaData);
 			
-			HasHeaderCheckbox hasHeader = new HasHeaderCheckbox();
-			
-			if(metaData.isPresent()) {
-				model.addAttribute(MODEL_MetaData, metaData.get());
-				model.addAttribute(MODEL_Preview, dataStorageService.getPreview(metaData.get()));
-				hasHeader.setHasHeader(metaData.get().getStorage().isHasHeader());
-//				model.addAttribute(MODEL_HeaderItems, new DataPreview.ItemsList(preview.get().getHeaderItems()));
-			}
-			model.addAttribute(MODEL_HasHeader, hasHeader);
 //			{ // for debug reasons only
 //				log.warn("-== Debugging section: is needed to remove");
 //				DataPreview prev = fileService.loadDataPreview(Paths.get("idcat","proj0"), "telecom_churn.csv");

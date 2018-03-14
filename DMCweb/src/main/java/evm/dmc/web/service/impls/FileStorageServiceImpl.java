@@ -80,6 +80,9 @@ public class FileStorageServiceImpl implements DataStorageService {
 //	@Autowired
 	private MetaDataService metaDataService;
 	
+	@Autowired
+	private ProjectService projectService;
+	
     private Path rootLocation;
     
     private int previewLinesCount;
@@ -125,7 +128,8 @@ public class FileStorageServiceImpl implements DataStorageService {
     	Path currLocation = this.rootLocation.resolve(relativePath);
     	Path destinationPath =  currLocation.resolve(filename);
     	
-    	// 2. Create MetaData 
+    	// 2. Create MetaData
+    	project = projectService.getOrSave(project);
     	MetaData meta = metaDataService.getMetaData(project, destinationPath, 
     			DataSrcDstType.LOCAL_FS, "", DataStorageModel.DEFAULT_DELIMITER, hasHeader);
     	

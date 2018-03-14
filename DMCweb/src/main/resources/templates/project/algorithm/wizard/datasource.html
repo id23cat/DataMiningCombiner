@@ -24,7 +24,7 @@
 		<form method="post"
 			th:object="${hasHeader}"
 			enctype="multipart/form-data" 
-			th:action="${sourceUploadURI}"
+			th:action="${dataUploadURL}"
 			>
 			<!-- th:action="${sourceUpload}" -->
 			
@@ -64,7 +64,7 @@
 			<!-- <div th:insert="fragments/datapreview :: dataPreview(${previewData})"></div> -->
 			
 			<form method="post"
-			th:action="${sourceAttributesURI}"
+			th:action="${dataAttributesURL}"
 			th:object="${metaData}"
 			>
 				<!-- <span th:inline="*{project}"></span> -->

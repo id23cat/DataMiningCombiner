@@ -25,6 +25,7 @@ import org.springframework.web.util.UriComponentsBuilder;
 
 import evm.dmc.api.model.ProjectModel;
 import evm.dmc.api.model.account.Account;
+import evm.dmc.api.model.algorithm.Algorithm;
 import evm.dmc.api.model.data.MetaData;
 import evm.dmc.web.exceptions.ProjectNotFoundException;
 import evm.dmc.web.exceptions.UserNotExistsException;
@@ -36,17 +37,22 @@ import lombok.extern.slf4j.Slf4j;
 
 @Controller
 @RequestMapping(DatasetController.BASE_URL)
-@SessionAttributes({ProjectController.SESSION_Account, ProjectController.SESSION_CurrentProject})
+@SessionAttributes({ProjectController.SESSION_Account, 
+	ProjectController.SESSION_CurrentProject,
+	AlgorithmController.SESSION_CurrentAlgorithm})
 @Slf4j
 public class DatasetController {
 	public static final String BASE_URL=RequestPath.project + DatasetController.PATH_ProjectName + RequestPath.dataset;
 	public static final String URL_SetSource = BASE_URL+RequestPath.setSource;
+	public static final String URL_SetAttributes = BASE_URL+RequestPath.setSourceAttributes;
 	
 	public static final String MODEL_DataSet = "dataSet";
 	public final static String MODEL_PostFile = "file";
 	public final static String MODEL_MetaData = "metaData";
 	public final static String MODEL_DataUploadURL = "dataUploadURL";
+	public final static String MODEL_DataAttributesURL = "dataAttributesURL";
 	public final static String MODEL_HasHeader = "hasHeader";
+	public final static String MODEL_Preview = "preview";
 	
 	public final static String PATH_ProjectName = "/{projectName}";
 
@@ -67,9 +73,25 @@ public class DatasetController {
 				.buildAndExpand(project.getName());
 		model.addAttribute(MODEL_DataUploadURL, srcUploadUri.toUriString());
 		
+		UriComponents srcAttrdUri = UriComponentsBuilder.fromPath(URL_SetAttributes)
+				.buildAndExpand(project.getName());
+		model.addAttribute(MODEL_DataAttributesURL, srcAttrdUri.toUriString());
+		
 		HasHeaderCheckbox hasHeader = new HasHeaderCheckbox();
 		model.addAttribute(MODEL_HasHeader, hasHeader);
 		
+		return model;
+	}
+	
+	public Model addAttributesToModel(Model model, ProjectModel project, Optional<MetaData> metaData) {
+		model = addAttributesToModel(model, project);
+		if(metaData.isPresent()) {
+			model.addAttribute(MODEL_MetaData, metaData.get());
+			model.addAttribute(MODEL_Preview, dataStorageService.getPreview(metaData.get()));
+			HasHeaderCheckbox hasHeader = (HasHeaderCheckbox) model.asMap().get(MODEL_HasHeader);
+			hasHeader.setHasHeader(metaData.get().getStorage().isHasHeader());
+//			model.addAttribute(MODEL_HeaderItems, new DataPreview.ItemsList(preview.get().getHeaderItems()));
+		}
 		return model;
 	}
 	
@@ -89,7 +111,7 @@ public class DatasetController {
 //	}
 	
 	@GetMapping
-	public String getDataList(@SessionAttribute(ProjectController.SESSION_CurrentProject) ProjectModel project,
+	public String getDataSetsList(@SessionAttribute(ProjectController.SESSION_CurrentProject) ProjectModel project,
 			Model model) {
 		model = addAttributesToModel(model, project);
 		return views.project.getDatasourcesList();
@@ -99,17 +121,22 @@ public class DatasetController {
 	public RedirectView postSourceFile(@RequestParam(MODEL_PostFile) MultipartFile file,
 			@SessionAttribute(ProjectController.SESSION_Account) Account account,
 			@SessionAttribute(ProjectController.SESSION_CurrentProject) ProjectModel project,
+			@SessionAttribute(AlgorithmController.SESSION_CurrentAlgorithm) Algorithm algorithm,
 			@ModelAttribute(MODEL_HasHeader) HasHeaderCheckbox hasHeader,
 			RedirectAttributes ra) {
 		
 //		DataPreview preview = fileService.store(DataStorageService.relativePath(account, project), file);
 		log.debug("HasHeader checkbox state: {}", hasHeader.isHasHeader());
+		log.debug("-== Receiving file: {}", file.getName());
+		
 		MetaData metaData = dataStorageService.saveData(account, project, file, hasHeader.isHasHeader());
 		ra.addFlashAttribute(MODEL_MetaData, Optional.of(metaData));
 		
-		log.debug("-== Receiving file: {}", file.getName());
-		UriComponents uriComponents = UriComponentsBuilder.fromPath(BASE_URL+"/{projName}")
-				.buildAndExpand(project.getName());
+//		UriComponents uriComponents = UriComponentsBuilder.fromPath(BASE_URL)
+//				.buildAndExpand(project.getName());
+		
+		UriComponents uriComponents = UriComponentsBuilder.fromPath(AlgorithmController.BASE_URL)
+				.buildAndExpand(project.getName(), algorithm.getName());
 		
 		log.debug("-== Saving complete");
 		return new RedirectView(uriComponents.toUriString());
@@ -118,19 +145,20 @@ public class DatasetController {
 	@PostMapping(RequestPath.setSourceAttributes)
 	public RedirectView postSourceAttributes(
 			@Valid @ModelAttribute(MODEL_MetaData) MetaData metaData, 
-			@PathVariable(PATH_ProjectName) String projName) {
+			@SessionAttribute(ProjectController.SESSION_CurrentProject) ProjectModel project) {
 		
-//		List<HeaderItem> selectedItems = attributes.getItems().stream()
-//												.filter((item) -> {return item.isChecked();})
-//												.collect(Collectors.toList());
 		log.debug("Saving properties of MetaData: {}", metaData);
 		log.debug("ID: {}", metaData.getId());
-//		log.debug("Selected fields: {}", metaData.getAttributes().)
-//		dataStorageService.save(metaData);
 		log.debug("-== Getting data attributes comlete");
 		
-		UriComponents uriComponents = UriComponentsBuilder.fromPath(BASE_URL)
-				.buildAndExpand(projName);
+//		UriComponents uriComponents = UriComponentsBuilder.fromPath(BASE_URL)
+//				.buildAndExpand(projName);
+//		UriComponents uriComponents = UriComponentsBuilder.fromPath(AlgorithmController.BASE_URL)
+//				.buildAndExpand(project.getName(), algorithm.getName());
+		
+		UriComponents uriComponents = UriComponentsBuilder.fromPath(ProjectController.URL_GetPorject)
+				.buildAndExpand(project.getName());
+		
 		return new RedirectView(uriComponents.toUriString());
 	}
 
