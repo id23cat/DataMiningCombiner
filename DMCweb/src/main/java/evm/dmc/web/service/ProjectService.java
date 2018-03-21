@@ -39,11 +39,10 @@ public interface ProjectService {
 	
 	Set<String> getNamesByAccount(Account account);
 	
-	Stream<Algorithm> getAllAlgorithms(ProjectModel project);
-	Algorithm assignAlgorithm(ProjectModel project, Algorithm algorithm);
-	Algorithm addAlgorithm(ProjectModel project, Algorithm algorithm);
-	ProjectModel deleteAlgorithm(ProjectModel project, Algorithm algorithm);
-	ProjectModel deleteAlgorithms(ProjectModel project, Set<String> names);
+//	Stream<Algorithm> getAllAlgorithms(ProjectModel project);
+//	Algorithm addAlgorithm(ProjectModel project, Algorithm algorithm);
+//	ProjectModel deleteAlgorithm(ProjectModel project, Algorithm algorithm);
+//	ProjectModel deleteAlgorithms(ProjectModel project, Set<String> names);
 	
 	ProjectModel getNew();
 	ProjectModel getNew(Account account, ProjectType type, Set<Algorithm> algorithms, Properties properties, String projectName);

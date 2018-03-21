@@ -11,7 +11,7 @@
 		<form method="post" 
 			th:action="${action}"
 			th:object="${backBean}">
-			<div class="col-sm-4 form-group">
+			<div class="col-sm-6 form-group pull-left">
 				<div th:each="value, stat : ${valuesList}">
 					<h4>
 						<input th:id="${id}+'_'+${value.name}" type="checkbox" 

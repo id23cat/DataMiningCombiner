@@ -49,10 +49,21 @@ public class DataStorageModel implements Serializable {
 	@NotNull
 	private MetaData meta;
 	
+//	@NotNull
+//	private String URIstring;
+	
 	@NotNull
-	private URI uri;
+	private String uri;
 	
 	private String delimiter = DEFAULT_DELIMITER;
 	
 	private boolean hasHeader = DEFAULT_HASHEADER;
+	
+	public URI getUri() {
+		return URI.create(uri);
+	}
+	
+	public void setUri(URI uri) {
+		this.uri = uri.toString();
+	}
 }

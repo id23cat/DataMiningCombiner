@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layouts/layout}"
+      >
+
+<head>
+    <title>Algorithms List</title>
+    <!-- <script th:src="@{/js/bootstrap-confirmation.min.js}"></script> -->
+</head>
+<body>
+<!-- Insert content into the layouts/layout.html -->
+<!-- <th:block th:if="${#fields.hasErrors('${newProject.*}') or errorMessage != null}"
+   	   	th:with="errMsg= ${#strings.isEmpty(errorMessage)} ? 'Form contains errors. Please try again.' : ${errorMessage}">
+    	
+        <div th:replace="fragments/alert :: alert (type='danger', message=${errMsg})">Alert</div>
+</th:block> -->
+<th:block layout:fragment="content">
+	<div th:fragment="algorithmsList">
+		<!-- <div class="col-sm-6 text-center bg-info"> -->
+		<!-- <div class="container"> -->
+			<div class="row">
+				<div id="algList"  
+					th:insert="fragments/deletable_list :: list('alg', 'Algorithms',
+												 ${@requestPath.projDelAlgorithm},
+												 ${backBean}, ${algorithmsSet}, ${algBaseURL})">
+				</div>
+			</div>
+			<div class="row">
+				<!-- <form method="post" th:action="${@requestPath.projAddAlgorithm}"
+					th:object="${newAlgorithm}"> -->
+				<form method="post" th:action="${T(evm.dmc.web.controllers.project.AlgorithmController).URL_Add_Algorithm}"
+					th:object="${newAlgorithm}">
+	
+					<div class="col-sm-8">
+						<label for="newName" class="control-label">Add new	algorithm</label>
+						<div class="alert alert-danger"
+							th:if="${#fields.hasErrors('name')}">
+							<strong>Important!</strong> 
+							<span class="help-block"
+								th:if="${#fields.hasErrors('name')}" th:errors="*{name}">
+								Invalid algorithm name
+							</span>
+						</div>
+						<div class="input-group">
+							<input type="text" 
+								class="form-control"
+								placeholder="New algorithm name" 
+								th:field="*{name}" />
+							<span class="input-group-btn">
+								<button class="btn btn-primary" type="submit">Add</button>
+							</span>
+						</div>
+					</div>
+				</form>
+			</div>
+		<!-- </div> -->
+		<!-- </div> -->
+	</div>
+</th:block>
+
+</body>
+</html>

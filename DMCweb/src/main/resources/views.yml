@@ -15,8 +15,10 @@ views:
     userExists: errors/userExists
   project:
     main: "project/project"
-    algorithmsList: "project/algorithm/algslist"
+    algorithmsList: "project/algorithmsList"
     datasourcesList: "project/datasourcesList"
+    data: 
+      dataSource: "dataSource"
     wizardBase: "project/algorithm/wizard"
     wizard:
       datasource: "project/algorithm/wizard/datasource"

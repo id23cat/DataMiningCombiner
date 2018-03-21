@@ -5,28 +5,22 @@ import java.util.List;
 import java.util.Optional;
 import java.util.Properties;
 import java.util.Set;
-import java.util.function.Predicate;
 import java.util.stream.Collector;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import javax.persistence.EntityManager;
 
-import org.assertj.core.internal.Lists;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 import evm.dmc.api.model.ProjectModel;
 import evm.dmc.api.model.ProjectType;
 import evm.dmc.api.model.account.Account;
 import evm.dmc.api.model.algorithm.Algorithm;
-import evm.dmc.api.model.algorithm.SubAlgorithm;
 import evm.dmc.api.model.data.MetaData;
-import evm.dmc.model.repositories.AlgorithmRepository;
-import evm.dmc.model.repositories.MetaDataRepository;
 import evm.dmc.model.repositories.ProjectModelRepository;
 import evm.dmc.web.exceptions.EntityNotFoundException;
 import evm.dmc.web.service.AlgorithmService;
@@ -40,8 +34,8 @@ public class ProjectServiceImpl implements ProjectService {
 	@Autowired
 	private ProjectModelRepository projectRepo;
 	
-	@Autowired
-	private AlgorithmService algorithmService;
+//	@Autowired
+//	private AlgorithmService algorithmService;
 	
 	@Autowired
 	private MetaDataService metaDataService;
@@ -203,75 +197,81 @@ public class ProjectServiceImpl implements ProjectService {
 		return new ProjectModel(account, type, algorithms, properties, projectName);
 	}
 	
-	@Override
-//	@Transactional(propagation = Propagation.REQUIRES_NEW)
-	@Transactional
-	public Algorithm assignAlgorithm(ProjectModel project, Algorithm algorithm) {
-		
-		project = merge(project);
-//		project = save(project);
-		
-//		project.assignAlgorithm(algorithm);
-		algorithm.getDependentProjects().remove(project);
-		project.getAlgorithms().add(algorithm);
-		algorithm.setParentProject(project);
-		
-		return algorithmService.save(algorithm);
-	}
-	
-	@Override
-	@Transactional
-	public Algorithm addAlgorithm(ProjectModel project, Algorithm algorithm) {
-		if(algorithm.getParentProject() == null) {
-			return assignAlgorithm(project, algorithm);
-		}
-		project = merge(project);
-		algorithm.getDependentProjects().add(project);
-		project.getAlgorithms().add(algorithm);
-		
-		return algorithm;
-	}
-	
-	@Override
-	@Transactional
-	@Modifying
-	public ProjectModel deleteAlgorithm(ProjectModel project, Algorithm algorithm) {
-		project = merge(project);
-		Optional<ProjectModel> newParrentProject = algorithm.getDependentProjects().stream().findFirst();
-		project.getAlgorithms().remove(algorithm);
-		log.debug("Algorithms set after removing algorithm: {}", project.getAlgorithms().size());
+//	@Override
+////	@Transactional(propagation = Propagation.REQUIRES_NEW)
+//	@Transactional
+//	public Algorithm assignAlgorithm(ProjectModel project, Algorithm algorithm) {
+//		
 //		project = merge(project);
-		if(newParrentProject.isPresent()) {
-			algorithm = assignAlgorithm(newParrentProject.get(), algorithm);
-//		}
-		} else {
-			algorithmService.delete(algorithm);
-//			algorithmRepository.flush();
-		}
-		
-//		save(project);
-//		projectRepo.flush();
-		return project;
-	}
+////		project = save(project);
+//		
+////		project.assignAlgorithm(algorithm);
+////		algorithm.getDependentProjects().remove(project);
+//		project.getAlgorithms().add(algorithm);
+//		algorithm.setParentProject(project);
+//		
+//		return algorithmService.save(algorithm);
+//	}
 	
-	@Override
-	@Transactional
-	@Modifying
-	public ProjectModel deleteAlgorithms(ProjectModel project, Set<String> names) {
-		project = merge(project);
-		Set<Algorithm> algorithms = algorithmService.getByNameAndDependentProject(names, project)
-				.collect(Collectors.toSet());
-		algorithms.addAll(algorithmService.getByNameAndParentProject(names, project).collect(Collectors.toSet()));
-		log.debug("Algorithmds for deletion: {}", algorithms.stream().map(alg -> alg.getName()).collect(Collectors.toSet()));
-		
-//		projectRepo.flush();
-		for(Algorithm alg: algorithms) {
-			deleteAlgorithm(project, alg);
-		}
-//		save(project);
-		
-		return project;
-	}
+//	@Override
+//	@Transactional
+//	public Algorithm addAlgorithm(ProjectModel project, Algorithm algorithm) {
+//		if(algorithm.getParentProject() == null) {
+//			return assignAlgorithm(project, algorithm);
+//		}
+//		project = merge(project);
+////		algorithm.getDependentProjects().add(project);
+//		project.getAlgorithms().add(algorithm);
+//		
+//		return algorithm;
+//	}
+	
+//	@Override
+////	@Transactional(propagation = Propagation.REQUIRES_NEW)
+//	@Transactional
+//	public Algorithm addAlgorithm(ProjectModel project, Algorithm algorithm) {
+//		project = merge(project);
+//		project.getAlgorithms().add(algorithm);
+//		algorithm.setProject(project);
+//		
+//		return algorithmService.save(algorithm);
+//	}
+	
+//	@Override
+//	@Transactional
+//	@Modifying
+//	public ProjectModel deleteAlgorithm(ProjectModel project, Algorithm algorithm) {
+//		project = merge(project);
+////		Optional<ProjectModel> newParrentProject = algorithm.getDependentProjects().stream().findFirst();
+//		project.getAlgorithms().remove(algorithm);
+//		log.debug("Algorithms set after removing algorithm: {}", project.getAlgorithms().size());
+////		if(newParrentProject.isPresent()) {
+////			algorithm = assignAlgorithm(newParrentProject.get(), algorithm);
+////		} else {
+////			algorithmService.delete(algorithm);
+////		}
+//		algorithmService.delete(algorithm);
+//		
+//		return project;
+//	}
+	
+//	@Override
+//	@Transactional
+//	@Modifying
+//	public ProjectModel deleteAlgorithms(ProjectModel project, Set<String> names) {
+//		project = merge(project);
+//		
+//		Set<Algorithm> algorithms = algorithmService.getByNameAndProject(names, project).collect(Collectors.toSet());
+//		log.debug("Algorithmds for deletion: {}", algorithms.stream().map(alg -> alg.getName()).collect(Collectors.toSet()));
+//		
+////		projectRepo.flush();
+//		for(Algorithm alg: algorithms) {
+//			deleteAlgorithm(project, alg);
+//		}
+////		save(project);
+//		
+//		return project;
+//	}
 	
 	@Override
 	@Transactional
@@ -321,12 +321,12 @@ public class ProjectServiceImpl implements ProjectService {
 //		return projectRepo.getOne(project.getId());
 	}
 
-	@Transactional(readOnly = true)
-	@Override
-	public Stream<Algorithm> getAllAlgorithms(ProjectModel project) {
-		project = merge(project);
-		return project.getAlgorithms().stream();
-	}
+//	@Transactional(readOnly = true)
+//	@Override
+//	public Stream<Algorithm> getAllAlgorithms(ProjectModel project) {
+//		project = merge(project);
+//		return project.getAlgorithms().stream();
+//	}
 
 	@Transactional(readOnly = true)
 	@Override

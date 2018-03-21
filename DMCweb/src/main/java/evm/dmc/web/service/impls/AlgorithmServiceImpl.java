@@ -14,72 +14,72 @@ import org.springframework.transaction.annotation.Transactional;
 
 import evm.dmc.api.model.ProjectModel;
 import evm.dmc.api.model.algorithm.Algorithm;
-import evm.dmc.api.model.algorithm.AlgorithmFunction;
-import evm.dmc.api.model.algorithm.SubAlgorithm;
 import evm.dmc.model.repositories.AlgorithmRepository;
 import evm.dmc.web.service.AlgorithmService;
+import evm.dmc.web.service.ProjectService;
+import lombok.experimental.Delegate;
 
 @Service
 public class AlgorithmServiceImpl implements AlgorithmService {
 	
 	@Autowired
-	AlgorithmRepository algRepository;
+	ProjectService projectService;
+	
+	@Autowired
+//	@Delegate(types = {AlgorithmRepository.class})
+	AlgorithmRepository algorithmRepository;
 	
 	@Autowired
 	EntityManager em;
 	
 	@Override
 	@Transactional(readOnly = true)
-	public Optional<Algorithm> getByNameAndParentProject(String name, ProjectModel project) {
-		return getByNameAndParentProject(Stream.of(name).collect(Collectors.toSet()), project)
-				.findFirst();
-	}
-	
-	@Override
-	public Optional<Algorithm> getByNameAndDependentProject(String name, ProjectModel project) {
-		return getByNameAndDependentProject(Stream.of(name).collect(Collectors.toSet()), project)
-				.findFirst();
+	public Optional<Algorithm> getByNameAndProject(String name, ProjectModel project) {
+		return algorithmRepository.findByProjectAndName(project, name);
 	}
 
 	@Override
-	public Stream<Algorithm> getByNameAndParentProject(Set<String> names, ProjectModel project) {
-		return algRepository.findByParentProjectAndNameIn(project, names);
+	@Transactional(readOnly=true)
+	public Set<Algorithm> getByNameAndProject(Set<String> names, ProjectModel project) {
+//		return algorithmRepository.findByProjectAndNameIn(project, names).stream();
+		return algorithmRepository.findByProjectAndNameIn(project, names).collect(Collectors.toSet());
 	}
 
 	@Override
-	public Stream<Algorithm> getByNameAndDependentProject(Set<String> names, ProjectModel project) {
-		return algRepository.findByDependentProjectsAndNameIn(project, names);
+	@Transactional(readOnly=true)
+	public Set<Algorithm> getForProject(ProjectModel project) {
+		return algorithmRepository.findByProject(project).collect(Collectors.toSet());
 	}
 	
 	@Override
 	@Transactional
 	public void delete(Algorithm algorithm) {
-		algRepository.delete(algorithm);
+		algorithmRepository.delete(algorithm);
+	}
+	
+	@Override
+	@Transactional
+	public void delete(ProjectModel project, Set<String> algorithmNames) {
+		algorithmRepository.deleteByProjectAndNameIn(project, algorithmNames);
+	}
+	
+	@Override
+	@Transactional
+	public Algorithm addNew(ProjectModel project, Algorithm algorithm) {
+		project = projectService.getOrSave(project);
+		algorithm.setProject(project);
+		project.getAlgorithms().add(algorithm);
+		return algorithmRepository.save(algorithm);
 	}
 	
 	@Override
 	@Transactional
 	public Algorithm save(Algorithm algorithm) {
-		return algRepository.save(algorithm);
-	}
-
-	@Override
-	@Transactional
-	public ProjectModel addDependentProject(Algorithm algorithm, ProjectModel project) {
-		algorithm = merge(algorithm);
-		project = merge(project);
-		
-		algorithm.getDependentProjects().add(project);
-		project.getAlgorithms().add(algorithm);
-		return project;
+		return algorithmRepository.save(algorithm);
 	}
 
 	private Algorithm merge(Algorithm algorithm) {
 		return em.merge(algorithm);
 	}
 	
-	private ProjectModel merge(ProjectModel project) {
-		return em.merge(project);
-	}
-
 }

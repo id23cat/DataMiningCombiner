@@ -65,12 +65,11 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public class ProjectController {
 	public static final String BASE_URL = RequestPath.project;
+	
 	public static final String URL_GetPorject = BASE_URL + ProjectController.PATH_ProjectName;
 	public static final String SESSION_Account = "account";
 	public static final String SESSION_CurrentProject = "currentProject";
 	
-	public static final String MODEL_AlgBasePath = "algBasePath";
-	public static final String MODEL_AlgorithmsSet = "algorithmsSet";
 	public static final String MODEL_BackBean = "backBean";
 	
 	public final static String MODEL_HasHeader = "hasHeader";
@@ -78,10 +77,15 @@ public class ProjectController {
 	public static final String MODEL_NewProject = "newProject";
 	public static final String MODEL_ProjectsSet = "projectsSet";
 	
-	public final static String PATH_ProjectName = "/{projectName}";
+	public final static String PATH_VAR_ProjectName = "projectName";
+	public final static String PATH_ProjectName = "/{" + PATH_VAR_ProjectName + "}";
+	
 	
 	@Autowired
 	private DatasetController datasetController;
+	
+	@Autowired
+	private AlgorithmController algorithmController;
 	
 //	@Autowired
 	private AccountService accountService;
@@ -130,8 +134,9 @@ public class ProjectController {
 	 * 
 	 * Open selected or newly created project
 	 */
+//	@GetMapping(ProjectController.PATH_ProjectName)
 	@GetMapping(value=PATH_ProjectName)
-	public String getProject(@PathVariable String projectName,
+	public String getProject(@PathVariable(PATH_VAR_ProjectName) String projectName,
 							@ModelAttribute(SESSION_Account) Account account,
 							Model model, 
 							HttpServletRequest request) 
@@ -147,16 +152,12 @@ public class ProjectController {
 		
 		log.debug("Current project: {}", project.getId()+project.getName());
 		
-		Set<Algorithm> algSet = project.getAlgorithms();
+//		Set<Algorithm> algSet = project.getAlgorithms();
 		
 		
 		model.addAttribute(SESSION_CurrentProject, project);
 		
-		// algorithm attributes
-		model.addAttribute(MODEL_AlgorithmsSet, algSet);
-		model.addAttribute(MODEL_AlgBasePath, request.getServletPath() + RequestPath.algorithm);
-		log.debug("algBasePath : {}", request.getServletPath() + RequestPath.algorithm);
-		model.addAttribute(MODEL_NewAlgorithm, projectService.getNewAlgorithm());
+		model = algorithmController.addAttributesToModel(model, project);
 		
 		model = datasetController.addAttributesToModel(model, project);
 			
@@ -169,7 +170,7 @@ public class ProjectController {
 						@Valid @ModelAttribute(MODEL_NewProject) ProjectModel project,
 						BindingResult bindingResult, RedirectAttributes ra) {
 		if(bindingResult.hasErrors()) {
-			log.debug("Invalid new project property: {}", bindingResult);
+			log.debug("Invalid new project's property: {}", bindingResult);
 			
 			new RedirectView(RequestPath.project);
 		}
@@ -186,47 +187,14 @@ public class ProjectController {
 			@ModelAttribute(MODEL_BackBean) CheckboxNamesBean bean,
 			BindingResult bindingResult, RedirectAttributes ra
 			) {
-		log.debug("BackBean: {}", Arrays.stream(bean.getNames()).collect(Collectors.toList()));
+//		log.debug("BackBean: {}", Arrays.stream(bean.getNames()).collect(Collectors.toList()));
+		log.debug("BackBean: {}", bean.getNamesSet());
 		
-		projectService.deleteByAccountAndNames(account, new HashSet<String>(Arrays.asList(bean.getNames())));
+//		projectService.deleteByAccountAndNames(account, new HashSet<String>(Arrays.asList(bean.getNames())));
+		projectService.deleteByAccountAndNames(account, bean.getNamesSet());
 		
 		log.debug("==============redirect===================");
 		return new RedirectView(RequestPath.project);
 	}
-	
-	
-	/**
-	 * @param project
-	 * @param algorithm
-	 * @return
-	 * 
-	 * Handles request to /project/algorithm/add
-	 */
-	@PostMapping(RequestPath.assignAlgorithm)
-	public RedirectView postAssignAlgorithm(
-			@SessionAttribute(SESSION_CurrentProject) ProjectModel project,
-			@Valid @ModelAttribute(MODEL_NewAlgorithm) Algorithm algorithm
-			) {
-		log.debug("Adding algorithm: {}" ,algorithm.getName());
-		log.debug("Project: {}", project.getId() + project.getName());
-		
-		projectService.assignAlgorithm(project, algorithm);
-
-		return new RedirectView(String.format("%s/%s", RequestPath.project, project.getName()));
-	}
-	
-	@PostMapping(RequestPath.delAlgorithm)
-	public RedirectView postDelAlgorithm(
-			@SessionAttribute(SESSION_CurrentProject) ProjectModel project,
-			@ModelAttribute(MODEL_BackBean) CheckboxNamesBean bean
-			) {
-		log.debug("Selected algorithms for deleteion:{}", StringUtils.arrayToCommaDelimitedString(bean.getNames()));
-		log.debug("Project for deletion in: {}", project);
-		
-		projectService.deleteAlgorithms(project, new HashSet<String>(Arrays.asList(bean.getNames())));
-		
-		return new RedirectView(String.format("%s/%s", RequestPath.project, project.getName()));
-	}
-	
 	
 }

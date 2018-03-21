@@ -83,14 +83,13 @@ public class ProjectModel implements Serializable {
 	@NotNull
 	private ProjectType projectType = ProjectType.SIMPLEST_PROJECT;
 	
-	@ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-	@JoinTable(name = "project_algorithm", 
-			joinColumns = @JoinColumn(name = "project_id", referencedColumnName = "id"),
-			inverseJoinColumns = @JoinColumn(name = "algorithm_id", referencedColumnName = "id")
-	)
-//	@OneToMany(mappedBy="parentProject", fetch = FetchType.LAZY,
-//			cascade = CascadeType.ALL, orphanRemoval = true)
-//	@Delegate(type=Set.class)
+//	@ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+//	@JoinTable(name = "project_algorithm", 
+//			joinColumns = @JoinColumn(name = "project_id", referencedColumnName = "id"),
+//			inverseJoinColumns = @JoinColumn(name = "algorithm_id", referencedColumnName = "id")
+//	)
+	@OneToMany(mappedBy="project", fetch = FetchType.LAZY,
+			cascade = CascadeType.ALL, orphanRemoval = true)
 	private Set<Algorithm> algorithms = new HashSet<>();
 	
 //	@Transient

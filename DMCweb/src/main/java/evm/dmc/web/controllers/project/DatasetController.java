@@ -42,9 +42,15 @@ import lombok.extern.slf4j.Slf4j;
 	AlgorithmController.SESSION_CurrentAlgorithm})
 @Slf4j
 public class DatasetController {
-	public static final String BASE_URL=RequestPath.project + DatasetController.PATH_ProjectName + RequestPath.dataset;
-	public static final String URL_SetSource = BASE_URL+RequestPath.setSource;
-	public static final String URL_SetAttributes = BASE_URL+RequestPath.setSourceAttributes;
+	public static final String URL_PART_DATASET = "/dataset";
+	public static final String URL_PART_SETSRC = "/setsrc";
+	public static final String URL_PART_GETSRC = "/getsrc";
+	public static final String URL_PART_SETATTRIBUTES = "/setsrcattr";
+	
+	public static final String BASE_URL=ProjectController.URL_GetPorject + URL_PART_DATASET;
+	public static final String URL_GetSource = BASE_URL + URL_PART_GETSRC;
+	public static final String URL_SetSource = BASE_URL + URL_PART_SETSRC;
+	public static final String URL_SetAttributes = BASE_URL + URL_PART_SETATTRIBUTES;
 	
 	public static final String MODEL_DataSet = "dataSet";
 	public final static String MODEL_PostFile = "file";
@@ -54,7 +60,7 @@ public class DatasetController {
 	public final static String MODEL_HasHeader = "hasHeader";
 	public final static String MODEL_Preview = "preview";
 	
-	public final static String PATH_ProjectName = "/{projectName}";
+	
 
 //	@Autowired
 	private DataStorageService dataStorageService;
@@ -122,13 +128,14 @@ public class DatasetController {
 //	}
 	
 	@GetMapping
-	public String getDataSetsList(@SessionAttribute(ProjectController.SESSION_CurrentProject) ProjectModel project,
+	public String getDataSetsList(
+			@SessionAttribute(ProjectController.SESSION_CurrentProject) ProjectModel project,
 			Model model) {
 		model = addAttributesToModel(model, project);
 		return views.project.getDatasourcesList();
 	}
 	
-	@PostMapping(RequestPath.setSource)
+	@PostMapping(URL_PART_SETSRC)
 	public RedirectView postSourceFile(@RequestParam(MODEL_PostFile) MultipartFile file,
 			@SessionAttribute(ProjectController.SESSION_Account) Account account,
 			@SessionAttribute(ProjectController.SESSION_CurrentProject) ProjectModel project,
@@ -153,7 +160,7 @@ public class DatasetController {
 		return new RedirectView(uriComponents.toUriString());
 	}
 	
-	@PostMapping(RequestPath.setSourceAttributes)
+	@PostMapping(URL_PART_SETATTRIBUTES)
 	public RedirectView postSourceAttributes(
 			@Valid @ModelAttribute(MODEL_MetaData) MetaData metaData, 
 			@SessionAttribute(ProjectController.SESSION_CurrentProject) ProjectModel project) {

@@ -76,7 +76,7 @@ public class MetaData implements Serializable {
 	private ProjectModel project;
 
 	@ElementCollection
-	@MapKeyColumn(name = "ATTR_NAME")
+	@MapKeyColumn(name = "MAP_KEY")
 	@Column(name = "ATTRIBUTE")
 	@CollectionTable(name = "DATA_ATTRIBUTES", joinColumns=@JoinColumn(name="METADATA_ID"))
 	@Setter(AccessLevel.PROTECTED)
@@ -104,8 +104,8 @@ public class MetaData implements Serializable {
 	@JoinColumn(name = "storage_id")
 	private DataStorageModel storage;
 	
-	@Version
-    private Long version;
+//	@Version
+//    private Long version;
 	
 	public void setStorage(DataStorageModel storage) {
 		storage.setMeta(this);
