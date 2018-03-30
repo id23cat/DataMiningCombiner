@@ -34,13 +34,13 @@ public class AlgorithmServiceImpl implements AlgorithmService {
 	
 	@Override
 	@Transactional(readOnly = true)
-	public Optional<Algorithm> getByNameAndProject(String name, ProjectModel project) {
+	public Optional<Algorithm> getByProjectAndName(ProjectModel project, String name) {
 		return algorithmRepository.findByProjectAndName(project, name);
 	}
 
 	@Override
 	@Transactional(readOnly=true)
-	public Set<Algorithm> getByNameAndProject(Set<String> names, ProjectModel project) {
+	public Set<Algorithm> getByProjectAndName(ProjectModel project, Set<String> names) {
 //		return algorithmRepository.findByProjectAndNameIn(project, names).stream();
 		return algorithmRepository.findByProjectAndNameIn(project, names).collect(Collectors.toSet());
 	}

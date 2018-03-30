@@ -97,7 +97,7 @@ public class AlgorithmControllerTest {
 				.buildAndExpand(TEST_PROJECT_NAME,TEST_ALG_NAME).toString();
 		
 		Mockito
-			.when(algorithmService.getByNameAndProject(TEST_ALG_NAME, testProject))
+			.when(algorithmService.getByProjectAndName(testProject, TEST_ALG_NAME))
 			.thenReturn(Optional.of(testAlg));
 		
 		Set<MetaData> dataSet = new HashSet<>();

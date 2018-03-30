@@ -58,6 +58,9 @@ public class AlgorithmController {
 	public final static String BASE_URL = ProjectController.URL_GetPorject + URL_PART_ALGORITHM;
 	public final static String URL_Add_Algorithm = BASE_URL + RequestPath.add;
 	
+	public static final String PATH_VAR_AlgorithmName = "algName";
+	public static final String PATH_AlgorithmName = "/{" + PATH_VAR_AlgorithmName + "}";
+	
 	public final static String SESSION_CurrentAlgorithm = "currentAlgorithm";
 	
 	public final static String MODEL_Algorithm = "algorithm";
@@ -65,10 +68,6 @@ public class AlgorithmController {
 	public static final String MODEL_AlgBaseURL = "algBaseURL";
 	public static final String MODEL_AlgorithmsSet = "algorithmsSet";
 	public static final String MODEL_NewAlgorithm = "newAlgorithm";
-	
-	public static final String PATH_VAR_AlgorithmName = "algName";
-	public static final String PATH_AlgorithmName = "/{" + PATH_VAR_AlgorithmName + "}";
-	
 	
 	@Autowired
 	private AlgorithmService algorithmService;
@@ -134,7 +133,7 @@ public class AlgorithmController {
 			HttpServletRequest request) throws AlgorithmNotFoundException {
 		
 		log.trace("Getting algorithm");
-		Optional<Algorithm> optAlgorithm = algorithmService.getByNameAndProject(algName, project);
+		Optional<Algorithm> optAlgorithm = algorithmService.getByProjectAndName(project, algName);
 		if(!optAlgorithm.isPresent()){
 			log.warn("Reqiest for non-existing project {}", algName);
 			return views.getErrors().getNotFound();
@@ -148,7 +147,7 @@ public class AlgorithmController {
 //			
 //			return views.project.wizard.datasource;
 //		}
-		return "project/algorithm/datasource";
+		return "project/algorithm/algorithm";
 	}
 	
 	/**

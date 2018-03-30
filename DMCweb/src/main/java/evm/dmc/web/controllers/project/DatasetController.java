@@ -3,6 +3,7 @@ package evm.dmc.web.controllers.project;
 import java.util.Optional;
 import java.util.Set;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,6 +29,7 @@ import evm.dmc.api.model.account.Account;
 import evm.dmc.api.model.algorithm.Algorithm;
 import evm.dmc.api.model.data.MetaData;
 import evm.dmc.web.exceptions.ProjectNotFoundException;
+import evm.dmc.web.exceptions.StorageException;
 import evm.dmc.web.exceptions.UserNotExistsException;
 import evm.dmc.web.service.DataStorageService;
 import evm.dmc.web.service.MetaDataService;
@@ -44,17 +46,23 @@ import lombok.extern.slf4j.Slf4j;
 public class DatasetController {
 	public static final String URL_PART_DATASET = "/dataset";
 	public static final String URL_PART_SETSRC = "/setsrc";
-	public static final String URL_PART_GETSRC = "/getsrc";
+//	public static final String URL_PART_GETSRC = "/getsrc";
+	public static final String URL_PART_DELSRC = "/delsrc";
 	public static final String URL_PART_SETATTRIBUTES = "/setsrcattr";
 	
+	public static final String PATH_VAR_DataName = "dataName";
+	public static final String PATH_DataName = "/{" + PATH_VAR_DataName + ":.+}";
+	
 	public static final String BASE_URL=ProjectController.URL_GetPorject + URL_PART_DATASET;
-	public static final String URL_GetSource = BASE_URL + URL_PART_GETSRC;
+//	public static final String URL_GetSource = BASE_URL + URL_PART_GETSRC;
 	public static final String URL_SetSource = BASE_URL + URL_PART_SETSRC;
+	public static final String URL_DeleteSource = BASE_URL + URL_PART_DELSRC;
 	public static final String URL_SetAttributes = BASE_URL + URL_PART_SETATTRIBUTES;
 	
 	public static final String MODEL_DataSet = "dataSet";
 	public final static String MODEL_PostFile = "file";
 	public final static String MODEL_MetaData = "metaData";
+	public static final String MODEL_DataBaseURL = "dataBaseURL";
 	public final static String MODEL_DataUploadURL = "dataUploadURL";
 	public final static String MODEL_DataAttributesURL = "dataAttributesURL";
 	public final static String MODEL_HasHeader = "hasHeader";
@@ -94,6 +102,10 @@ public class DatasetController {
 				.buildAndExpand(project.getName());
 		model.addAttribute(MODEL_DataAttributesURL, srcAttrdUri.toUriString());
 		
+		UriComponents baseUri = UriComponentsBuilder.fromPath(BASE_URL)
+				.buildAndExpand(project.getName());
+		model.addAttribute(MODEL_DataBaseURL, baseUri.toString());
+		
 		HasHeaderCheckbox hasHeader = new HasHeaderCheckbox();
 		model.addAttribute(MODEL_HasHeader, hasHeader);
 		
@@ -103,6 +115,7 @@ public class DatasetController {
 	public Model addAttributesToModel(Model model, ProjectModel project, Optional<MetaData> metaData) {
 		model = addAttributesToModel(model, project);
 		if(metaData.isPresent()) {
+			log.debug("MetaData is found: {}", metaData.get().getName());
 			model.addAttribute(MODEL_MetaData, metaData.get());
 			model.addAttribute(MODEL_Preview, dataStorageService.getPreview(metaData.get()));
 			HasHeaderCheckbox hasHeader = (HasHeaderCheckbox) model.asMap().get(MODEL_HasHeader);
@@ -133,6 +146,19 @@ public class DatasetController {
 			Model model) {
 		model = addAttributesToModel(model, project);
 		return views.project.getDatasourcesList();
+	}
+	
+	@GetMapping(PATH_DataName)
+	public String GetDataSet(@PathVariable(PATH_VAR_DataName) String dataName,
+			@SessionAttribute(ProjectController.SESSION_CurrentProject) ProjectModel project,
+			Model model
+			) {
+		log.debug("Looking for {}", dataName);
+		Optional<MetaData> optMeta = metaDataService.getByProjectAndName(project, dataName);
+		log.debug("Opt MetaData: {}", optMeta);
+	
+		model = addAttributesToModel(model, project, optMeta);
+		return views.project.data.dataSource;
 	}
 	
 	@PostMapping(URL_PART_SETSRC)
@@ -178,6 +204,14 @@ public class DatasetController {
 				.buildAndExpand(project.getName());
 		
 		return new RedirectView(uriComponents.toUriString());
+	}
+	
+	@PostMapping(URL_PART_DELSRC)
+	public RedirectView postDelData(
+			@SessionAttribute(ProjectController.SESSION_CurrentProject) ProjectModel project,
+			HttpServletRequest request) {
+		
+		return new RedirectView(request.getHeader("Referer"));
 	}
 
 }

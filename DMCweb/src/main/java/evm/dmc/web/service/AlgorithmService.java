@@ -8,17 +8,11 @@ import evm.dmc.api.model.ProjectModel;
 import evm.dmc.api.model.algorithm.Algorithm;
 import evm.dmc.api.model.algorithm.FWMethod;
 
-public interface AlgorithmService {
+public interface AlgorithmService extends EnityGetter<Algorithm>, EntityModifier<Algorithm>{
 	
-	Optional<Algorithm> getByNameAndProject(String name, ProjectModel project);
-	Set<Algorithm> getByNameAndProject(Set<String> names, ProjectModel project);
 	
-	Set<Algorithm> getForProject(ProjectModel project);
-	
-	void delete(ProjectModel project, Set<String> algorithmNames);
-	void delete(Algorithm algorithm);
 	Algorithm addNew(ProjectModel project, Algorithm algorithm);
-	Algorithm save(Algorithm algorithm);
+	
 	
 	static Algorithm getNewAlgorithm() {
 		return new Algorithm();

@@ -5,6 +5,7 @@ import static org.junit.Assert.*;
 
 import java.nio.file.Paths;
 import java.util.List;
+import java.util.Optional;
 import java.util.Random;
 import java.util.StringJoiner;
 import java.util.function.Supplier;
@@ -32,14 +33,14 @@ import evm.dmc.core.api.AttributeType;
 import evm.dmc.core.api.back.data.DataSrcDstType;
 import lombok.extern.slf4j.Slf4j;
 
-@RunWith(SpringRunner.class)
-@SpringBootTest
-@DataJpaTest
-@ActiveProfiles({"test", "devH2"})
-@Rollback
-@ComponentScan( basePackages = { "evm.dmc.web", "evm.dmc.core", "evm.dmc.service", "evm.dmc.model"})
+//@RunWith(SpringRunner.class)
+//@SpringBootTest
+//@DataJpaTest
+//@ActiveProfiles({"test", "devH2"})
+//@Rollback
+//@ComponentScan( basePackages = { "evm.dmc.web", "evm.dmc.core", "evm.dmc.service", "evm.dmc.model"})
 @Slf4j
-public class MetaDataServiceTest {
+public class MetaDataServiceTest extends ServiceTest {
 	@Autowired
 	MetaDataService metaDataService;
 	
@@ -78,6 +79,8 @@ public class MetaDataServiceTest {
 	
 	@Before
 	public void init() {
+		super.init();
+		
 		project = projectService.getByName("test0").findFirst().get();
 		assertNotNull(project);
 		
@@ -177,7 +180,6 @@ public class MetaDataServiceTest {
 		
 		assertEquals(",", activeDelim);
 	}
-
 	
 	private DataPreview getPreviewData(Stream<String> stream) {
 		int previewSize = 10;

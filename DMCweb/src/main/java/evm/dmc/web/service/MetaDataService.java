@@ -18,14 +18,10 @@ import evm.dmc.api.model.data.MetaData;
 import evm.dmc.api.model.datapreview.DataPreview;
 import evm.dmc.core.api.back.data.DataSrcDstType;
 
-public interface MetaDataService {
-	
-	MetaData save(MetaData meta);
-	
+public interface MetaDataService extends EnityGetter<MetaData>, EntityModifier<MetaData>{
+
 	MetaData getMetaData(ProjectModel project, Path fullFilePath,
     		DataSrcDstType type, String description, String delimiter, boolean hasHeader);
-	
-	Set<MetaData> getForProject(ProjectModel project);
 	
 	Optional<DataPreview> getPreview(MetaData meta);
 	

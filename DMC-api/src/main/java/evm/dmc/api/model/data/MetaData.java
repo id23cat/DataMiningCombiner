@@ -64,6 +64,7 @@ public class MetaData implements Serializable {
 	@Setter(AccessLevel.NONE) 
 	private Long id;
 	
+	@NotNull
 	private String name;
 	
 	private String description;

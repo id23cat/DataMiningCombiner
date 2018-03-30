@@ -13,55 +13,83 @@
 
 <body>
 	<!-- Preview data using DataPreview instance -->
-	<div th:fragment="dataPreview(preview)">
-	<form method="post"
-			th:action="${@requestPath.delProject}"
-			th:object="${backBean}"
-			>
-		<div class="table-responsive">
-			<table class="table table-bordered " > <!-- table-fixed -->
-				<thead class="head">
-				<!-- 	<th:block th:each="item : ${preview.getHeaderItems()}">		 -->	
-					<tr>
-						<th:block th:each="item : ${preview.getHeaderItems()}">
-							<th >
-								<span th:text=${item.name}></span>
-								<br>
-								
-								<!-- <span class="input-group-addon " > -->
-									<input type="checkbox" />
-									 <!-- th:field="*{name}" -->
-									 <!-- <div class="col-xs-1"> -->
-									 <br>
-									 <!-- <input type="number" step="0.01" value="1" style="width:40px;"/> -->
-									<!--  </div> -->
-								<!-- </span> -->
-								
-								
-	                					 
-							</th>
-						</th:block>
-					</tr>
-						<th:block th:each="item : ${preview.getHeaderItems()}">
-							<th>
-								 <input type="number" step="0.1" value="1" style="width:55px;" />  <!-- th:field="*{names}" th:value="${project.name}" -->
-							</th>
-						</th:block>
-					<tr>
-					</tr>
-				</thead>
-				<tbody>
-					<tr th:each="line, iter : ${preview.getAllLines()}">
-						<th:block th:each="item : ${preview.getDataItems(line)}">
-							<td th:text=${item}>Data item</td>
-						</th:block>
-					</tr>
-				</tbody>
-			</table>
+	<div th:fragment="dataPreview(metaData, preview, actionURL)">
+		<form method="post" 
+			th:action="${actionURL}"
+			th:object="${metaData}">
+			<!-- <span th:inline="*{project}"></span> -->
+			<div class="control-group">
+				<input type="submit" class="btn btn-primary" value="Apply changes"
+					th:id="attr-button" />
+
+				<div class="checkbox">
+					<input checked id="checkAll" data-toggle="toggle"
+						data-onstyle="info" data-offstyle="default" data-on="Select all"
+						data-off="Deselect all" data-size="small" type="checkbox">
+
+				</div>
+			</div>
+			<div th:value="*{id}" th:field="${metaData.id}"></div>
+
+			<div class="table-responsive">
+				<table class="table table-bordered ">
+					<!-- table-fixed -->
+					<thead class="head">
+						<!-- 	<th:block th:each="item : ${preview.getHeaderItems()}">		 -->
+						<tr>
+							<th:block
+								th:each="name, stat : ${T(evm.dmc.web.service.DataPreviewService).listLine(preview.header, preview.delimiter)}">
+								<th><span th:text=${name}></span> <br> <select
+									class="form-control" th:id="'type_' + ${stat.index}">
+										<!-- th:field="*{attributes['__name__'].type}" -->
+										<option
+											th:each="type: ${T(evm.dmc.core.api.AttributeType).values()}"
+											th:value="*{attributes['__${name}__'].type}"
+											th:text="${type}"
+											th:selected="${type == metaData.attributes['__${name}__'].type}">
+								</select> <br> <input type="checkbox"
+									th:id="'chkbx_' + ${stat.index}"
+									th:field="*{attributes['__${name}__'].checked}"
+									th:value="${metaData.attributes['__${name}__'].checked}" /> <!-- <input type="checkbox" th:field="*{items}" th:value="item"/> -->
+									<br> <input type="number" th:id="'num_' + ${stat.index}"
+									th:field="*{attributes['__${name}__'].multiplier}"
+									th:value="${metaData.attributes['__${name}__'].multiplier}"
+									step="0.1" style="width: 55px;" /></th>
+							</th:block>
+						</tr>
+						<!-- <th:block th:each="item : ${previewData.getHeaderItems()}">
+								<th>
+									 <input type="number" step="0.1" value="1" style="width:55px;" />  
+								</th>
+							</th:block> -->
+					</thead>
+					<tbody>
+						<tr th:each="line, iter : ${preview.data}">
+							<th:block
+								th:each="attr : ${T(evm.dmc.web.service.DataPreviewService).listLine(line, preview.delimiter)}">
+								<td th:text=${attr}>Data item</td>
+							</th:block>
+						</tr>
+					</tbody>
+				</table>
+
+			</div>
+			<script>
+					$("#checkAll").change(function () {
+						
+					    $("input[id^='chkbx_']").prop('checked', $(this).prop("checked"));
+					    
+					});
 					
-		</div>
-	</form>
-	</div>
-	
-<body>
+					// That selector matches all spans that have an id attribute and it starts
+					// with chkbx
+					$("input[id^='chkbx_']").change(function () {
+						var idchk = $(this)[0].id;
+						var elfind = "#"+idchk.replace("chkbx","num");
+						$(elfind).prop('hidden', !$(this).prop("checked"));
+					});
+					
+				</script>
+		</form>
+	</div><body>
 </html>

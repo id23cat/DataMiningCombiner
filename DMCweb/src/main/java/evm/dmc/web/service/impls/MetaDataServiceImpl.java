@@ -38,7 +38,7 @@ import lombok.extern.slf4j.Slf4j;
 
 @Service
 @Slf4j
-public class MetaDataServiceImpl implements MetaDataService{
+public class MetaDataServiceImpl implements MetaDataService {
 	
 	private MetaDataRepository metaDataRepository;
 	
@@ -58,8 +58,22 @@ public class MetaDataServiceImpl implements MetaDataService{
 
 	@Override
 	@Transactional
-	public MetaData save(MetaData meta) {
-		return metaDataRepository.save(meta);
+	public MetaData save(MetaData metaData) {
+		return metaDataRepository.save(metaData);
+	}
+	
+	@Override
+	@Transactional
+	public void delete(ProjectModel project, Set<String> names) {
+		metaDataRepository.deleteByProjectAndNameIn(project, names);
+		
+	}
+
+
+	@Override
+	@Transactional
+	public void delete(MetaData metaData) {
+		metaDataRepository.delete(metaData);
 	}
 	
 	
@@ -93,6 +107,19 @@ public class MetaDataServiceImpl implements MetaDataService{
 	@Override
 	public Set<MetaData> getForProject(ProjectModel project) {
 		return metaDataRepository.findByProject(project).collect(Collectors.toSet());
+	}
+	
+	@Transactional(readOnly=true)
+	@Override
+	public Optional<MetaData> getByProjectAndName(ProjectModel project, String name) {
+		return metaDataRepository.findByProjectAndName(project, name);
+//		return Optional.of(metaDataRepository.findByProjectAndName(project, name));
+	}
+	
+	@Transactional(readOnly=true)
+	@Override
+	public Set<MetaData> getByProjectAndName(ProjectModel project, Set<String> names) {
+		return metaDataRepository.findByProjectAndNameIn(project, names).collect(Collectors.toSet());
 	}
 	
 	@Override
@@ -290,5 +317,6 @@ public class MetaDataServiceImpl implements MetaDataService{
 //    	return metaDataRepository.findOne(meta.getId());
     	return em.merge(meta);
     }
+
 
 }

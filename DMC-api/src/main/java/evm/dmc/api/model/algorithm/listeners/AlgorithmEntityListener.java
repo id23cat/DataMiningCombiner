@@ -7,10 +7,10 @@ import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 public class AlgorithmEntityListener {
-	@PreRemove
-	public void algorithmPreRemove(Algorithm algorithm) {
-		algorithm.setParentProject(null);
-		log.debug("Deleteing Algorithm: {}", algorithm);
-	}
+//	@PreRemove
+//	public void algorithmPreRemove(Algorithm algorithm) {
+//		algorithm.setParentProject(null);
+//		log.debug("Deleteing Algorithm: {}", algorithm);
+//	}
 
 }

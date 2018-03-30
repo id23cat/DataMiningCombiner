@@ -18,11 +18,11 @@ logging:
     org.springframework: ERROR
     org.springframework.web: DEBUG
     org.springframework.security: WARN
-    org.springframework.data: DEBUG
+    org.springframework.data: TRACE
     org.springframework.transaction: DEBUG
     org.springframework.webflow: TRACE
-    org.hibernate.SQL: DEBUG
-    org.hibernate.type.descriptor.sql.BasicBinder: DEBUG
+    org.hibernate.SQL: TRACE
+    org.hibernate.type.descriptor.sql.BasicBinder: TRACE
     evm.dmc.web: TRACE
     evm.dmc.api: DEBUG
 
