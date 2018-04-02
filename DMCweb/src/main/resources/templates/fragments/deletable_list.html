@@ -26,11 +26,11 @@
 				</div>
 				<!-- </ul> -->
 				<div th:if="${not #lists.isEmpty(valuesList)}">
-					<button th:id="deleteButton" data-toggle="confirmation"
+					<button th:id="deleteButton_ + ${id}" data-toggle="confirmation"
 						class="btn btn-primary" type="submit" disabled>Delete</button>
 					<script>
 						$('[data-toggle="confirmation"]')
-							.confirmation(options)
+							.confirmation()
 					</script>
 				</div>
 

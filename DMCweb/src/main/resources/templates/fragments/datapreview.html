@@ -13,7 +13,7 @@
 
 <body>
 	<!-- Preview data using DataPreview instance -->
-	<div th:fragment="dataPreview(metaData, preview, actionURL)">
+	<div th:fragment="dataPreview(metaData, preview, actionURL, showCheckboxes='false')">
 		<form method="post" 
 			th:action="${actionURL}"
 			th:object="${metaData}">
@@ -21,7 +21,7 @@
 			<div class="control-group">
 				<input type="submit" class="btn btn-primary" value="Apply changes"
 					th:id="attr-button" />
-
+				
 				<div class="checkbox">
 					<input checked id="checkAll" data-toggle="toggle"
 						data-onstyle="info" data-offstyle="default" data-on="Select all"
@@ -32,29 +32,35 @@
 			<div th:value="*{id}" th:field="${metaData.id}"></div>
 
 			<div class="table-responsive">
-				<table class="table table-bordered ">
+				<table class="table table-striped table-bordered table-condensed table-responsive">
 					<!-- table-fixed -->
 					<thead class="head">
 						<!-- 	<th:block th:each="item : ${preview.getHeaderItems()}">		 -->
 						<tr>
 							<th:block
 								th:each="name, stat : ${T(evm.dmc.web.service.DataPreviewService).listLine(preview.header, preview.delimiter)}">
-								<th><span th:text=${name}></span> <br> <select
-									class="form-control" th:id="'type_' + ${stat.index}">
-										<!-- th:field="*{attributes['__name__'].type}" -->
-										<option
-											th:each="type: ${T(evm.dmc.core.api.AttributeType).values()}"
-											th:value="*{attributes['__${name}__'].type}"
-											th:text="${type}"
-											th:selected="${type == metaData.attributes['__${name}__'].type}">
-								</select> <br> <input type="checkbox"
-									th:id="'chkbx_' + ${stat.index}"
-									th:field="*{attributes['__${name}__'].checked}"
-									th:value="${metaData.attributes['__${name}__'].checked}" /> <!-- <input type="checkbox" th:field="*{items}" th:value="item"/> -->
-									<br> <input type="number" th:id="'num_' + ${stat.index}"
-									th:field="*{attributes['__${name}__'].multiplier}"
-									th:value="${metaData.attributes['__${name}__'].multiplier}"
-									step="0.1" style="width: 55px;" /></th>
+								<th>
+									<span th:text=${name} style="width: 30%"></span> 
+									<br> <select
+										class="form-control" th:id="'type_' + ${stat.index}">
+											<!-- th:field="*{attributes['__name__'].type}" -->
+											<option
+												th:each="type: ${T(evm.dmc.core.api.AttributeType).values()}"
+												th:value="*{attributes['__${name}__'].type}"
+												th:text="${type}"
+												th:selected="${type == metaData.attributes['__${name}__'].type}">
+									</select> <br>
+									<div th:if="${showCheckboxes} == true">
+										<input type="checkbox"
+											th:id="'chkbx_' + ${stat.index}"
+											th:field="*{attributes['__${name}__'].checked}"
+											th:value="${metaData.attributes['__${name}__'].checked}" /> <!-- <input type="checkbox" th:field="*{items}" th:value="item"/> -->
+											<br> <input type="number" th:id="'num_' + ${stat.index}"
+											th:field="*{attributes['__${name}__'].multiplier}"
+											th:value="${metaData.attributes['__${name}__'].multiplier}"
+											step="0.1" style="width: 55px;" />
+									</div>
+								</th>
 							</th:block>
 						</tr>
 						<!-- <th:block th:each="item : ${previewData.getHeaderItems()}">

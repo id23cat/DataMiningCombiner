@@ -7,7 +7,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.Authentication;
+import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -28,12 +28,9 @@ import evm.dmc.api.model.ProjectModel;
 import evm.dmc.api.model.account.Account;
 import evm.dmc.api.model.algorithm.Algorithm;
 import evm.dmc.api.model.data.MetaData;
-import evm.dmc.web.exceptions.ProjectNotFoundException;
-import evm.dmc.web.exceptions.StorageException;
-import evm.dmc.web.exceptions.UserNotExistsException;
+import evm.dmc.web.service.DataSetProperties;
 import evm.dmc.web.service.DataStorageService;
 import evm.dmc.web.service.MetaDataService;
-import evm.dmc.web.service.RequestPath;
 import evm.dmc.web.service.Views;
 import lombok.extern.slf4j.Slf4j;
 
@@ -65,7 +62,7 @@ public class DatasetController {
 	public static final String MODEL_DataBaseURL = "dataBaseURL";
 	public final static String MODEL_DataUploadURL = "dataUploadURL";
 	public final static String MODEL_DataAttributesURL = "dataAttributesURL";
-	public final static String MODEL_HasHeader = "hasHeader";
+	public final static String MODEL_DataSetProps = "dataSetProps";
 	public final static String MODEL_Preview = "preview";
 	
 	
@@ -76,8 +73,48 @@ public class DatasetController {
 //	@Autowired
 	private MetaDataService metaDataService;
 	
+	@Autowired DatasetModelAppender modelAppender;
+	
 //	@Autowired
 	private Views views;
+	
+	@Component
+	public class DatasetModelAppender {
+		public Model addAttributesToModel(Model model, ProjectModel project) {
+			Set<MetaData> dataSet = metaDataService.getForProject(project);
+			
+			model.addAttribute(MODEL_DataSet, dataSet);
+			UriComponents srcUploadUri = UriComponentsBuilder.fromPath(URL_SetSource)
+					.buildAndExpand(project.getName());
+			model.addAttribute(MODEL_DataUploadURL, srcUploadUri.toUriString());
+			
+			UriComponents srcAttrdUri = UriComponentsBuilder.fromPath(URL_SetAttributes)
+					.buildAndExpand(project.getName());
+			model.addAttribute(MODEL_DataAttributesURL, srcAttrdUri.toUriString());
+			
+			UriComponents baseUri = UriComponentsBuilder.fromPath(BASE_URL)
+					.buildAndExpand(project.getName());
+			model.addAttribute(MODEL_DataBaseURL, baseUri.toString());
+			
+			DataSetProperties datasetProps = new DataSetProperties();
+			model.addAttribute(MODEL_DataSetProps, datasetProps);
+			
+			return model;
+		}
+		
+		public Model addAttributesToModel(Model model, ProjectModel project, Optional<MetaData> metaData) {
+			model = addAttributesToModel(model, project);
+			if(metaData.isPresent()) {
+				log.debug("MetaData is found: {}", metaData.get().getName());
+				model.addAttribute(MODEL_MetaData, metaData.get());
+				model.addAttribute(MODEL_Preview, dataStorageService.getPreview(metaData.get()));
+				DataSetProperties hasHeader = (DataSetProperties) model.asMap().get(MODEL_DataSetProps);
+				hasHeader.setHasHeader(metaData.get().getStorage().isHasHeader());
+//				model.addAttribute(MODEL_HeaderItems, new DataPreview.ItemsList(preview.get().getHeaderItems()));
+			}
+			return model;
+		}
+	}
 	
 	
 	
@@ -90,40 +127,6 @@ public class DatasetController {
 		this.views = views;
 	}
 
-	public Model addAttributesToModel(Model model, ProjectModel project) {
-		Set<MetaData> dataSet = metaDataService.getForProject(project);
-		
-		model.addAttribute(MODEL_DataSet, dataSet);
-		UriComponents srcUploadUri = UriComponentsBuilder.fromPath(URL_SetSource)
-				.buildAndExpand(project.getName());
-		model.addAttribute(MODEL_DataUploadURL, srcUploadUri.toUriString());
-		
-		UriComponents srcAttrdUri = UriComponentsBuilder.fromPath(URL_SetAttributes)
-				.buildAndExpand(project.getName());
-		model.addAttribute(MODEL_DataAttributesURL, srcAttrdUri.toUriString());
-		
-		UriComponents baseUri = UriComponentsBuilder.fromPath(BASE_URL)
-				.buildAndExpand(project.getName());
-		model.addAttribute(MODEL_DataBaseURL, baseUri.toString());
-		
-		HasHeaderCheckbox hasHeader = new HasHeaderCheckbox();
-		model.addAttribute(MODEL_HasHeader, hasHeader);
-		
-		return model;
-	}
-	
-	public Model addAttributesToModel(Model model, ProjectModel project, Optional<MetaData> metaData) {
-		model = addAttributesToModel(model, project);
-		if(metaData.isPresent()) {
-			log.debug("MetaData is found: {}", metaData.get().getName());
-			model.addAttribute(MODEL_MetaData, metaData.get());
-			model.addAttribute(MODEL_Preview, dataStorageService.getPreview(metaData.get()));
-			HasHeaderCheckbox hasHeader = (HasHeaderCheckbox) model.asMap().get(MODEL_HasHeader);
-			hasHeader.setHasHeader(metaData.get().getStorage().isHasHeader());
-//			model.addAttribute(MODEL_HeaderItems, new DataPreview.ItemsList(preview.get().getHeaderItems()));
-		}
-		return model;
-	}
 	
 //	@ModelAttribute(ProjectController.SESSION_Account)
 //	public Account getAccount(Authentication authentication) throws UserNotExistsException {
@@ -144,7 +147,7 @@ public class DatasetController {
 	public String getDataSetsList(
 			@SessionAttribute(ProjectController.SESSION_CurrentProject) ProjectModel project,
 			Model model) {
-		model = addAttributesToModel(model, project);
+		model = modelAppender.addAttributesToModel(model, project);
 		return views.project.getDatasourcesList();
 	}
 	
@@ -157,7 +160,7 @@ public class DatasetController {
 		Optional<MetaData> optMeta = metaDataService.getByProjectAndName(project, dataName);
 		log.debug("Opt MetaData: {}", optMeta);
 	
-		model = addAttributesToModel(model, project, optMeta);
+		model = modelAppender.addAttributesToModel(model, project, optMeta);
 		return views.project.data.dataSource;
 	}
 	
@@ -165,25 +168,27 @@ public class DatasetController {
 	public RedirectView postSourceFile(@RequestParam(MODEL_PostFile) MultipartFile file,
 			@SessionAttribute(ProjectController.SESSION_Account) Account account,
 			@SessionAttribute(ProjectController.SESSION_CurrentProject) ProjectModel project,
-			@SessionAttribute(AlgorithmController.SESSION_CurrentAlgorithm) Algorithm algorithm,
-			@ModelAttribute(MODEL_HasHeader) HasHeaderCheckbox hasHeader,
-			RedirectAttributes ra) {
+//			@SessionAttribute(AlgorithmController.SESSION_CurrentAlgorithm) Algorithm algorithm,
+			@ModelAttribute(MODEL_DataSetProps) DataSetProperties datasetProps,
+			RedirectAttributes ra,
+			HttpServletRequest request) {
 		
 //		DataPreview preview = fileService.store(DataStorageService.relativePath(account, project), file);
-		log.debug("HasHeader checkbox state: {}", hasHeader.isHasHeader());
+		log.debug("HasHeader checkbox state: {}", datasetProps.isHasHeader());
 		log.debug("-== Receiving file: {}", file.getName());
 		
-		MetaData metaData = dataStorageService.saveData(account, project, file, hasHeader.isHasHeader());
+		MetaData metaData = dataStorageService.saveData(account, project, file, datasetProps);
 		ra.addFlashAttribute(MODEL_MetaData, Optional.of(metaData));
 		
 //		UriComponents uriComponents = UriComponentsBuilder.fromPath(BASE_URL)
 //				.buildAndExpand(project.getName());
 		
-		UriComponents uriComponents = UriComponentsBuilder.fromPath(AlgorithmController.BASE_URL)
-				.buildAndExpand(project.getName(), algorithm.getName());
+//		UriComponents uriComponents = UriComponentsBuilder.fromPath(AlgorithmController.BASE_URL)
+//				.buildAndExpand(project.getName(), algorithm.getName());
 		
 		log.debug("-== Saving complete");
-		return new RedirectView(uriComponents.toUriString());
+//		return new RedirectView(uriComponents.toUriString());
+		return new RedirectView(request.getHeader("Referer"));
 	}
 	
 	@PostMapping(URL_PART_SETATTRIBUTES)

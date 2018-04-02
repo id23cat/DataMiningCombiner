@@ -96,5 +96,67 @@
 		</div><!-- /.modal -->
 	</div>
 	
+	<!-- DataSource file selector -->
+	<div th:fragment="fileSelector(id, dataSetProps, uploadURL)">
+		<form method="post" 
+			th:object="${dataSetProps}"
+			enctype="multipart/form-data" 
+			th:action="${uploadURL}">
+			<!-- th:action="${sourceUpload}" -->
+
+			<h3>Select source data file</h3>
+
+			<div class="btn btn-default btn-file " data-text="Select file">
+				<input th:id="fileSelect" type="file" class="btn"  name="file">
+			</div>
+			
+			<div class="row justify-content-center">
+				<div class="col-sm-6 ">
+					<input th:id="dataName_id" 
+						type="text" 
+						class="form-control"
+						placeholder="Data set name" 
+						th:field="*{name}"
+						disabled />
+				</div>
+				<div class="col-sm-6 ">
+					<div class="checkbox">
+						<label> 
+							<input type="checkbox" th:id="hasHeader_id"
+								th:field="*{hasHeader}" th:value="*{hasHeader}" disabled />
+							Dataset	has header
+						</label>
+					</div>
+				</div>
+				<input type="submit" class="btn btn-primary" value="Upload"
+					th:id="upload-button" disabled />
+				<script>
+					$(function() {
+						var fileSelect = $("input[type='file']");
+						var submitButt = $("#upload-button");
+						var ckbox = $("#hasHeader_id");
+						var datasetNameField = $("#dataName_id");
+						
+						fileSelect.change(function() {
+							if(fileSelect.val()) {
+								var fileName = $('#fileSelect')[0].files[0].name
+								
+								submitButt.attr("disabled", false);
+								ckbox.attr("disabled", false);
+								datasetNameField.val(fileName);
+								datasetNameField.attr("disabled", false);
+							} else {
+								submitButt.attr("disabled", true);
+								ckbox.attr("disabled", true)
+								datasetNameField.attr("disabled", true);
+							}
+						});
+					});
+			</script>
+			</div>
+			<!-- <input type="submit" class="btn btn-primary" value="Upload" name="_eventId_upload" th:id="upload-button" disabled/> -->
+			
+		</form>
+	</div>
 <body>
 </html>

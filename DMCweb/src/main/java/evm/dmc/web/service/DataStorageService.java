@@ -22,7 +22,7 @@ import java.util.stream.Stream;
 
 public interface DataStorageService {
 
-    MetaData saveData(Account account, ProjectModel project, MultipartFile file, boolean hasHeader)
+    MetaData saveData(Account account, ProjectModel project, MultipartFile file, DataSetProperties datasetProperties)
     	throws UnsupportedFileTypeException, StorageException;
     
     MetaData save(MetaData metaData);

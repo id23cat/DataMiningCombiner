@@ -18,7 +18,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 import evm.dmc.api.model.algorithm.Algorithm;
 //import evm.dmc.config.ViewsConfig;
-import evm.dmc.web.testing.ShowTableController;
+//import evm.dmc.web.testing.ShowTableController;
 
 @Controller
 @RequestMapping("/testing/{userId}/project/{projId}/")

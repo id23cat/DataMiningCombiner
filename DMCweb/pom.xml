@@ -35,8 +35,8 @@
         <bootstrap-toggle.version>2.2.2</bootstrap-toggle.version>
         <ajax-utils.version>1.0</ajax-utils.version>
         <commons-lang3.version>3.7</commons-lang3.version>
-        <dmcombiner.version>${version}</dmcombiner.version>
-        <DMC-api.version>${version}</DMC-api.version>
+        <dmcombiner.version>${project.version}</dmcombiner.version>
+        <DMC-api.version>${project.version}</DMC-api.version>
         <assertj-core.version>3.8.0</assertj-core.version>
         <junit-addons.version>1.4</junit-addons.version>
         

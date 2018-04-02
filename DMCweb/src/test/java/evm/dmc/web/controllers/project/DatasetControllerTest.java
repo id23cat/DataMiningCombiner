@@ -2,7 +2,6 @@ package evm.dmc.web.controllers.project;
 
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.junit.Assert.*;
-import static org.mockito.Matchers.any;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.flash;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.redirectedUrl;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -70,7 +69,7 @@ public class DatasetControllerTest {
 		ArgumentCaptor<MultipartFile> fileCaptor = ArgumentCaptor.forClass(MultipartFile.class);
 		Mockito
 			.when(dataStorageService.saveData(accCaptor.capture(), projCaptor.capture(), 
-					fileCaptor.capture(), any(boolean.class)))
+					fileCaptor.capture(), null))
 			.thenReturn(new MetaData());
 		
 		UriComponents uriComponents = UriComponentsBuilder.fromPath(DatasetController.BASE_URL)

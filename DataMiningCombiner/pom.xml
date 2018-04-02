@@ -32,7 +32,7 @@
 		<weka.weka-devVersion>3.9.1</weka.weka-devVersion>
 		<jfree.jfreechartVersion>1.0.19</jfree.jfreechartVersion>
 		<apache.commons-lang3Version>3.6</apache.commons-lang3Version>
-		<dmc-apiVersion>${version}</dmc-apiVersion>
+		<dmc-apiVersion>${project.version}</dmc-apiVersion>
 	</properties>
 
 	<dependencies>
@@ -71,7 +71,7 @@
 		<dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-data-jpa</artifactId>
-            <scope>test</scope>
+           <!--  <scope>test</scope> -->
         </dependency>
 
 		<!-- https://mvnrepository.com/artifact/org.mockito/mockito-core -->

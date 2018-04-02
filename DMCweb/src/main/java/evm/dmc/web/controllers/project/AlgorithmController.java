@@ -1,47 +1,32 @@
 package evm.dmc.web.controllers.project;
 
-import java.util.Arrays;
-import java.util.HashSet;
 import java.util.Optional;
 import java.util.Set;
-import java.util.stream.Collectors;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.Authentication;
+import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Controller;
-import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.Model;
-import org.springframework.util.StringUtils;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.SessionAttribute;
 import org.springframework.web.bind.annotation.SessionAttributes;
-import org.springframework.web.multipart.MultipartFile;
-import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import org.springframework.web.servlet.view.RedirectView;
 import org.springframework.web.util.UriComponents;
 import org.springframework.web.util.UriComponentsBuilder;
 
 import evm.dmc.api.model.ProjectModel;
-import evm.dmc.api.model.account.Account;
 import evm.dmc.api.model.algorithm.Algorithm;
-import evm.dmc.api.model.data.MetaData;
 import evm.dmc.web.controllers.CheckboxNamesBean;
 import evm.dmc.web.exceptions.AlgorithmNotFoundException;
-import evm.dmc.web.exceptions.ProjectNotFoundException;
-import evm.dmc.web.exceptions.UserNotExistsException;
-import evm.dmc.web.service.AccountService;
 import evm.dmc.web.service.AlgorithmService;
-import evm.dmc.web.service.DataStorageService;
-import evm.dmc.web.service.ProjectService;
 import evm.dmc.web.service.RequestPath;
 import evm.dmc.web.service.Views;
 import lombok.extern.slf4j.Slf4j;
@@ -72,11 +57,30 @@ public class AlgorithmController {
 	@Autowired
 	private AlgorithmService algorithmService;
 	
-	@Autowired
-	private DatasetController datasetController;
+//	@Autowired
+//	private DatasetController datasetController;
 	
 	@Autowired
 	private Views views;
+	
+	@Autowired
+	private AlgorithmModelAppender modelAppender;
+	
+	@Component
+	public class AlgorithmModelAppender {
+		public Model addAttributesToModel(Model model, ProjectModel project) {
+			Set<Algorithm> algSet = algorithmService.getForProject(project);
+			
+			// algorithm attributes
+			model.addAttribute(MODEL_AlgorithmsSet, algSet);
+			UriComponents baseUrl = UriComponentsBuilder.fromPath(BASE_URL)
+					.buildAndExpand(project.getName());
+			model.addAttribute(MODEL_AlgBaseURL, baseUrl.toString());
+			model.addAttribute(MODEL_NewAlgorithm, AlgorithmService.getNewAlgorithm());
+			
+			return model;
+		}
+	}
 	
 //	@ModelAttribute(ProjectController.SESSION_Account)
 //	public Account getAccount(Authentication authentication) throws UserNotExistsException {
@@ -94,18 +98,7 @@ public class AlgorithmController {
 //				new ProjectNotFoundException(String.format("Project with name %s owned by user %s not found", projectName, account.getUserName())));
 //	}
 
-	public Model addAttributesToModel(Model model, ProjectModel project) {
-		Set<Algorithm> algSet = algorithmService.getForProject(project);
-		
-		// algorithm attributes
-		model.addAttribute(MODEL_AlgorithmsSet, algSet);
-		UriComponents baseUrl = UriComponentsBuilder.fromPath(BASE_URL)
-				.buildAndExpand(project.getName());
-		model.addAttribute(MODEL_AlgBaseURL, baseUrl.toString());
-		model.addAttribute(MODEL_NewAlgorithm, AlgorithmService.getNewAlgorithm());
-		
-		return model;
-	}
+	
 	
 //	@ModelAttribute(SESSION_CurrentAlgorithm)
 //	public Algorithm getCurrentAlgorithm(
@@ -121,7 +114,7 @@ public class AlgorithmController {
 	public String getAlgorithmsList(
 			@SessionAttribute(ProjectController.SESSION_CurrentProject) ProjectModel project,
 			Model model) {
-		model = addAttributesToModel(model, project);
+		model = modelAppender.addAttributesToModel(model, project);
 		return views.project.getAlgorithmsList();
 	}
 	
@@ -147,7 +140,7 @@ public class AlgorithmController {
 //			
 //			return views.project.wizard.datasource;
 //		}
-		return "project/algorithm/algorithm";
+		return views.project.algorithm.algorithm;
 	}
 	
 	/**

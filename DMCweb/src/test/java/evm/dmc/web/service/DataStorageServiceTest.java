@@ -150,7 +150,7 @@ public class DataStorageServiceTest {
 			MockMultipartFile file = new MockMultipartFile("file", realFilename, 
 					MediaType.TEXT_PLAIN_VALUE, realResource.getInputStream());
 			
-			metaData = service.saveData(account, project, file, true);
+			metaData = service.saveData(account, project, file, null);
 //		}
 		assertNotNull(metaData);
 		junitx.framework.FileAssert.assertEquals(sourceFile, new File(metaData.getStorage().getUri()));
@@ -175,13 +175,13 @@ public class DataStorageServiceTest {
 		MockMultipartFile file = new MockMultipartFile("file", filename,
 				MediaType.TEXT_PLAIN_VALUE, resource.getInputStream());
 		
-		service.saveData(account, project, file, true);
+		service.saveData(account, project, file, null);
     }
 
     @Test(expected = StorageException.class)
     public void storeNotPermitted() {
         service.saveData(account, project, new MockMultipartFile("foo", "../foo.txt",
-                MediaType.TEXT_PLAIN_VALUE, "Hello World".getBytes()), false);
+                MediaType.TEXT_PLAIN_VALUE, "Hello World".getBytes()), null);
     }
 
     

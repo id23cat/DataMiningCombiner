@@ -1,52 +1,28 @@
 package evm.dmc.web.controllers.project;
 
-import static org.junit.Assert.assertThat;
-
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.Collections;
 import java.util.Comparator;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Map;
 import java.util.Optional;
-import java.util.Set;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 
-import org.assertj.core.util.Lists;
-import org.assertj.core.util.Sets;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
-import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.Model;
-import org.springframework.util.StringUtils;
 import org.springframework.validation.BindingResult;
-import org.springframework.validation.Errors;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.SessionAttribute;
 import org.springframework.web.bind.annotation.SessionAttributes;
-import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import org.springframework.web.servlet.view.RedirectView;
-import org.springframework.web.util.UriComponents;
-import org.springframework.web.util.UriComponentsBuilder;
 
 import evm.dmc.api.model.ProjectModel;
 import evm.dmc.api.model.account.Account;
-import evm.dmc.api.model.algorithm.Algorithm;
-import evm.dmc.api.model.data.MetaData;
 import evm.dmc.web.controllers.CheckboxNamesBean;
 import evm.dmc.web.exceptions.ProjectNotFoundException;
 import evm.dmc.web.exceptions.UserNotExistsException;
@@ -54,9 +30,6 @@ import evm.dmc.web.service.ProjectService;
 import evm.dmc.web.service.RequestPath;
 import evm.dmc.web.service.Views;
 import evm.dmc.web.service.AccountService;
-import evm.dmc.web.service.DataStorageService;
-import lombok.Data;
-import lombok.extern.java.Log;
 import lombok.extern.slf4j.Slf4j;
 
 @Controller
@@ -82,10 +55,12 @@ public class ProjectController {
 	
 	
 	@Autowired
-	private DatasetController datasetController;
+	private DatasetController.DatasetModelAppender datasetModelAppender;
 	
+//	@Autowired
+//	private AlgorithmController algorithmController;
 	@Autowired
-	private AlgorithmController algorithmController;
+	private AlgorithmController.AlgorithmModelAppender algoritmModelAppender;
 	
 //	@Autowired
 	private AccountService accountService;
@@ -157,9 +132,9 @@ public class ProjectController {
 		
 		model.addAttribute(SESSION_CurrentProject, project);
 		
-		model = algorithmController.addAttributesToModel(model, project);
+		model = algoritmModelAppender.addAttributesToModel(model, project);
 		
-		model = datasetController.addAttributesToModel(model, project);
+		model = datasetModelAppender.addAttributesToModel(model, project);
 			
 		return views.getProject().getMain();
 		

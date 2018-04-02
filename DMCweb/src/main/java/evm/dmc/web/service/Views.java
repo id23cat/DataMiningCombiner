@@ -42,7 +42,8 @@ public class Views {
 		private String datasourcesList;
 		
 		@Getter public final Data data = new Data();
-		@Getter public final Wizard wizard = new Wizard();
+		@Getter public final Algorithm algorithm = new Algorithm();
+//		@Getter public final Wizard wizard = new Wizard();
 		
 		@lombok.Data
 		public static class Data {
@@ -50,9 +51,14 @@ public class Views {
 		}
 		
 		@lombok.Data
-		public static class Wizard {
-			public String datasource;
+		public static class Algorithm {
+			public String algorithm;
 		}
+		
+//		@lombok.Data
+//		public static class Wizard {
+//			public String datasource;
+//		}
 	}
 
 }

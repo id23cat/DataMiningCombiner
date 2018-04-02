@@ -1,7 +1,8 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org"
       xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
-      layout:decorate="~{layouts/sidebarlayout}">
+      layout:decorate="~{layouts/layout}">
+      <!-- layout:decorate="~{layouts/sidebarlayout}" -->
 
 <head>
 	<title>New algorithm: data source</title>
@@ -14,92 +15,44 @@
 </head>
 <body>
 	<!-- Insert page content into the layouts/sidebarpage.html -->
-	<th:block layout:fragment="sidebar_pagecontent">
-		<ul class="breadcrumb">
+	<!-- <th:block layout:fragment="sidebar_pagecontent"> -->
+	<th:block layout:fragment="content">
+		<!-- <ul class="breadcrumb">
 			<li><a href="#">Home</a></li>
 		    <li><a href="#">Private</a></li>
 		    <li><a href="#">Pictures</a></li>
 		    <li class="active">Vacation</li>        
-		</ul>
-		<form method="post"
-			th:object="${hasHeader}"
-			enctype="multipart/form-data" 
-			th:action="${dataUploadURL}"
-			>
-			<!-- th:action="${sourceUpload}" -->
-			
-		 	<h3>Select source data file</h3>
-
-			<div class="btn btn-default btn-file " data-text="Select file">
-					<input type="file" class="btn" th:id="fileSelect" name="file">
-			</div>
-				<input type="submit" class="btn btn-primary" value="Upload" th:id="upload-button" disabled/>
-				<div class="checkbox">
-					<label>
-						<input type="checkbox" th:id="hasHeader_id"	th:field="*{hasHeader}"	th:value="*{hasHeader}" disabled/>
-						Dataset has header
-					</label>
-				</div> 
-			<!-- <input type="submit" class="btn btn-primary" value="Upload" name="_eventId_upload" th:id="upload-button" disabled/> -->
-			<script>
-			$(function() {
-				var fileSelect = $("input[type='file']"), submitButt = $("#upload-button");
-				var ckbox = $("#hasHeader_id");
-				fileSelect.change(function() {
-					if(fileSelect.val()) {
-						submitButt.attr("disabled", false);
-						ckbox.attr("disabled", false)
-					} else {
-						submitButt.attr("disabled", true);
-						ckbox.attr("disabled", true)
-					}
-				});
-			});
-			</script>
-		</form>
-			
+		</ul> -->
+					
 		<div th:if="${metaData != null}" class="form-group">
-			I wonder, if variable exists... 
+			<!-- I wonder, if variable exists...  -->
 				
 			<!-- <div th:insert="fragments/datapreview :: dataPreview(${previewData})"></div> -->
 			
 			<div th:insert="fragments/datapreview :: dataPreview( ${metaData},
 							 ${preview}, 
-							 ${T(evm.dmc.web.controllers.project.DatasetController).URL_SetAttributes} )">
+							 ${T(evm.dmc.web.controllers.project.DatasetController).URL_SetAttributes},
+							 false)">
 			</div>
 		</div>
 
-			
-		 	<!-- <ul class="pager">
-				<li><a class="btn btn-info" role="button" th:href="@{${flowExecutionUrl}(_eventId='prev')}" >Previous</a></li>
-				<li class="btn btn-danger"><a th:href="@{${flowExecutionUrl}(_eventId='cancel')}" >Cancel</a></li>
-				<li><a th:href="@{${flowExecutionUrl}(_eventId='next')}">Next</a></li>
-			</ul> -->
-			
-			<!-- <a class="btn btn-warning" role="button" th:href="@{${flowExecutionUrl}(_eventId='cancel')}" >Cancel</a>
+		<!-- 	<a class="btn btn-warning" role="button" th:href="@{${flowExecutionUrl}(_eventId='cancel')}" >Cancel</a>
 			<div class="btn-group">
 				<a class="btn btn-info disabled" role="button" th:href="@{${flowExecutionUrl}(_eventId='prev')}" >Previous</a>
 				
 				<a class="btn btn-info" role="button" th:href="@{${flowExecutionUrl}(_eventId='next')}">Next</a>
 			</div> -->
-			
-			<a class="btn btn-warning" role="button" th:href="@{${flowExecutionUrl}(_eventId='cancel')}" >Cancel</a>
-			<div class="btn-group">
-				<a class="btn btn-info disabled" role="button" th:href="@{${flowExecutionUrl}(_eventId='prev')}" >Previous</a>
-				
-				<a class="btn btn-info" role="button" th:href="@{${flowExecutionUrl}(_eventId='next')}">Next</a>
-			</div>
 		
 	</th:block>
 
 	<!-- Insert bar content into the layouts/sidebarpage.html -->
-	<th:block layout:fragment="sidebar_barcontent">
+	<!-- <th:block layout:fragment="sidebar_barcontent">
 		<ul class="sidebar-nav">
 			<li class="sidebar-brand">Algorithm flow</li>
 			<li><a href="#">File source</a></li>
 			
 		</ul>
-	</th:block>
+	</th:block> -->
 </body>
 
 </html>

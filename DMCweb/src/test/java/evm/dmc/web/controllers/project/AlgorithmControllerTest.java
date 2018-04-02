@@ -119,7 +119,7 @@ public class AlgorithmControllerTest {
 			.andExpect(model().attributeExists(
 					DatasetController.MODEL_DataUploadURL,
 					DatasetController.MODEL_DataAttributesURL,
-					DatasetController.MODEL_HasHeader))
+					DatasetController.MODEL_DataSetProps))
 			;
 	}
 	

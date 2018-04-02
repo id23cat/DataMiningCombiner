@@ -63,6 +63,7 @@ import evm.dmc.web.exceptions.StorageException;
 import evm.dmc.web.exceptions.StorageFileNotFoundException;
 import evm.dmc.web.exceptions.UnsupportedFileTypeException;
 import evm.dmc.web.service.DataPreviewService;
+import evm.dmc.web.service.DataSetProperties;
 import evm.dmc.web.service.DataStorageService;
 import evm.dmc.web.service.MetaDataService;
 import evm.dmc.web.service.ProjectService;
@@ -118,11 +119,12 @@ public class FileStorageServiceImpl implements DataStorageService {
     
     @Override
     @Transactional
-    public MetaData saveData(Account account, ProjectModel project, MultipartFile file, boolean hasHeader) 
+    public MetaData saveData(Account account, ProjectModel project, 
+    		MultipartFile file, DataSetProperties datasetProperties) 
     		throws UnsupportedFileTypeException, StorageException {
     	// 1. Check file path, extension and non-empty data 
     	checkFileType(file);	// throws UnsupportedFileTypeException, StorageException
-    	int requiredLinesCount = hasHeader ? previewLinesCount+1 : previewLinesCount;
+    	int requiredLinesCount = datasetProperties.isHasHeader() ? previewLinesCount+1 : previewLinesCount;
     	
     	String filename = StringUtils.cleanPath(file.getOriginalFilename());
     	Path relativePath = DataStorageService.relativePath(account, project);
@@ -132,7 +134,8 @@ public class FileStorageServiceImpl implements DataStorageService {
     	// 2. Create MetaData
     	project = projectService.getOrSave(project);
     	MetaData meta = metaDataService.getMetaData(project, destinationPath, 
-    			DataSrcDstType.LOCAL_FS, "", DataStorageModel.DEFAULT_DELIMITER, hasHeader);
+    			DataSrcDstType.LOCAL_FS, DataStorageModel.DEFAULT_DELIMITER,
+    			datasetProperties);
     	
     	List<String> previewList = new ArrayList<>();
     	

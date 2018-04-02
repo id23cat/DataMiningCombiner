@@ -19,9 +19,11 @@ views:
     datasourcesList: "project/datasourcesList"
     data: 
       dataSource: "project/data/datasource"
-    wizardBase: "project/algorithm/wizard"
-    wizard:
-      datasource: "project/algorithm/wizard/datasource"
+    algorithm:
+      algorithm: "project/algorithm/algorithm"
+#    wizardBase: "project/algorithm/wizard"
+#    wizard:
+#      datasource: "project/algorithm/wizard/datasource"
   testing:
     testindex:  testing/testindex
     hello:  testing/hello?name=Alex

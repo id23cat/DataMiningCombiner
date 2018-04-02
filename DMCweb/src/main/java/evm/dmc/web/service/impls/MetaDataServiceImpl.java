@@ -32,6 +32,7 @@ import evm.dmc.core.api.AttributeType;
 import evm.dmc.core.api.back.data.DataSrcDstType;
 import evm.dmc.model.repositories.MetaDataRepository;
 import evm.dmc.web.service.DataPreviewService;
+import evm.dmc.web.service.DataSetProperties;
 import evm.dmc.web.service.MetaDataService;
 import evm.dmc.web.service.ProjectService;
 import lombok.extern.slf4j.Slf4j;
@@ -79,23 +80,22 @@ public class MetaDataServiceImpl implements MetaDataService {
 	
 	/**
      * Use default delimiter MetaData.DEFAULT_DELIMITER
-     * @param accountName
-     * @param projectName
-     * @param fileName
-     * @param type
-     * @param description
+	 * @param type
+	 * @param accountName
+	 * @param projectName
+	 * @param fileName
      * @return
      */
 	@Override
     public  MetaData getMetaData(ProjectModel project, Path fullFilePath,
-    		DataSrcDstType type, String description, String delimiter, boolean hasHeader) {
+    		DataSrcDstType type, String delimiter, DataSetProperties datasetProperities) {
 		
 		// 1. Create DataStorageModel
     	DataStorageModel stroage = MetaDataService
-    			.newDataStorageModel(fullFilePath, type, delimiter, hasHeader);
+    			.newDataStorageModel(fullFilePath, type, delimiter, datasetProperities.isHasHeader());
     	
     	// 2. Create MetaData, assign DataStorageModel
-    	MetaData meta = MetaDataService.newMetaData(fullFilePath.getFileName().toString(), description, stroage);
+    	MetaData meta = MetaDataService.newMetaData(datasetProperities.getName(), datasetProperities.getDescription(), stroage);
     	
     	// 3. Persist new MetaData -- it is important to do before starting save process 
     	meta = persistMetadata(meta, project);

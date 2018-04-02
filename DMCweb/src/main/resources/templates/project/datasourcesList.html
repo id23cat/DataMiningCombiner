@@ -26,42 +26,11 @@
 				</div>
 			</div>
 			<div class="row">
-				<form method="post"
-					th:object="${hasHeader}"
-					enctype="multipart/form-data" 
-					th:action="${sourceUploadURI}"
-					>
-					<!-- th:action="${sourceUpload}" -->
-						
-				 	<h3>Select source data file</h3>
-			
-					<div class="btn btn-default btn-file " data-text="Select file">
-							<input type="file" class="btn" th:id="fileSelect" name="file">
-					</div>
-					<input type="submit" class="btn btn-primary" value="Upload" th:id="upload-button" disabled/>
-					<div class="checkbox">
-						<label>
-							<input type="checkbox" th:id="hasHeader_id"	th:field="*{hasHeader}"	th:value="*{hasHeader}" disabled/>
-								Dataset has header
-						</label>
-					</div> 
-					<!-- <input type="submit" class="btn btn-primary" value="Upload" name="_eventId_upload" th:id="upload-button" disabled/> -->
-					<script>
-					$(function() {
-						var fileSelect = $("input[type='file']"), submitButt = $("#upload-button");
-						var ckbox = $("#hasHeader_id");
-						fileSelect.change(function() {
-							if(fileSelect.val()) {
-								submitButt.attr("disabled", false);
-								ckbox.attr("disabled", false)
-							} else {
-								submitButt.attr("disabled", true);
-								ckbox.attr("disabled", true)
-							}
-						});
-					});
-					</script>
-				</form>
+				<div id="fileSource"
+					th:insert="fragments/control_elements :: fileSelector('file_id', 
+												${dataSetProps},
+												${T(evm.dmc.web.controllers.project.DatasetController).URL_SetSource})">
+				</div>
 			</div>
 		<!-- </div> -->
 	</div>
