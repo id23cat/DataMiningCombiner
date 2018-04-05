@@ -21,7 +21,7 @@ import evm.dmc.core.api.back.data.DataSrcDstType;
 public interface MetaDataService extends EnityGetter<MetaData>, EntityModifier<MetaData>{
 
 	MetaData getMetaData(ProjectModel project, Path fullFilePath,
-    		DataSrcDstType type, String delimiter, DataSetProperties datasetProperities);
+    		Path baseDir, DataSrcDstType type, String delimiter, DataSetProperties datasetProperities);
 	
 	Optional<DataPreview> getPreview(MetaData meta);
 	
@@ -38,12 +38,12 @@ public interface MetaDataService extends EnityGetter<MetaData>, EntityModifier<M
 	
 	List<DataAttribute> getDataAttributes(DataPreview preview);
 	
-	public static DataStorageModel newDataStorageModel(Path fullFilePath,
+	public static DataStorageModel newDataStorageModel(Path baseDir, Path fullFilePath,
 			DataSrcDstType type, String delimiter, boolean hasHeader) {
 		DataStorageModel storageDesc = new DataStorageModel();
 
 		storageDesc.setStorageType(type);
-		storageDesc.setUri(fullFilePath.toUri());
+		storageDesc.setUri(fullFilePath.toUri(), baseDir.toUri().toString());
 		storageDesc.setDelimiter(delimiter);
 		storageDesc.setHasHeader(hasHeader);
 

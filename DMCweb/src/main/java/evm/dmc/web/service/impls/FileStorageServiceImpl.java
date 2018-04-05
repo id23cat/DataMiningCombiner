@@ -134,8 +134,8 @@ public class FileStorageServiceImpl implements DataStorageService {
     	// 2. Create MetaData
     	project = projectService.getOrSave(project);
     	MetaData meta = metaDataService.getMetaData(project, destinationPath, 
-    			DataSrcDstType.LOCAL_FS, DataStorageModel.DEFAULT_DELIMITER,
-    			datasetProperties);
+    			rootLocation, DataSrcDstType.LOCAL_FS,
+    			DataStorageModel.DEFAULT_DELIMITER, datasetProperties);
     	
     	List<String> previewList = new ArrayList<>();
     	
@@ -179,7 +179,9 @@ public class FileStorageServiceImpl implements DataStorageService {
     
     @Override
     public List<String> getPreview(MetaData meta, int lineCount) {
-    	List<String> preview = getPreview(Paths.get(meta.getStorage().getUri()), lineCount,
+    	List<String> preview = getPreview(
+    			Paths.get(meta.getStorage().getUri(rootLocation.toString())), 
+    			lineCount,
     			meta.getStorage().isHasHeader());
     	
     	return preview;
@@ -214,7 +216,7 @@ public class FileStorageServiceImpl implements DataStorageService {
 
 	@Override
 	public Path path(MetaData metaData) {
-		return Paths.get(metaData.getStorage().getUri());
+		return Paths.get(metaData.getStorage().getUri(rootLocation.toString()));
 	}
 	
 	@Override

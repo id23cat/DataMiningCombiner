@@ -84,15 +84,15 @@ public class MetaDataServiceImpl implements MetaDataService {
 	 * @param accountName
 	 * @param projectName
 	 * @param fileName
-     * @return
+	 * @return
      */
 	@Override
     public  MetaData getMetaData(ProjectModel project, Path fullFilePath,
-    		DataSrcDstType type, String delimiter, DataSetProperties datasetProperities) {
-		
+    		Path baseDir, DataSrcDstType type, String delimiter, DataSetProperties datasetProperities) {
+		log.debug("==Creating new DataStorageModel: {}", fullFilePath.toUri().toString()+" with "+baseDir.toUri().toString());
 		// 1. Create DataStorageModel
     	DataStorageModel stroage = MetaDataService
-    			.newDataStorageModel(fullFilePath, type, delimiter, datasetProperities.isHasHeader());
+    			.newDataStorageModel(baseDir, fullFilePath, type, delimiter, datasetProperities.isHasHeader());
     	
     	// 2. Create MetaData, assign DataStorageModel
     	MetaData meta = MetaDataService.newMetaData(datasetProperities.getName(), datasetProperities.getDescription(), stroage);

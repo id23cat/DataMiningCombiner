@@ -84,7 +84,7 @@ public class MetaDataServiceTest extends ServiceTest {
 		project = projectService.getByName("test0").findFirst().get();
 		assertNotNull(project);
 		
-		dataStorage = MetaDataService.newDataStorageModel(Paths.get("/test/path"), DataSrcDstType.LOCAL_FS,
+		dataStorage = MetaDataService.newDataStorageModel(Paths.get("/test/"), Paths.get("/test/path"), DataSrcDstType.LOCAL_FS,
 				DataStorageModel.DEFAULT_DELIMITER, true);
 		assertNotNull(dataStorage);
 		
@@ -179,6 +179,15 @@ public class MetaDataServiceTest extends ServiceTest {
 		String activeDelim = MetaDataService.getActiveDelimiters(defaultHeader, DataPreview.DEFAULT_DELIMITER);
 		
 		assertEquals(",", activeDelim);
+	}
+	
+	@Test
+	public final void testNewDataStorageModel() {
+		DataStorageModel dataStorage = MetaDataService.newDataStorageModel(Paths.get("/test/"), Paths.get("/test/path"), DataSrcDstType.LOCAL_FS,
+				DataStorageModel.DEFAULT_DELIMITER, true);
+//		log.debug("URI: {}", dataStorage.getUri("/test/"));
+		
+		assertThat(dataStorage.getRelativePath(), equalTo("/path"));
 	}
 	
 	private DataPreview getPreviewData(Stream<String> stream) {
