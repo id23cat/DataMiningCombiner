@@ -4,7 +4,7 @@
       layout:decorate="~{layouts/sidebarlayout}">
 
 <body>
-	<div th:fragment="list(id, title, action, backBean, valuesList, refBase)">
+	<div th:fragment="deletable_list(id, title, action, backBean, valuesList, refBase)">
 		<h3>
 			<span th:text="${title}"></span>
 		</h3>
@@ -49,6 +49,49 @@
 				});
 			});
 		</script>
+	</div>
+	
+	<div th:fragment="selectable_list(id, title, action, backBean, valuesList, refBase)">
+		<h3>
+			<span th:text="${title}"></span>
+		</h3>
+		<form method="post" 
+			th:action="${action}"
+			th:object="${backBean}">
+			<div class="col-sm-6 form-group pull-left">
+				<select
+						class="form-control" th:id="src_id_">
+					<!-- th:field="*{attributes['__name__'].type}" -->
+					<option
+						th:each="value: ${valuesList}"
+						th:value="*{attributes['__${name}__'].type}"
+						th:text="${type}"
+						th:selected="${type == metaData.attributes['__${name}__'].type}">
+				</select>
+				<!-- <div th:each="value, stat : ${valuesList}">
+					<h4>
+						<input th:id="${id}+'_'+${value.name}" type="checkbox" 
+							th:field="*{names}"
+							th:value="${value.name}" /> 
+						
+						<a	th:href="@{__${refBase}__/__${value.name}__}">
+							<span th:text="${value.name}">Algorithm name</span>
+						</a>
+						<br>
+					</h4>
+				</div> -->
+				<!-- </ul> -->
+				<div th:if="${not #lists.isEmpty(valuesList)}">
+					<button th:id="deleteButton_ + ${id}" data-toggle="confirmation"
+						class="btn btn-primary" type="submit" disabled>Delete</button>
+					<script>
+						$('[data-toggle="confirmation"]')
+							.confirmation()
+					</script>
+				</div>
+
+			</div>
+		</form>	
 	</div>
 	
 <body>

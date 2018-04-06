@@ -17,13 +17,15 @@
 	<!-- Insert page content into the layouts/sidebarpage.html -->
 	<!-- <th:block layout:fragment="sidebar_pagecontent"> -->
 	<th:block layout:fragment="content">
+	<div th:fragment="dataSource">
 		<!-- <ul class="breadcrumb">
 			<li><a href="#">Home</a></li>
 		    <li><a href="#">Private</a></li>
 		    <li><a href="#">Pictures</a></li>
 		    <li class="active">Vacation</li>        
 		</ul> -->
-					
+		
+		<!-- IF DATASOURCE NOT NULL-->		
 		<div th:if="${metaData != null}" class="form-group">
 			<!-- I wonder, if variable exists...  -->
 				
@@ -35,6 +37,14 @@
 							 false)">
 			</div>
 		</div>
+		<!-- ELSE -->
+		<div th:unless="${metaData != null}">
+			<div id="fileSource"
+					th:insert="fragments/control_elements :: fileSelector('file_id', 
+												${dataSetProps},
+												${T(evm.dmc.web.controllers.project.DatasetController).URL_SetSource})">
+			</div>
+		</div>
 
 		<!-- 	<a class="btn btn-warning" role="button" th:href="@{${flowExecutionUrl}(_eventId='cancel')}" >Cancel</a>
 			<div class="btn-group">
@@ -42,7 +52,7 @@
 				
 				<a class="btn btn-info" role="button" th:href="@{${flowExecutionUrl}(_eventId='next')}">Next</a>
 			</div> -->
-		
+	</div>
 	</th:block>
 
 	<!-- Insert bar content into the layouts/sidebarpage.html -->

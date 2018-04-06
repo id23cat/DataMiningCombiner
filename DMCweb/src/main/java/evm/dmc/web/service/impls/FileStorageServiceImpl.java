@@ -174,7 +174,9 @@ public class FileStorageServiceImpl implements DataStorageService {
     @Override
     public DataPreview getPreview(MetaData meta) {
     	Optional<DataPreview> optPreview = metaDataService.getPreview(meta);
-    	return optPreview.orElse(metaDataService.createPreview(meta, getPreview(meta, previewLinesCount)));
+    	log.debug("==Loaded preview: {}", optPreview.get());
+    	return optPreview.orElseGet(
+    			()->metaDataService.createPreview(meta, getPreview(meta, previewLinesCount)));
     }
     
     @Override
@@ -375,7 +377,7 @@ public class FileStorageServiceImpl implements DataStorageService {
 	}
 
 	protected List<String> getPreview(Path path, int linesCount, boolean hasHeader) {
-		log.debug("Getting preview from: {}", path);
+		log.debug("==Getting new preview from: {}", path);
 		String extension = StringUtils.getFilenameExtension(path.getFileName().toString()).toLowerCase();
 
 		switch (extension) {

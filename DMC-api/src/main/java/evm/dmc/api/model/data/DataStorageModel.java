@@ -66,7 +66,7 @@ public class DataStorageModel implements Serializable {
 	private boolean hasHeader = DEFAULT_HASHEADER;
 	
 	public URI getUri(String basePath) {
-		return URI.create(Paths.get(basePath, relativePath).toString());
+		return Paths.get(basePath, relativePath).toUri();
 	}
 	
 	public void setUri(URI uri, String basePath) {

@@ -30,8 +30,9 @@
         <thymeleaf-extras-springsecurity4.version>3.0.2.RELEASE</thymeleaf-extras-springsecurity4.version>
         <spring-webflow-version>2.4.7.RELEASE</spring-webflow-version>
         <bootstrap.version>3.3.7</bootstrap.version>
+        <!-- <bootstrap.version>4.0.0</bootstrap.version> -->
         <jquery.version>3.2.1</jquery.version>
-        <popper.js.version>1.12.3</popper.js.version>
+        <popper.js.version>1.12.9</popper.js.version>
         <bootstrap-toggle.version>2.2.2</bootstrap-toggle.version>
         <ajax-utils.version>1.0</ajax-utils.version>
         <commons-lang3.version>3.7</commons-lang3.version>

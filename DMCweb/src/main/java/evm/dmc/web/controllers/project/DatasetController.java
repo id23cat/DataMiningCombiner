@@ -56,7 +56,7 @@ public class DatasetController {
 	public static final String URL_DeleteSource = BASE_URL + URL_PART_DELSRC;
 	public static final String URL_SetAttributes = BASE_URL + URL_PART_SETATTRIBUTES;
 	
-	public static final String MODEL_DataSet = "dataSet";
+	public static final String MODEL_DataSets = "dataSets";
 	public final static String MODEL_PostFile = "file";
 	public final static String MODEL_MetaData = "metaData";
 	public static final String MODEL_DataBaseURL = "dataBaseURL";
@@ -77,46 +77,6 @@ public class DatasetController {
 	
 //	@Autowired
 	private Views views;
-	
-	@Component
-	public class DatasetModelAppender {
-		public Model addAttributesToModel(Model model, ProjectModel project) {
-			Set<MetaData> dataSet = metaDataService.getForProject(project);
-			
-			model.addAttribute(MODEL_DataSet, dataSet);
-			UriComponents srcUploadUri = UriComponentsBuilder.fromPath(URL_SetSource)
-					.buildAndExpand(project.getName());
-			model.addAttribute(MODEL_DataUploadURL, srcUploadUri.toUriString());
-			
-			UriComponents srcAttrdUri = UriComponentsBuilder.fromPath(URL_SetAttributes)
-					.buildAndExpand(project.getName());
-			model.addAttribute(MODEL_DataAttributesURL, srcAttrdUri.toUriString());
-			
-			UriComponents baseUri = UriComponentsBuilder.fromPath(BASE_URL)
-					.buildAndExpand(project.getName());
-			model.addAttribute(MODEL_DataBaseURL, baseUri.toString());
-			
-			DataSetProperties datasetProps = new DataSetProperties();
-			model.addAttribute(MODEL_DataSetProps, datasetProps);
-			
-			return model;
-		}
-		
-		public Model addAttributesToModel(Model model, ProjectModel project, Optional<MetaData> metaData) {
-			model = addAttributesToModel(model, project);
-			if(metaData.isPresent()) {
-				log.debug("MetaData is found: {}", metaData.get().getName());
-				model.addAttribute(MODEL_MetaData, metaData.get());
-				model.addAttribute(MODEL_Preview, dataStorageService.getPreview(metaData.get()));
-				DataSetProperties hasHeader = (DataSetProperties) model.asMap().get(MODEL_DataSetProps);
-				hasHeader.setHasHeader(metaData.get().getStorage().isHasHeader());
-//				model.addAttribute(MODEL_HeaderItems, new DataPreview.ItemsList(preview.get().getHeaderItems()));
-			}
-			return model;
-		}
-	}
-	
-	
 	
 	public DatasetController(@Autowired DataStorageService dataStorageService,
 			@Autowired MetaDataService metaDataService, 

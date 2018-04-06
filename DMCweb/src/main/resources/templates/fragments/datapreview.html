@@ -14,6 +14,9 @@
 <body>
 	<!-- Preview data using DataPreview instance -->
 	<div th:fragment="dataPreview(metaData, preview, actionURL, showCheckboxes='false')">
+		<h3>
+			Data set: <span th:text="${metaData.name}"></span>
+		</h3>
 		<form method="post" 
 			th:action="${actionURL}"
 			th:object="${metaData}">
@@ -41,7 +44,8 @@
 								th:each="name, stat : ${T(evm.dmc.web.service.DataPreviewService).listLine(preview.header, preview.delimiter)}">
 								<th>
 									<span th:text=${name} style="width: 30%"></span> 
-									<br> <select
+									<br> 
+									<select
 										class="form-control" th:id="'type_' + ${stat.index}">
 											<!-- th:field="*{attributes['__name__'].type}" -->
 											<option

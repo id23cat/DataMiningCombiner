@@ -55,12 +55,12 @@ public class ProjectController {
 	
 	
 	@Autowired
-	private DatasetController.DatasetModelAppender datasetModelAppender;
+	private DatasetModelAppender datasetModelAppender;
 	
 //	@Autowired
 //	private AlgorithmController algorithmController;
 	@Autowired
-	private AlgorithmController.AlgorithmModelAppender algoritmModelAppender;
+	private AlgorithmModelAppender algoritmModelAppender;
 	
 //	@Autowired
 	private AccountService accountService;

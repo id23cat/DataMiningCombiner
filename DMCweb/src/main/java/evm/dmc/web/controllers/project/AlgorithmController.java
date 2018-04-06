@@ -66,21 +66,9 @@ public class AlgorithmController {
 	@Autowired
 	private AlgorithmModelAppender modelAppender;
 	
-	@Component
-	public class AlgorithmModelAppender {
-		public Model addAttributesToModel(Model model, ProjectModel project) {
-			Set<Algorithm> algSet = algorithmService.getForProject(project);
-			
-			// algorithm attributes
-			model.addAttribute(MODEL_AlgorithmsSet, algSet);
-			UriComponents baseUrl = UriComponentsBuilder.fromPath(BASE_URL)
-					.buildAndExpand(project.getName());
-			model.addAttribute(MODEL_AlgBaseURL, baseUrl.toString());
-			model.addAttribute(MODEL_NewAlgorithm, AlgorithmService.getNewAlgorithm());
-			
-			return model;
-		}
-	}
+	@Autowired
+	private DatasetModelAppender datasetModelAppender;
+	
 	
 //	@ModelAttribute(ProjectController.SESSION_Account)
 //	public Account getAccount(Authentication authentication) throws UserNotExistsException {
@@ -132,6 +120,9 @@ public class AlgorithmController {
 			return views.getErrors().getNotFound();
 		}
 		Algorithm algorithm = optAlgorithm.get();
+		model.addAttribute(MODEL_Algorithm, algorithm);
+		
+		datasetModelAppender.addAttributesToModel(model, project, Optional.ofNullable(algorithm.getDataSource()));
 		// if algorithm is empty (new algorithm)
 //		if(algorithm.getMethod()..getAlgorithmSteps().isEmpty()) {
 //			log.debug("Prepare new algorithm");

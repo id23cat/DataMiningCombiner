@@ -20,9 +20,11 @@
 		<!-- <div class="col-sm-6 text-center bg-info"> -->
 			<div class="row">
 				<div id="dataList"  
-					th:insert="fragments/deletable_list :: list('data', 'Data sets',
+					th:insert="fragments/lists :: deletable_list('data', 'Data sets',
 												 ${@requestPath.projDelAlgorithm},
-												 ${backBean}, ${dataSet}, ${dataBaseURL})">
+												 ${backBean}, 
+												 ${dataSets}, 
+												 ${dataBaseURL})">
 				</div>
 			</div>
 			<div class="row">
@@ -35,6 +37,23 @@
 		<!-- </div> -->
 	</div>
 </th:block>
+
+	<!-- <div th:fragment="datasourcesListSelectable">
+			<div class="row">
+				<div id="dataList"  
+					th:insert="fragments/lists :: deletable_list('data', 'Data sets',
+												 ${@requestPath.projDelAlgorithm},
+												 ${backBean}, ${dataSet}, ${dataBaseURL})">
+				</div>
+			</div>
+			<div class="row">
+				<div id="fileSource"
+					th:insert="fragments/control_elements :: fileSelector('file_id', 
+												${dataSetProps},
+												${T(evm.dmc.web.controllers.project.DatasetController).URL_SetSource})">
+				</div>
+			</div>
+	</div> -->
 
 </body>
 </html>

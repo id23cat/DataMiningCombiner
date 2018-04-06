@@ -21,7 +21,7 @@
 		<!-- <div class="container"> -->
 			<div class="row">
 				<div id="algList"  
-					th:insert="fragments/deletable_list :: list('alg', 'Algorithms',
+					th:insert="fragments/lists :: deletable_list('alg', 'Algorithms',
 												 ${@requestPath.projDelAlgorithm},
 												 ${backBean}, ${algorithmsSet}, ${algBaseURL})">
 				</div>
