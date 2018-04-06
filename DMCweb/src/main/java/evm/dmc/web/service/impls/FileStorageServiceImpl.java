@@ -189,6 +189,12 @@ public class FileStorageServiceImpl implements DataStorageService {
     	return preview;
     }
     
+    @Override
+    @Transactional(readOnly=true)
+    public DataStorageModel getDataStorage(MetaData meta) {
+    	log.debug("==Get data storage: {}", meta.getStorage());
+    	return meta.getStorage();
+    }
     
     @Override
     public Resource loadAsResource(MetaData metaData)

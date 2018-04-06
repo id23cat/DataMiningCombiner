@@ -5,14 +5,18 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.web.HttpSessionRequiredException;
+import org.springframework.web.bind.ServletRequestBindingException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.servlet.ModelAndView;
+import org.springframework.web.servlet.view.RedirectView;
 
 import evm.dmc.web.controllers.SignInController;
+import evm.dmc.web.controllers.project.ProjectController;
 import evm.dmc.web.service.Views;
 import lombok.extern.slf4j.Slf4j;
 
@@ -35,7 +39,22 @@ public class DefaultExceptionHandler {
 		log.warn("Attempt to add actualy existing user: {}", ExceptionUtils.getRootCause(ex.getCause()).getMessage());
 		return views.getErrors().getUserExists();
 	}
-//	
+	
+	@org.springframework.web.bind.annotation.ExceptionHandler(ServletRequestBindingException.class)
+	//HttpSessionRequiredException
+	//ServletRequestBindingException
+	public RedirectView missedSessionAttribute(ServletRequestBindingException ex) {
+		String redirect = ProjectController.BASE_URL;
+		RedirectView rw = new RedirectView(redirect);
+//		rw.setStatusCode(HttpStatus.MOVED_PERMANENTLY); // you might not need this
+//	    FlashMap outputFlashMap = RequestContextUtils.getOutputFlashMap(request);
+//	    if (outputFlashMap != null){
+//	        outputFlashMap.put("myAttribute", true);
+//	    }
+		return rw;
+	}
+	
+	
 //	@org.springframework.web.bind.annotation.ExceptionHandler(value = Exception.class)
 //	public ModelAndView exception(Exception exception, WebRequest request) {
 //		ModelAndView modelAndView = new ModelAndView("error/general");

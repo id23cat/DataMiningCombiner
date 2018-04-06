@@ -35,16 +35,18 @@ public class DatasetModelAppender {
 		return setURLs(model, project);
 	}
 	
-//	@Transactional(readOnly=true)
 	public Model addAttributesToModel(Model model, ProjectModel project, Optional<MetaData> metaData) {
-		model = addAttributesToModel(model, project);
-//		model = setURLs(model, project);
+//		model = addAttributesToModel(model, project);
+		model = setURLs(model, project);
 		if(metaData.isPresent()) {
 			log.debug("MetaData is found: {}", metaData.get().getName());
 			model.addAttribute(DatasetController.MODEL_MetaData, metaData.get());
 			model.addAttribute(DatasetController.MODEL_Preview, dataStorageService.getPreview(metaData.get()));
-			DataSetProperties hasHeader = (DataSetProperties) model.asMap().get(DatasetController.MODEL_DataSetProps);
-			hasHeader.setHasHeader(metaData.get().getStorage().isHasHeader());
+//			DataSetProperties hasHeader = (DataSetProperties) model.asMap().get(DatasetController.MODEL_DataSetProps);
+//			hasHeader.setHasHeader(metaData.get().getStorage().isHasHeader());
+			DataSetProperties datasetProps = new DataSetProperties();
+			model.addAttribute(DatasetController.MODEL_DataSetProps, datasetProps);
+			datasetProps.setHasHeader(dataStorageService.getDataStorage(metaData.get()).isHasHeader());
 //			model.addAttribute(MODEL_HeaderItems, new DataPreview.ItemsList(preview.get().getHeaderItems()));
 		} else {
 			model = addAttributesToModel(model, project);

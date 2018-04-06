@@ -32,6 +32,8 @@ public interface DataStorageService {
     DataPreview getPreview(MetaData meta);
     
     List<String> getPreview(MetaData meta, int lineCount);
+    
+    DataStorageModel getDataStorage(MetaData meta);
 
     Resource loadAsResource(MetaData metaData)
     		throws StorageFileNotFoundException;
