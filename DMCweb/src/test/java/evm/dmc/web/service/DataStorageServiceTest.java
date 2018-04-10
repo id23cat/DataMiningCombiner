@@ -16,17 +16,17 @@
 package evm.dmc.web.service;
 
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.net.URI;
 import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.nio.file.attribute.PosixFilePermissions;
+import java.util.HashSet;
 import java.util.Random;
+import java.util.Set;
 import java.util.concurrent.ExecutorService;
 
-import org.assertj.core.api.FileAssert;
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -39,7 +39,6 @@ import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.test.annotation.Rollback;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit4.SpringRunner;
-import org.springframework.transaction.annotation.Transactional;
 
 import evm.dmc.api.model.ProjectModel;
 import evm.dmc.api.model.account.Account;
@@ -47,7 +46,6 @@ import evm.dmc.api.model.data.MetaData;
 import evm.dmc.api.model.datapreview.DataPreview;
 import evm.dmc.config.FileStorageConfig;
 import evm.dmc.model.repositories.AccountRepository;
-import evm.dmc.model.repositories.MetaDataRepository;
 import evm.dmc.web.exceptions.StorageException;
 import evm.dmc.web.exceptions.UnsupportedFileTypeException;
 import evm.dmc.web.service.impls.FileStorageServiceImpl;
@@ -76,7 +74,7 @@ public class DataStorageServiceTest {
     private	MetaDataService metaDataService;
     
     @Autowired
-    DataPreviewService previewService;
+    private DataPreviewService previewService;
     
 //    @Autowired
     private DataStorageService service;
@@ -94,25 +92,23 @@ public class DataStorageServiceTest {
     private ProjectService projectService;
     
     private Account account = new Account();
-	private ProjectModel project = new ProjectModel();
+	private ProjectModel project;
 	
-	private Path relativePath;
+//	private Path relativePath;
 	private String destRoot = "target/files/";
+	private String srcRoot = "Data/";
 //	private String realFilename = "telecom.csv";
 	private String realFilename = "telecom_churn.csv";
-	private ClassPathResource realResource = new ClassPathResource(realFilename, getClass());
+	private File sourceFile = new File(srcRoot, realFilename);
+	private File destFile;
+//	private ClassPathResource realResource = new ClassPathResource(realFilename, getClass());
+//	private ClassPathResource realResource = new ClassPathResource(realFilename, getClass());
 	
 	FileStorageConfig properties;
 	
     @Before
 //    @Transactional
     public void init() {
-//    	try {
-//			Files.createFile(Paths.get("111.txt"));
-//		} catch (IOException e) {
-//			// TODO Auto-generated catch block
-//			e.printStackTrace();
-//		}
     	properties = new FileStorageConfig();
 		properties.setLocation(destRoot + Math.abs(new Random().nextLong())+File.separator);
         properties.setPreviewLinesCount(PREVIEW_LINES_COUNT);
@@ -128,7 +124,12 @@ public class DataStorageServiceTest {
         project = account.getProjects().stream().findFirst().get();
         assertNotNull(project);
         
-        relativePath = DataStorageService.relativePath(account, project);
+        
+        String dstRoot = properties.getLocation();
+    	destFile = new File(dstRoot + DataStorageService.relativePath(account, project).toString(),
+    			realFilename);
+        
+//        relativePath = DataStorageService.relativePath(account, project);
     }
     
     @Test
@@ -141,19 +142,17 @@ public class DataStorageServiceTest {
     @Test
     public void storeAndLoadValidFile() throws IOException {
     	
-    	MetaData metaData = null;
-    	File sourceFile = realResource.getFile();
-    	File destFile = new File(properties.getLocation() + 
-    			DataStorageService.relativePath(account, project).toString(),
-    			realFilename);
-//		for(int i=0; i<50; i++) {
-			MockMultipartFile file = new MockMultipartFile("file", realFilename, 
-					MediaType.TEXT_PLAIN_VALUE, realResource.getInputStream());
+		MockMultipartFile file = new MockMultipartFile("file", realFilename, 
+					MediaType.TEXT_PLAIN_VALUE, new FileInputStream(sourceFile));
 			
-			metaData = service.saveData(account, project, file, null);
-//		}
+		DataSetProperties dataProps = new DataSetProperties("testDataSet", "description", true);
+			
+			/**********/
+		MetaData metaData = service.saveData(account, project, file, dataProps);
 		assertNotNull(metaData);
-		junitx.framework.FileAssert.assertEquals(sourceFile, new File(metaData.getStorage().getUri()));
+		URI uri = metaData.getStorage().getUri(properties.getLocation());
+		junitx.framework.FileAssert.assertEquals(sourceFile,
+				new File(uri));
 		log.debug("SourceFile: {}", sourceFile);
 		log.debug("SourceFile size: {}", Files.size(sourceFile.toPath()));
 		log.debug("DestFile: {}", destFile);
@@ -184,6 +183,33 @@ public class DataStorageServiceTest {
                 MediaType.TEXT_PLAIN_VALUE, "Hello World".getBytes()), null);
     }
 
+    @Test
+    public void deleteTest() throws FileNotFoundException, IOException {
+    	MockMultipartFile file = new MockMultipartFile("file", realFilename, 
+				MediaType.TEXT_PLAIN_VALUE, new FileInputStream(sourceFile));
+		DataSetProperties dataProps = new DataSetProperties("testDataSet", "description", true);
+    	service.saveData(account, project, file, dataProps);
+    	Set<MetaData> metaSet = metaDataService.getForProject(project);
+    	
+    	int initSize = metaSet.size();
+    	MetaData first = metaSet.stream().findFirst().get();
+    	metaSet = null;
+//    	DataStorageModel storage = dataStorageService.getDataStorage(first);
+    	
+    	Set<String> names = new HashSet<String>();
+    	names.add(first.getName());
+    	service.delete(project, names);
+
+    	
+    	//    	assertNull(dataStorageService.getDataStorage(first));
+    	assertFalse(previewService.getForMetaData(first).isPresent());
+    	
+    	Set<MetaData> metaSet2 = metaDataService.getForProject(project);
+    	assertThat(metaSet2.size(), equalTo(initSize - 1));
+    	assertFalse(metaSet2.contains(first) );
+    	
+    }
     
+   
 
 }

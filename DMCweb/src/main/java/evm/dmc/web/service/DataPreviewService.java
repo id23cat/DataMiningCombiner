@@ -3,6 +3,7 @@ package evm.dmc.web.service;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 import java.util.stream.Stream;
 
 import org.springframework.util.StringUtils;
@@ -17,6 +18,8 @@ public interface DataPreviewService {
 	DataPreview save(DataPreview preview);
 	
 	DataPreview delete(DataPreview preview);
+	
+	void deleteAllByMetaDataIds(Set<Long> ids);
 	
 	void deleteByMetaDataId(Long mid);
 	

@@ -1,6 +1,7 @@
 package evm.dmc.web.service.impls;
 
 import java.util.Optional;
+import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -43,6 +44,13 @@ public class DataPreviewServiceImpl implements DataPreviewService {
 	public DataPreview delete(DataPreview preview) {
 		repo.delete(preview);
 		return null;
+	}
+	
+	@Override
+	@Transactional
+//	public void deleteAllByMetaDataIds(Stream<Long> ids) {
+	public void deleteAllByMetaDataIds(Set<Long> ids) {
+		repo.deleteByMetaDataIdIn(ids);
 	}
 	
 	@Override

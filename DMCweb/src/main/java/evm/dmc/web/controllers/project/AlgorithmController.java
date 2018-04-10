@@ -69,35 +69,6 @@ public class AlgorithmController {
 	@Autowired
 	private DatasetModelAppender datasetModelAppender;
 	
-	
-//	@ModelAttribute(ProjectController.SESSION_Account)
-//	public Account getAccount(Authentication authentication) throws UserNotExistsException {
-//			log.debug("Call to create account session bean");
-//			return accountService.getAccountByName(authentication.getName());
-//	}
-//	
-//	@ModelAttribute(ProjectController.SESSION_CurrentProject)
-//	public ProjectModel getCurrentProjectInSession(
-//			@PathVariable(PATH_ProjectName) String projectName,
-//			@ModelAttribute(ProjectController.SESSION_Account) Account account) throws ProjectNotFoundException {
-//		log.debug("Call to create currentProject session bean");
-//		return projectService.getByNameAndAccount(projectName, account)
-//				.orElseThrow(() ->
-//				new ProjectNotFoundException(String.format("Project with name %s owned by user %s not found", projectName, account.getUserName())));
-//	}
-
-	
-	
-//	@ModelAttribute(SESSION_CurrentAlgorithm)
-//	public Algorithm getCurrentAlgorithm(
-//			@ModelAttribute(ProjectController.SESSION_CurrentProject) ProjectModel project, 
-//			@PathVariable(PATH_AlgName) String algName
-//			) throws AlgorithmNotFoundException {
-//		return algorithmService.getByNameAndProject(algName, project)
-//				.orElseThrow( () ->
-//						new AlgorithmNotFoundException(String.format("Algorithm with name %s not found", algName)));
-//	}
-	
 	@GetMapping
 	public String getAlgorithmsList(
 			@SessionAttribute(ProjectController.SESSION_CurrentProject) ProjectModel project,
@@ -115,14 +86,9 @@ public class AlgorithmController {
 		
 		log.trace("Getting algorithm");
 		Optional<Algorithm> optAlgorithm = algorithmService.getByProjectAndName(project, algName);
-		if(!optAlgorithm.isPresent()){
-			log.warn("Reqiest for non-existing project {}", algName);
-			return views.getErrors().getNotFound();
-		}
-		Algorithm algorithm = optAlgorithm.get();
-		model.addAttribute(MODEL_Algorithm, algorithm);
 		
-		datasetModelAppender.addAttributesToModel(model, project, Optional.ofNullable(algorithm.getDataSource()));
+		modelAppender.addAttributesToModel(model, project, optAlgorithm);
+		datasetModelAppender.addAttributesToModel(model, project);
 		// if algorithm is empty (new algorithm)
 //		if(algorithm.getMethod()..getAlgorithmSteps().isEmpty()) {
 //			log.debug("Prepare new algorithm");

@@ -21,8 +21,8 @@
 			<div class="row">
 				<div id="dataList"  
 					th:insert="fragments/lists :: deletable_list('data', 'Data sets',
-												 ${@requestPath.projDelAlgorithm},
-												 ${backBean}, 
+												 ${T(evm.dmc.web.controllers.project.DatasetController).URL_DeleteSource},
+												 ${T(evm.dmc.web.controllers.project.DatasetController).MODEL_SelectedNamesBean}, 
 												 ${dataSets}, 
 												 ${dataBaseURL})">
 				</div>
@@ -38,10 +38,10 @@
 	</div>
 </th:block>
 
-	<!-- <div th:fragment="datasourcesListSelectable">
+	<div th:fragment="datasourcesListSelectable">
 			<div class="row">
 				<div id="dataList"  
-					th:insert="fragments/lists :: deletable_list('data', 'Data sets',
+					th:insert="fragments/lists :: selectable_list('data', 'Data sets',
 												 ${@requestPath.projDelAlgorithm},
 												 ${backBean}, ${dataSet}, ${dataBaseURL})">
 				</div>

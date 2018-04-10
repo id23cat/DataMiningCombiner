@@ -1,5 +1,6 @@
 package evm.dmc.web.controllers.project;
 
+import java.util.Arrays;
 import java.util.Optional;
 import java.util.Set;
 
@@ -28,6 +29,7 @@ import evm.dmc.api.model.ProjectModel;
 import evm.dmc.api.model.account.Account;
 import evm.dmc.api.model.algorithm.Algorithm;
 import evm.dmc.api.model.data.MetaData;
+import evm.dmc.web.controllers.CheckboxNamesBean;
 import evm.dmc.web.service.DataSetProperties;
 import evm.dmc.web.service.DataStorageService;
 import evm.dmc.web.service.MetaDataService;
@@ -56,6 +58,7 @@ public class DatasetController {
 	public static final String URL_DeleteSource = BASE_URL + URL_PART_DELSRC;
 	public static final String URL_SetAttributes = BASE_URL + URL_PART_SETATTRIBUTES;
 	
+	public static final String MODEL_SelectedNamesBean = "selectedNames";
 	public static final String MODEL_DataSets = "dataSets";
 	public final static String MODEL_PostFile = "file";
 	public final static String MODEL_MetaData = "metaData";
@@ -172,9 +175,13 @@ public class DatasetController {
 	}
 	
 	@PostMapping(URL_PART_DELSRC)
-	public RedirectView postDelData(
+	public RedirectView postDeleteData(
 			@SessionAttribute(ProjectController.SESSION_CurrentProject) ProjectModel project,
+			@ModelAttribute(MODEL_SelectedNamesBean) CheckboxNamesBean checkboxNames,
 			HttpServletRequest request) {
+		log.debug("==Deleteion datasets with names: {}",Arrays.asList(checkboxNames.getNames()));
+		
+		dataStorageService.delete(project, checkboxNames.getNamesSet());
 		
 		return new RedirectView(request.getHeader("Referer"));
 	}

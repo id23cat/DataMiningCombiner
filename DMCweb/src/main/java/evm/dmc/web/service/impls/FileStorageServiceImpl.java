@@ -215,9 +215,18 @@ public class FileStorageServiceImpl implements DataStorageService {
             throw new StorageFileNotFoundException("Could not read file: " + file, e);
         }
     }
+    
+    @Override
+    @Transactional
+    public void delete(ProjectModel project, Set<String> names) {
+    	metaDataService.delete(project, names);
+    	// TODO: add backend daemon thread that would delete directories that are not bind to 
+    	// any existent metaData in database
+    }
 
     @Override
     public void deleteAll(ProjectModel project) {
+    	log.error("Method DataStorageService.deleteAll is not yet implemnted");
         FileSystemUtils.deleteRecursively(projectPath(project.getAccount(), project).toFile());
     }
 

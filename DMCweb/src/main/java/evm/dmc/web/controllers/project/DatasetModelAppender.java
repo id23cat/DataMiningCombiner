@@ -12,6 +12,7 @@ import org.springframework.web.util.UriComponentsBuilder;
 
 import evm.dmc.api.model.ProjectModel;
 import evm.dmc.api.model.data.MetaData;
+import evm.dmc.web.controllers.CheckboxNamesBean;
 import evm.dmc.web.service.DataSetProperties;
 import evm.dmc.web.service.DataStorageService;
 import evm.dmc.web.service.MetaDataService;
@@ -32,6 +33,9 @@ public class DatasetModelAppender {
 		DataSetProperties datasetProps = new DataSetProperties();
 		model.addAttribute(DatasetController.MODEL_DataSetProps, datasetProps);
 		
+		CheckboxNamesBean backNamesBean = new CheckboxNamesBean();
+		model.addAttribute(DatasetController.MODEL_SelectedNamesBean, backNamesBean);
+		
 		return setURLs(model, project);
 	}
 	
@@ -44,6 +48,7 @@ public class DatasetModelAppender {
 			model.addAttribute(DatasetController.MODEL_Preview, dataStorageService.getPreview(metaData.get()));
 //			DataSetProperties hasHeader = (DataSetProperties) model.asMap().get(DatasetController.MODEL_DataSetProps);
 //			hasHeader.setHasHeader(metaData.get().getStorage().isHasHeader());
+			
 			DataSetProperties datasetProps = new DataSetProperties();
 			model.addAttribute(DatasetController.MODEL_DataSetProps, datasetProps);
 			datasetProps.setHasHeader(dataStorageService.getDataStorage(metaData.get()).isHasHeader());
@@ -61,9 +66,9 @@ public class DatasetModelAppender {
 		model.addAttribute(DatasetController.MODEL_DataBaseURL, baseUri.toString());
 		
 		// setting URL for uploading new dataset
-		UriComponents srcUploadUri = UriComponentsBuilder.fromPath(DatasetController.URL_SetSource)
-				.buildAndExpand(project.getName());
-		model.addAttribute(DatasetController.MODEL_DataUploadURL, srcUploadUri.toUriString());
+//		UriComponents srcUploadUri = UriComponentsBuilder.fromPath(DatasetController.URL_SetSource)
+//				.buildAndExpand(project.getName());
+//		model.addAttribute(DatasetController.MODEL_DataUploadURL, srcUploadUri.toUriString());
 		
 		// setting URL for uploading changes to dataset attributes
 		UriComponents srcAttrdUri = UriComponentsBuilder.fromPath(DatasetController.URL_SetAttributes)

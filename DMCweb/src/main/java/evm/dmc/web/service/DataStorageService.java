@@ -38,6 +38,8 @@ public interface DataStorageService {
     Resource loadAsResource(MetaData metaData)
     		throws StorageFileNotFoundException;
 
+    void delete(ProjectModel project, Set<String> names);
+    
     void deleteAll(ProjectModel project);
     
     /**

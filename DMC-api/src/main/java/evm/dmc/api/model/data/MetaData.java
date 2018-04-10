@@ -72,7 +72,7 @@ public class MetaData implements Serializable {
 	/**
 	 * what project this data belongs to
 	 */
-	@ManyToOne(cascade = CascadeType.ALL)
+	@ManyToOne
 	@JoinColumn(name = "project_id")
 	private ProjectModel project;
 

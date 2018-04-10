@@ -12,14 +12,12 @@ import java.util.Optional;
 import java.util.Set;
 import java.util.StringJoiner;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import javax.persistence.EntityManager;
 
-import org.jfree.util.Log;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Isolation;
-import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
 
@@ -34,7 +32,6 @@ import evm.dmc.model.repositories.MetaDataRepository;
 import evm.dmc.web.service.DataPreviewService;
 import evm.dmc.web.service.DataSetProperties;
 import evm.dmc.web.service.MetaDataService;
-import evm.dmc.web.service.ProjectService;
 import lombok.extern.slf4j.Slf4j;
 
 @Service
@@ -66,8 +63,16 @@ public class MetaDataServiceImpl implements MetaDataService {
 	@Override
 	@Transactional
 	public void delete(ProjectModel project, Set<String> names) {
-		metaDataRepository.deleteByProjectAndNameIn(project, names);
-		
+//		metaDataRepository.deleteByProjectAndNameIn(project, names);
+		Set<MetaData> metaSet = metaDataRepository
+				.findByProjectAndNameIn(project, names)
+				.collect(Collectors.toSet());
+		Set<Long> idsSet = metaSet.parallelStream()
+				.map((meta) -> meta.getId())
+				.collect(Collectors.toSet());
+		previewService.deleteAllByMetaDataIds(idsSet);
+//		metaDataRepository.deleteInBatch(metaSet);
+		metaDataRepository.delete(metaSet);
 	}
 
 
