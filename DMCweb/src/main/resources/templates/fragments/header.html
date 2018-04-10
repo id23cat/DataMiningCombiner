@@ -20,10 +20,17 @@
 				</a>
 	        </div>
 	        <!-- Collect the nav links, forms, and other content for toggling -->
-			<div class="collapse navbar-collapse" id="myNavbar">
+			<div class="collapse navbar-collapse" id="myNavbar" th:with=projectController=${T(evm.dmc.web.controllers.project.ProjectController)}>
 				<ul class="nav navbar-nav">
 					<li sec:authorize="hasAuthority('USER')" th:classappend="${module == @requestPath.project ? 'active' : ''}">
 						<a th:href="${@requestPath.project}" >Projects</a>
+					</li>
+					<li th:with="currentProject=${session.currentProject}" th:if="${currentProject != null}">
+						<!-- th:href="@{/project/{projectName}(projectName=${session.currentProject.name})}" -->
+						<a th:href="@{${projectController.URL_GetPorject}
+							(${projectController.PATH_VAR_ProjectName} = ${currentProject.name})}" 
+							th:text="'CurrentProject: '+${currentProject.name}">
+						</a>
 					</li>
 					<li sec:authorize="!isAuthenticated()" th:classappend="${module == '/' ? 'active' : ''}">
 						<a th:href="@{/}">Home</a>

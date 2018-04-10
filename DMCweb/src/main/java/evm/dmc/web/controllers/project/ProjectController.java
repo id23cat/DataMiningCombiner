@@ -5,9 +5,11 @@ import java.util.List;
 import java.util.Optional;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Scope;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -18,6 +20,9 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.SessionAttributes;
+import org.springframework.web.bind.support.SessionAttributeStore;
+import org.springframework.web.bind.support.SessionStatus;
+import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import org.springframework.web.servlet.view.RedirectView;
 
@@ -35,6 +40,7 @@ import lombok.extern.slf4j.Slf4j;
 @Controller
 @RequestMapping(ProjectController.BASE_URL)		// /project
 @SessionAttributes({ProjectController.SESSION_Account, ProjectController.SESSION_CurrentProject})
+@Scope("session")
 @Slf4j
 public class ProjectController {
 	public static final String BASE_URL = RequestPath.project;
@@ -91,7 +97,11 @@ public class ProjectController {
 	}
 	
 	@GetMapping
-	public String getAllProjects(@ModelAttribute(SESSION_Account) Account account, Model model) {
+	public String getAllProjects(@ModelAttribute(SESSION_Account) Account account,
+			Model model, HttpSession session, SessionStatus status) {
+////		status.setComplete();
+//        session.removeAttribute(SESSION_CurrentProject);
+//        model.addAttribute(SESSION_CurrentProject, null);
 		
 		List<ProjectModel> projectsSet = projectService.getByAccountAsList(account);
 		projectsSet.sort(Comparator.comparing(ProjectModel::getName, String.CASE_INSENSITIVE_ORDER));

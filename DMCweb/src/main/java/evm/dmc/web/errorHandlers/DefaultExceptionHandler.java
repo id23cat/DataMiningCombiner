@@ -1,5 +1,7 @@
 package evm.dmc.web.errorHandlers;
 
+import javax.servlet.ServletException;
+
 import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -43,17 +45,27 @@ public class DefaultExceptionHandler {
 	@org.springframework.web.bind.annotation.ExceptionHandler(ServletRequestBindingException.class)
 	//HttpSessionRequiredException
 	//ServletRequestBindingException
-	public RedirectView missedSessionAttribute(ServletRequestBindingException ex) {
-		String redirect = ProjectController.BASE_URL;
-		RedirectView rw = new RedirectView(redirect);
-//		rw.setStatusCode(HttpStatus.MOVED_PERMANENTLY); // you might not need this
-//	    FlashMap outputFlashMap = RequestContextUtils.getOutputFlashMap(request);
-//	    if (outputFlashMap != null){
-//	        outputFlashMap.put("myAttribute", true);
-//	    }
-		return rw;
+	public RedirectView missedSessionAttribute(ServletRequestBindingException ex) throws ServletRequestBindingException {
+		return redirectToUserHome(ex);
 	}
 	
+	@org.springframework.web.bind.annotation.ExceptionHandler(HttpSessionRequiredException.class)
+	public RedirectView missedSessionAttribute(HttpSessionRequiredException ex) throws HttpSessionRequiredException {
+		return redirectToUserHome(ex);
+		
+		
+	}
+	
+	private <T extends ServletException> RedirectView redirectToUserHome(T ex) throws T {
+		if(ex.getMessage().matches("Expected session attribute \'currentProject\'") || 
+				ex.getMessage().matches("Missing session attribute \'currentProject\' of type ProjectModel")){
+			String redirect = ProjectController.BASE_URL;
+			RedirectView rw = new RedirectView(redirect);
+			return rw;
+		} else
+			throw ex;
+		
+	}
 	
 //	@org.springframework.web.bind.annotation.ExceptionHandler(value = Exception.class)
 //	public ModelAndView exception(Exception exception, WebRequest request) {
