@@ -1,7 +1,9 @@
 package evm.dmc.web.controllers.project;
 
+import java.util.List;
 import java.util.Optional;
 import java.util.Set;
+import java.util.TreeSet;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -27,7 +29,13 @@ public class DatasetModelAppender {
 	@Autowired
 	private MetaDataService metaDataService;
 	public Model addAttributesToModel(Model model, ProjectModel project) {
-		Set<MetaData> dataSets = metaDataService.getForProject(project);
+//		Set<MetaData> sortedSet = new TreeSet<>(
+//				(meta1, meta2) -> meta1.getName().compareTo(meta2.getName()));
+//		Set<MetaData> dataSets = metaDataService.getForProject(project);
+		List<MetaData> dataSets = metaDataService.getForProjectSortedBy(project, "name");
+		
+//		sortedSet.addAll(dataSets);
+//		model.addAttribute(DatasetController.MODEL_DataSets, sortedSet);
 		model.addAttribute(DatasetController.MODEL_DataSets, dataSets);
 		
 		DataSetProperties datasetProps = new DataSetProperties();

@@ -53,6 +53,7 @@ public class AlgorithmController {
 	public static final String MODEL_AlgBaseURL = "algBaseURL";
 	public static final String MODEL_AlgorithmsSet = "algorithmsSet";
 	public static final String MODEL_NewAlgorithm = "newAlgorithm";
+	public static final String MODEL_CurrentAlgorithm = "currentAlgorithm";
 	
 	@Autowired
 	private AlgorithmService algorithmService;

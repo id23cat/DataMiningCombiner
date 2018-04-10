@@ -19,9 +19,10 @@
 	    <li><a data-toggle="pill" href="#menu2">Menu 2</a></li>
 	    <li><a data-toggle="pill" href="#menu3">Menu 3</a></li>
   	</ul>
-	<div class="tab-content">
+	<div class="tab-content" 
+			th:with=algorithmController=${T(evm.dmc.web.controllers.project.AlgorithmController)}>
 		<div id="datasource" class="tab-pane fade in active">
-			<div th:insert="project/datasourcesList :: datasourcesListSelectable">
+			<div th:insert="project/datasourcesList :: datasourcesListSelectable(${algorithmController.MODEL_CurrentAlgorithm})">
 			</div>
 		</div>
 		

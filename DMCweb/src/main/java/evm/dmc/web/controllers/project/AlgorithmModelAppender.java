@@ -25,6 +25,7 @@ public class AlgorithmModelAppender {
 		model.addAttribute(AlgorithmController.MODEL_AlgorithmsSet, algSet);
 				
 		model.addAttribute(AlgorithmController.MODEL_NewAlgorithm, AlgorithmService.getNewAlgorithm());
+		model.addAttribute(AlgorithmController.MODEL_CurrentAlgorithm, AlgorithmService.getNewAlgorithm());
 		
 		return setURLs(model, project);
 	}

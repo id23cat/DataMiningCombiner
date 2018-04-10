@@ -17,6 +17,7 @@ import java.util.stream.Stream;
 import javax.persistence.EntityManager;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
@@ -112,6 +113,12 @@ public class MetaDataServiceImpl implements MetaDataService {
 	@Override
 	public Set<MetaData> getForProject(ProjectModel project) {
 		return metaDataRepository.findByProject(project).collect(Collectors.toSet());
+	}
+	
+	@Transactional(readOnly=true)
+	@Override
+	public List<MetaData> getForProjectSortedBy(ProjectModel project, String fieldName) {
+		return metaDataRepository.findByProject(project, new Sort(fieldName));
 	}
 	
 	@Transactional(readOnly=true)

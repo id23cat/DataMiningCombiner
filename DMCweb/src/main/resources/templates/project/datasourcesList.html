@@ -16,13 +16,14 @@
         <div th:replace="fragments/alert :: alert (type='danger', message=${errMsg})">Alert</div>
 </th:block> -->
 <th:block layout:fragment="content">
-	<div th:fragment="datasourcesList">
+	<div th:fragment="datasourcesList" 
+			th:with=datasetController=${T(evm.dmc.web.controllers.project.DatasetController)}>
 		<!-- <div class="col-sm-6 text-center bg-info"> -->
 			<div class="row">
 				<div id="dataList"  
 					th:insert="fragments/lists :: deletable_list('data', 'Data sets',
-												 ${T(evm.dmc.web.controllers.project.DatasetController).URL_DeleteSource},
-												 ${T(evm.dmc.web.controllers.project.DatasetController).MODEL_SelectedNamesBean}, 
+												 ${datasetController.URL_DeleteSource},
+												 ${datasetController.MODEL_SelectedNamesBean}, 
 												 ${dataSets}, 
 												 ${dataBaseURL})">
 				</div>
@@ -31,29 +32,30 @@
 				<div id="fileSource"
 					th:insert="fragments/control_elements :: fileSelector('file_id', 
 												${dataSetProps},
-												${T(evm.dmc.web.controllers.project.DatasetController).URL_SetSource})">
+												${datasetController.URL_SetSource})">
 				</div>
 			</div>
 		<!-- </div> -->
 	</div>
 </th:block>
 
-	<div th:fragment="datasourcesListSelectable">
-			<div class="row">
-				<div id="dataList"  
-					th:insert="fragments/lists :: selectable_list('data', 'Data sets',
-												 ${@requestPath.projDelAlgorithm},
-												 ${backBean}, ${dataSet}, ${dataBaseURL})">
-				</div>
-			</div>
-			<div class="row">
-				<div id="fileSource"
-					th:insert="fragments/control_elements :: fileSelector('file_id', 
-												${dataSetProps},
-												${T(evm.dmc.web.controllers.project.DatasetController).URL_SetSource})">
-				</div>
-			</div>
-	</div> -->
+<div th:fragment="datasourcesListSelectable(select_url)"
+		th:with="datasetController=${T(evm.dmc.web.controllers.project.DatasetController)}">
+	<div class="row" th:if="${!dataSets.isEmpty()}">
+		<div id="dataList"  
+			th:insert="fragments/lists :: selectable_list('data', 'Data sets',
+										 ${datasetController.URL_DeleteSource},
+										 ${backBean}, ${dataSets})">
+		</div>
+	</div>
+	<div class="row" th:if="${ dataSets.isEmpty() }">
+		<div id="fileSource"
+			th:insert="fragments/control_elements :: fileSelector('file_id', 
+							${dataSetProps},
+							${T(evm.dmc.web.controllers.project.DatasetController).URL_SetSource})">
+		</div>
+	</div>
+</div>
 
 </body>
 </html>

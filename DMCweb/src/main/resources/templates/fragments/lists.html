@@ -52,7 +52,7 @@
 		</script>
 	</div>
 	
-	<div th:fragment="selectable_list(id, title, action, backBean, valuesList, refBase)">
+	<div th:fragment="selectable_list(id, title, action, backBean, valuesList)">
 		<h3>
 			<span th:text="${title}"></span>
 		</h3>
@@ -65,9 +65,10 @@
 					<!-- th:field="*{attributes['__name__'].type}" -->
 					<option
 						th:each="value: ${valuesList}"
-						th:value="*{attributes['__${name}__'].type}"
-						th:text="${type}"
-						th:selected="${type == metaData.attributes['__${name}__'].type}">
+						th:value="${value}"
+						th:text="${value.name}"
+						> <!-- th:selected="${type == metaData.attributes['__${name}__'].type}"  -->
+						
 				</select>
 				<!-- <div th:each="value, stat : ${valuesList}">
 					<h4>
@@ -82,14 +83,14 @@
 					</h4>
 				</div> -->
 				<!-- </ul> -->
-				<div th:if="${not #lists.isEmpty(valuesList)}">
-					<button th:id="deleteButton_ + ${id}" data-toggle="confirmation"
-						class="btn btn-primary" type="submit" disabled>Delete</button>
+				<!-- <div th:if="${not #lists.isEmpty(valuesList)}">
+					<button th:id="previewButton_ + ${id}" data-toggle="confirmation"
+						class="btn btn-primary" type="submit" disabled>Preview</button>
 					<script>
 						$('[data-toggle="confirmation"]')
 							.confirmation()
 					</script>
-				</div>
+				</div> -->
 
 			</div>
 		</form>	
