@@ -45,7 +45,8 @@
 		<div id="dataList"  
 			th:insert="fragments/lists :: selectable_list('data', 'Data sets',
 										 ${datasetController.URL_DeleteSource},
-										 ${backBean}, ${dataSets})">
+										 ${backBean},
+										 ${dataSets})">
 		</div>
 	</div>
 	<div class="row" th:if="${ dataSets.isEmpty() }">
