@@ -2,34 +2,41 @@
 <html xmlns:th="http://www.thymeleaf.org"
 	  xmlns:dt="http://www.thymeleaf.org/dandelion/datatables"
       xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
-      layout:decorate="~{layouts/sidebarlayout}">
+      layout:decorate="~{layouts/layout}">
       
 <head>
-	<link rel="stylesheet" th:href="@{/webjars/bootstrap/3.3.7/css/bootstrap.min.css}">
-  	<script th:src="@{/webjars/jquery/3.2.1/jquery.min.js}"></script>
-  	<script th:src="@{/webjars/bootstrap/3.3.7/js/bootstrap.min.js}"></script>
-  	<link th:href="@{/css/core.css}" rel="stylesheet" media="screen" />
+	<!-- <link rel="stylesheet" th:href="@{/webjars/bootstrap/3.3.7/css/bootstrap.min.css}"> -->
+  	<!-- <script th:src="@{/webjars/jquery/3.2.1/jquery.min.js}"></script> -->
+  	<!-- <script th:src="@{/webjars/bootstrap/3.3.7/js/bootstrap.min.js}"></script> -->
+  	<!-- <link th:href="@{/css/core.css}" rel="stylesheet" media="screen" /> -->
 </head>
 
 <body>
 	<!-- Preview data using DataPreview instance -->
-	<div th:fragment="dataPreview(metaData, preview, actionURL, showCheckboxes='false')">
+	<div th:id="preview_id" th:fragment="dataPreview(metaData, preview, actionURL, showCheckboxes='false')">
 		<h3>
 			Data set: <span th:text="${metaData.name}"></span>
 		</h3>
-		<form method="post" 
+		<form 
+			method="post" 
 			th:action="${actionURL}"
 			th:object="${metaData}">
 			<!-- <span th:inline="*{project}"></span> -->
 			<div class="control-group" >
-				<input type="submit" class="btn btn-primary" value="Apply changes"
-					th:id="attr-button" />
-				
-				<div class="checkbox" > <!-- th:if="${showCheckboxes} == true" -->
-					<input checked id="checkAll" data-toggle="toggle"
-						data-onstyle="info" data-offstyle="default" data-on="Select all"
-						data-off="Deselect all" data-size="small" type="checkbox">
-
+				<div class="row">
+					<!-- <div th:id="seldesel_id" class="checkbox col-sm-4" > --> <!-- th:if="${showCheckboxes} == true" -->
+					<div class="col-sm-2">
+						<input checked id="checkAll" data-toggle="toggle" 
+							data-onstyle="info" data-offstyle="default" data-on="Select all"
+							data-off="Deselect all" data-size="small" type="checkbox">
+					</div>
+					<div class="col-sm-8">
+					<input type="submit" class="btn btn-primary col-sm-2" value="Apply changes"
+						th:id="attr-button" />
+					</div>
+				</div>
+				<div class="row">
+					
 				</div>
 			</div>
 			<!-- <div th:value="*{id}" th:field="${metaData.id}"></div> -->
@@ -50,21 +57,21 @@
 									<br>
 									<select
 										class="form-control" th:id="'type_' + ${stat.index}"
-											th:field="*{attributes[__${name}__].type}">
+											th:field="*{attributes['__${name}__'].type}">
 											<option
 												th:each="type: ${T(evm.dmc.core.api.AttributeType).values()}"
 												th:value="${type}"
 												th:text="${type}"
-												th:selected="${type == metaData.attributes[__${name}__].type}">
+												th:selected="${type == metaData.attributes['__${name}__'].type}">
 									</select> <br>
 									<div > <!-- th:if="${showCheckboxes} == true" -->
 										<input type="checkbox"
 											th:id="'chkbx_' + ${stat.index}"
-											th:field="*{attributes[__${name}__].checked}"
-											th:value="${metaData.attributes[__${name}__].checked}" /> <!-- <input type="checkbox" th:field="*{items}" th:value="item"/> -->
+											th:field="*{attributes['__${name}__'].checked}"
+											th:value="${metaData.attributes['__${name}__'].checked}" /> <!-- <input type="checkbox" th:field="*{items}" th:value="item"/> -->
 											<br> <input type="number" th:id="'num_' + ${stat.index}"
-											th:field="*{attributes[__${name}__].multiplier}"
-											th:value="${metaData.attributes[__${name}__].multiplier}"
+											th:field="*{attributes['__${name}__'].multiplier}"
+											th:value="${metaData.attributes['__${name}__'].multiplier}"
 											step="0.1" style="width: 55px;" />
 									</div>
 								</th>
