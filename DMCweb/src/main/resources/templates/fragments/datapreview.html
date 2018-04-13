@@ -21,18 +21,21 @@
 			th:action="${actionURL}"
 			th:object="${metaData}">
 			<!-- <span th:inline="*{project}"></span> -->
-			<div class="control-group">
+			<div class="control-group" >
 				<input type="submit" class="btn btn-primary" value="Apply changes"
 					th:id="attr-button" />
 				
-				<div class="checkbox">
+				<div class="checkbox" > <!-- th:if="${showCheckboxes} == true" -->
 					<input checked id="checkAll" data-toggle="toggle"
 						data-onstyle="info" data-offstyle="default" data-on="Select all"
 						data-off="Deselect all" data-size="small" type="checkbox">
 
 				</div>
 			</div>
-			<div th:value="*{id}" th:field="${metaData.id}"></div>
+			<!-- <div th:value="*{id}" th:field="${metaData.id}"></div> -->
+			<!-- <div th:value="*{name}" th:field="${metaData.name}"></div> -->
+			<!-- <input type="text" name="id" th:value="*{id}" th:field="${metaData.id}" hidden=true/> -->
+			<input type="text" name="name" th:value="*{name}" th:field="${metaData.name}" hidden=true/>
 
 			<div class="table-responsive">
 				<table class="table table-striped table-bordered table-condensed table-responsive">
@@ -44,24 +47,24 @@
 								th:each="name, stat : ${T(evm.dmc.web.service.DataPreviewService).listLine(preview.header, preview.delimiter)}">
 								<th>
 									<span th:text=${name} style="width: 30%"></span> 
-									<br> 
+									<br>
 									<select
-										class="form-control" th:id="'type_' + ${stat.index}">
-											<!-- th:field="*{attributes['__name__'].type}" -->
+										class="form-control" th:id="'type_' + ${stat.index}"
+											th:field="*{attributes[__${name}__].type}">
 											<option
 												th:each="type: ${T(evm.dmc.core.api.AttributeType).values()}"
-												th:value="*{attributes['__${name}__'].type}"
+												th:value="${type}"
 												th:text="${type}"
-												th:selected="${type == metaData.attributes['__${name}__'].type}">
+												th:selected="${type == metaData.attributes[__${name}__].type}">
 									</select> <br>
-									<div th:if="${showCheckboxes} == true">
+									<div > <!-- th:if="${showCheckboxes} == true" -->
 										<input type="checkbox"
 											th:id="'chkbx_' + ${stat.index}"
-											th:field="*{attributes['__${name}__'].checked}"
-											th:value="${metaData.attributes['__${name}__'].checked}" /> <!-- <input type="checkbox" th:field="*{items}" th:value="item"/> -->
+											th:field="*{attributes[__${name}__].checked}"
+											th:value="${metaData.attributes[__${name}__].checked}" /> <!-- <input type="checkbox" th:field="*{items}" th:value="item"/> -->
 											<br> <input type="number" th:id="'num_' + ${stat.index}"
-											th:field="*{attributes['__${name}__'].multiplier}"
-											th:value="${metaData.attributes['__${name}__'].multiplier}"
+											th:field="*{attributes[__${name}__].multiplier}"
+											th:value="${metaData.attributes[__${name}__].multiplier}"
 											step="0.1" style="width: 55px;" />
 									</div>
 								</th>

@@ -48,7 +48,7 @@ public class DataPreview implements Serializable {
 	@Column
 	@Lob
 	@ElementCollection
-	@CollectionTable(name = "PREVIEW_DATA")
+	@CollectionTable(name = "DATA_PREVIEW_LIST")
 	private List<String> data = new ArrayList<>();
 	
 	private String delimiter = DEFAULT_DELIMITER; 

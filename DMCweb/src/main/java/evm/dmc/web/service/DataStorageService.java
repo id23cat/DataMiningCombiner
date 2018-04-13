@@ -25,18 +25,20 @@ public interface DataStorageService {
     MetaData saveData(Account account, ProjectModel project, MultipartFile file, DataSetProperties datasetProperties)
     	throws UnsupportedFileTypeException, StorageException;
     
-    MetaData save(MetaData metaData);
-    
-    Path path(MetaData metaData);
+//    MetaData save(MetaData metaData);
+//    
+//    Path path(MetaData metaData);
     
     DataPreview getPreview(MetaData meta);
     
-    List<String> getPreview(MetaData meta, int lineCount);
+//    List<String> getPreview(MetaData meta, int lineCount);
     
     DataStorageModel getDataStorage(MetaData meta);
+    
+    MetaData updateAttributes(ProjectModel project, MetaData meta);
 
-    Resource loadAsResource(MetaData metaData)
-    		throws StorageFileNotFoundException;
+//    Resource loadAsResource(MetaData metaData)
+//    		throws StorageFileNotFoundException;
 
     void delete(ProjectModel project, Set<String> names);
     

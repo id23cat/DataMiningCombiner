@@ -38,7 +38,7 @@ public class DatasetModelAppender {
 //		model.addAttribute(DatasetController.MODEL_DataSets, sortedSet);
 		model.addAttribute(DatasetController.MODEL_DataSets, dataSets);
 		
-		DataSetProperties datasetProps = new DataSetProperties();
+		DataSetProperties datasetProps = new DataSetProperties("","", true);
 		model.addAttribute(DatasetController.MODEL_DataSetProps, datasetProps);
 		
 		CheckboxNamesBean backNamesBean = new CheckboxNamesBean();
@@ -57,7 +57,7 @@ public class DatasetModelAppender {
 //			DataSetProperties hasHeader = (DataSetProperties) model.asMap().get(DatasetController.MODEL_DataSetProps);
 //			hasHeader.setHasHeader(metaData.get().getStorage().isHasHeader());
 			
-			DataSetProperties datasetProps = new DataSetProperties();
+			DataSetProperties datasetProps = new DataSetProperties("","", true);
 			model.addAttribute(DatasetController.MODEL_DataSetProps, datasetProps);
 			datasetProps.setHasHeader(dataStorageService.getDataStorage(metaData.get()).isHasHeader());
 //			model.addAttribute(MODEL_HeaderItems, new DataPreview.ItemsList(preview.get().getHeaderItems()));

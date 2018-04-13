@@ -139,7 +139,8 @@ public class DatasetController {
 			HttpServletRequest request) {
 		
 //		DataPreview preview = fileService.store(DataStorageService.relativePath(account, project), file);
-		log.debug("HasHeader checkbox state: {}", datasetProps.isHasHeader());
+		log.debug("-== HasHeader checkbox state: {}", datasetProps.isHasHeader());
+		log.debug("-== Etered name: {}", datasetProps.getName());
 		log.debug("-== Receiving file: {}", file.getName());
 		
 		MetaData metaData = dataStorageService.saveData(account, project, file, datasetProps);
@@ -164,6 +165,8 @@ public class DatasetController {
 		log.debug("Saving properties of MetaData: {}", metaData);
 		log.debug("ID: {}", metaData.getId());
 		log.debug("-== Getting data attributes comlete");
+		
+		dataStorageService.updateAttributes(project, metaData);
 		
 //		UriComponents uriComponents = UriComponentsBuilder.fromPath(BASE_URL)
 //				.buildAndExpand(projName);

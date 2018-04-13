@@ -59,6 +59,7 @@ import evm.dmc.config.FileStorageConfig;
 import evm.dmc.core.api.AttributeType;
 import evm.dmc.core.api.back.data.DataSrcDstType;
 import evm.dmc.model.repositories.MetaDataRepository;
+import evm.dmc.web.exceptions.EntityNotFoundException;
 import evm.dmc.web.exceptions.StorageException;
 import evm.dmc.web.exceptions.StorageFileNotFoundException;
 import evm.dmc.web.exceptions.UnsupportedFileTypeException;
@@ -179,7 +180,7 @@ public class FileStorageServiceImpl implements DataStorageService {
     			()->metaDataService.createPreview(meta, getPreview(meta, previewLinesCount)));
     }
     
-    @Override
+//    @Override
     public List<String> getPreview(MetaData meta, int lineCount) {
     	List<String> preview = getPreview(
     			Paths.get(meta.getStorage().getUri(rootLocation.toString())), 
@@ -196,7 +197,7 @@ public class FileStorageServiceImpl implements DataStorageService {
     	return meta.getStorage();
     }
     
-    @Override
+//    @Override
     public Resource loadAsResource(MetaData metaData)
     	throws StorageFileNotFoundException {
     	Path file = path(metaData);
@@ -218,6 +219,25 @@ public class FileStorageServiceImpl implements DataStorageService {
     
     @Override
     @Transactional
+    public MetaData updateAttributes(ProjectModel project, MetaData metaAttribs) {
+    	Optional<MetaData> optMeta = metaDataService.getByProjectAndName(project, metaAttribs.getName());
+    	MetaData meta = optMeta.orElseThrow(
+    			() -> {return new EntityNotFoundException("MetaData with name" +
+				    	metaAttribs.getName() + 
+				    	" not found");});
+    	
+    	meta.getAttributes().replaceAll((k,v) -> {
+    		DataAttribute dattr = metaAttribs.getAttributes().get(k);
+    		v.setChecked(dattr.getChecked());
+    		v.setMultiplier(dattr.getMultiplier());
+    		v.setType(dattr.getType());
+    		return v;
+    	});
+    	return meta;
+    }
+    
+    @Override
+    @Transactional
     public void delete(ProjectModel project, Set<String> names) {
     	metaDataService.delete(project, names);
     	// TODO: add backend daemon thread that would delete directories that are not bind to 
@@ -231,12 +251,12 @@ public class FileStorageServiceImpl implements DataStorageService {
     }
 
 
-	@Override
+//	@Override
 	public Path path(MetaData metaData) {
 		return Paths.get(metaData.getStorage().getUri(rootLocation.toString()));
 	}
 	
-	@Override
+//	@Override
 	public MetaData save(MetaData metaData) {
 		return metaDataService.save(metaData);
 	}
