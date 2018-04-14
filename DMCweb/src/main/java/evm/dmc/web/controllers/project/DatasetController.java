@@ -60,6 +60,7 @@ public class DatasetController {
 	public static final String URL_SetAttributes = BASE_URL + URL_PART_SETATTRIBUTES;
 	public static final String URL_GetPreview = BASE_URL + URL_PART_GETPREVIEW;
 	
+	public static final String MODEL_AllowSelectFeatures = "AllowSelectFeatures";
 	public static final String MODEL_SelectedNamesBean = "selectedNames";
 	public static final String MODEL_DataSets = "dataSets";
 	public final static String MODEL_PostFile = "file";
@@ -69,6 +70,8 @@ public class DatasetController {
 	public final static String MODEL_DataAttributesURL = "dataAttributesURL";
 	public final static String MODEL_DataSetProps = "dataSetProps";
 	public final static String MODEL_Preview = "preview";
+	public final static String MODEL_ShowChekboxes = "showCheckboxes";
+	
 	
 	
 
@@ -119,6 +122,7 @@ public class DatasetController {
 	@GetMapping(PATH_DataName)
 	public String GetDataSet(@PathVariable(PATH_VAR_DataName) String dataName,
 			@SessionAttribute(ProjectController.SESSION_CurrentProject) ProjectModel project,
+			@RequestParam(value = "showCheckboxes", defaultValue = "false") Boolean showCheckboxes,
 			Model model
 			) {
 		log.debug("Looking for {}", dataName);
@@ -126,6 +130,7 @@ public class DatasetController {
 		log.debug("Opt MetaData: {}", optMeta);
 	
 		model = modelAppender.addAttributesToModel(model, project, optMeta);
+		model.addAttribute(MODEL_ShowChekboxes, showCheckboxes);
 		return views.project.data.dataSource;
 	}
 	

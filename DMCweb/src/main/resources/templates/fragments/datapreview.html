@@ -13,7 +13,7 @@
 
 <body>
 	<!-- Preview data using DataPreview instance -->
-	<div th:id="preview_id" th:fragment="dataPreview(metaData, preview, actionURL, showCheckboxes='false')">
+	<div th:id="preview_id" th:fragment="dataPreview(metaData, preview, actionURL, showCheckboxes)">
 		<h3>
 			Data set: <span th:text="${metaData.name}"></span>
 		</h3>
@@ -25,7 +25,7 @@
 			<div class="control-group" >
 				<div class="row">
 					<!-- <div th:id="seldesel_id" class="checkbox col-sm-4" > --> <!-- th:if="${showCheckboxes} == true" -->
-					<div class="col-sm-2">
+					<div class="col-sm-2" th:if="${showCheckboxes} == true">
 						<input checked id="checkAll" data-toggle="toggle" 
 							data-onstyle="info" data-offstyle="default" data-on="Select all"
 							data-off="Deselect all" data-size="small" type="checkbox">
@@ -64,7 +64,7 @@
 												th:text="${type}"
 												th:selected="${type == metaData.attributes['__${name}__'].type}">
 									</select> <br>
-									<div > <!-- th:if="${showCheckboxes} == true" -->
+									<div th:if="${showCheckboxes} == true">
 										<input type="checkbox"
 											th:id="'chkbx_' + ${stat.index}"
 											th:field="*{attributes['__${name}__'].checked}"

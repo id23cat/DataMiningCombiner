@@ -15,6 +15,9 @@ function gettext(textid, geturl) {
 		type: "GET",
 		url: geturl,
 		cache: false,
+		data: {
+			showCheckboxes: true
+		},
 		success: function (data){
 			$(textid).html($(data).find("#preview_id").html());
 		}

@@ -17,7 +17,7 @@
 	<!-- Insert page content into the layouts/sidebarpage.html -->
 	<!-- <th:block layout:fragment="sidebar_pagecontent"> -->
 	<th:block layout:fragment="content">
-	<div th:fragment="dataSource">
+	<div th:fragment="dataSource" th:with=datasetController=${T(evm.dmc.web.controllers.project.DatasetController)}>
 		<!-- <ul class="breadcrumb">
 			<li><a href="#">Home</a></li>
 		    <li><a href="#">Private</a></li>
@@ -33,8 +33,8 @@
 			
 			<div th:insert="fragments/datapreview :: dataPreview( ${metaData}, 
 							 ${preview}, 
-							 ${T(evm.dmc.web.controllers.project.DatasetController).URL_SetAttributes},
-							 false)">
+							 ${datasetController.URL_SetAttributes},
+							 ${showCheckboxes})">
 			</div>
 		</div>
 		<!-- ELSE -->
@@ -42,7 +42,7 @@
 			<div id="fileSource"
 					th:insert="fragments/control_elements :: fileSelector('file_id', 
 												${dataSetProps},
-												${T(evm.dmc.web.controllers.project.DatasetController).URL_SetSource})">
+												${datasetController.URL_SetSource})">
 			</div>
 		</div>
 
