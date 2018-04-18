@@ -225,9 +225,12 @@ public class FileStorageServiceImpl implements DataStorageService {
     			() -> {return new EntityNotFoundException("MetaData with name" +
 				    	metaAttribs.getName() + 
 				    	" not found");});
-    	
+    	log.debug("-== metaAttribs: {}", metaAttribs);
     	meta.getAttributes().replaceAll((k,v) -> {
     		DataAttribute dattr = metaAttribs.getAttributes().get(k);
+    		log.debug("-== Key: {}", k);
+    		log.debug("-== Set: {}", dattr);
+    		log.debug("-== To: {}", v);
     		v.setChecked(dattr.getChecked());
     		v.setMultiplier(dattr.getMultiplier());
     		v.setType(dattr.getType());

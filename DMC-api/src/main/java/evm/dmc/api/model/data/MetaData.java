@@ -80,28 +80,8 @@ public class MetaData implements Serializable {
 	@JoinColumn(name = "project_id")
 	private ProjectModel project;
 
-//	@ElementCollection
-//	@MapKeyColumn(name = "MAP_KEY")
-////	@Column(name = "ATTRIBUTE")
-//	@CollectionTable(name = "DATA_ATTRIBUTES", 
-//		joinColumns={
-//				@JoinColumn(name="METADATA_ID",  referencedColumnName="ID"), 
-//				@JoinColumn(name="ALGORITHM_ID", referencedColumnName="ALGORITHM_ID")})
-//	@Setter(AccessLevel.PROTECTED)
-//	@Getter
-//	private Map<String, DataAttribute> attributes = new HashMap<>();
-//
-	
-	@OneToMany(cascade=CascadeType.ALL)
-	@MapKeyColumn(name = "FEATURE_NAME")
-	@JoinTable(name = "METADATA_ATTRIBUTES", 
-		joinColumns={
-				@JoinColumn(name="METADATA_ID",  referencedColumnName="ID")}, 
-		inverseJoinColumns={
-				@JoinColumn(name="ATTRIBUTE_ID", referencedColumnName="ID")})
-////	@Lob
-//	@Column( length = 100000 )
-//	@Convert(converter = MapAttributesConverterJson.class)
+	@Column( length = 100000 )
+	@Convert(converter = MapAttributesConverterJson.class)
 	@Setter(AccessLevel.PROTECTED)
 	@Getter
 	private Map<String, DataAttribute> attributes = new HashMap<>();

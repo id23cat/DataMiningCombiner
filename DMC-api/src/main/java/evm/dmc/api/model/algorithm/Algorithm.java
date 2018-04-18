@@ -85,16 +85,16 @@ public class Algorithm implements Serializable {
 	@Column(nullable = true)
 	private MetaData dataSource = null;
 	
-	@OneToMany
-	@MapKeyColumn(name = "FEATURE_NAME")
-	@JoinTable(name = "ALGORITHM_ATTRIBUTES", 
-		joinColumns={
-				@JoinColumn(name="ALGORITHM_ID",  referencedColumnName="ID")}, 
-		inverseJoinColumns={
-				@JoinColumn(name="ATTRIBUTE_ID", referencedColumnName="ID")})
-	@Setter(AccessLevel.PROTECTED)
-	@Getter
-	private Map<String, DataAttribute> attributes = new HashMap<>();
+//	@OneToMany
+//	@MapKeyColumn(name = "FEATURE_NAME")
+//	@JoinTable(name = "ALGORITHM_ATTRIBUTES", 
+//		joinColumns={
+//				@JoinColumn(name="ALGORITHM_ID",  referencedColumnName="ID")}, 
+//		inverseJoinColumns={
+//				@JoinColumn(name="ATTRIBUTE_ID", referencedColumnName="ID")})
+//	@Setter(AccessLevel.PROTECTED)
+//	@Getter
+//	private Map<String, DataAttribute> attributes = new HashMap<>();
 	
 //	@ElementCollection
 //	@MapKeyColumn(name = "MAP_KEY")

@@ -51,7 +51,8 @@ public class DatasetModelAppender {
 //		model = addAttributesToModel(model, project);
 		model = setURLs(model, project);
 		if(metaData.isPresent()) {
-			log.debug("MetaData is found: {}", metaData.get().getName());
+			log.debug("-== MetaData is found: {}", metaData.get());
+			log.debug("-== Attributes: {}", metaData.get().getAttributes());
 			model.addAttribute(DatasetController.MODEL_MetaData, metaData.get());
 			model.addAttribute(DatasetController.MODEL_Preview, dataStorageService.getPreview(metaData.get()));
 //			DataSetProperties hasHeader = (DataSetProperties) model.asMap().get(DatasetController.MODEL_DataSetProps);

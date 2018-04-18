@@ -24,15 +24,8 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @Data
-@Entity
-@Table(name="DATA_ATTRIBUTES")
-//@Embeddable
 @NoArgsConstructor(force = true)
 public class DataAttribute {
-	@Id
-	@GeneratedValue(strategy=GenerationType.IDENTITY)
-	@Setter(AccessLevel.NONE) 
-	private Long id;
 
 	private String name;
 	
