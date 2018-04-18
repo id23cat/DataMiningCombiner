@@ -15,6 +15,8 @@ import javax.persistence.Id;
 import javax.persistence.Table;
 import javax.persistence.Transient;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import evm.dmc.core.api.AttributeType;
 import lombok.AccessLevel;
 import lombok.Data;
@@ -22,11 +24,15 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @Data
-//@Entity
-//@Table(name="DATA_ATTRIBUTE")
-@Embeddable
+@Entity
+@Table(name="DATA_ATTRIBUTES")
+//@Embeddable
 @NoArgsConstructor(force = true)
 public class DataAttribute {
+	@Id
+	@GeneratedValue(strategy=GenerationType.IDENTITY)
+	@Setter(AccessLevel.NONE) 
+	private Long id;
 
 	private String name;
 	
@@ -37,6 +43,7 @@ public class DataAttribute {
 	private Boolean checked = true;
 	
 	@Transient
+	@JsonIgnore
 	private List<String> lines = new ArrayList<>();
 
 	public DataAttribute(String name) {

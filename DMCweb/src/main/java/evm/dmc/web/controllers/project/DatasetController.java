@@ -163,7 +163,7 @@ public class DatasetController {
 	}
 	
 	@PostMapping(URL_PART_SETATTRIBUTES)
-	public RedirectView postSourceAttributes(
+	public RedirectView postModifyAttributes(
 			@Valid @ModelAttribute(MODEL_MetaData) MetaData metaData, 
 			@SessionAttribute(ProjectController.SESSION_CurrentProject) ProjectModel project) {
 		
@@ -172,11 +172,6 @@ public class DatasetController {
 		log.debug("-== Getting data attributes comlete");
 		
 		dataStorageService.updateAttributes(project, metaData);
-		
-//		UriComponents uriComponents = UriComponentsBuilder.fromPath(BASE_URL)
-//				.buildAndExpand(projName);
-//		UriComponents uriComponents = UriComponentsBuilder.fromPath(AlgorithmController.BASE_URL)
-//				.buildAndExpand(project.getName(), algorithm.getName());
 		
 		UriComponents uriComponents = UriComponentsBuilder.fromPath(ProjectController.URL_GetPorject)
 				.buildAndExpand(project.getName());

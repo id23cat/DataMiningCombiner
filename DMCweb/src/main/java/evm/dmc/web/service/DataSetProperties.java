@@ -7,7 +7,7 @@ import lombok.NoArgsConstructor;
 
 @Data
 @AllArgsConstructor(access = AccessLevel.PUBLIC)
-//@NoArgsConstructor
+@NoArgsConstructor
 public class DataSetProperties {
 	private String name = "";
 	private String Description = "";

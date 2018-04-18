@@ -24,9 +24,11 @@ import javax.persistence.Id;
 import javax.persistence.Inheritance;
 import javax.persistence.InheritanceType;
 import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.MapKeyColumn;
+import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
@@ -47,8 +49,6 @@ import lombok.Setter;
 import lombok.ToString;
 
 @Data
-@EqualsAndHashCode(exclude="dependentProjects")
-@ToString(exclude="dependentProjects")
 @Entity
 @EntityListeners(AlgorithmEntityListener.class)
 @Table(name="ALGORITHM"
@@ -84,6 +84,17 @@ public class Algorithm implements Serializable {
 	// null -- means getting source form previous function in hierarchy
 	@Column(nullable = true)
 	private MetaData dataSource = null;
+	
+	@OneToMany
+	@MapKeyColumn(name = "FEATURE_NAME")
+	@JoinTable(name = "ALGORITHM_ATTRIBUTES", 
+		joinColumns={
+				@JoinColumn(name="ALGORITHM_ID",  referencedColumnName="ID")}, 
+		inverseJoinColumns={
+				@JoinColumn(name="ATTRIBUTE_ID", referencedColumnName="ID")})
+	@Setter(AccessLevel.PROTECTED)
+	@Getter
+	private Map<String, DataAttribute> attributes = new HashMap<>();
 	
 //	@ElementCollection
 //	@MapKeyColumn(name = "MAP_KEY")

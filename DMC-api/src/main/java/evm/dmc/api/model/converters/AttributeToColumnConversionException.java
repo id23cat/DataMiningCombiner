@@ -10,6 +10,10 @@ public class AttributeToColumnConversionException extends RuntimeException{
 	public AttributeToColumnConversionException(String message) {
         super(message);
     }
+	
+	public AttributeToColumnConversionException(Throwable cause) {
+        super(cause);
+    }
 
     public AttributeToColumnConversionException(String message, Throwable cause) {
         super(message, cause);

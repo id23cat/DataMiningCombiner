@@ -15,15 +15,18 @@ import javax.persistence.CascadeType;
 import javax.persistence.CollectionTable;
 import javax.persistence.Column;
 import javax.persistence.Convert;
+import javax.persistence.Converter;
 import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
 import javax.persistence.Lob;
 import javax.persistence.ManyToOne;
 import javax.persistence.MapKeyColumn;
+import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import javax.persistence.UniqueConstraint;
@@ -33,6 +36,7 @@ import org.springframework.data.annotation.Version;
 import org.springframework.util.StringUtils;
 
 import evm.dmc.api.model.ProjectModel;
+import evm.dmc.api.model.converters.MapAttributesConverterJson;
 import evm.dmc.api.model.converters.StringListConverter;
 import lombok.AccessLevel;
 import lombok.Data;
@@ -76,10 +80,28 @@ public class MetaData implements Serializable {
 	@JoinColumn(name = "project_id")
 	private ProjectModel project;
 
-	@ElementCollection
-	@MapKeyColumn(name = "MAP_KEY")
-	@Column(name = "ATTRIBUTE")
-	@CollectionTable(name = "DATA_ATTRIBUTES", joinColumns=@JoinColumn(name="METADATA_ID"))
+//	@ElementCollection
+//	@MapKeyColumn(name = "MAP_KEY")
+////	@Column(name = "ATTRIBUTE")
+//	@CollectionTable(name = "DATA_ATTRIBUTES", 
+//		joinColumns={
+//				@JoinColumn(name="METADATA_ID",  referencedColumnName="ID"), 
+//				@JoinColumn(name="ALGORITHM_ID", referencedColumnName="ALGORITHM_ID")})
+//	@Setter(AccessLevel.PROTECTED)
+//	@Getter
+//	private Map<String, DataAttribute> attributes = new HashMap<>();
+//
+	
+	@OneToMany(cascade=CascadeType.ALL)
+	@MapKeyColumn(name = "FEATURE_NAME")
+	@JoinTable(name = "METADATA_ATTRIBUTES", 
+		joinColumns={
+				@JoinColumn(name="METADATA_ID",  referencedColumnName="ID")}, 
+		inverseJoinColumns={
+				@JoinColumn(name="ATTRIBUTE_ID", referencedColumnName="ID")})
+////	@Lob
+//	@Column( length = 100000 )
+//	@Convert(converter = MapAttributesConverterJson.class)
 	@Setter(AccessLevel.PROTECTED)
 	@Getter
 	private Map<String, DataAttribute> attributes = new HashMap<>();
