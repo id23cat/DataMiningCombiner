@@ -1,15 +1,11 @@
 package evm.dmc.web.exceptions;
 
-public class AlgorithmNotFoundException extends Exception {
+public class AlgorithmNotFoundException extends NotFoundException {
 	/**
 	 * 
 	 */
 	private static final long serialVersionUID = 6065449387879839019L;
 
-	public AlgorithmNotFoundException(){
-		super();
-	}
-	
 	public AlgorithmNotFoundException(String message){
 		super(message);
 	}

@@ -25,7 +25,12 @@ import lombok.Setter;
 
 @Data
 @NoArgsConstructor(force = true)
-public class DataAttribute {
+public class DataAttribute  implements Serializable{
+
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -3020317305095468013L;
 
 	private String name;
 	

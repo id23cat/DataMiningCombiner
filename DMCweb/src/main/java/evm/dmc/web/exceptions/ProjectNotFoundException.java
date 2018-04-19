@@ -1,19 +1,20 @@
 package evm.dmc.web.exceptions;
 
-public class ProjectNotFoundException extends RuntimeException {
+import java.util.NoSuchElementException;
+
+import org.springframework.dao.DataAccessException;
+
+public class ProjectNotFoundException extends NotFoundException {
+
 	/**
 	 * 
 	 */
-	private static final long serialVersionUID = 990656933748723543L;
+	private static final long serialVersionUID = -2661762885454572655L;
 
-	public ProjectNotFoundException(){
-		super();
-	}
-	
-	public ProjectNotFoundException(String message){
+	public ProjectNotFoundException(String message) {
 		super(message);
 	}
-
+	
 	public ProjectNotFoundException(String message, Throwable cause){
 		super(message, cause);
 	}

@@ -24,6 +24,7 @@ import org.springframework.web.util.UriComponentsBuilder;
 
 import evm.dmc.api.model.ProjectModel;
 import evm.dmc.api.model.algorithm.Algorithm;
+import evm.dmc.api.model.data.MetaData;
 import evm.dmc.web.controllers.CheckboxNamesBean;
 import evm.dmc.web.exceptions.AlgorithmNotFoundException;
 import evm.dmc.web.service.AlgorithmService;
@@ -39,21 +40,28 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public class AlgorithmController {
 	public final static String URL_PART_ALGORITHM = "/algorithm";
+	public final static String URL_PART_MODIFY_ATTRIBUTES = "/modifyAttrs";
+	public final static String URL_PART_SELECT_DATASET = "/selectDataset";
 	
 	public final static String BASE_URL = ProjectController.URL_GetPorject + URL_PART_ALGORITHM;
 	public final static String URL_Add_Algorithm = BASE_URL + RequestPath.add;
+	public final static String URL_Modify_Attributes = BASE_URL + URL_PART_MODIFY_ATTRIBUTES;
+	public final static String URL_Select_DataSet = BASE_URL + URL_PART_SELECT_DATASET;
 	
 	public static final String PATH_VAR_AlgorithmName = "algName";
+	public static final String PATH_VAR_DataName = DatasetController.PATH_VAR_DataName;
 	public static final String PATH_AlgorithmName = "/{" + PATH_VAR_AlgorithmName + "}";
+	public static final String PATH_DataName = DatasetController.PATH_DataName;
 	
 	public final static String SESSION_CurrentAlgorithm = "currentAlgorithm";
 	
-	public final static String MODEL_Algorithm = "algorithm";
+//	public final static String MODEL_Algorithm = "algorithm";
 	public final static String MODEL_PagesMap = "pagesMap";
 	public static final String MODEL_AlgBaseURL = "algBaseURL";
+	public static final String MODEL_SelDataURL = "selDataURL";
 	public static final String MODEL_AlgorithmsSet = "algorithmsSet";
 	public static final String MODEL_NewAlgorithm = "newAlgorithm";
-	public static final String MODEL_CurrentAlgorithm = "currentAlgorithm";
+//	public static final String MODEL_CurrentAlgorithm = "currentAlgorithm";
 	
 	@Autowired
 	private AlgorithmService algorithmService;
@@ -78,7 +86,7 @@ public class AlgorithmController {
 		return views.project.getAlgorithmsList();
 	}
 	
-	@GetMapping(PATH_AlgorithmName)
+	@GetMapping(PATH_AlgorithmName)	// /{algName}
 	public String getAlgorithm(
 			@PathVariable(PATH_VAR_AlgorithmName) String algName,
 			@ModelAttribute(ProjectController.SESSION_CurrentProject) ProjectModel project,
@@ -87,6 +95,10 @@ public class AlgorithmController {
 		
 		log.trace("Getting algorithm");
 		Optional<Algorithm> optAlgorithm = algorithmService.getByProjectAndName(project, algName);
+		
+		model.addAttribute(AlgorithmController.SESSION_CurrentAlgorithm, 
+				optAlgorithm.orElseThrow(()->
+						new AlgorithmNotFoundException("No such algorithm" + algName + " in project "+ project.getName())));
 		
 		modelAppender.addAttributesToModel(model, project, optAlgorithm);
 		datasetModelAppender.addAttributesToModel(model, project);
@@ -141,6 +153,32 @@ public class AlgorithmController {
 		algorithmService.delete(project, bean.getNamesSet());
 		
 		return new RedirectView(String.format("%s/%s", RequestPath.project, project.getName()));
+	}
+	
+	@GetMapping(URL_PART_SELECT_DATASET+PATH_DataName)
+	public RedirectView getSelectDataset(
+			@PathVariable(PATH_VAR_DataName) String dataName,
+			@SessionAttribute(ProjectController.SESSION_CurrentProject) ProjectModel project,
+			@SessionAttribute(SESSION_CurrentAlgorithm) Algorithm algorithm
+			) {
+		log.debug("-== Selecting dataset: {}", dataName);
+		
+		algorithmService.setDataSource(algorithm, dataName);
+		
+		UriComponents uri = UriComponentsBuilder
+				.fromPath(DatasetController.BASE_URL + "/" + dataName)
+				.buildAndExpand(project.getName());
+		
+		/* redirect to DatasetController: /project/{projectName}/dataset/{dataName} */
+		return new RedirectView(uri.toString());
+	}
+	
+	@PostMapping(URL_PART_MODIFY_ATTRIBUTES)
+	public void postSaveDataAtributes(
+			@SessionAttribute(ProjectController.SESSION_CurrentProject) ProjectModel project,
+			@Valid @ModelAttribute(DatasetController.MODEL_MetaData) MetaData metaData
+			) {
+		log.debug("Saving properties of MetaData: {}", metaData);
 	}
 	
 }

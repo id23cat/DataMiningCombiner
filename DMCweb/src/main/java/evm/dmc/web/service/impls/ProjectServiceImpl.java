@@ -22,7 +22,7 @@ import evm.dmc.api.model.account.Account;
 import evm.dmc.api.model.algorithm.Algorithm;
 import evm.dmc.api.model.data.MetaData;
 import evm.dmc.model.repositories.ProjectModelRepository;
-import evm.dmc.web.exceptions.EntityNotFoundException;
+import evm.dmc.web.exceptions.ProjectNotFoundException;
 import evm.dmc.web.service.AlgorithmService;
 import evm.dmc.web.service.MetaDataService;
 import evm.dmc.web.service.ProjectService;
@@ -132,7 +132,7 @@ public class ProjectServiceImpl implements ProjectService {
 		Optional<ProjectModel> optProject = Optional.empty();
 		try {
 			optProject = Optional.ofNullable(projectRepo.findOne(id));
-		} catch (EntityNotFoundException exc) {
+		} catch (ProjectNotFoundException exc) {
 			optProject = Optional.empty();
 		}
 		

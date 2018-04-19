@@ -1,10 +1,8 @@
 package evm.dmc.web.service.impls;
 
-import java.util.Collections;
 import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 import javax.persistence.EntityManager;
 
@@ -14,12 +12,16 @@ import org.springframework.transaction.annotation.Transactional;
 
 import evm.dmc.api.model.ProjectModel;
 import evm.dmc.api.model.algorithm.Algorithm;
+import evm.dmc.api.model.data.MetaData;
 import evm.dmc.model.repositories.AlgorithmRepository;
+import evm.dmc.web.exceptions.MetaDataNotFoundException;
 import evm.dmc.web.service.AlgorithmService;
+import evm.dmc.web.service.MetaDataService;
 import evm.dmc.web.service.ProjectService;
-import lombok.experimental.Delegate;
+import lombok.extern.slf4j.Slf4j;
 
 @Service
+@Slf4j
 public class AlgorithmServiceImpl implements AlgorithmService {
 	
 	@Autowired
@@ -28,6 +30,9 @@ public class AlgorithmServiceImpl implements AlgorithmService {
 	@Autowired
 //	@Delegate(types = {AlgorithmRepository.class})
 	AlgorithmRepository algorithmRepository;
+	
+	@Autowired
+	MetaDataService metaDataService;
 	
 	@Autowired
 	EntityManager em;
@@ -70,6 +75,23 @@ public class AlgorithmServiceImpl implements AlgorithmService {
 		algorithm.setProject(project);
 		project.getAlgorithms().add(algorithm);
 		return algorithmRepository.save(algorithm);
+	}
+	
+	@Override
+	@Transactional
+	public Algorithm setDataSource(Algorithm algorithm, String name) throws MetaDataNotFoundException {
+		log.debug("Merge algorithm");
+//		algorithm = merge(algorithm);
+		final ProjectModel project = algorithm.getProject();
+		Optional<MetaData> optMeta = metaDataService.getByProjectAndName(project, name);
+		
+		log.debug("-== Setting datasource to algorithm: {}", optMeta.get());
+		algorithm.setDataSource(optMeta.orElseThrow(() ->
+				new MetaDataNotFoundException(
+						"No such dataset {" + name +
+						"} for project " + project.getName())));
+		algorithmRepository.save(algorithm);
+		return algorithm;
 	}
 	
 	@Override

@@ -36,7 +36,7 @@ import evm.dmc.api.model.account.AccountExt;
 import evm.dmc.api.model.account.Role;
 import evm.dmc.model.repositories.AccountRepository;
 import evm.dmc.web.controllers.SignInController;
-import evm.dmc.web.exceptions.EntityNotFoundException;
+import evm.dmc.web.exceptions.ProjectNotFoundException;
 import evm.dmc.web.exceptions.UserNotExistsException;
 import evm.dmc.web.service.AccountService;
 
@@ -104,13 +104,13 @@ public class AccountServiceImpl implements AccountService {
 	
 	@Override
 	@Transactional
-	public ProjectModel addProject(Account account, ProjectModel project) {
+	public ProjectModel addProject(Account account, ProjectModel project) throws ProjectNotFoundException {
 		account = merge(account);
 		account.addProject(project);
 		save(account);
 		return findProjectByName(account, project.getName())
 				.orElseThrow(
-						() -> new EntityNotFoundException(String.format("Project with name [%s] not found", project.getName()))
+						() -> new ProjectNotFoundException(String.format("Project with name [%s] not found", project.getName()))
 				);
 	}
 	

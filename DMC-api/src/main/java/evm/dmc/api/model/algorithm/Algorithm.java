@@ -12,6 +12,7 @@ import java.util.Set;
 import javax.persistence.CascadeType;
 import javax.persistence.CollectionTable;
 import javax.persistence.Column;
+import javax.persistence.Convert;
 import javax.persistence.DiscriminatorColumn;
 import javax.persistence.DiscriminatorType;
 import javax.persistence.ElementCollection;
@@ -31,6 +32,7 @@ import javax.persistence.MapKeyColumn;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
+import javax.persistence.UniqueConstraint;
 import javax.validation.constraints.NotNull;
 
 import org.hibernate.validator.constraints.Length;
@@ -39,6 +41,8 @@ import org.hibernate.validator.constraints.NotBlank;
 import evm.dmc.api.model.FunctionModel;
 import evm.dmc.api.model.ProjectModel;
 import evm.dmc.api.model.algorithm.listeners.AlgorithmEntityListener;
+import evm.dmc.api.model.converters.MapAttributesToJson;
+import evm.dmc.api.model.converters.OptionalMapAttributesToJson;
 import evm.dmc.api.model.data.DataAttribute;
 import evm.dmc.api.model.data.MetaData;
 import lombok.AccessLevel;
@@ -47,13 +51,16 @@ import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
+import lombok.extern.slf4j.Slf4j;
 
 @Data
+@EqualsAndHashCode(exclude={"srcAttributes"})
 @Entity
-@EntityListeners(AlgorithmEntityListener.class)
+//@EntityListeners(AlgorithmEntityListener.class)
 @Table(name="ALGORITHM"
-//	,uniqueConstraints={@UniqueConstraint(columnNames = {"parentProject_id", "name"})}
+	,uniqueConstraints={@UniqueConstraint(columnNames = {"project_id", "name"})}
 )
+@Slf4j
 //@Inheritance(strategy=InheritanceType.SINGLE_TABLE)
 //@DiscriminatorColumn(name = "entity_type", discriminatorType = DiscriminatorType.STRING)
 public class Algorithm implements Serializable {
@@ -82,28 +89,14 @@ public class Algorithm implements Serializable {
 	private ProjectModel project = null;
 	
 	// null -- means getting source form previous function in hierarchy
-	@Column(nullable = true)
+//	@Column(nullable = true)
+	@OneToOne(cascade = {CascadeType.DETACH, CascadeType.MERGE, CascadeType.PERSIST}, optional = true)
 	private MetaData dataSource = null;
 	
-//	@OneToMany
-//	@MapKeyColumn(name = "FEATURE_NAME")
-//	@JoinTable(name = "ALGORITHM_ATTRIBUTES", 
-//		joinColumns={
-//				@JoinColumn(name="ALGORITHM_ID",  referencedColumnName="ID")}, 
-//		inverseJoinColumns={
-//				@JoinColumn(name="ATTRIBUTE_ID", referencedColumnName="ID")})
-//	@Setter(AccessLevel.PROTECTED)
-//	@Getter
-//	private Map<String, DataAttribute> attributes = new HashMap<>();
-	
-//	@ElementCollection
-//	@MapKeyColumn(name = "MAP_KEY")
-//	@Column(name = "SRC_ATTRS")
-//	@CollectionTable(name = "DATA_ATTRIBUTES", joinColumns=@JoinColumn(name="METADATA_ID"))
-//	@Setter(AccessLevel.PROTECTED)
-//	@Getter
-//	private Map<String, DataAttribute> srcAttributes = new HashMap<>();
-	
+	@Column( length = 100000 )
+	@Convert(converter = MapAttributesToJson.class)
+	private Map<String, DataAttribute> srcAttributes;
+
 	// null -- means redirect result to next function in hierarchy
 	@Column(nullable = true)
 	private MetaData dataDestination = null;
@@ -112,39 +105,15 @@ public class Algorithm implements Serializable {
 	@OneToOne(cascade = CascadeType.ALL)
 	@JoinColumn(name = "function_id")
 	private Method method;
-
-//	
-//	
-//	// Unidirectional One-to-many association
-//	@OneToMany
-//	@JoinColumn(name = "function_id")
-//	@OrderColumn(name = "functions_order")
-//	private List<FunctionModel> functions = new LinkedList<>();
-//	
-//	private FunctionDstModel dataDestination = null;
-//	
-
-//	
-//	public AlgorithmModel addFunction(FunctionModel func) {
-//		this.functions.add(func);
-//		return this;
+	
+	public Map<String, DataAttribute> getSrcAttributes() {
+		if(dataSource == null)
+			return null;
+		return Optional.ofNullable(srcAttributes).orElseGet(() -> dataSource.getAttributes());
+	}
+	
+//	public void setDataSource(MetaData meta) {
+//		log.debug("-== Setting MetaData to Algorith: {}", meta);
+//		dataSource = meta;
 //	}
-//	
-//	public AlgorithmModel delFunction(FunctionModel func) {
-//		this.functions.remove(func);
-//		return this;
-//	}
-//	
-//	public FunctionModel newFunction() {
-//		return new FunctionModel();
-//	}
-//	
-//	public FunctionSrcModel newSource() {
-//		return new FunctionSrcModel();
-//	}
-//	
-//	public FunctionDstModel newDestination() {
-//		return new FunctionDstModel();
-//	}
-
 }

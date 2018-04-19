@@ -36,7 +36,7 @@ import org.springframework.data.annotation.Version;
 import org.springframework.util.StringUtils;
 
 import evm.dmc.api.model.ProjectModel;
-import evm.dmc.api.model.converters.MapAttributesConverterJson;
+import evm.dmc.api.model.converters.MapAttributesToJson;
 import evm.dmc.api.model.converters.StringListConverter;
 import lombok.AccessLevel;
 import lombok.Data;
@@ -57,10 +57,13 @@ import lombok.ToString;
 //@EqualsAndHashCode(exclude={"storage"})
 //@ToString(exclude={"storage"})
 public class MetaData implements Serializable {
+	
 	/**
 	 * 
 	 */
-	private static final long serialVersionUID = 1L;
+	private static final long serialVersionUID = -6801760958025220213L;
+
+	@Deprecated
 	public static final String DUPLICATION_POSTFIX = "-DUP";
 	
 	@Id
@@ -81,7 +84,7 @@ public class MetaData implements Serializable {
 	private ProjectModel project;
 
 	@Column( length = 100000 )
-	@Convert(converter = MapAttributesConverterJson.class)
+	@Convert(converter = MapAttributesToJson.class)
 	@Setter(AccessLevel.PROTECTED)
 	@Getter
 	private Map<String, DataAttribute> attributes = new HashMap<>();

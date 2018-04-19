@@ -25,15 +25,16 @@ public class AlgorithmModelAppender {
 		model.addAttribute(AlgorithmController.MODEL_AlgorithmsSet, algSet);
 				
 		model.addAttribute(AlgorithmController.MODEL_NewAlgorithm, AlgorithmService.getNewAlgorithm());
-		model.addAttribute(AlgorithmController.MODEL_CurrentAlgorithm, AlgorithmService.getNewAlgorithm());
 		
 		return setURLs(model, project);
 	}
 	
 	public Model addAttributesToModel(Model model, ProjectModel project, Optional<Algorithm> optAlg) 
 			throws AlgorithmNotFoundException {
+		model = setURLs(model, project);
 		if(optAlg.isPresent()){
-			model.addAttribute(AlgorithmController.MODEL_Algorithm, optAlg.get());
+//			model.addAttribute(AlgorithmController.MODEL_Algorithm, optAlg.get());
+//			model.addAttribute(AlgorithmController.SESSION_CurrentAlgorithm, optAlg.get());
 		} else {
 //			return views.getErrors().getNotFound();
 			throw new AlgorithmNotFoundException("No such algorithm");
@@ -42,9 +43,18 @@ public class AlgorithmModelAppender {
 	}
 	
 	private Model setURLs(Model model, ProjectModel project) {
-		UriComponents baseUrl = UriComponentsBuilder.fromPath(AlgorithmController.BASE_URL)
-				.buildAndExpand(project.getName());
-		model.addAttribute(AlgorithmController.MODEL_AlgBaseURL, baseUrl.toString());
+		model.addAttribute(AlgorithmController.MODEL_AlgBaseURL, 
+				setUriComponent(AlgorithmController.BASE_URL, project.getName()).toString());
+		
+		model.addAttribute(DatasetController.MODEL_DataAttributesURL, 
+				setUriComponent(AlgorithmController.URL_Modify_Attributes, project.getName()).toUriString());
+		
+		model.addAttribute(AlgorithmController.MODEL_SelDataURL, 
+				setUriComponent(AlgorithmController.URL_Select_DataSet, project.getName()).toUriString());
 		return model;
+	}
+	
+	private UriComponents setUriComponent(String uri, String component) {
+		return UriComponentsBuilder.fromPath(uri).buildAndExpand(component);
 	}
 }

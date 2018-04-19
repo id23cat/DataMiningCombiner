@@ -64,7 +64,11 @@
 			<div class="col-sm-6 form-group pull-left">
 				<select
 						class="form-control" th:id="'selector_id_' + ${id}"
-						th:onchange="'getPreview(\'#feedback\', this.value,\''+ ${previewURL} +'\')'">
+						th:onchange="'selectAndGetPreview(
+								\'#feedback\', 
+								this.value,
+								\''+ ${action} +'\')'">
+								<!-- \''+ ${previewURL} +'\')'"> -->
 					<!-- th:field="*{attributes['__name__'].type}" -->
 					<option disabled selected value=" "> -- select an dataset -- </option>
 					<option
@@ -78,13 +82,17 @@
 		</form>
 		</div>
 		<div class="row" id="feedback"></div>
-		<script>
+	<!-- 	<script>
 			/*<![CDATA[*/
 			$(document).ready(function() {
-				getPreview("#feedback", $("#selector_id_[[${id}]] option:selected").text(), '[[${previewURL}]]');
+				selectAndGetPreview(
+						"#feedback",
+						$("#selector_id_[[${id}]] option:selected").text(), 
+						'[[${action}]]'	/* '[[${previewURL}]]' */
+						);
 			});
 			/*]]>*/
-		</script>
+		</script> -->
 		<script th:src="@{/js/data_preview.js}"></script>
 	</div>
 	

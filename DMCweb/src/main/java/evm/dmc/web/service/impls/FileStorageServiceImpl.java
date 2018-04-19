@@ -59,7 +59,7 @@ import evm.dmc.config.FileStorageConfig;
 import evm.dmc.core.api.AttributeType;
 import evm.dmc.core.api.back.data.DataSrcDstType;
 import evm.dmc.model.repositories.MetaDataRepository;
-import evm.dmc.web.exceptions.EntityNotFoundException;
+import evm.dmc.web.exceptions.MetaDataNotFoundException;
 import evm.dmc.web.exceptions.StorageException;
 import evm.dmc.web.exceptions.StorageFileNotFoundException;
 import evm.dmc.web.exceptions.UnsupportedFileTypeException;
@@ -222,7 +222,7 @@ public class FileStorageServiceImpl implements DataStorageService {
     public MetaData updateAttributes(ProjectModel project, MetaData metaAttribs) {
     	Optional<MetaData> optMeta = metaDataService.getByProjectAndName(project, metaAttribs.getName());
     	MetaData meta = optMeta.orElseThrow(
-    			() -> {return new EntityNotFoundException("MetaData with name" +
+    			() -> {return new MetaDataNotFoundException("MetaData with name" +
 				    	metaAttribs.getName() + 
 				    	" not found");});
     	log.debug("-== metaAttribs: {}", metaAttribs);
