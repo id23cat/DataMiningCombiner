@@ -204,28 +204,6 @@ public class FileStorageServiceImpl implements DataStorageService {
     
     @Override
     @Transactional
-    public MetaData updateAttributes(ProjectModel project, MetaData metaAttribs) {
-    	Optional<MetaData> optMeta = metaDataService.getByProjectAndName(project, metaAttribs.getName());
-    	MetaData meta = optMeta.orElseThrow(
-    			() -> {return new MetaDataNotFoundException("MetaData with name" +
-				    	metaAttribs.getName() + 
-				    	" not found");});
-    	log.debug("-== metaAttribs: {}", metaAttribs);
-    	meta.getAttributes().replaceAll((k,v) -> {
-    		DataAttribute dattr = metaAttribs.getAttributes().get(k);
-    		log.debug("-== Key: {}", k);
-    		log.debug("-== Set: {}", dattr);
-    		log.debug("-== To: {}", v);
-    		v.setChecked(dattr.getChecked());
-    		v.setMultiplier(dattr.getMultiplier());
-    		v.setType(dattr.getType());
-    		return v;
-    	});
-    	return meta;
-    }
-    
-    @Override
-    @Transactional
     public void delete(ProjectModel project, Set<String> names) {
     	metaDataService.delete(project, names);
     	// TODO: add backend daemon thread that would delete directories that are not bind to 
@@ -237,7 +215,6 @@ public class FileStorageServiceImpl implements DataStorageService {
     	log.error("Method DataStorageService.deleteAll is not yet implemnted");
         FileSystemUtils.deleteRecursively(projectPath(project.getAccount(), project).toFile());
     }
-
 
 //	@Override
 	public Path path(MetaData metaData) {

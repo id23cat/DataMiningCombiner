@@ -29,6 +29,7 @@ import evm.dmc.api.model.datapreview.DataPreview;
 import evm.dmc.core.api.AttributeType;
 import evm.dmc.core.api.back.data.DataSrcDstType;
 import evm.dmc.model.repositories.MetaDataRepository;
+import evm.dmc.web.exceptions.MetaDataNotFoundException;
 import evm.dmc.web.service.DataPreviewService;
 import evm.dmc.web.service.DataSetProperties;
 import evm.dmc.web.service.MetaDataService;
@@ -235,6 +236,31 @@ public class MetaDataServiceImpl implements MetaDataService {
 
 		return attributes;
 	}
+	
+	@Override
+    @Transactional
+    public MetaData updateAttributes(ProjectModel project, MetaData metaAttribs) {
+    	Optional<MetaData> optMeta = getByProjectAndName(project, metaAttribs.getName());
+    	MetaData meta = optMeta.orElseThrow(
+    			() -> {return new MetaDataNotFoundException("MetaData with name" +
+				    	metaAttribs.getName() + 
+				    	" not found");});
+    	log.debug("-== metaAttribs: {}", metaAttribs);
+    	meta.getAttributes().replaceAll((k,v) -> {
+    		DataAttribute dattr = metaAttribs.getAttributes().get(k);
+    		log.debug("-== Key: {}", k);
+    		log.debug("-== Set: {}", dattr);
+    		log.debug("-== To: {}", v);
+    		if(dattr.getChecked() != null)
+    			v.setChecked(dattr.getChecked());
+    		if(dattr.getMultiplier() != null)
+    			v.setMultiplier(dattr.getMultiplier());
+    		if(dattr.getType() != null)
+    			v.setType(dattr.getType());
+    		return v;
+    	});
+    	return meta;
+    }
 	
 //	@Override
 	private DataPreview getPreview(List<String> lines, boolean hasHeader, String delimiter) {

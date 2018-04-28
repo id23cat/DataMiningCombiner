@@ -13,7 +13,8 @@
 
 <body>
 	<!-- Preview data using DataPreview instance -->
-	<div th:id="preview_id" th:fragment="dataPreview(metaData, preview, actionURL, showCheckboxes)">
+	<div th:id="preview_id" th:fragment="dataPreview(metaData, preview, actionURL, showCheckboxes)"
+		th:with="dataPreviewService=${T(evm.dmc.web.service.DataPreviewService)}">
 		<h3>
 			Data set: <span th:text="${metaData.name}"></span>
 		</h3>
@@ -30,7 +31,7 @@
 						<input checked id="checkAll" data-toggle="toggle" 
 							data-onstyle="info" data-offstyle="default" data-on="Select all"
 							data-off="Deselect all" data-size="small" type="checkbox">
-							Check all
+						<label for="checkAll">Check All</label>
 					</div>
 					<div class="col-lg-8">
 					<input type="submit" class="btn btn-primary col-sm-2" value="Apply changes"
@@ -48,31 +49,47 @@
 					<!-- table-fixed -->
 					<thead class="head">
 						<!-- 	<th:block th:each="item : ${preview.getHeaderItems()}">		 -->
-						<tr>
+						<tr class="align-top"> <!-- for Bootstrap 4 -->
 							<th:block
-								th:each="name, stat : ${T(evm.dmc.web.service.DataPreviewService).listLine(preview.header, preview.delimiter)}">
+								th:each="name, stat : ${dataPreviewService.listLine(preview.header, preview.delimiter)}">
 								<th>
 									<span th:text=${name} style="width: 30%"></span>
-									<input type="text" name="name" th:value="${metaData.attributes['__${name}__'].name}" th:field="*{attributes['__${name}__'].name}"  hidden=true/>
+									<input type="text" name="name" 
+										th:value="${metaData.attributes['__${name}__'].name}" 
+										th:field="*{attributes['__${name}__'].name}"  
+										hidden=true/>
 									<br>
-									<select
-										class="form-control" th:id="'type_' + ${stat.index}"
-											th:field="*{attributes['__${name}__'].type}">
+									<div th:if="${showCheckboxes} == true">
+										<input type="checkbox"
+											th:id="'chkbx_' + ${stat.index}"
+											th:field="*{attributes['__${name}__'].checked}"
+											th:value="${metaData.attributes['__${name}__'].checked}" 
+										/> <!-- <input type="checkbox" th:field="*{items}" th:value="item"/> -->
+										<label th:for="'chkbx_' + ${stat.index}">Use feature</label>
+									</div>
+									<div th:id="'type_grp_' + ${stat.index}">
+										<select
+											class="form-control" 
+												th:id="'type_' + ${stat.index}"
+												th:field="*{attributes['__${name}__'].type}">
 											<option
 												th:each="type: ${T(evm.dmc.core.api.AttributeType).values()}"
 												th:value="${type}"
 												th:text="${type}"
 												th:selected="${type == metaData.attributes['__${name}__'].type}">
-									</select> <br>
+										</select>
+										<br>
+									</div>
+									
 									<div th:if="${showCheckboxes} == true">
-										<input type="checkbox"
-											th:id="'chkbx_' + ${stat.index}"
-											th:field="*{attributes['__${name}__'].checked}"
-											th:value="${metaData.attributes['__${name}__'].checked}" /> <!-- <input type="checkbox" th:field="*{items}" th:value="item"/> -->
-											<br> <input type="number" th:id="'num_' + ${stat.index}"
-											th:field="*{attributes['__${name}__'].multiplier}"
-											th:value="${metaData.attributes['__${name}__'].multiplier}"
-											step="0.1" style="width: 55px;" />
+										<div th:id="'mul_grp_' + ${stat.index}">
+											<label>Multiplier:</label>
+											<input type="number" 
+												th:id="'num_' + ${stat.index}"
+												th:field="*{attributes['__${name}__'].multiplier}"
+												th:value="${metaData.attributes['__${name}__'].multiplier}"
+												step="0.1" style="width: 55px;" />
+										</div>
 									</div>
 								</th>
 							</th:block>
@@ -81,7 +98,7 @@
 					<tbody>
 						<tr th:each="line, iter : ${preview.data}">
 							<th:block
-								th:each="attr : ${T(evm.dmc.web.service.DataPreviewService).listLine(line, preview.delimiter)}">
+								th:each="attr : ${dataPreviewService.listLine(line, preview.delimiter)}">
 								<td th:text=${attr}>Data item</td>
 							</th:block>
 						</tr>
@@ -89,20 +106,25 @@
 				</table>
 
 			</div>
-			<script>
-					$("#checkAll").change(function () {
+			<script th:src="@{/js/preview.js}">
+					/* $("#checkAll").change(function () {
 						
 					    $("input[id^='chkbx_']").prop('checked', $(this).prop("checked"));
+					    $("input[id^='chkbx_']").change()
 					    
-					});
+					}); */
 					
 					// That selector matches all spans that have an id attribute and it starts
 					// with chkbx
-					$("input[id^='chkbx_']").change(function () {
+					/* $("input[id^='chkbx_']").change(function () {
 						var idchk = $(this)[0].id;
-						var elfind = "#"+idchk.replace("chkbx","num");
-						$(elfind).prop('hidden', !$(this).prop("checked"));
-					});
+						var multiplier_element = "#" + idchk.replace("chkbx_","mul_grp_");
+						var datatype_element = "#" + idchk.replace("chkbx_","type_grp_");
+						
+						$(multiplier_element).prop('hidden', !$(this).prop("checked"));
+						$(datatype_element).prop('hidden', !$(this).prop("checked"));
+						
+					}); */
 					
 				</script>
 		</form>

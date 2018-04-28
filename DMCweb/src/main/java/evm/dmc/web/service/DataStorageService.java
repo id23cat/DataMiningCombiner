@@ -28,8 +28,6 @@ public interface DataStorageService {
     
     DataStorageModel getDataStorage(MetaData meta);
     
-    MetaData updateAttributes(ProjectModel project, MetaData meta);
-
 //    Resource loadAsResource(MetaData metaData)
 //    		throws StorageFileNotFoundException;
 

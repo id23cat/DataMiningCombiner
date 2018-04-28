@@ -165,7 +165,7 @@ public class DatasetController {
 		log.debug("ID: {}", metaData.getId());
 		log.debug("-== Getting data attributes comlete");
 		
-		dataStorageService.updateAttributes(project, metaData);
+		metaDataService.updateAttributes(project, metaData);
 		
 		UriComponents uriComponents = UriComponentsBuilder.fromPath(ProjectController.URL_GetPorject)
 				.buildAndExpand(project.getName());
