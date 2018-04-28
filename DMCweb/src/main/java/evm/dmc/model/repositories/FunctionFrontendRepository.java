@@ -5,18 +5,14 @@ import java.util.Optional;
 import java.util.concurrent.CompletableFuture;
 import java.util.stream.Stream;
 
-import javax.persistence.QueryHint;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
-import org.springframework.data.jpa.repository.QueryHints;
-import org.springframework.data.repository.query.Param;
 import org.springframework.scheduling.annotation.Async;
 
 import evm.dmc.api.model.FunctionModel;
 import evm.dmc.api.model.FunctionType;
 
-import static org.hibernate.jpa.QueryHints.HINT_FETCH_SIZE;
 
 public interface FunctionFrontendRepository extends JpaRepository<FunctionModel, Long> {
 	public static final String FIND_DIFF_TYPES = "SELECT DISTINCT f.type FROM FunctionModel f";

@@ -52,7 +52,7 @@
 		</script>
 	</div>
 	
-	<div th:fragment="selectable_list(id, title, action, backBean, valuesList, previewURL)">
+	<div th:fragment="selectable_list(id, title, action, backBean, valuesList, selectedValue, previewURL)">
 		<h3>
 			<span th:text="${title}"></span>
 		</h3>
@@ -61,7 +61,7 @@
 			method="post" 
 			th:action="${action}"
 			th:object="${backBean}">
-			<div class="col-sm-6 form-group pull-left">
+			<div class="col-sm-6 form-group pull-left" th:with="defaultSelected=' -- select an dataset -- '">
 				<select
 						class="form-control" th:id="'selector_id_' + ${id}"
 						th:onchange="'selectAndGetPreview(
@@ -70,17 +70,19 @@
 								\''+ ${action} +'\')'">
 								<!-- \''+ ${previewURL} +'\')'"> -->
 					<!-- th:field="*{attributes['__name__'].type}" -->
-					<option disabled selected value=" "> -- select an dataset -- </option>
+					<option th:if="${selectedValue==null}" disabled selected value=" "> -- select an dataset -- </option> 
 					<option
 						th:each="value: ${valuesList}"
 						th:value="${value.name}"
 						th:text="${value.name}"
-						> <!-- th:selected="${value.name}" --><!-- th:selected="${type == metaData.attributes['__${name}__'].type}"  -->
+						th:selected="${selectedValue!=null && selectedValue.name == value.name}"
+						> <!--  --><!-- th:selected="${type == metaData.attributes['__${name}__'].type}"  -->
 						
 				</select>
 			</div>
 		</form>
 		</div>
+		
 		<div class="row" id="feedback"></div>
 	<!-- 	<script>
 			/*<![CDATA[*/

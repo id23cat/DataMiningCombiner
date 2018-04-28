@@ -2,16 +2,10 @@ package evm.dmc.api.model;
 
 import java.io.Serializable;
 import java.time.Instant;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.LinkedList;
-import java.util.List;
 import java.util.Map;
+import java.util.HashSet;
 import java.util.Properties;
 import java.util.Set;
-import java.util.stream.Collectors;
 
 import javax.persistence.CascadeType;
 import javax.persistence.CollectionTable;
@@ -25,16 +19,12 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
-import javax.persistence.JoinTable;
-import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.MapKeyColumn;
 import javax.persistence.OneToMany;
-import javax.persistence.PreRemove;
 import javax.persistence.Table;
 import javax.persistence.Transient;
 import javax.persistence.UniqueConstraint;
-import javax.persistence.Version;
 import javax.validation.constraints.NotNull;
 
 import org.hibernate.validator.constraints.NotBlank;
@@ -43,15 +33,21 @@ import evm.dmc.api.model.account.Account;
 import evm.dmc.api.model.algorithm.Algorithm;
 import evm.dmc.api.model.data.MetaData;
 import lombok.AccessLevel;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
+import lombok.Singular;
 import lombok.ToString;
-import lombok.experimental.Delegate;
 
 
 @Data
 @Entity
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
 @Table(name="PROJECT"
 	,uniqueConstraints={@UniqueConstraint(columnNames = {"account_id", "name"})}
 )
@@ -81,6 +77,7 @@ public class ProjectModel implements Serializable {
 	
 	@Enumerated(EnumType.STRING)
 	@NotNull
+	@Builder.Default 
 	private ProjectType projectType = ProjectType.SIMPLEST_PROJECT;
 	
 //	@ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
@@ -90,109 +87,44 @@ public class ProjectModel implements Serializable {
 //	)
 	@OneToMany(mappedBy="project", fetch = FetchType.LAZY,
 			cascade = CascadeType.ALL, orphanRemoval = true)
+//	@Singular
+	@Builder.Default
 	private Set<Algorithm> algorithms = new HashSet<>();
 	
-//	@Transient
-//	private Properties properties = new Properties();
 	
-	@ElementCollection
-	@MapKeyColumn(name = "property")
-	@Column(name = "value")
-	@CollectionTable(name = "projectProps")
-	private Map<String, String> propertiesMap = new HashMap<>();
+//	@ElementCollection
+//	@MapKeyColumn(name = "property")
+//	@Column(name = "value")
+//	@CollectionTable(name = "projectProps")
+//	@Singular
+//	private Map<String, String> properties;
 	
 	@NotBlank(message = ProjectModel.NOT_BLANK_MESSAGE)
 	@Column(nullable = false)
 	private String name;
 	
 	@Setter(AccessLevel.NONE) 
+	@Builder.Default
 	private Instant created = Instant.now();
 	
 	@OneToMany(mappedBy = "project" ,cascade = CascadeType.ALL, orphanRemoval = true)
-	private Set<MetaData> dataSources = new HashSet<>();
+	@Singular
+	private Set<MetaData> dataSources;
 	
-	public ProjectModel() {
-		super();
-	}
 	
-	public ProjectModel(Account acc, ProjectType type, Set<Algorithm> algorithms, Properties properties, String projectName){
-		this.projectType = type;
-		if(algorithms != null  && !algorithms.isEmpty())
-			this.algorithms =  new HashSet<>(algorithms);
-		if(this.propertiesMap != null && properties != null && !properties.isEmpty())
-			setProperties(properties);
-		this.name = projectName;
-		acc.addProject(this);
-		this.account = acc;
-	}
-	
-//	public ProjectModel addAlgorithm(AlgorithmModel algorithm){
-//		algorithms.add(algorithm);
-//		algorithm.getDependentProjects().add(this);
-//		return this;
+//	public Properties getProperties() {
+//		Properties props = new Properties();
+//		props.putAll(properties);
+//		return props;
 //	}
-	
-	/**
-	 * Differs from addAlgorithm by setting this project as parent
-	 * @param algorithm
-	 * @return this
-	 */
-//	public Algorithm assignAlgorithm(Algorithm algorithm) {
-//		algorithms.add(algorithm);
-//		algorithm.setParentProject(this);
-//		return algorithm;
+//	
+//	public void setProperties(Properties prop) {
+////		prop.stringPropertyNames().parallelStream().map((name)->propMap.put(name, prop.getProperty(name)));
+////		propMap.prop.entrySet()
+//		for(String name: prop.stringPropertyNames()) {
+//			properties.put(name, prop.getProperty(name));
+//		}
 //	}
-	
-//	public ProjectModel removeAlgorithm(Algorithm algorithm) {
-//		removeAlgorithmLinkToThis(algorithm);
-//		algorithms.remove(algorithm);
-//		return this;
-//	}
-	
-//	public ProjectModel removeAlgorithmsByNames(String[] names) {
-////		for(Iterator<AlgorithmModel> iter = algorithms.iterator(); iter.hasNext();) {
-////			
-////			if(Arrays.stream(names).anyMatch(iter.alg.getName() :: contains)){
-////				removeAlgorithm(alg);
-////			}
-////		}
-//		
-//		algorithms.removeIf( alg -> {
-//				if(!Arrays.stream(names).anyMatch(alg.getName() :: contains)) {
-//					return false;
-//				}
-//				removeAlgorithmLinkToThis(alg);
-//				return true;
-//		});
-//
-//		return this;
-//	}
-	
-	
-//	private ProjectModel removeAlgorithmLinkToThis(Algorithm algorithm) {
-//		algorithm.getDependentProjects().remove(this);
-//		return this;
-//	}
-	
-//	@PreRemove
-//	public void removeProject() {
-//		algorithms.parallelStream().forEach((alg) -> alg.getDependentProjects().remove(this));
-//		log.debug("===PreDeleting procedure");
-//	}
-	
-	public Properties getProperties() {
-		Properties props = new Properties();
-		props.putAll(propertiesMap);
-		return props;
-	}
-	
-	public void setProperties(Properties prop) {
-//		prop.stringPropertyNames().parallelStream().map((name)->propMap.put(name, prop.getProperty(name)));
-//		propMap.prop.entrySet()
-		for(String name: prop.stringPropertyNames()) {
-			propertiesMap.put(name, prop.getProperty(name));
-		}
-	}
 	
 	public synchronized void addMetaData(MetaData meta) {
 		meta.setProject(this);

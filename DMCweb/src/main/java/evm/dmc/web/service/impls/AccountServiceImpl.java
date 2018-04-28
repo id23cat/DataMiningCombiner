@@ -6,17 +6,13 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 import javax.annotation.PostConstruct;
-import javax.persistence.EntityManager;
 
-import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
-import org.springframework.context.annotation.ScopedProxyMode;
-import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
@@ -24,7 +20,6 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -37,7 +32,6 @@ import evm.dmc.api.model.account.Role;
 import evm.dmc.model.repositories.AccountRepository;
 import evm.dmc.web.controllers.SignInController;
 import evm.dmc.web.exceptions.ProjectNotFoundException;
-import evm.dmc.web.exceptions.UserNotExistsException;
 import evm.dmc.web.service.AccountService;
 
 
@@ -106,7 +100,8 @@ public class AccountServiceImpl implements AccountService {
 	@Transactional
 	public ProjectModel addProject(Account account, ProjectModel project) throws ProjectNotFoundException {
 		account = merge(account);
-		account.addProject(project);
+		account.getProjects().add(project);
+		project.setAccount(account);
 		save(account);
 		return findProjectByName(account, project.getName())
 				.orElseThrow(
@@ -118,7 +113,7 @@ public class AccountServiceImpl implements AccountService {
 	@Transactional
 	public Account delProject(Account account, ProjectModel project) {
 		account = merge(account);
-		account.removeProject(project);
+		account.getProjects().remove(project);
 //		save(account);
 		return account;
 	}

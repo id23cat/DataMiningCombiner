@@ -1,55 +1,42 @@
 package evm.dmc.api.model.data;
 
 import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
-import java.util.Optional;
-import java.util.stream.Collectors;
 
 import javax.persistence.CascadeType;
-import javax.persistence.CollectionTable;
 import javax.persistence.Column;
 import javax.persistence.Convert;
-import javax.persistence.Converter;
-import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
-import javax.persistence.JoinTable;
-import javax.persistence.Lob;
 import javax.persistence.ManyToOne;
-import javax.persistence.MapKeyColumn;
-import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import javax.persistence.UniqueConstraint;
 import javax.validation.constraints.NotNull;
 
-import org.springframework.data.annotation.Version;
-import org.springframework.util.StringUtils;
-
 import evm.dmc.api.model.ProjectModel;
 import evm.dmc.api.model.converters.MapAttributesToJson;
-import evm.dmc.api.model.converters.StringListConverter;
 import lombok.AccessLevel;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
-import lombok.ToString;
+import lombok.Singular;
 
 /**
  * @author id23cat
  *
  */
 @Data
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
 @Entity
 @Table(name="METADATA"
 	,uniqueConstraints={@UniqueConstraint(columnNames = {"project_id", "name"})}
@@ -63,7 +50,7 @@ public class MetaData implements Serializable {
 	 */
 	private static final long serialVersionUID = -6801760958025220213L;
 
-	@Deprecated
+//	@Deprecated
 	public static final String DUPLICATION_POSTFIX = "-DUP";
 	
 	@Id
@@ -85,9 +72,11 @@ public class MetaData implements Serializable {
 
 	@Column( length = 100000 )
 	@Convert(converter = MapAttributesToJson.class)
-	@Setter(AccessLevel.PROTECTED)
-	@Getter
-	private Map<String, DataAttribute> attributes = new HashMap<>();
+//	@Setter(AccessLevel.PROTECTED)
+//	@Getter
+//	@Singular
+	@Builder.Default
+	private Map<String, DataAttribute> attributes = Collections.synchronizedMap(new HashMap<>());
 	
 //	@Column
 ////	@Column(columnDefinition = "TEXT")

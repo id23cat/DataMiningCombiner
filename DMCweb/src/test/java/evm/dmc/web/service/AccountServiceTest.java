@@ -6,8 +6,6 @@ import static org.hamcrest.CoreMatchers.notNullValue;
 import static org.hamcrest.Matchers.*;
 import static org.junit.Assert.*;
 
-import java.util.Arrays;
-import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -25,7 +23,6 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.test.annotation.Rollback;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit4.SpringRunner;
-import org.springframework.transaction.annotation.Transactional;
 
 import evm.dmc.api.model.ProjectModel;
 import evm.dmc.api.model.account.Account;
@@ -63,7 +60,13 @@ public class AccountServiceTest {
 
 	@Test
 	public final void testSave() {
-		accountService.save(new Account("user", "password2", "user@mail.org", "UUser", "Just"));
+		accountService.save(Account.builder()
+						.userName("user")
+						.password("password2")
+						.email("user@mail.org")
+						.firstName("UUser")
+						.lastName("Just")
+						.build());
 		
 		UserDetails user = accountService.loadUserByUsername("user");
 		
@@ -74,8 +77,20 @@ public class AccountServiceTest {
 
 	@Test
 	public final void testLoadUserByUsername() {
-		accountService.save(new Account("user1", "password1", "user1@mail.org", "UUser1", "Just1"));
-		accountService.save(new Account("user2", "password2", "user2@mail.org", "UUser2", "Just2"));
+		accountService.save(Account.builder()
+							.userName("user1")
+							.password("password1")
+							.email("user1@mail.org")
+							.firstName("UUser1")
+							.lastName("Just1")
+							.build());
+		accountService.save(Account.builder()
+				.userName("user2")
+				.password("password2")
+				.email("user2@mail.org")
+				.firstName("UUser2")
+				.lastName("Just2")
+				.build());
 		
 		assertThat( accountService.loadUserByUsername("user1").getUsername()).isEqualTo("user1");
 		assertThat( accountService.loadUserByUsername("user2").getUsername()).isEqualTo("user2");
@@ -84,7 +99,13 @@ public class AccountServiceTest {
 
 	@Test(expected = UsernameNotFoundException.class )
 	public final void testDelete() {
-		accountService.save(new Account("user", "password2", "user@mail.org", "UUser", "Just"));
+		accountService.save(Account.builder()
+				.userName("user")
+				.password("password2")
+				.email("user@mail.org")
+				.firstName("UUser")
+				.lastName("Just")
+				.build());
 		Account acc = loadAccount("user");
 		accountService.delete(acc);
 		accountService.getAccountByName("user");
@@ -110,7 +131,7 @@ public class AccountServiceTest {
 							.filter((pro) -> pro.getName().equals("test1"))
 							.findFirst().orElse(null);
 		assertNotNull(pro1);
-		acc.removeProject(pro1);
+		acc.getProjects().remove(pro1);
 		pro1=null;
 		assertThat(acc.getProjects().size(), equalTo(2));
 		Stream<ProjectModel> proStream = projectService.getByAccount(acc);
@@ -122,9 +143,9 @@ public class AccountServiceTest {
 	@Test
 	public final void testAddProject() throws Exception {
 		Account account = loadAccount("id23cat");
+		assertNotNull(account.getRole());
 		
-		ProjectModel project = new ProjectModel();
-		project.setName("testProject");
+		ProjectModel project = ProjectModel.builder().name("testProject").build();
 		
 		project = accountService.addProject(account, project);
 		

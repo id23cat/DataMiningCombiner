@@ -16,20 +16,21 @@
         <div th:replace="fragments/alert :: alert (type='danger', message=${errMsg})">Alert</div>
 </th:block> -->
 <th:block layout:fragment="content">
-	<div th:fragment="algorithmsList">
+	<div th:fragment="algorithmsList" 
+	th:with="algController=${T(evm.dmc.web.controllers.project.AlgorithmController)}">
 		<!-- <div class="col-sm-6 text-center bg-info"> -->
 		<!-- <div class="container"> -->
 			<div class="row">
 				<div id="algList"  
 					th:insert="fragments/lists :: deletable_list('alg', 'Algorithms',
-												 ${@requestPath.projDelAlgorithm},
+												 ${__${algController.MODEL_URL_DelAlgorithm}__},
 												 ${backBean}, ${algorithmsSet}, ${algBaseURL})">
 				</div>
 			</div>
 			<div class="row">
 				<!-- <form method="post" th:action="${@requestPath.projAddAlgorithm}"
 					th:object="${newAlgorithm}"> -->
-				<form method="post" th:action="${T(evm.dmc.web.controllers.project.AlgorithmController).URL_Add_Algorithm}"
+				<form method="post" th:action="${algController.URL_Add_Algorithm}"
 					th:object="${newAlgorithm}">
 	
 					<div class="col-sm-8">

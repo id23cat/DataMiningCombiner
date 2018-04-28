@@ -3,21 +3,13 @@ package evm.dmc.web.errorHandlers;
 import javax.servlet.ServletException;
 
 import org.apache.commons.lang3.exception.ExceptionUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.web.HttpSessionRequiredException;
 import org.springframework.web.bind.ServletRequestBindingException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
-import org.springframework.web.bind.annotation.ExceptionHandler;
-import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.bind.annotation.ResponseStatus;
-import org.springframework.web.context.request.WebRequest;
-import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.view.RedirectView;
 
-import evm.dmc.web.controllers.SignInController;
 import evm.dmc.web.controllers.project.ProjectController;
 import evm.dmc.web.service.Views;
 import lombok.extern.slf4j.Slf4j;
@@ -28,7 +20,6 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 @ControllerAdvice
 public class DefaultExceptionHandler {
-//	private static final Logger logger = LoggerFactory.getLogger("ErrorLog");
 	/**
 	 * Handle exceptions thrown by handlers.
 	 */

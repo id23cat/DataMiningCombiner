@@ -16,11 +16,6 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.context.annotation.ComponentScan;
-import org.springframework.test.annotation.Rollback;
-import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.util.StringUtils;
 
@@ -31,9 +26,11 @@ import evm.dmc.api.model.data.MetaData;
 import evm.dmc.api.model.datapreview.DataPreview;
 import evm.dmc.core.api.AttributeType;
 import evm.dmc.core.api.back.data.DataSrcDstType;
+import evm.dmc.web.controllers.project.DatasetTestUtils;
+import evm.dmc.web.exceptions.ProjectNotFoundException;
 import lombok.extern.slf4j.Slf4j;
 
-//@RunWith(SpringRunner.class)
+@RunWith(SpringRunner.class)
 //@SpringBootTest
 //@DataJpaTest
 //@ActiveProfiles({"test", "devH2"})
@@ -188,6 +185,22 @@ public class MetaDataServiceTest extends ServiceTest {
 //		log.debug("URI: {}", dataStorage.getUri("/test/"));
 		
 		assertThat(dataStorage.getRelativePath(), equalTo("/path"));
+	}
+	
+	@Test
+	public final void testGetByProjectAndName() {
+		ProjectModel project = projectService.getByName(DatasetTestUtils.TEST_PROJ_NAME)
+				.findFirst().orElseThrow(()-> new ProjectNotFoundException(DatasetTestUtils.TEST_PROJ_NAME));
+		
+		Optional<MetaData> optMeta = metaDataService.getByProjectAndName(project, DatasetTestUtils.TEST_data_telecom);
+		
+		assertTrue(optMeta.isPresent());
+		
+		MetaData meta = optMeta.get();
+		assertNotNull(meta.getAttributes());
+		
+		assertNotNull(meta.getAttributes().get("Churn"));
+		
 	}
 	
 	private DataPreview getPreviewData(Stream<String> stream) {

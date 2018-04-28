@@ -32,9 +32,11 @@ public interface DataPreviewService {
 	}
 	
 	static DataPreview newDataPreview(String header, List<String> data) {
-		DataPreview preview = new DataPreview();
-		preview.setHeader(header);
-		preview.setData(data);
+		DataPreview preview = DataPreview
+				.builder()
+				.header(header)
+				.data(data)
+				.build();
 		return preview;
 	}
 

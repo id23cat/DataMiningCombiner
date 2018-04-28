@@ -2,12 +2,9 @@ package evm.dmc.web.controllers.project;
 
 import java.util.List;
 import java.util.Optional;
-import java.util.Set;
-import java.util.TreeSet;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.Model;
 import org.springframework.web.util.UriComponents;
 import org.springframework.web.util.UriComponentsBuilder;
@@ -58,9 +55,13 @@ public class DatasetModelAppender {
 //			DataSetProperties hasHeader = (DataSetProperties) model.asMap().get(DatasetController.MODEL_DataSetProps);
 //			hasHeader.setHasHeader(metaData.get().getStorage().isHasHeader());
 			
-			DataSetProperties datasetProps = new DataSetProperties("","", true);
+//			DataSetProperties datasetProps = new DataSetProperties("","", true);
+			DataSetProperties datasetProps = DataSetProperties
+					.builder()
+					.hasHeader(dataStorageService.getDataStorage(metaData.get()).isHasHeader())
+					.build();
+			
 			model.addAttribute(DatasetController.MODEL_DataSetProps, datasetProps);
-			datasetProps.setHasHeader(dataStorageService.getDataStorage(metaData.get()).isHasHeader());
 //			model.addAttribute(MODEL_HeaderItems, new DataPreview.ItemsList(preview.get().getHeaderItems()));
 		} else {
 			model = addAttributesToModel(model, project);

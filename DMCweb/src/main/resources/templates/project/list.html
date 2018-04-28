@@ -15,13 +15,14 @@
     	
         <div th:replace="fragments/alert :: alert (type='danger', message=${errMsg})">Alert</div>
 </th:block> -->
-<th:block layout:fragment="content">
+<th:block layout:fragment="content"
+	th:with="projectController=${T(evm.dmc.web.controllers.project.ProjectController)}">
 	<!-- <div th:insert="fragments/control_elements :: common_modal(id='deleteButton', page='${@requestPath.delete}', title='Do you really want to delete')"></div> -->
 	<div class="row">
 		<div class="row">
 			<div id="algList"  
 				th:insert="fragments/lists :: deletable_list('proj', 'Projects:',
-											 ${@requestPath.delProject},
+											 ${projectController.URL_DeleteProject},
 											 ${backBean}, ${projectsSet}, 
 											 ${T(evm.dmc.web.controllers.project.ProjectController).BASE_URL})">
 			</div>
@@ -33,7 +34,7 @@
 	<div class="col-xs-12" style="height:50px;"></div>
 	<div class="form-group">
 		<form method="post" 
-			th:action="${@requestPath.addProject}" 
+			th:action="${projectController.URL_AddProject}" 
 			th:object="${newProject}">
            
             <div class="col-sm-4">

@@ -1,20 +1,17 @@
 package evm.dmc.web.service;
 
 import org.junit.Before;
-import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
-import org.springframework.boot.test.autoconfigure.orm.jpa.TestEntityManager;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.test.context.ActiveProfiles;
-import org.springframework.test.context.junit4.SpringRunner;
 
-import evm.dmc.api.model.ProjectType;
+
+import evm.dmc.api.model.ProjectModel;
 import evm.dmc.api.model.account.Account;
 import lombok.extern.slf4j.Slf4j;
 
-@RunWith(SpringRunner.class)
 @SpringBootTest
 @DataJpaTest
 @ActiveProfiles({"test", "devH2"})
@@ -41,11 +38,10 @@ public class ServiceTest {
 //		Account account = new Account("id42cat", "password", "id42cat@mail.sm", "Alex", "Demidchuk");
 		account = accService.getAccountByName(userName);
 		log.debug("Account ID: {}", account.getId());
-		account.addProject(projectService.getNew(account, ProjectType.SIMPLEST_PROJECT, null, null, PROJECTNAME_1));
-		account.addProject(projectService.getNew(account, ProjectType.SIMPLEST_PROJECT, null, null, PROJECTNAME_2));
-		log.debug("Trying to persist");
 //		this.entityManager.persist(account);
-		accService.save(account);
+		accService.addProject(account, ProjectModel.builder().name(PROJECTNAME_1).build());
+		accService.addProject(account, ProjectModel.builder().name(PROJECTNAME_2).build());
+//		.save(account);
 		
 	}
 }

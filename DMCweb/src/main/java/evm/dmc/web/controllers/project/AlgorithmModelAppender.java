@@ -47,10 +47,14 @@ public class AlgorithmModelAppender {
 				setUriComponent(AlgorithmController.BASE_URL, project.getName()).toString());
 		
 		model.addAttribute(DatasetController.MODEL_DataAttributesURL, 
-				setUriComponent(AlgorithmController.URL_Modify_Attributes, project.getName()).toUriString());
+				setUriComponent(AlgorithmController.URL_ModifyAttributes, project.getName()).toUriString());
 		
 		model.addAttribute(AlgorithmController.MODEL_SelDataURL, 
 				setUriComponent(AlgorithmController.URL_Select_DataSet, project.getName()).toUriString());
+		
+		model.addAttribute(AlgorithmController.MODEL_URL_DelAlgorithm, 
+				setUriComponent(AlgorithmController.URL_Del_Algorithm, project.getName()).toUriString());
+		
 		return model;
 	}
 	

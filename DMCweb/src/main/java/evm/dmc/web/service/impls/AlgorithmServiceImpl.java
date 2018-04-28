@@ -81,7 +81,7 @@ public class AlgorithmServiceImpl implements AlgorithmService {
 	@Transactional
 	public Algorithm setDataSource(Algorithm algorithm, String name) throws MetaDataNotFoundException {
 		log.debug("Merge algorithm");
-//		algorithm = merge(algorithm);
+		algorithm = merge(algorithm);
 		final ProjectModel project = algorithm.getProject();
 		Optional<MetaData> optMeta = metaDataService.getByProjectAndName(project, name);
 		
@@ -90,7 +90,6 @@ public class AlgorithmServiceImpl implements AlgorithmService {
 				new MetaDataNotFoundException(
 						"No such dataset {" + name +
 						"} for project " + project.getName())));
-		algorithmRepository.save(algorithm);
 		return algorithm;
 	}
 	

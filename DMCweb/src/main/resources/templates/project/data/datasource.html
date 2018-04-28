@@ -33,7 +33,7 @@
 			
 			<div th:insert="fragments/datapreview :: dataPreview( ${metaData}, 
 							 ${preview}, 
-							 ${datasetController.URL_SetAttributes},
+							 ${__${datasetController.MODEL_ActionURL}__},
 							 ${showCheckboxes})">
 			</div>
 		</div>

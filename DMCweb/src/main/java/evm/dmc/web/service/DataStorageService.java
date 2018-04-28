@@ -1,24 +1,17 @@
 package evm.dmc.web.service;
 
-import org.springframework.core.io.Resource;
-import org.springframework.util.StringUtils;
 import org.springframework.web.multipart.MultipartFile;
 
 import evm.dmc.api.model.ProjectModel;
 import evm.dmc.api.model.account.Account;
-import evm.dmc.api.model.data.DataAttribute;
 import evm.dmc.api.model.data.DataStorageModel;
 import evm.dmc.api.model.data.MetaData;
 import evm.dmc.api.model.datapreview.DataPreview;
-import evm.dmc.core.api.back.data.DataSrcDstType;
 import evm.dmc.web.exceptions.StorageException;
-import evm.dmc.web.exceptions.StorageFileNotFoundException;
 import evm.dmc.web.exceptions.UnsupportedFileTypeException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.List;
 import java.util.Set;
-import java.util.stream.Stream;
 
 public interface DataStorageService {
 

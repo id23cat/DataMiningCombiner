@@ -54,7 +54,6 @@ import lombok.extern.slf4j.Slf4j;
 @AutoConfigureMockMvc
 @EnableAutoConfiguration(exclude = { SecurityAutoConfiguration.class})
 @EnableConfigurationProperties(Views.class)
-@Slf4j
 public class AlgorithmControllerTest {
 	
 	@MockBean
@@ -81,85 +80,9 @@ public class AlgorithmControllerTest {
 	@Test
 	@WithMockUser("Alex")
 	public final void testGetAlgorithmDefault() throws Exception {
-		final String TEST_PROJECT_NAME = "testProject";
-		final String TEST_ALG_NAME = "testAlg";
-		final String TEST_USER_NAME = "Alex";
-		
-		ProjectModel testProject = new ProjectModel();
-		Algorithm testAlg = getNewAlgorithm();
-		
-		testAlg.setName(TEST_ALG_NAME);
-		
-		testProject.setName(TEST_PROJECT_NAME);
-		testProject.getAlgorithms().add(testAlg);
-		testAlg.setParentProject(testProject);
-		String URL = UriComponentsBuilder.fromPath(AlgorithmController.BASE_URL)
-				.buildAndExpand(TEST_PROJECT_NAME,TEST_ALG_NAME).toString();
-		
-		Mockito
-			.when(algorithmService.getByProjectAndName(testProject, TEST_ALG_NAME))
-			.thenReturn(Optional.of(testAlg));
-		
-		Set<MetaData> dataSet = new HashSet<>();
-		dataSet.add(new MetaData());
-		Mockito
-			.when(metaDataService.getForProject(testProject))
-			.thenReturn(dataSet);
-		
-		
-//		ArgumentCaptor<Model> modelCaptor = ArgumentCaptor.forClass(Model.class);
-//		Mockito
-//			.when(datasetController.addAttributesToModel(modelCaptor.capture(), testProject, Optional.of(metaData)))
-//			.thenReturn(addArguments(modelCaptor.getValue()));
-		
-		mockMvc.perform(get(URL)
-				.sessionAttr(ProjectController.SESSION_CurrentProject, testProject))
-			.andExpect(status().isOk())
-			.andExpect(view().name(views.project.wizard.datasource))
-			.andExpect(model().attributeExists(
-					DatasetController.MODEL_DataUploadURL,
-					DatasetController.MODEL_DataAttributesURL,
-					DatasetController.MODEL_DataSetProps))
-			;
 	}
 	
-		
-//	@Test
-//	@WithMockUser("Alex")
-//	public final void testGetAlgorithmWithMetaData() throws Exception {
-//		String projectName = "testProject";
-//		String algName = "testAlg";
-//		ProjectModel testProject = new ProjectModel();
-//		AlgorithmModel testAlg = new AlgorithmModel();
-//		
-//		testAlg.setName(algName);
-//		
-//		testProject.setName(projectName);
-//		testProject.assignAlgorithm(testAlg);
-//		
-//		Mockito.when(dataStorage.isHasHeader()).thenReturn(true);
-//		Mockito.when(metaData.getStorage()).thenReturn(dataStorage);
-//		Optional<MetaData> optMetaData = Optional.of(metaData);
-//		
-//		Mockito
-//		.when(metaDataService.getPreview(any(MetaData.class)))
-//		.thenReturn(new DataPreview());
-//		
-//		mockMvc.perform(get(RequestPath.project+"/"+projectName + RequestPath.algorithm+"/"+algName)
-//				.sessionAttr(AlgorithmController.SESSION_CurrProject, testProject)
-//				.sessionAttr(AlgorithmController.SESSION_Account, new Account("Alex"))
-//				.sessionAttr(AlgorithmController.MODEL_MetaData, optMetaData))
-//			.andExpect(status().isOk())
-//			.andExpect(view().name(views.project.wizard.datasource))
-////			.andExpect(model().attribute(AlgorithmController.MODEL_MetaData, metaData))
-//			.andExpect(model().attributeExists(
-//					AlgorithmController.MODEL_SrcUploadURI,
-//					AlgorithmController.MODEL_SrcAttrURI,
-//					AlgorithmController.MODEL_HasHeader,
-//					AlgorithmController.MODEL_Preview))
-//			;
-//	}
-
+	
 	
 
 }

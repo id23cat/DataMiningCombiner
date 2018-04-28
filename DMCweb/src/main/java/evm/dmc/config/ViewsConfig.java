@@ -1,30 +1,16 @@
 package evm.dmc.config;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.beans.factory.config.YamlPropertiesFactoryBean;
-import org.springframework.boot.SpringApplication;
 import org.springframework.boot.context.properties.ConfigurationProperties;
-import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.PropertySource;
 import org.springframework.context.support.PropertySourcesPlaceholderConfigurer;
 import org.springframework.core.io.ClassPathResource;
-import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter;
-import org.springframework.web.servlet.view.InternalResourceViewResolver;
-import org.springframework.web.servlet.view.JstlView;
 
-import evm.dmc.DmcWebApplication;
-import evm.dmc.web.service.Views;
-import evm.dmc.web.testing.TestingController;
 
 @Configuration
 @ConfigurationProperties(prefix = "views")
 public class ViewsConfig {
-	private static final Logger logger = LoggerFactory.getLogger(TestingController.class);
-	
 
 	/*
 	 * Config file to resolve view names

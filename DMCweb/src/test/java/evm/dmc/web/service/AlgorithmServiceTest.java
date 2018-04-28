@@ -8,11 +8,14 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import org.junit.Test;
+import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.test.context.junit4.SpringRunner;
 
 import evm.dmc.api.model.ProjectModel;
 import evm.dmc.api.model.algorithm.Algorithm;
 
+@RunWith(SpringRunner.class)
 public class AlgorithmServiceTest extends ServiceTest{
 	
 	@Autowired
@@ -26,7 +29,6 @@ public class AlgorithmServiceTest extends ServiceTest{
 	public final void testGetForProjectEmty() {
 		ProjectModel project = projectService.getByName(ServiceTest.PROJECTNAME_1).findFirst().get();
 		Set<Algorithm> algStream = algorithmService.getForProject(project);
-//		assertThat(algStream.count(), equalTo(0L));
 		assertTrue(algStream.isEmpty());
 	}
 

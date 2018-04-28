@@ -1,11 +1,8 @@
 package evm.dmc.web.service;
 
-import java.util.Random;
 
-import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
-import evm.dmc.config.FileStorageConfig;
 
 @Configuration
 public class ServicesTestConfig {

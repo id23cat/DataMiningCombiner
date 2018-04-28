@@ -20,9 +20,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.SessionAttributes;
-import org.springframework.web.bind.support.SessionAttributeStore;
 import org.springframework.web.bind.support.SessionStatus;
-import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import org.springframework.web.servlet.view.RedirectView;
 
@@ -30,7 +28,7 @@ import evm.dmc.api.model.ProjectModel;
 import evm.dmc.api.model.account.Account;
 import evm.dmc.web.controllers.CheckboxNamesBean;
 import evm.dmc.web.exceptions.ProjectNotFoundException;
-import evm.dmc.web.exceptions.UserNotExistsException;
+import evm.dmc.web.exceptions.AccountNotFoundException;
 import evm.dmc.web.service.ProjectService;
 import evm.dmc.web.service.RequestPath;
 import evm.dmc.web.service.Views;
@@ -43,9 +41,14 @@ import lombok.extern.slf4j.Slf4j;
 @Scope("session")
 @Slf4j
 public class ProjectController {
-	public static final String BASE_URL = RequestPath.project;
+	public static final String BASE_URL = "/project";
+	
+	public static final String URL_PART_DELPROJ =  "/delete";
+	public static final String URL_PART_ADDPROJ = "/add";
 	
 	public static final String URL_GetPorject = BASE_URL + ProjectController.PATH_ProjectName;
+	public static final String URL_DeleteProject = BASE_URL + URL_PART_DELPROJ;
+	public static final String URL_AddProject = BASE_URL + URL_PART_ADDPROJ;
 	public static final String SESSION_Account = "account";
 	public static final String SESSION_CurrentProject = "currentProject";
 	
@@ -87,7 +90,7 @@ public class ProjectController {
 	}
 	
 	@ModelAttribute(SESSION_Account)
-	public Account getAccount(Authentication authentication) throws UserNotExistsException {
+	public Account getAccount(Authentication authentication) throws AccountNotFoundException {
 			return accountService.getAccountByName(authentication.getName());
 	}
 	
@@ -150,7 +153,7 @@ public class ProjectController {
 		
 	}
 	
-	@PostMapping(RequestPath.add)
+	@PostMapping(URL_PART_ADDPROJ)
 	public RedirectView postAddProject(@ModelAttribute(SESSION_Account) Account account, 
 						@Valid @ModelAttribute(MODEL_NewProject) ProjectModel project,
 						BindingResult bindingResult, RedirectAttributes ra) {
@@ -166,7 +169,7 @@ public class ProjectController {
 		return new RedirectView(RequestPath.project + "/" + project.getName());
 	}
 	
-	@PostMapping(RequestPath.delete)
+	@PostMapping(URL_PART_DELPROJ)
 	public RedirectView postDelProject(
 			@ModelAttribute(SESSION_Account) Account account,
 			@ModelAttribute(MODEL_BackBean) CheckboxNamesBean bean,
@@ -179,7 +182,7 @@ public class ProjectController {
 		projectService.deleteByAccountAndNames(account, bean.getNamesSet());
 		
 		log.debug("==============redirect===================");
-		return new RedirectView(RequestPath.project);
+		return new RedirectView(ProjectController.BASE_URL);
 	}
 	
 }

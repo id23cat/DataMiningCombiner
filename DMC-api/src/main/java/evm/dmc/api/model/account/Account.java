@@ -7,6 +7,7 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
 
@@ -33,15 +34,25 @@ import org.hibernate.validator.constraints.NotBlank;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import evm.dmc.api.model.ProjectModel;
+import evm.dmc.api.model.ProjectType;
+import evm.dmc.api.model.algorithm.Algorithm;
+import evm.dmc.api.model.data.MetaData;
 import lombok.AccessLevel;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
+import lombok.Singular;
 import lombok.ToString;
 import lombok.extern.slf4j.Slf4j;
 
 @Entity
 @Data
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
 @Table(name="ACCOUNT")
 @Inheritance(strategy=InheritanceType.SINGLE_TABLE)
 @EqualsAndHashCode(exclude={"projects"})
@@ -83,22 +94,25 @@ public class Account implements Serializable {
 	@Enumerated(EnumType.STRING)
 	@Setter(AccessLevel.PROTECTED)
 	@NotNull
+	@Builder.Default
 	protected Role role = Role.USER;
 	
 	@Setter(AccessLevel.NONE) 
+	@Builder.Default
 	private Instant created = Instant.now();
 	
 	@OneToMany(mappedBy="account", fetch = FetchType.LAZY,
-			orphanRemoval = true, cascade = CascadeType.ALL) //{CascadeType.REMOVE, CascadeType.PERSIST}, 
-	private Set<ProjectModel> projects = new HashSet<>();
+			orphanRemoval = true, cascade = CascadeType.ALL) //{CascadeType.REMOVE, CascadeType.PERSIST},
+	@Singular
+	private Set<ProjectModel> projects;
 //	private List<ProjectModel> projects = new LinkedList<>();
 
-    public Account() {
-    }
-    
-    public Account(String name) {
-    	this.userName = name;
-    }
+//    public Account() {
+//    }
+//    
+//    public Account(String name) {
+//    	this.userName = name;
+//    }
 
 	public Account(String username, String password, String email, 
 			String firstName, String lastName) {
@@ -111,28 +125,41 @@ public class Account implements Serializable {
 		this.created = Instant.now();
 	}
 	
-	public Account(Account acc) {
-//		this.id = acc.id;
-		this.userName = acc.userName;
-		this.created = acc.created;
-		this.email = acc.email;
-		this.firstName = acc.firstName;
-		this.lastName = acc.lastName;
-		this.password = acc.password;
-		this.role = acc.role;
+	public Account(String username, String password, String email, 
+			String firstName, String lastName, Role role) {
+		super();
+		this.email = email;
+		this.userName = username;
+		this.password = password;
+		this.firstName = firstName;
+		this.lastName = lastName;
+		this.role = role;
+		this.created = Instant.now();
 	}
 	
-	public Account addProject(ProjectModel project) {
-		projects.add(project);
-		project.setAccount(this);
-		return this;
-	}
+//	public Account(Account acc) {
+////		this.id = acc.id;
+//		this.userName = acc.userName;
+//		this.created = acc.created;
+//		this.email = acc.email;
+//		this.firstName = acc.firstName;
+//		this.lastName = acc.lastName;
+//		this.password = acc.password;
+//		this.role = acc.role;
+//	}
 	
-	public void removeProject(ProjectModel project) {
-		projects.remove(project);
-		project.setAccount(null);
+//	public Account addProject(ProjectModel project) {
+//		projects.add(project);
+//		project.setAccount(this);
 //		return this;
-	}
+//	}
+	
+//	public void removeProject(ProjectModel project) {
+//		projects.remove(project);
+//		project.setAccount(null);
+////		return this;
+//	}
+	
 //	
 //	public void removeProjectByName(String name) {
 //

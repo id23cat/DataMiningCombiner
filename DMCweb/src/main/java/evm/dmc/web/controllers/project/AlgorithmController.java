@@ -1,13 +1,11 @@
 package evm.dmc.web.controllers.project;
 
 import java.util.Optional;
-import java.util.Set;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -16,8 +14,10 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.SessionAttribute;
 import org.springframework.web.bind.annotation.SessionAttributes;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import org.springframework.web.servlet.view.RedirectView;
 import org.springframework.web.util.UriComponents;
 import org.springframework.web.util.UriComponentsBuilder;
@@ -39,13 +39,16 @@ import lombok.extern.slf4j.Slf4j;
 	AlgorithmController.SESSION_CurrentAlgorithm})
 @Slf4j
 public class AlgorithmController {
-	public final static String URL_PART_ALGORITHM = "/algorithm";
-	public final static String URL_PART_MODIFY_ATTRIBUTES = "/modifyAttrs";
-	public final static String URL_PART_SELECT_DATASET = "/selectDataset";
+	private final static String URL_PART_ALGORITHM = "/algorithm";
+	private final static String URL_PART_MODIFY_ATTRIBUTES = "/modifyAttrs";
+	private final static String URL_PART_SELECT_DATASET = "/selectDataset";
+	private final static String URL_PART_DELETE_ALGORITHM = "/delete";
+	private final static String URL_PART_ADD_ALGORITHM = "/add";
 	
 	public final static String BASE_URL = ProjectController.URL_GetPorject + URL_PART_ALGORITHM;
-	public final static String URL_Add_Algorithm = BASE_URL + RequestPath.add;
-	public final static String URL_Modify_Attributes = BASE_URL + URL_PART_MODIFY_ATTRIBUTES;
+	public final static String URL_Add_Algorithm = BASE_URL + URL_PART_ADD_ALGORITHM;
+	public final static String URL_Del_Algorithm = BASE_URL + URL_PART_DELETE_ALGORITHM;
+	public final static String URL_ModifyAttributes = BASE_URL + URL_PART_MODIFY_ATTRIBUTES;
 	public final static String URL_Select_DataSet = BASE_URL + URL_PART_SELECT_DATASET;
 	
 	public static final String PATH_VAR_AlgorithmName = "algName";
@@ -59,6 +62,7 @@ public class AlgorithmController {
 	public final static String MODEL_PagesMap = "pagesMap";
 	public static final String MODEL_AlgBaseURL = "algBaseURL";
 	public static final String MODEL_SelDataURL = "selDataURL";
+	public static final String MODEL_URL_DelAlgorithm = "algDelete";
 	public static final String MODEL_AlgorithmsSet = "algorithmsSet";
 	public static final String MODEL_NewAlgorithm = "newAlgorithm";
 //	public static final String MODEL_CurrentAlgorithm = "currentAlgorithm";
@@ -93,7 +97,7 @@ public class AlgorithmController {
 			Model model,
 			HttpServletRequest request) throws AlgorithmNotFoundException {
 		
-		log.trace("Getting algorithm");
+		log.trace("-== Getting algorithm");
 		Optional<Algorithm> optAlgorithm = algorithmService.getByProjectAndName(project, algName);
 		
 		model.addAttribute(AlgorithmController.SESSION_CurrentAlgorithm, 
@@ -120,34 +124,34 @@ public class AlgorithmController {
 	 * 
 	 * Handles request to /project/algorithm/add
 	 */
-	@PostMapping(RequestPath.add)
+	@PostMapping(URL_PART_ADD_ALGORITHM)
 	public RedirectView postAddAlgorithm(
 			@SessionAttribute(ProjectController.SESSION_CurrentProject) ProjectModel project,
 			@Valid @ModelAttribute(MODEL_NewAlgorithm) Algorithm algorithm, 
 			BindingResult bindingResult
 			) {
 		if(bindingResult.hasErrors()) {
-			log.debug("Invalid new algorithm's property: {}", bindingResult);
+			log.error("-== Invalid new algorithm's property: {}", bindingResult);
 			
 			new RedirectView(BASE_URL);
 		}
 		
-		log.debug("Adding algorithm: {}" ,algorithm.getName());
-		log.debug("to project: {}", project.getId() + project.getName());
+		log.debug("-== Adding algorithm: {}" ,algorithm.getName());
+		log.debug("-== to project: {}", project.getId() + project.getName());
 		
 		algorithm = algorithmService.addNew(project, algorithm);
 
 		return new RedirectView(String.format("%s/%s", RequestPath.project, project.getName()));
 	}
 	
-	@PostMapping(RequestPath.delete)
+	@PostMapping(URL_PART_DELETE_ALGORITHM)
 	public RedirectView postDelAlgorithm(
 			@SessionAttribute(ProjectController.SESSION_CurrentProject) ProjectModel project,
 			@ModelAttribute(ProjectController.MODEL_BackBean) CheckboxNamesBean bean
 			) {
 //		log.debug("Selected algorithms for deleteion:{}", StringUtils.arrayToCommaDelimitedString(bean.getNames()));
-		log.debug("Selected algorithms for deleteion:{}", bean.getNamesSet());
-		log.debug("Project for deletion in: {}", project);
+		log.debug("-== Selected algorithms for deleteion:{}", bean.getNamesSet());
+		log.debug("-==Project for deletion in: {}", project);
 		
 //		projectService.deleteAlgorithms(project, new HashSet<String>(Arrays.asList(bean.getNames())));
 		algorithmService.delete(project, bean.getNamesSet());
@@ -159,11 +163,24 @@ public class AlgorithmController {
 	public RedirectView getSelectDataset(
 			@PathVariable(PATH_VAR_DataName) String dataName,
 			@SessionAttribute(ProjectController.SESSION_CurrentProject) ProjectModel project,
-			@SessionAttribute(SESSION_CurrentAlgorithm) Algorithm algorithm
+			@SessionAttribute(SESSION_CurrentAlgorithm) Algorithm algorithm,
+			@RequestParam(value = DatasetController.REQPARAM_ShowCheckboxes, defaultValue = "false") Boolean showCheckboxes,
+			RedirectAttributes ra
 			) {
 		log.debug("-== Selecting dataset: {}", dataName);
 		
-		algorithmService.setDataSource(algorithm, dataName);
+		algorithm = algorithmService.setDataSource(algorithm, dataName);
+		
+		// override default attributes map to use it on preview page 
+		algorithm.getDataSource().setAttributes(algorithm.getSrcAttributes());
+		
+		// adding optional to flash attributes, it will be extracted in DatasetController when add preview
+		ra.addFlashAttribute(DatasetController.FLASH_MetaData, Optional.of(algorithm.getDataSource()));
+		
+		// redirect showCheckboxes flag to DatasetController
+		ra.addAttribute(DatasetController.REQPARAM_ShowCheckboxes, showCheckboxes);
+		
+		ra.addAttribute(DatasetController.REQPARAM_ActionURL, URL_ModifyAttributes);
 		
 		UriComponents uri = UriComponentsBuilder
 				.fromPath(DatasetController.BASE_URL + "/" + dataName)
@@ -174,11 +191,14 @@ public class AlgorithmController {
 	}
 	
 	@PostMapping(URL_PART_MODIFY_ATTRIBUTES)
-	public void postSaveDataAtributes(
+	public RedirectView postSaveDataAtributes(
 			@SessionAttribute(ProjectController.SESSION_CurrentProject) ProjectModel project,
-			@Valid @ModelAttribute(DatasetController.MODEL_MetaData) MetaData metaData
+			@Valid @ModelAttribute(DatasetController.MODEL_MetaData) MetaData metaData,
+			HttpServletRequest request
 			) {
-		log.debug("Saving properties of MetaData: {}", metaData);
+		log.debug("-== Saving properties of MetaData: {}", metaData);
+		
+		return new RedirectView(request.getHeader("Referer"));
 	}
 	
 }

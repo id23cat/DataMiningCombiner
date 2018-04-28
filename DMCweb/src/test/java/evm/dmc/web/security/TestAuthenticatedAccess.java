@@ -3,7 +3,7 @@ package evm.dmc.web.security;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
-import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,6 +32,7 @@ public class TestAuthenticatedAccess {
 	
 	@Test
 	@WithMockUser
+	@Ignore
 	public final void getUserHomeAuthenticatedTest() throws Exception {
 		this.mockMvc.perform(get(RequestPath.userHome))
 		.andExpect(status().isOk())		

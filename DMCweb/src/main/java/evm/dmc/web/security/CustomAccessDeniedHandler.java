@@ -13,7 +13,6 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.web.access.AccessDeniedHandler;
 
-import evm.dmc.config.SecurityConfig;
 import evm.dmc.web.service.RequestPath;
 
 public class CustomAccessDeniedHandler implements AccessDeniedHandler {

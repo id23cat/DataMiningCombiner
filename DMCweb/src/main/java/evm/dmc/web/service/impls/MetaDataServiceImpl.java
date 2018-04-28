@@ -12,7 +12,6 @@ import java.util.Optional;
 import java.util.Set;
 import java.util.StringJoiner;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 import javax.persistence.EntityManager;
 
@@ -156,12 +155,6 @@ public class MetaDataServiceImpl implements MetaDataService {
 				meta.getStorage().isHasHeader(), meta.getStorage().getDelimiter());
 		
     	preview.setMetaDataId(meta.getId());
-//    	meta.setPreviewId(preview.getId());
-    	
-//    	meta = metaDataRepository.save(meta);
-//    	preview = previewService.save(preview);
-//    	Map<MetaData, DataPreview> map = new HashMap<>();
-//    	map.put(meta, preview);
     	return preview;
     }
 	
@@ -225,7 +218,7 @@ public class MetaDataServiceImpl implements MetaDataService {
 	@Override
 	public List<DataAttribute> getDataAttributes(DataPreview preview) {
 		List<DataAttribute> attributes = MetaDataService.streamLine(preview.getHeader(), preview.getDelimiter())
-				.map((atrName) -> new DataAttribute(atrName)).collect(Collectors.toList());
+				.map((atrName) -> DataAttribute.builder().name(atrName).build()).collect(Collectors.toList());
 
 		List<String> dataLines = new ArrayList<>(preview.getData());
 		for (DataAttribute attribute : attributes) {
@@ -326,7 +319,6 @@ public class MetaDataServiceImpl implements MetaDataService {
     }
     
     private MetaData merge(MetaData meta) {
-//    	return metaDataRepository.findOne(meta.getId());
     	return em.merge(meta);
     }
 

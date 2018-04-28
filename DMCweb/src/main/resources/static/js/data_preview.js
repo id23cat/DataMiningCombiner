@@ -1,7 +1,9 @@
 
 function selectAndGetPreview(textid, name, url) {
-//	$(textid).text(url + "/" + name);
+	$(textid).text(url + "/" + name);
 	getPreview(textid, url + "/" + name);
+	$("#previewForm_id").attr('action', "NoNE");
+	$("#test").text('rrrrr');
 }
 
 function getPreview(textid, geturl) {
@@ -13,7 +15,7 @@ function getPreview(textid, geturl) {
 			showCheckboxes: true
 		},
 		success: function (data){
-			$(textid).html($(data).find("#preview_id").html());
+			$(textid).html($(data).find("#preview_id").html()).fadeIn();
 		}
 	})
 }

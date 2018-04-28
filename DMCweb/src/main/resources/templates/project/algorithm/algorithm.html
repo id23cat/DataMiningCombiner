@@ -24,7 +24,7 @@
 		<span th:text="${__${algorithmController.MODEL_SelDataURL}__}"></span>
 		<div id="datasource" class="tab-pane fade in active">
 			<div th:insert="project/datasourcesList 
-				:: datasourcesListSelectable(${selDataURL})">
+				:: datasourcesListSelectable(${__${algorithmController.MODEL_SelDataURL}__})">
 			</div>
 		</div>
 		<div id="act1" class="tab-pane fade">

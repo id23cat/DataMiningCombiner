@@ -17,14 +17,22 @@ import javax.validation.constraints.NotNull;
 
 import org.hibernate.annotations.Immutable;
 
+import evm.dmc.core.api.AttributeType;
 import lombok.AccessLevel;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
+import lombok.Singular;
 
 @Entity
 @Table(name="DATA_PREVIEW")
+@NoArgsConstructor
+@AllArgsConstructor
 @Immutable
 @Data
+@Builder
 public class DataPreview implements Serializable {
 	/**
 	 * 
@@ -49,7 +57,7 @@ public class DataPreview implements Serializable {
 	@Lob
 	@ElementCollection
 	@CollectionTable(name = "DATA_PREVIEW_LIST")
-	private List<String> data = new ArrayList<>();
+	@Singular("line") private List<String> data = new ArrayList<>();
 	
-	private String delimiter = DEFAULT_DELIMITER; 
+	@Builder.Default private String delimiter = DEFAULT_DELIMITER; 
 }

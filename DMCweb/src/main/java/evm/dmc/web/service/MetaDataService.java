@@ -39,22 +39,25 @@ public interface MetaDataService extends EnityGetter<MetaData>, EntityModifier<M
 	
 	public static DataStorageModel newDataStorageModel(Path baseDir, Path fullFilePath,
 			DataSrcDstType type, String delimiter, boolean hasHeader) {
-		DataStorageModel storageDesc = new DataStorageModel();
-
-		storageDesc.setStorageType(type);
+		DataStorageModel storageDesc = DataStorageModel
+				.builder()
+				.storageType(type)
+				.delimiter(delimiter)
+				.hasHeader(hasHeader)
+				.build();
 		storageDesc.setUri(fullFilePath.toUri(), baseDir.toUri().toString());
-		storageDesc.setDelimiter(delimiter);
-		storageDesc.setHasHeader(hasHeader);
 
 		return storageDesc;
 	}
 
 	public static MetaData newMetaData(String name, String description, DataStorageModel dataStore) {
-		MetaData meta = new MetaData();
-		meta.setName(name);
-		meta.setDescription(description);
-		meta.setStorage(dataStore);
-
+		MetaData meta = MetaData
+			.builder()
+			.name(name)
+			.description(description)
+			.storage(dataStore)
+			.build();
+		dataStore.setMeta(meta);
 		return meta;
 	}
 	

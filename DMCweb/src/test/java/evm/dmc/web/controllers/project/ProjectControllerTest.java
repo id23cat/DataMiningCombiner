@@ -15,7 +15,6 @@ import java.util.HashSet;
 import java.util.Optional;
 import java.util.Set;
 
-import org.assertj.core.util.Arrays;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -24,42 +23,31 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.boot.autoconfigure.security.SecurityAutoConfiguration;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
-import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.context.SpringBootTest.WebEnvironment;
-import org.springframework.boot.test.context.TestConfiguration;
 import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.Import;
 import org.springframework.security.test.context.support.WithMockUser;
-import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
 import evm.dmc.api.model.ProjectModel;
-import evm.dmc.api.model.ProjectType;
 import evm.dmc.api.model.account.Account;
 import evm.dmc.api.model.algorithm.Algorithm;
 import evm.dmc.api.model.data.MetaData;
-import evm.dmc.config.SecurityConfig;
 import evm.dmc.web.service.ProjectService;
 import evm.dmc.web.service.RequestPath;
 import evm.dmc.web.service.Views;
-import evm.dmc.web.controllers.CheckboxNamesBean;
+import evm.dmc.web.controllers.ControllersTestsUtils;
 import evm.dmc.web.service.AccountService;
 import evm.dmc.web.service.AlgorithmService;
 import evm.dmc.web.service.MetaDataService;
-import lombok.extern.slf4j.Slf4j;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest(webEnvironment = WebEnvironment.RANDOM_PORT, properties = "management.port=-1")
 @AutoConfigureMockMvc
 @EnableAutoConfiguration(exclude = { SecurityAutoConfiguration.class})
 @EnableConfigurationProperties(Views.class)
-@Slf4j
 public class ProjectControllerTest {
 	
 	@MockBean
@@ -70,6 +58,9 @@ public class ProjectControllerTest {
 	
 	@MockBean
 	private MetaDataService metaDataService;
+	
+	@MockBean
+	private AlgorithmService algorithmService;
 
 	@Autowired
 	MockMvc mockMvc;
@@ -78,7 +69,7 @@ public class ProjectControllerTest {
 	Views views;
 	
 	Account acc;
-	ProjectModel proj;
+	ProjectModel project;
 	
 //	 @TestConfiguration
 //     static class Config {
@@ -94,16 +85,25 @@ public class ProjectControllerTest {
 		assertNotNull(views);
 		assertNotNull(views.getRegister());
 		
-		acc = new Account("Alex");
-		proj = new ProjectModel(acc, ProjectType.SIMPLEST_PROJECT, null, null, "test");
-		acc.getProjects().add(proj);
+		project = ProjectModel.builder()
+				.account(acc)
+				.name("test")
+				.build();
+		
+		acc = Account.builder().userName("Alex").project(project).build();
+		
+		project.setAccount(acc);
+		
 		Mockito.when(accServ.getAccountByName(acc.getUserName()))
 			.thenReturn(acc);
 		Mockito.when(accServ.save(acc))
 			.thenReturn(acc);
 		
-		Mockito.when(projServ.getNew()).thenReturn(proj);
-		Mockito.when(projServ.getNewAlgorithm()).thenReturn(AlgorithmService.getNewAlgorithm());
+		Mockito.when(projServ.getNew()).thenReturn(project);
+//		Mockito.when(projServ.getNewAlgorithm()).thenReturn(AlgorithmService.getNewAlgorithm());
+		
+		Mockito.when(algorithmService.getForProject(project))
+			.thenReturn(Collections.emptySet());
 		
 	}
 	
@@ -136,20 +136,20 @@ public class ProjectControllerTest {
 	@WithMockUser("Alex")
 	public final void testGetProjectWithEmptyAlgorithmsSet() throws Exception {
 		Mockito.when(projServ.getByNameAndAccount(any(String.class), any(Account.class)))
-			.thenReturn(Optional.of(proj));
+			.thenReturn(Optional.of(project));
 		
 		Set<MetaData> dataSet = new HashSet<>();
-		dataSet.add(new MetaData());
+		dataSet.add(MetaData.builder().build());
 		Mockito
-			.when(metaDataService.getForProject(proj))
+			.when(metaDataService.getForProject(project))
 			.thenReturn(dataSet);
 		
-		mockMvc.perform(get(ProjectController.BASE_URL + "/"+proj.getName()))
+		mockMvc.perform(get(ProjectController.BASE_URL + "/"+project.getName()))
 			.andExpect(status().isOk())
 //			.andExpect(view().name(views.getProject().getNewAlg()))
 			.andExpect(view().name(views.getProject().getMain()))
 			.andExpect(model().attribute("algorithmsSet", Collections.EMPTY_SET))
-			.andExpect(model().attribute("currentProject", proj))
+			.andExpect(model().attribute("currentProject", project))
 			.andExpect(model().attributeExists("newAlgorithm"))
 		;
 		
@@ -160,17 +160,26 @@ public class ProjectControllerTest {
 	public final void testGetProjectWithNotEmptyAlgorithmsSet() throws Exception {
 		Algorithm alg = getNewAlgorithm();
 		alg.setName("Algorithm0");
-		alg.setParentProject(proj);
-		proj.getAlgorithms().add(alg);
+		alg.setProject(project);
+		project.getAlgorithms().add(alg);
 		
-		Mockito.when(projServ.getByNameAndAccount(proj.getName(), acc))
-			.thenReturn(Optional.of(proj));
+		Mockito.when(projServ.getByNameAndAccount(project.getName(), acc))
+			.thenReturn(Optional.of(project));
 		
-		mockMvc.perform(get(RequestPath.project+"/"+proj.getName()))
+		mockMvc.perform(get(ProjectController.BASE_URL + "/" +project.getName()))
 			.andExpect(status().isOk())
 			.andExpect(view().name(views.getProject().getMain()))
-			.andExpect(model().attribute("algorithmsSet", proj.getAlgorithms()))
-		;
+			.andExpect(model().attribute(ProjectController.SESSION_CurrentProject, project))
+			// algorithm's model data
+			.andExpect(model().attributeExists(AlgorithmController.MODEL_AlgorithmsSet))
+			.andExpect(model().attributeExists(AlgorithmController.MODEL_NewAlgorithm))
+			.andExpect(model().attribute(AlgorithmController.MODEL_AlgBaseURL, 
+					ControllersTestsUtils.setUriComponent(AlgorithmController.BASE_URL, project.getName())
+					.toString()))
+			.andExpect(model().attribute(AlgorithmController.MODEL_SelDataURL, 
+					ControllersTestsUtils.setUriComponent(AlgorithmController.URL_Select_DataSet, project.getName())
+					.toUriString()))
+			;
 	}
 	
 	@Test
@@ -179,20 +188,20 @@ public class ProjectControllerTest {
 		Algorithm algorithm = getNewAlgorithm();
 		algorithm.setName("testAlg0");
 		
-		algorithm.setParentProject(proj);
-		proj.getAlgorithms().add(algorithm);
+		algorithm.setProject(project);
+		project.getAlgorithms().add(algorithm);
 
 		
 		mockMvc
-			.perform(
-					MockMvcRequestBuilders
-						.post(RequestPath.projDelAlgorithm)
-						.sessionAttr("currentProject", proj)
+			.perform(post(ProjectController.URL_DeleteProject)
+//						.sessionAttr("currentProject", project)
 						.param("names", algorithm.getName()))
-			.andExpect(redirectedUrl(String.format("%s/%s", RequestPath.project, proj.getName())))
 			.andExpect(status().isFound())
+			.andExpect(redirectedUrl(ProjectController.BASE_URL))
+			
 		;
 			
 	}
+	
 
 }

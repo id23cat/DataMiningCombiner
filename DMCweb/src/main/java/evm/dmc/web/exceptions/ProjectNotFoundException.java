@@ -1,9 +1,5 @@
 package evm.dmc.web.exceptions;
 
-import java.util.NoSuchElementException;
-
-import org.springframework.dao.DataAccessException;
-
 public class ProjectNotFoundException extends NotFoundException {
 
 	/**

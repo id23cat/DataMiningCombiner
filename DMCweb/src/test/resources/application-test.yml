@@ -12,6 +12,8 @@ management:
 #spring.mvc.view.suffix: .jsp
 
 spring:
+  include:
+    - H2
   datasource:
     url: jdbc:h2:mem:testdmc
 
