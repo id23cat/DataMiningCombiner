@@ -33,6 +33,7 @@ import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.util.UriComponents;
@@ -43,6 +44,7 @@ import evm.dmc.api.model.account.Account;
 import evm.dmc.api.model.data.DataStorageModel;
 import evm.dmc.api.model.data.MetaData;
 import evm.dmc.api.model.datapreview.DataPreview;
+import evm.dmc.web.controllers.project.utils.DatasetTestUtils;
 import evm.dmc.web.service.DataSetProperties;
 import evm.dmc.web.service.DataStorageService;
 import evm.dmc.web.service.MetaDataService;
@@ -70,7 +72,7 @@ public class DatasetControllerTest {
 	@Autowired
 	private Views views;
 	
-	private ProjectModel testSessionProject = DatasetTestUtils.getProjectModel(DatasetTestUtils.getAccount());
+	
 //	private Algorithm testSessionAlgorithm = AlgorithmService.getNewAlgorithm();
 	
 	private ArgumentCaptor<Account> accCaptor = ArgumentCaptor.forClass(Account.class);
@@ -83,10 +85,9 @@ public class DatasetControllerTest {
 	
 	@Test
 	public final void testGetDataSetsList() throws Exception {
-		URI uri = UriComponentsBuilder.fromPath(DatasetController.BASE_URL)
-				.buildAndExpand(DatasetTestUtils.TEST_PROJ_NAME).toUri();
+		String url = DatasetTestUtils.cookURL(DatasetController.BASE_URL, DatasetTestUtils.TEST_PROJ_NAME);
 		
-		MetaData  meta = DatasetTestUtils.getMetaData(testSessionProject);
+		MetaData  meta = DatasetTestUtils.getMetaData(DatasetTestUtils.TEST_session_project);
 		
 		List<MetaData> metaDataList = new LinkedList<>();
 		metaDataList.add(meta);
@@ -94,36 +95,33 @@ public class DatasetControllerTest {
 			.when(metaDataService.getForProjectSortedBy(projCaptor.capture(), eq("name")))
 			.thenReturn(metaDataList);
 		
-		this.mockMvc
-			.perform(MockMvcRequestBuilders.get(uri.toString())
-					.sessionAttr(ProjectController.SESSION_CurrentProject, testSessionProject))
+		ResultActions checkResult = this.mockMvc
+			.perform(MockMvcRequestBuilders.get(url)
+					.sessionAttr(ProjectController.SESSION_CurrentProject, DatasetTestUtils.TEST_session_project))
 			.andExpect(status().isOk())
 			.andExpect(view().name(views.project.getDatasourcesList()))
 			// model from controller
 			.andExpect(model().attributeExists(ProjectController.MODEL_BackBean))
-			// models from DatasetModelAppender.addAttributesToModel()
-			.andExpect(model().attribute(DatasetController.MODEL_DataSets, metaDataList))
-			.andExpect(model().attributeExists(DatasetController.MODEL_DataSetProps))
-			.andExpect(model().attributeExists(DatasetController.MODEL_SelectedNamesBean))
-			// URLs from DatasetModelAppender.setURLs()
-			.andExpect(model().attribute(DatasetController.MODEL_DataBaseURL, uri.toString()))
-			.andExpect(model().attribute(DatasetController.MODEL_DataAttributesURL, 
-					UriComponentsBuilder.fromPath(DatasetController.URL_SetAttributes)
-						.buildAndExpand(testSessionProject.getName())
-						.toString()))
 			;
+		// models from DatasetModelAppender.addAttributesToModel()
+		DatasetTestUtils.assertDatasetAttributesToModel(checkResult, metaDataList);
+		
+		// URLs from DatasetModelAppender.setURLs()
+		DatasetTestUtils.assertDatasetURLs(checkResult, DatasetTestUtils.TEST_PROJ_NAME);
+		
 		assertThat(projCaptor.getValue().getName(), equalTo(DatasetTestUtils.TEST_PROJ_NAME));
 	}
 	
 	@Test
 	public final void testGetDataSet_Without_FLASH_MetaData() throws Exception {
-		URI uri = UriComponentsBuilder.fromPath(DatasetController.BASE_URL + DatasetController.PATH_DataName)
-				.buildAndExpand(DatasetTestUtils.TEST_PROJ_NAME, DatasetTestUtils.TEST_DATA_NAME).toUri();
+		String url = DatasetTestUtils.cookURL(DatasetController.BASE_URL + "/{dataName}",
+				DatasetTestUtils.TEST_PROJ_NAME, DatasetTestUtils.TEST_DATA_NAME);
 		
-		MetaData  meta = DatasetTestUtils.getMetaData(testSessionProject);
+		MetaData  meta = DatasetTestUtils.getMetaData(DatasetTestUtils.TEST_session_project);
 		Mockito
 			.when(metaDataService.getByProjectAndName(projCaptor.capture(), eq(DatasetTestUtils.TEST_DATA_NAME)))
 			.thenReturn(Optional.of(meta));
+		
 		
 		DataPreview preview = DatasetTestUtils.getDataPreview();
 		Mockito
@@ -135,25 +133,32 @@ public class DatasetControllerTest {
 			.when(dataStorageService.getDataStorage(eq(meta)))
 			.thenReturn(dataStorage);
 		
-		this.mockMvc
-		.perform(MockMvcRequestBuilders.get(uri.toString())
-				.sessionAttr(ProjectController.SESSION_CurrentProject, testSessionProject))
+		ResultActions checkResult = this.mockMvc
+		.perform(MockMvcRequestBuilders.get(url)
+				.sessionAttr(ProjectController.SESSION_CurrentProject, DatasetTestUtils.TEST_session_project))
 		.andExpect(status().isOk())
 		.andExpect(view().name(views.project.data.dataSource))
 		.andExpect(model().attribute(DatasetController.MODEL_ShowChekboxes, false))
 		.andExpect(model().attribute(DatasetController.MODEL_ActionURL, DatasetController.URL_SetAttributes))
-		.andExpect(model().attribute(DatasetController.MODEL_MetaData, meta))
-		.andExpect(model().attribute(DatasetController.MODEL_Preview, preview))
-		.andExpect(model().attributeExists(DatasetController.MODEL_DataSetProps))
 		;
+		
+		// model attributes set in addAttributesToModel
+		DatasetTestUtils.assertDatasetAttributesToModel_WithMetaData(
+				checkResult, 
+				Optional.of(meta), 
+				preview, 
+				null);
+		
+		// URLs from DatasetModelAppender.setURLs()
+		DatasetTestUtils.assertDatasetURLs(checkResult, DatasetTestUtils.TEST_PROJ_NAME);
 		
 	}
 	
 	@Test
 	public final void testGetDataSet_With_FLASH_MetaData() throws Exception {
-		URI uri = UriComponentsBuilder.fromPath(DatasetController.BASE_URL + DatasetController.PATH_DataName)
-				.buildAndExpand(DatasetTestUtils.TEST_PROJ_NAME, DatasetTestUtils.TEST_DATA_NAME).toUri();
-		MetaData  meta = DatasetTestUtils.getMetaData(testSessionProject);
+		String url = DatasetTestUtils.cookURL(DatasetController.BASE_URL + "/{dataName}",
+				DatasetTestUtils.TEST_PROJ_NAME, DatasetTestUtils.TEST_DATA_NAME);
+		MetaData  meta = DatasetTestUtils.getMetaData(DatasetTestUtils.TEST_session_project);
 		
 		DataPreview preview = DatasetTestUtils.getDataPreview();
 		Mockito
@@ -165,27 +170,31 @@ public class DatasetControllerTest {
 			.when(dataStorageService.getDataStorage(eq(meta)))
 			.thenReturn(dataStorage);
 		
-		this.mockMvc
-		.perform(MockMvcRequestBuilders.get(uri.toString())
-				.sessionAttr(ProjectController.SESSION_CurrentProject, testSessionProject)
+		ResultActions checkResult = this.mockMvc
+		.perform(MockMvcRequestBuilders.get(url)
+				.sessionAttr(ProjectController.SESSION_CurrentProject, DatasetTestUtils.TEST_session_project)
 				.flashAttr(DatasetController.FLASH_MetaData, Optional.of(meta)))
 		.andExpect(status().isOk())
 		.andExpect(view().name(views.project.data.dataSource))
 		.andExpect(model().attribute(DatasetController.MODEL_ShowChekboxes, false))
 		.andExpect(model().attribute(DatasetController.MODEL_ActionURL, DatasetController.URL_SetAttributes))
-		.andExpect(model().attribute(DatasetController.MODEL_MetaData, meta))
-		.andExpect(model().attribute(DatasetController.MODEL_Preview, preview))
-		.andExpect(model().attributeExists(DatasetController.MODEL_DataSetProps))
 		;
 		
+		// model attributes set in addAttributesToModel
+		DatasetTestUtils.assertDatasetAttributesToModel_WithMetaData(
+				checkResult, 
+				Optional.of(meta), 
+				preview, 
+				null);
+		
+		// URLs from DatasetModelAppender.setURLs()
+		DatasetTestUtils.assertDatasetURLs(checkResult, DatasetTestUtils.TEST_PROJ_NAME);
 	}
-	
 	
 	@Test
 	public final void testPostSourceFile() throws Exception {
-		UriComponents uri = UriComponentsBuilder.fromPath(DatasetController.BASE_URL)
-				.path(RequestPath.setSource)
-				.buildAndExpand(DatasetTestUtils.TEST_PROJ_NAME);
+		String url = DatasetTestUtils.cookURL(DatasetController.URL_SetSource, 
+				DatasetTestUtils.TEST_PROJ_NAME);
 		
 		final String filename = "iris.csv";
 		ClassPathResource resource = new ClassPathResource(filename, getClass());
@@ -200,35 +209,26 @@ public class DatasetControllerTest {
 					fileCaptor.capture(), any(DataSetProperties.class)))
 			.thenReturn(MetaData.builder().build());
 		
-		String expectedUrl = UriComponentsBuilder.fromPath(AlgorithmController.BASE_URL)
-				.buildAndExpand(DatasetTestUtils.TEST_PROJ_NAME, TEST_ALG_NAME)
-				.toUriString();
+		String expectedUrl = DatasetTestUtils.cookURL(AlgorithmController.BASE_URL,
+				DatasetTestUtils.TEST_PROJ_NAME, TEST_ALG_NAME);
 		
 		this.mockMvc
 			.perform(
 					MockMvcRequestBuilders
-						.fileUpload(uri.toUriString())
+						.fileUpload(url)
 						.file(file)
 						.sessionAttr(ProjectController.SESSION_Account, DatasetTestUtils.getAccount())
-						.sessionAttr(ProjectController.SESSION_CurrentProject, testSessionProject)
+						.sessionAttr(ProjectController.SESSION_CurrentProject, DatasetTestUtils.TEST_session_project)
 						.header("Referer", expectedUrl))
 			.andExpect(status().isFound())
 			.andExpect(redirectedUrl(expectedUrl))
 			.andExpect(flash().attributeExists(
 					DatasetController.MODEL_MetaData))
 			;
-			
+		
 		assertThat(accCaptor.getValue().getUserName(), equalTo(DatasetTestUtils.TEST_USER_NAME));
 		assertThat(projCaptor.getValue().getName(), equalTo(DatasetTestUtils.TEST_PROJ_NAME));
 	}
 
-	@Test
-	public final void testPostModifyAttributes() throws Exception {
-		
-	}
 	
-	@Test
-	public final void testPostDeleteData() throws Exception {
-		
-	}
 }

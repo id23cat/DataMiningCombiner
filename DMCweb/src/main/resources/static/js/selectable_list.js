@@ -1,9 +1,12 @@
 
 function selectAndGetPreview(textid, name, url) {
-	$(textid).text(url + "/" + name);
+//	$(textid).text(url + "/" + name);
+	console.log(textid);
+	console.log(name);
+	console.log(url);
 	getPreview(textid, url + "/" + name);
 	$("#previewForm_id").attr('action', "NoNE");
-	$("#test").text('rrrrr');
+//	$("#test").text('rrrrr');
 }
 
 function getPreview(textid, geturl) {
@@ -19,3 +22,13 @@ function getPreview(textid, geturl) {
 		}
 	})
 }
+
+///*<![CDATA[*/
+//$(document).ready(function() {
+//	selectAndGetPreview(
+//			"#previewTable",
+//			'[[${selectedValue.name}]]', 
+//			'[[${action}]]'	/* '[[${previewURL}]]' */
+//			);
+//});
+///*]]>*/

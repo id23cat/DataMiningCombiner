@@ -19,6 +19,7 @@ import org.springframework.web.bind.annotation.SessionAttribute;
 import org.springframework.web.bind.annotation.SessionAttributes;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+import org.springframework.web.servlet.support.RequestContextUtils;
 import org.springframework.web.servlet.view.RedirectView;
 import org.springframework.web.util.UriComponents;
 import org.springframework.web.util.UriComponentsBuilder;
@@ -112,12 +113,13 @@ public class DatasetController {
 	}
 	
 	@GetMapping(PATH_DataName)
-	public String GetDataSet(@PathVariable(PATH_VAR_DataName) String dataName,
+	public String getDataSet(@PathVariable(PATH_VAR_DataName) String dataName,
 			@SessionAttribute(ProjectController.SESSION_CurrentProject) ProjectModel project,
 			@RequestParam(value = REQPARAM_ShowCheckboxes, defaultValue = "false") Boolean showCheckboxes,
 			@RequestParam(value = REQPARAM_ActionURL, defaultValue = "") String actionURL,
 			@ModelAttribute(FLASH_MetaData) Optional<MetaData> optMetaData,
-			Model model
+			Model model,
+			HttpServletRequest request
 			) {
 		log.debug("-== Looking for {}", dataName);
 		Optional<MetaData> optMeta = Optional.ofNullable(
@@ -134,6 +136,10 @@ public class DatasetController {
 			model.addAttribute(MODEL_ActionURL, URL_SetAttributes);
 		else
 			model.addAttribute(MODEL_ActionURL, actionURL);
+		
+		
+		log.trace("-== Redirect attributes: {}", RequestContextUtils.getInputFlashMap(request));
+		
 		return views.project.data.dataSource;
 	}
 	

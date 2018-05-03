@@ -63,7 +63,7 @@ public class AlgorithmController {
 	public static final String MODEL_AlgBaseURL = "algBaseURL";
 	public static final String MODEL_SelDataURL = "selDataURL";
 	public static final String MODEL_URL_DelAlgorithm = "algDelete";
-	public static final String MODEL_AlgorithmsSet = "algorithmsSet";
+	public static final String MODEL_AlgorithmsList = "algorithmsSet";
 	public static final String MODEL_NewAlgorithm = "newAlgorithm";
 //	public static final String MODEL_CurrentAlgorithm = "currentAlgorithm";
 	
@@ -82,6 +82,11 @@ public class AlgorithmController {
 	@Autowired
 	private DatasetModelAppender datasetModelAppender;
 	
+	@ModelAttribute(ProjectController.MODEL_BackBean)
+	public CheckboxNamesBean backingBeanForCheckboxes() {
+		return new CheckboxNamesBean();
+	}
+	
 	@GetMapping
 	public String getAlgorithmsList(
 			@SessionAttribute(ProjectController.SESSION_CurrentProject) ProjectModel project,
@@ -99,30 +104,27 @@ public class AlgorithmController {
 		
 		log.trace("-== Getting algorithm");
 		Optional<Algorithm> optAlgorithm = algorithmService.getByProjectAndName(project, algName);
+		Algorithm algorithm = optAlgorithm.orElseThrow(()->
+		new AlgorithmNotFoundException("No such algorithm" + algName + " in project "+ project.getName()));
 		
-		model.addAttribute(AlgorithmController.SESSION_CurrentAlgorithm, 
-				optAlgorithm.orElseThrow(()->
-						new AlgorithmNotFoundException("No such algorithm" + algName + " in project "+ project.getName())));
+		model.addAttribute(AlgorithmController.SESSION_CurrentAlgorithm, algorithm);
 		
-		modelAppender.addAttributesToModel(model, project, optAlgorithm);
+		/* IMPORTANT: sequence of subsequent calls is significant:
+		 * AlgorithmModelAppender overrides some points on model, 
+		 * that was set in DatasetModelAppender
+		 */
 		datasetModelAppender.addAttributesToModel(model, project);
-		// if algorithm is empty (new algorithm)
-//		if(algorithm.getMethod()..getAlgorithmSteps().isEmpty()) {
-//			log.debug("Prepare new algorithm");
-//
-//			model = datasetController.addAttributesToModel(model, project, metaData);
-//			
-//			return views.project.wizard.datasource;
-//		}
+		modelAppender.addAttributesToModel(model, project, optAlgorithm);
+		
 		return views.project.algorithm.algorithm;
 	}
 	
 	/**
+	 * Handles request to /project/algorithm/add
+	 * 
 	 * @param project
 	 * @param algorithm
 	 * @return
-	 * 
-	 * Handles request to /project/algorithm/add
 	 */
 	@PostMapping(URL_PART_ADD_ALGORITHM)
 	public RedirectView postAddAlgorithm(
@@ -136,8 +138,8 @@ public class AlgorithmController {
 			new RedirectView(BASE_URL);
 		}
 		
-		log.debug("-== Adding algorithm: {}" ,algorithm.getName());
-		log.debug("-== to project: {}", project.getId() + project.getName());
+		log.trace("-== Adding algorithm: {}" ,algorithm.getName());
+		log.trace("-== to project: {}", project.getId() + project.getName());
 		
 		algorithm = algorithmService.addNew(project, algorithm);
 
@@ -164,7 +166,7 @@ public class AlgorithmController {
 			@PathVariable(PATH_VAR_DataName) String dataName,
 			@SessionAttribute(ProjectController.SESSION_CurrentProject) ProjectModel project,
 			@SessionAttribute(SESSION_CurrentAlgorithm) Algorithm algorithm,
-			@RequestParam(value = DatasetController.REQPARAM_ShowCheckboxes, defaultValue = "false") Boolean showCheckboxes,
+			@RequestParam(value = DatasetController.REQPARAM_ShowCheckboxes, defaultValue = "true") Boolean showCheckboxes,
 			RedirectAttributes ra
 			) {
 		log.debug("-== Selecting dataset: {}", dataName);
@@ -186,7 +188,7 @@ public class AlgorithmController {
 				.fromPath(DatasetController.BASE_URL + "/" + dataName)
 				.buildAndExpand(project.getName());
 		
-		/* redirect to DatasetController: /project/{projectName}/dataset/{dataName} */
+		/* redirect to DatasetController.getDataSet: /project/{projectName}/dataset/{dataName} */
 		return new RedirectView(uri.toString());
 	}
 	

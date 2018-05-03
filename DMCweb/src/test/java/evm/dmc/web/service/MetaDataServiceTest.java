@@ -26,7 +26,7 @@ import evm.dmc.api.model.data.MetaData;
 import evm.dmc.api.model.datapreview.DataPreview;
 import evm.dmc.core.api.AttributeType;
 import evm.dmc.core.api.back.data.DataSrcDstType;
-import evm.dmc.web.controllers.project.DatasetTestUtils;
+import evm.dmc.web.controllers.project.utils.DatasetTestUtils;
 import evm.dmc.web.exceptions.ProjectNotFoundException;
 import lombok.extern.slf4j.Slf4j;
 

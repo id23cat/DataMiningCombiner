@@ -1,7 +1,7 @@
 package evm.dmc.web.controllers.project;
 
+import java.util.List;
 import java.util.Optional;
-import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -13,6 +13,7 @@ import evm.dmc.api.model.ProjectModel;
 import evm.dmc.api.model.algorithm.Algorithm;
 import evm.dmc.web.exceptions.AlgorithmNotFoundException;
 import evm.dmc.web.service.AlgorithmService;
+import evm.dmc.web.service.DataStorageService;
 
 @Component
 //@Slf4j
@@ -20,11 +21,13 @@ public class AlgorithmModelAppender {
 	@Autowired
 	private AlgorithmService algorithmService;
 	
+	@Autowired DataStorageService dataStorageService;
+	
 	public Model addAttributesToModel(Model model, ProjectModel project) {
-		Set<Algorithm> algSet = algorithmService.getForProject(project);
-		model.addAttribute(AlgorithmController.MODEL_AlgorithmsSet, algSet);
+		List<Algorithm> algList = algorithmService.getForProjectSortedBy(project, "name");
+		model.addAttribute(AlgorithmController.MODEL_AlgorithmsList, algList);
 				
-		model.addAttribute(AlgorithmController.MODEL_NewAlgorithm, AlgorithmService.getNewAlgorithm());
+		model.addAttribute(AlgorithmController.MODEL_NewAlgorithm, AlgorithmService.getNewAlgorithm(project));
 		
 		return setURLs(model, project);
 	}
@@ -33,6 +36,12 @@ public class AlgorithmModelAppender {
 			throws AlgorithmNotFoundException {
 		model = setURLs(model, project);
 		if(optAlg.isPresent()){
+			if(optAlg.get().getDataSource() != null) {
+				model.addAttribute(DatasetController.MODEL_MetaData, 
+						optAlg.get().getDataSource());
+				model.addAttribute(DatasetController.MODEL_Preview,
+						dataStorageService.getPreview(optAlg.get().getDataSource()));
+			}
 //			model.addAttribute(AlgorithmController.MODEL_Algorithm, optAlg.get());
 //			model.addAttribute(AlgorithmController.SESSION_CurrentAlgorithm, optAlg.get());
 		} else {

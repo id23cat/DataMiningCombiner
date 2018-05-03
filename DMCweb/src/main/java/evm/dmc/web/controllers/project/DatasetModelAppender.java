@@ -25,14 +25,10 @@ public class DatasetModelAppender {
 	
 	@Autowired
 	private MetaDataService metaDataService;
+	
 	public Model addAttributesToModel(Model model, ProjectModel project) {
-//		Set<MetaData> sortedSet = new TreeSet<>(
-//				(meta1, meta2) -> meta1.getName().compareTo(meta2.getName()));
-//		Set<MetaData> dataSets = metaDataService.getForProject(project);
 		List<MetaData> dataSets = metaDataService.getForProjectSortedBy(project, "name");
 		
-//		sortedSet.addAll(dataSets);
-//		model.addAttribute(DatasetController.MODEL_DataSets, sortedSet);
 		model.addAttribute(DatasetController.MODEL_DataSets, dataSets);
 		
 		DataSetProperties datasetProps = new DataSetProperties("","", true);
@@ -45,24 +41,19 @@ public class DatasetModelAppender {
 	}
 	
 	public Model addAttributesToModel(Model model, ProjectModel project, Optional<MetaData> metaData) {
-//		model = addAttributesToModel(model, project);
 		model = setURLs(model, project);
 		if(metaData.isPresent()) {
 			log.debug("-== MetaData is found: {}", metaData.get());
 			log.debug("-== Attributes: {}", metaData.get().getAttributes());
 			model.addAttribute(DatasetController.MODEL_MetaData, metaData.get());
 			model.addAttribute(DatasetController.MODEL_Preview, dataStorageService.getPreview(metaData.get()));
-//			DataSetProperties hasHeader = (DataSetProperties) model.asMap().get(DatasetController.MODEL_DataSetProps);
-//			hasHeader.setHasHeader(metaData.get().getStorage().isHasHeader());
-			
-//			DataSetProperties datasetProps = new DataSetProperties("","", true);
+	
 			DataSetProperties datasetProps = DataSetProperties
 					.builder()
 					.hasHeader(dataStorageService.getDataStorage(metaData.get()).isHasHeader())
 					.build();
 			
 			model.addAttribute(DatasetController.MODEL_DataSetProps, datasetProps);
-//			model.addAttribute(MODEL_HeaderItems, new DataPreview.ItemsList(preview.get().getHeaderItems()));
 		} else {
 			model = addAttributesToModel(model, project);
 		}
@@ -70,17 +61,10 @@ public class DatasetModelAppender {
 	}
 	
 	private Model setURLs(Model model, ProjectModel project) {
-		// setting BASE_URL
 		UriComponents baseUri = UriComponentsBuilder.fromPath(DatasetController.BASE_URL)
 				.buildAndExpand(project.getName());
 		model.addAttribute(DatasetController.MODEL_DataBaseURL, baseUri.toString());
 		
-		// setting URL for uploading new dataset
-//		UriComponents srcUploadUri = UriComponentsBuilder.fromPath(DatasetController.URL_SetSource)
-//				.buildAndExpand(project.getName());
-//		model.addAttribute(DatasetController.MODEL_DataUploadURL, srcUploadUri.toUriString());
-		
-		// setting URL for uploading changes to dataset attributes
 		UriComponents srcAttrdUri = UriComponentsBuilder.fromPath(DatasetController.URL_SetAttributes)
 				.buildAndExpand(project.getName());
 		model.addAttribute(DatasetController.MODEL_DataAttributesURL, srcAttrdUri.toUriString());

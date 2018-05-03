@@ -30,9 +30,9 @@
 			<div class="row">
 				<!-- <form method="post" th:action="${@requestPath.projAddAlgorithm}"
 					th:object="${newAlgorithm}"> -->
-				<form method="post" th:action="${algController.URL_Add_Algorithm}"
+				<form method="post" 
+					th:action="${algController.URL_Add_Algorithm}"
 					th:object="${newAlgorithm}">
-	
 					<div class="col-sm-8">
 						<label for="newName" class="control-label">Add new	algorithm</label>
 						<div class="alert alert-danger"
@@ -44,6 +44,11 @@
 							</span>
 						</div>
 						<div class="input-group">
+							<input type="text"
+								th:field=*{project}
+								th:value=${newAlgorithm.project}
+								hidden=true
+							>
 							<input type="text" 
 								class="form-control"
 								placeholder="New algorithm name" 

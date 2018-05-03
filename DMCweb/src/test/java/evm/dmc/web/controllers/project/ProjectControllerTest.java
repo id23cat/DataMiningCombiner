@@ -148,9 +148,9 @@ public class ProjectControllerTest {
 			.andExpect(status().isOk())
 //			.andExpect(view().name(views.getProject().getNewAlg()))
 			.andExpect(view().name(views.getProject().getMain()))
-			.andExpect(model().attribute("algorithmsSet", Collections.EMPTY_SET))
-			.andExpect(model().attribute("currentProject", project))
-			.andExpect(model().attributeExists("newAlgorithm"))
+			.andExpect(model().attribute(AlgorithmController.MODEL_AlgorithmsList, Collections.EMPTY_LIST))
+			.andExpect(model().attribute(ProjectController.SESSION_CurrentProject, project))
+			.andExpect(model().attributeExists(AlgorithmController.MODEL_NewAlgorithm))
 		;
 		
 	}
@@ -158,7 +158,7 @@ public class ProjectControllerTest {
 	@Test
 	@WithMockUser("Alex")
 	public final void testGetProjectWithNotEmptyAlgorithmsSet() throws Exception {
-		Algorithm alg = getNewAlgorithm();
+		Algorithm alg = getNewAlgorithm(null);
 		alg.setName("Algorithm0");
 		alg.setProject(project);
 		project.getAlgorithms().add(alg);
@@ -171,7 +171,7 @@ public class ProjectControllerTest {
 			.andExpect(view().name(views.getProject().getMain()))
 			.andExpect(model().attribute(ProjectController.SESSION_CurrentProject, project))
 			// algorithm's model data
-			.andExpect(model().attributeExists(AlgorithmController.MODEL_AlgorithmsSet))
+			.andExpect(model().attributeExists(AlgorithmController.MODEL_AlgorithmsList))
 			.andExpect(model().attributeExists(AlgorithmController.MODEL_NewAlgorithm))
 			.andExpect(model().attribute(AlgorithmController.MODEL_AlgBaseURL, 
 					ControllersTestsUtils.setUriComponent(AlgorithmController.BASE_URL, project.getName())
@@ -185,7 +185,7 @@ public class ProjectControllerTest {
 	@Test
 	@WithMockUser("Alex")
 	public final void testPostDelAlgorithm() throws Exception {
-		Algorithm algorithm = getNewAlgorithm();
+		Algorithm algorithm = getNewAlgorithm(null);
 		algorithm.setName("testAlg0");
 		
 		algorithm.setProject(project);

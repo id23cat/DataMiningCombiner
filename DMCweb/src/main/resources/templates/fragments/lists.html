@@ -52,9 +52,11 @@
 		</script>
 	</div>
 	
-	<div th:fragment="selectable_list(id, title, action, backBean, valuesList, selectedValue, previewURL)">
+	<div th:fragment="selectable_datasets_list(id, title, action, backBean, 
+		valuesList, selectedValue, previewURL, preview, modifyDataUrl)">
 		<h3>
 			<span th:text="${title}"></span>
+			<!-- <span th:text="${selectedValue}"></span> -->
 		</h3>
 		<div class="row">
 		<form th:id="'form_select_' + ${id}"
@@ -65,7 +67,7 @@
 				<select
 						class="form-control" th:id="'selector_id_' + ${id}"
 						th:onchange="'selectAndGetPreview(
-								\'#feedback\', 
+								\'#previewTable\', 
 								this.value,
 								\''+ ${action} +'\')'">
 								<!-- \''+ ${previewURL} +'\')'"> -->
@@ -83,18 +85,15 @@
 		</form>
 		</div>
 		
-		<div class="row" id="feedback"></div>
-	<!-- 	<script>
-			/*<![CDATA[*/
-			$(document).ready(function() {
-				selectAndGetPreview(
-						"#feedback",
-						$("#selector_id_[[${id}]] option:selected").text(), 
-						'[[${action}]]'	/* '[[${previewURL}]]' */
-						);
-			});
-			/*]]>*/
-		</script> -->
+		<div class="row" id="previewTable">
+			<div th:if="${selectedValue!=null}"
+				th:insert="fragments/datapreview :: dataPreview(${selectedValue}, ${preview}, ${modifyDataUrl}, true)"
+			>
+		</div>
+			<!-- <script>
+				
+			</script> -->
+		</div>
 		<script th:src="@{/js/selectable_list.js}"></script>
 	</div>
 	

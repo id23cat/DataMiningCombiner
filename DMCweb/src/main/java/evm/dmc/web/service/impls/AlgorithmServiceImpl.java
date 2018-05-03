@@ -79,17 +79,27 @@ public class AlgorithmServiceImpl implements AlgorithmService {
 	
 	@Override
 	@Transactional
-	public Algorithm setDataSource(Algorithm algorithm, String name) throws MetaDataNotFoundException {
+	public Algorithm setDataSource(Algorithm algorithm, String datasetName) throws MetaDataNotFoundException {
 		log.debug("Merge algorithm");
 		algorithm = merge(algorithm);
 		final ProjectModel project = algorithm.getProject();
-		Optional<MetaData> optMeta = metaDataService.getByProjectAndName(project, name);
+		Optional<MetaData> optMeta = metaDataService.getByProjectAndName(project, datasetName);
 		
 		log.debug("-== Setting datasource to algorithm: {}", optMeta.get());
 		algorithm.setDataSource(optMeta.orElseThrow(() ->
 				new MetaDataNotFoundException(
-						"No such dataset {" + name +
+						"No such dataset {" + datasetName +
 						"} for project " + project.getName())));
+		return algorithm;
+	}
+	
+	@Override
+	@Transactional
+	public Algorithm setAttributes(Algorithm algorithm, MetaData metaData) {
+		algorithm = merge(algorithm);
+		if(algorithm.getDataSource().getAttributes().equals(metaData.getAttributes()))
+			return algorithm;
+		algorithm.setSrcAttributes(metaData.getAttributes());
 		return algorithm;
 	}
 	
