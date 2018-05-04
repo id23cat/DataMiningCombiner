@@ -38,7 +38,7 @@ public class AlgorithmModelAppender {
 		if(optAlg.isPresent()){
 			if(optAlg.get().getDataSource() != null) {
 				model.addAttribute(DatasetController.MODEL_MetaData, 
-						optAlg.get().getDataSource());
+						algorithmService.getDataSource(optAlg.get()));
 				model.addAttribute(DatasetController.MODEL_Preview,
 						dataStorageService.getPreview(optAlg.get().getDataSource()));
 			}

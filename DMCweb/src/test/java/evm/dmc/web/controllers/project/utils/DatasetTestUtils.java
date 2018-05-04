@@ -15,7 +15,6 @@ import evm.dmc.api.model.data.DataAttribute;
 import evm.dmc.api.model.data.DataStorageModel;
 import evm.dmc.api.model.data.MetaData;
 import evm.dmc.api.model.datapreview.DataPreview;
-import evm.dmc.web.controllers.project.AlgorithmController;
 import evm.dmc.web.controllers.project.DatasetController;
 
 public class DatasetTestUtils {

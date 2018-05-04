@@ -10,7 +10,6 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.view;
 
-import java.net.URI;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Optional;
@@ -36,8 +35,6 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.web.multipart.MultipartFile;
-import org.springframework.web.util.UriComponents;
-import org.springframework.web.util.UriComponentsBuilder;
 
 import evm.dmc.api.model.ProjectModel;
 import evm.dmc.api.model.account.Account;
@@ -48,7 +45,6 @@ import evm.dmc.web.controllers.project.utils.DatasetTestUtils;
 import evm.dmc.web.service.DataSetProperties;
 import evm.dmc.web.service.DataStorageService;
 import evm.dmc.web.service.MetaDataService;
-import evm.dmc.web.service.RequestPath;
 import evm.dmc.web.service.Views;
 
 @RunWith(SpringRunner.class)

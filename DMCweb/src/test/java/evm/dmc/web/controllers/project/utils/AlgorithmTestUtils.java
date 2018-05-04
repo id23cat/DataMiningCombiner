@@ -1,7 +1,5 @@
 package evm.dmc.web.controllers.project.utils;
 
-import static evm.dmc.web.controllers.project.utils.DatasetTestUtils.TEST_PROJ_NAME;
-import static evm.dmc.web.controllers.project.utils.DatasetTestUtils.cookURL;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.model;
 
 import java.util.Arrays;

@@ -52,7 +52,7 @@
 						<tr class="align-top"> <!-- for Bootstrap 4 -->
 							<th:block
 								th:each="name, stat : ${dataPreviewService.listLine(preview.header, preview.delimiter)}">
-								<th>
+								<th th:with="attribute=${metaData.attributes['__${name}__']}">
 									<span th:text=${name} style="width: 30%"></span>
 									<input type="text" name="name" 
 										th:value="${metaData.attributes['__${name}__'].name}" 
@@ -67,7 +67,8 @@
 										/> <!-- <input type="checkbox" th:field="*{items}" th:value="item"/> -->
 										<label th:for="'chkbx_' + ${stat.index}">Use feature</label>
 									</div>
-									<div th:id="'type_grp_' + ${stat.index}">
+									<div th:id="'type_grp_' + ${stat.index}"
+										th:attrappend="hidden=${metaData.attributes['__${name}__'].checked ? flase : true}">
 										<select
 											class="form-control" 
 												th:id="'type_' + ${stat.index}"
@@ -82,7 +83,10 @@
 									</div>
 									
 									<div th:if="${showCheckboxes} == true">
-										<div th:id="'mul_grp_' + ${stat.index}">
+										<div th:id="'mul_grp_' + ${stat.index}" 
+											th:attrappend="hidden=${attribute.checked &&
+												attribute.type == T(evm.dmc.core.api.AttributeType).NUMERIC ? flase : true}"
+										>
 											<label>Multiplier:</label>
 											<input type="number" 
 												th:id="'num_' + ${stat.index}"

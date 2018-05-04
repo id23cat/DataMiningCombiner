@@ -194,11 +194,13 @@ public class AlgorithmController {
 	
 	@PostMapping(URL_PART_MODIFY_ATTRIBUTES)
 	public RedirectView postSaveDataAtributes(
-			@SessionAttribute(ProjectController.SESSION_CurrentProject) ProjectModel project,
+			@SessionAttribute(SESSION_CurrentAlgorithm) Algorithm algorithm,
 			@Valid @ModelAttribute(DatasetController.MODEL_MetaData) MetaData metaData,
 			HttpServletRequest request
 			) {
-		log.debug("-== Saving properties of MetaData: {}", metaData);
+		log.trace("-== Saving properties of MetaData: {}", metaData);
+		
+		algorithmService.setAttributes(algorithm, metaData);
 		
 		return new RedirectView(request.getHeader("Referer"));
 	}

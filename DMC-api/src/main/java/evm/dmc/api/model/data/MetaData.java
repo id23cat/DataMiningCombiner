@@ -34,7 +34,7 @@ import lombok.Singular;
  *
  */
 @Data
-@Builder
+@Builder(toBuilder=true)
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity

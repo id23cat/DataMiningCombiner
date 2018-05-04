@@ -94,9 +94,25 @@ public class AlgorithmServiceImpl implements AlgorithmService {
 	}
 	
 	@Override
+	public MetaData getDataSource(Algorithm algorithm) {
+		if(algorithm.getSrcAttributes().isEmpty())
+			return algorithm.getDataSource();
+		else {
+			MetaData meta = algorithm.getDataSource().toBuilder().build();
+			log.trace("-== Setting Algorithm's attributes to dataSource");
+			meta.setAttributes(algorithm.getSrcAttributes());
+			return meta;
+		}
+	}
+	
+	@Override
 	@Transactional
 	public Algorithm setAttributes(Algorithm algorithm, MetaData metaData) {
 		algorithm = merge(algorithm);
+		if(algorithm.getDataSource() == null || 
+				algorithm.getDataSource().getName() != metaData.getName()) {
+			setDataSource(algorithm, metaData.getName());
+		}
 		if(algorithm.getDataSource().getAttributes().equals(metaData.getAttributes()))
 			return algorithm;
 		algorithm.setSrcAttributes(metaData.getAttributes());

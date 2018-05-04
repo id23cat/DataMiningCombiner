@@ -11,6 +11,7 @@ public interface AlgorithmService extends EnityGetter<Algorithm>, EntityModifier
 	
 	Algorithm addNew(ProjectModel project, Algorithm algorithm);
 	Algorithm setDataSource(Algorithm algorithm, String datasetName) throws MetaDataNotFoundException;
+	MetaData getDataSource(Algorithm algorithm);
 	
 	Algorithm setAttributes(Algorithm algorithm, MetaData metaData);
 	

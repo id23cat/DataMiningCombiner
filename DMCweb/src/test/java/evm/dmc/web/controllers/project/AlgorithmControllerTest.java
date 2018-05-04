@@ -1,15 +1,11 @@
 package evm.dmc.web.controllers.project;
 
 import static evm.dmc.web.controllers.project.utils.AlgorithmTestUtils.*;
-import static org.hamcrest.CoreMatchers.*;
-import static org.junit.Assert.*;
-import static org.mockito.Matchers.any;
-import static org.mockito.Matchers.eq;
+import static org.mockito.Matchers.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 import java.net.URLEncoder;
-import java.nio.charset.Charset;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
@@ -30,7 +26,6 @@ import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.web.util.NestedServletException;
-import org.springframework.web.util.UriComponents;
 import org.springframework.web.util.UriComponentsBuilder;
 
 import evm.dmc.api.model.algorithm.Algorithm;
@@ -203,10 +198,24 @@ public class AlgorithmControllerTest {
 	}
 	
 	
-	@Test
-	public final void testPostSaveDataAtributes() throws Exception {
-		
-	}
+//	@Test
+//	public final void testPostSaveDataAtributes() throws Exception {
+//		String url = DatasetTestUtils.cookURL(AlgorithmController.URL_ModifyAttributes, 
+//				DatasetTestUtils.TEST_PROJ_NAME);
+//		
+//		String expectedUrl = cookURL(AlgorithmController.BASE_URL,
+//				DatasetTestUtils.TEST_PROJ_NAME, TEST_ALG0_NAME);
+//		
+//		MetaData meta = getMetaData(TEST_session_project);
+//		
+//		this.mockMvc
+//			.perform(post(url)
+//					.with(csrf())
+//					.content(meta)
+//					.sessionAttr(AlgorithmController.SESSION_CurrentAlgorithm, TEST_alg0)
+//					
+//					
+//	}
 	
 	
 

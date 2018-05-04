@@ -99,6 +99,15 @@ public class Algorithm implements Serializable {
 		return Optional.ofNullable(srcAttributes).orElseGet(() -> dataSource.getAttributes());
 	}
 	
+//	public MetaData getDataSource() {
+//		if(srcAttributes.isEmpty())
+//			return dataSource;
+//		else {
+//			dataSource.setAttributes(srcAttributes);
+//			return dataSource;
+//		}
+//	}
+	
 //	public void setDataSource(MetaData meta) {
 //		log.debug("-== Setting MetaData to Algorith: {}", meta);
 //		dataSource = meta;
