@@ -72,7 +72,9 @@
 										<select
 											class="form-control" 
 												th:id="'type_' + ${stat.index}"
-												th:field="*{attributes['__${name}__'].type}">
+												th:field="*{attributes['__${name}__'].type}"
+												
+										>
 											<option
 												th:each="type: ${T(evm.dmc.core.api.AttributeType).values()}"
 												th:value="${type}"
