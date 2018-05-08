@@ -14,21 +14,21 @@
 			Algorithm: <span th:text="${currentAlgorithm.name}"></span>
 	</h3>
 	<ul class="nav nav-pills">
-	    <li class="active"><a data-toggle="pill" href="#datasource">Source</a></li>
-	    <li><a data-toggle="pill" href="#act1">Action 1</a></li>
+	    <li ><a data-toggle="pill" href="#datasource">Source</a></li>
+	    <li class="active"><a data-toggle="pill" href="#act1">Action 1</a></li>
 	    <li><a data-toggle="pill" href="#menu2">Menu 2</a></li>
 	    <li><a data-toggle="pill" href="#menu3">Menu 3</a></li>
   	</ul>
 	<div class="tab-content" 
 			th:with=algorithmController=${T(evm.dmc.web.controllers.project.AlgorithmController)}>
-		<span th:text="${__${algorithmController.MODEL_SelDataURL}__}"></span>
-		<div id="datasource" class="tab-pane fade in active">
+		<!-- <span th:text="${__${algorithmController.MODEL_SelDataURL}__}"></span> -->
+		<div id="datasource" class="tab-pane fade">
 			<div th:insert="project/datasourcesList 
 				:: datasourcesListSelectable(${__${algorithmController.MODEL_SelDataURL}__})">
 			</div>
 		</div>
-		<div id="act1" class="tab-pane fade">
-			Action 1
+		<div id="act1" class="tab-pane fade in active">
+			<div th:insert="fragments/algorithm/functionsTree :: functionsTree"></div>
 		</div>
 		
 	</div>

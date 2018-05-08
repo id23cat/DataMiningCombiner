@@ -44,12 +44,14 @@ public class AlgorithmController {
 	private final static String URL_PART_SELECT_DATASET = "/selectDataset";
 	private final static String URL_PART_DELETE_ALGORITHM = "/delete";
 	private final static String URL_PART_ADD_ALGORITHM = "/add";
+//	private final static String URL_PART_GET_FUNCTIONS_LIST = "/getfunlist";
 	
 	public final static String BASE_URL = ProjectController.URL_GetPorject + URL_PART_ALGORITHM;
 	public final static String URL_Add_Algorithm = BASE_URL + URL_PART_ADD_ALGORITHM;
 	public final static String URL_Del_Algorithm = BASE_URL + URL_PART_DELETE_ALGORITHM;
 	public final static String URL_ModifyAttributes = BASE_URL + URL_PART_MODIFY_ATTRIBUTES;
 	public final static String URL_Select_DataSet = BASE_URL + URL_PART_SELECT_DATASET;
+//	public final static String URL_Get_Functions_List = BASE_URL + URL_PART_GET_FUNCTIONS_LIST;
 	
 	public static final String PATH_VAR_AlgorithmName = "algName";
 	public static final String PATH_VAR_DataName = DatasetController.PATH_VAR_DataName;
@@ -65,6 +67,7 @@ public class AlgorithmController {
 	public static final String MODEL_URL_DelAlgorithm = "algDelete";
 	public static final String MODEL_AlgorithmsList = "algorithmsSet";
 	public static final String MODEL_NewAlgorithm = "newAlgorithm";
+	public static final String MODEL_FunctionsList = "functionsList";
 //	public static final String MODEL_CurrentAlgorithm = "currentAlgorithm";
 	
 	@Autowired
@@ -203,6 +206,12 @@ public class AlgorithmController {
 		algorithmService.setAttributes(algorithm, metaData);
 		
 		return new RedirectView(request.getHeader("Referer"));
+	}
+	
+	@GetMapping("/gettree") 
+	public String getTestTreePage() {
+		
+		return "project/algorithm/algTest";
 	}
 	
 }

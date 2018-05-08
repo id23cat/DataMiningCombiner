@@ -1,12 +1,15 @@
 package evm.dmc.web.service.impls;
 
+import java.util.List;
 import java.util.Optional;
 import java.util.stream.Stream;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import evm.dmc.api.model.FrameworkModel;
 import evm.dmc.api.model.FunctionDstModel;
@@ -28,6 +31,12 @@ public class FrameworkFrontendServiceImpl implements FrameworkFrontendService {
 			@Autowired FunctionFrontendRepository functionRepo) {
 		this.frameworkRepo = frameworkRepo;
 		this.functionRepo = functionRepo;
+	}
+	
+	@Override
+	@Transactional
+	public List<FrameworkModel> getFrameworksList() {
+		return frameworkRepo.findAll(new Sort("name"));
 	}
 
 	@Override

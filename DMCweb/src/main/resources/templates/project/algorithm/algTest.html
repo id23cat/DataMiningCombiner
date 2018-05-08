@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layouts/layout}">
+
+<head>
+    <title>Algorithm</title>
+    <!-- <script th:src="@{/js/bootstrap-confirmation.min.js}"></script> -->
+</head>
+<body>
+
+<th:block layout:fragment="content">
+	<h3>
+			Test Page: <span th:text="${currentAlgorithm.name}"></span>
+	</h3>
+			
+			<div th:insert="fragments/algorithm/functionsTree :: functionsTree"></div>
+</th:block>
+ 
+</body>
+</html>

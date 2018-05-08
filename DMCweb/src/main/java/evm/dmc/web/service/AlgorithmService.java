@@ -1,6 +1,9 @@
 package evm.dmc.web.service;
 
 
+import java.util.List;
+
+import evm.dmc.api.model.FrameworkModel;
 import evm.dmc.api.model.ProjectModel;
 import evm.dmc.api.model.algorithm.Algorithm;
 import evm.dmc.api.model.data.MetaData;
@@ -14,6 +17,8 @@ public interface AlgorithmService extends EnityGetter<Algorithm>, EntityModifier
 	MetaData getDataSource(Algorithm algorithm);
 	
 	Algorithm setAttributes(Algorithm algorithm, MetaData metaData);
+	
+	List<FrameworkModel> getFrameworksList();
 	
 	
 	static Algorithm getNewAlgorithm(ProjectModel project) {

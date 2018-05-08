@@ -1,5 +1,6 @@
 package evm.dmc.web.service.impls;
 
+import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -10,12 +11,14 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import evm.dmc.api.model.FrameworkModel;
 import evm.dmc.api.model.ProjectModel;
 import evm.dmc.api.model.algorithm.Algorithm;
 import evm.dmc.api.model.data.MetaData;
 import evm.dmc.model.repositories.AlgorithmRepository;
 import evm.dmc.web.exceptions.MetaDataNotFoundException;
 import evm.dmc.web.service.AlgorithmService;
+import evm.dmc.web.service.FrameworkFrontendService;
 import evm.dmc.web.service.MetaDataService;
 import evm.dmc.web.service.ProjectService;
 import lombok.extern.slf4j.Slf4j;
@@ -33,6 +36,9 @@ public class AlgorithmServiceImpl implements AlgorithmService {
 	
 	@Autowired
 	MetaDataService metaDataService;
+	
+	@Autowired
+	FrameworkFrontendService frameworkService;
 	
 	@Autowired
 	EntityManager em;
@@ -123,6 +129,12 @@ public class AlgorithmServiceImpl implements AlgorithmService {
 	@Transactional
 	public Algorithm save(Algorithm algorithm) {
 		return algorithmRepository.save(algorithm);
+	}
+	
+	@Override
+	@Transactional
+	public List<FrameworkModel> getFrameworksList() {
+		return frameworkService.getFrameworksList();
 	}
 
 	private Algorithm merge(Algorithm algorithm) {

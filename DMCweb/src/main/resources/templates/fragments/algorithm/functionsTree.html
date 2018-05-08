@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layouts/sidebarlayout}">
+
+<body>
+	<div th:fragment="functionsTree">
+		<div th:id="tree"></div>
+		<!-- <script th:src="@{/webjars/bootstrap-toggle/2.2.2/js/bootstrap-toggle.min.js}"></script> -->
+		<script th:src="@{/webjars/bootstrap-toggle/2.2.2/js/bootstrap-treeview.js}"></script>
+		<script>
+			$(document).ready(function () {
+	            $('#tree').tree({
+	                uiLibrary: 'bootstrap',
+	                dataSource: '/Locations/Get',
+	                primaryKey: 'id',
+	                imageUrlField: 'flagUrl'
+	            });
+	        });
+		</script>
+	</div>
+
+<body>
+</html>

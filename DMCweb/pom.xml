@@ -239,8 +239,21 @@
 			<version>${DMC-api.version}</version>
 		</dependency>
 		
+		<!-- https://mvnrepository.com/artifact/org.webjars.npm/github-com-atatanasov-gijgo -->
+<!-- 		<dependency>
+		    <groupId>org.webjars.npm</groupId>
+		    <artifactId>github-com-atatanasov-gijgo</artifactId>
+		    <version>1.9.6</version>
+		</dependency> -->
 		
-		
+		<!-- https://mvnrepository.com/artifact/org.webjars.bower/patternfly-bootstrap-treeview -->
+		<dependency>
+		    <groupId>org.webjars.bower</groupId>
+		    <artifactId>patternfly-bootstrap-treeview</artifactId>
+		    <version>2.1.5</version>
+		</dependency>
+				
+				
 	</dependencies>
 
 	<build>
