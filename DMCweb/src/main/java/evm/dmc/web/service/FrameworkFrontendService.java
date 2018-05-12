@@ -8,9 +8,11 @@ import evm.dmc.api.model.FrameworkModel;
 import evm.dmc.api.model.FunctionDstModel;
 import evm.dmc.api.model.FunctionModel;
 import evm.dmc.api.model.FunctionSrcModel;
+import evm.dmc.web.service.dto.TreeNodeDTO;
 
 public interface FrameworkFrontendService {
 	List<FrameworkModel> getFrameworksList();
+	List<TreeNodeDTO> getFrameworksAsTreeNodes();
 	Optional<FrameworkModel> getFramework(String name);
 	Optional<FunctionModel> getFunction(String name);
 	Stream<FunctionModel> findFunctionByWord(String word);

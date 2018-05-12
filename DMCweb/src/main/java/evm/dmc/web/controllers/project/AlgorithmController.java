@@ -1,11 +1,13 @@
 package evm.dmc.web.controllers.project;
 
+import java.util.List;
 import java.util.Optional;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -13,8 +15,10 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.SessionAttribute;
 import org.springframework.web.bind.annotation.SessionAttributes;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
@@ -22,14 +26,18 @@ import org.springframework.web.servlet.view.RedirectView;
 import org.springframework.web.util.UriComponents;
 import org.springframework.web.util.UriComponentsBuilder;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+
 import evm.dmc.api.model.ProjectModel;
 import evm.dmc.api.model.algorithm.Algorithm;
 import evm.dmc.api.model.data.MetaData;
 import evm.dmc.web.controllers.CheckboxNamesBean;
 import evm.dmc.web.exceptions.AlgorithmNotFoundException;
 import evm.dmc.web.service.AlgorithmService;
+import evm.dmc.web.service.JsonService;
 import evm.dmc.web.service.RequestPath;
 import evm.dmc.web.service.Views;
+import evm.dmc.web.service.dto.TreeNodeDTO;
 import lombok.extern.slf4j.Slf4j;
 
 @Controller
@@ -44,6 +52,7 @@ public class AlgorithmController {
 	private final static String URL_PART_SELECT_DATASET = "/selectDataset";
 	private final static String URL_PART_DELETE_ALGORITHM = "/delete";
 	private final static String URL_PART_ADD_ALGORITHM = "/add";
+	private final static String URL_PART_SELECT_FUNCTION = "/selectFunction";
 //	private final static String URL_PART_GET_FUNCTIONS_LIST = "/getfunlist";
 	
 	public final static String BASE_URL = ProjectController.URL_GetPorject + URL_PART_ALGORITHM;
@@ -51,6 +60,7 @@ public class AlgorithmController {
 	public final static String URL_Del_Algorithm = BASE_URL + URL_PART_DELETE_ALGORITHM;
 	public final static String URL_ModifyAttributes = BASE_URL + URL_PART_MODIFY_ATTRIBUTES;
 	public final static String URL_Select_DataSet = BASE_URL + URL_PART_SELECT_DATASET;
+	public final static String URL_Select_Function = BASE_URL + URL_PART_SELECT_FUNCTION;
 //	public final static String URL_Get_Functions_List = BASE_URL + URL_PART_GET_FUNCTIONS_LIST;
 	
 	public static final String PATH_VAR_AlgorithmName = "algName";
@@ -65,6 +75,7 @@ public class AlgorithmController {
 	public static final String MODEL_AlgBaseURL = "algBaseURL";
 	public static final String MODEL_SelDataURL = "selDataURL";
 	public static final String MODEL_URL_DelAlgorithm = "algDelete";
+	public static final String MODEL_URL_SelectFunction = "selFunction";
 	public static final String MODEL_AlgorithmsList = "algorithmsSet";
 	public static final String MODEL_NewAlgorithm = "newAlgorithm";
 	public static final String MODEL_FunctionsList = "functionsList";
@@ -85,6 +96,9 @@ public class AlgorithmController {
 	@Autowired
 	private DatasetModelAppender datasetModelAppender;
 	
+	@Autowired
+	private JsonService jsonService;
+	
 	@ModelAttribute(ProjectController.MODEL_BackBean)
 	public CheckboxNamesBean backingBeanForCheckboxes() {
 		return new CheckboxNamesBean();
@@ -103,7 +117,7 @@ public class AlgorithmController {
 			@PathVariable(PATH_VAR_AlgorithmName) String algName,
 			@ModelAttribute(ProjectController.SESSION_CurrentProject) ProjectModel project,
 			Model model,
-			HttpServletRequest request) throws AlgorithmNotFoundException {
+			HttpServletRequest request) throws AlgorithmNotFoundException, JsonProcessingException {
 		
 		log.trace("-== Getting algorithm");
 		Optional<Algorithm> optAlgorithm = algorithmService.getByProjectAndName(project, algName);
@@ -209,9 +223,21 @@ public class AlgorithmController {
 	}
 	
 	@GetMapping("/gettree") 
-	public String getTestTreePage() {
+	public String getTestTreePage(Model model,
+			@SessionAttribute(ProjectController.SESSION_CurrentProject) ProjectModel project)
+					throws JsonProcessingException {
+		List<TreeNodeDTO> functionsListDTO = algorithmService.getFrameworksAsTreeNodes();
+		model.addAttribute(MODEL_FunctionsList, jsonService.frameworksListToTreeView(functionsListDTO));
+		modelAppender.addAttributesToModel(model, project);
 		
 		return "project/algorithm/algTest";
+	}
+	
+	@PostMapping(value=URL_PART_SELECT_FUNCTION, consumes=MediaType.APPLICATION_JSON_VALUE)
+	@ResponseBody
+	public String postSelectedFunction(@RequestBody TreeNodeDTO function) { //@ModelAttribute("functionDTO") TreeNodeDTO function
+		log.debug("Returned DTO: {}", function);
+		return "Ok";
 	}
 	
 }

@@ -6,12 +6,17 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 import java.net.URLEncoder;
+import java.util.Collections;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
+import javax.websocket.Decoder.Text;
+
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.mockito.Matchers;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
@@ -34,8 +39,10 @@ import evm.dmc.api.model.datapreview.DataPreview;
 import evm.dmc.web.exceptions.AlgorithmNotFoundException;
 import evm.dmc.web.service.AlgorithmService;
 import evm.dmc.web.service.DataStorageService;
+import evm.dmc.web.service.JsonService;
 import evm.dmc.web.service.MetaDataService;
 import evm.dmc.web.service.Views;
+import evm.dmc.web.service.dto.TreeNodeDTO;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest(webEnvironment = WebEnvironment.RANDOM_PORT, properties = "management.port=-1")
@@ -53,6 +60,9 @@ public class AlgorithmControllerTest {
 	
 	@MockBean
 	private MetaDataService metaDataService;
+	
+	@Autowired
+	private JsonService jsonService;
 	
 	@MockBean
 	private DataStorageService dataStorageService;
@@ -97,12 +107,21 @@ public class AlgorithmControllerTest {
 		Mockito
 			.when(algorithmService.getByProjectAndName(eq(TEST_session_project), eq(TEST_ALG0_NAME)))
 			.thenReturn(Optional.of(TEST_alg0));
+		List<TreeNodeDTO> funcList = getFunctionsListDTO();
+		Mockito
+			.when(algorithmService.getFrameworksAsTreeNodes())
+			.thenReturn(funcList);
+		Mockito
+			.when(algorithmService.getDataSource(Optional.of(TEST_alg0)))
+			.thenReturn(Optional.ofNullable(TEST_alg0.getDataSource()));
 		
 		ResultActions checkResult = this.mockMvc.perform(get(url)
 				.sessionAttr(ProjectController.SESSION_CurrentProject, TEST_session_project))
 		.andExpect(status().isOk())
 		.andExpect(view().name(views.project.algorithm.algorithm))
 		.andExpect(model().attribute(AlgorithmController.SESSION_CurrentAlgorithm, TEST_alg0))
+		.andExpect(model().attribute(AlgorithmController.MODEL_FunctionsList, 
+				jsonService.frameworksListToTreeView(funcList)))
 		;
 		
 		// model attributes set in addAttributesToModel
@@ -122,6 +141,14 @@ public class AlgorithmControllerTest {
 		Mockito
 			.when(algorithmService.getByProjectAndName(eq(TEST_session_project), eq(TEST_ALG0_NAME)))
 			.thenReturn(Optional.of(TEST_alg0));
+		List<TreeNodeDTO> funcList = getFunctionsListDTO();
+		Mockito
+			.when(algorithmService.getFrameworksAsTreeNodes())
+			.thenReturn(funcList);
+		
+		Mockito
+			.when(algorithmService.getDataSource(Optional.of(TEST_alg0)))
+			.thenReturn(Optional.ofNullable(TEST_alg0.getDataSource()));
 		
 		DataPreview preview = getDataPreview();
 		Mockito
@@ -133,6 +160,8 @@ public class AlgorithmControllerTest {
 			.andExpect(status().isOk())
 			.andExpect(view().name(views.project.algorithm.algorithm))
 			.andExpect(model().attribute(AlgorithmController.SESSION_CurrentAlgorithm, TEST_alg0))
+			.andExpect(model().attribute(AlgorithmController.MODEL_FunctionsList, 
+					jsonService.frameworksListToTreeView(funcList)))
 			;
 		
 		// model attributes set in addAttributesToModel

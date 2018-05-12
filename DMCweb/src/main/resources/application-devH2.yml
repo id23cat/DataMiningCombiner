@@ -1,4 +1,12 @@
 # devH2 -- H2 development profile
+management:
+  endpoints:
+    enabled-by-default: true
+  endpoint:
+    health:
+      enabled: true
+    beans:
+      enabled: true
 
 spring:
   include:

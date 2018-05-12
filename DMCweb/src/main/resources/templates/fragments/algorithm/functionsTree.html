@@ -4,19 +4,18 @@
       layout:decorate="~{layouts/sidebarlayout}">
 
 <body>
-	<div th:fragment="functionsTree">
+	<div th:fragment="functionsTree(treeData, actionURL)">
 		<div th:id="tree"></div>
-		<!-- <script th:src="@{/webjars/bootstrap-toggle/2.2.2/js/bootstrap-toggle.min.js}"></script> -->
-		<script th:src="@{/webjars/bootstrap-toggle/2.2.2/js/bootstrap-treeview.js}"></script>
-		<script>
+		<div th:id="selected"></div>
+		<link itemprop="url" th:href="@{/css/bootstrap-treeview.css}" rel="stylesheet" media="screen" />
+		<script th:src="@{/js/bootstrap-treeview.js}"></script>
+		<script th:src="@{/js/functionsTreeView.js}"></script>
+		<script th:inline="javascript" type="text/javascript">
+		/*<![CDATA[*/
 			$(document).ready(function () {
-	            $('#tree').tree({
-	                uiLibrary: 'bootstrap',
-	                dataSource: '/Locations/Get',
-	                primaryKey: 'id',
-	                imageUrlField: 'flagUrl'
-	            });
+	            insertFunctionsTree(/*[[${treeData}]]*/, /*[[${actionURL}]]*/);
 	        });
+		/*]]>*/
 		</script>
 	</div>
 

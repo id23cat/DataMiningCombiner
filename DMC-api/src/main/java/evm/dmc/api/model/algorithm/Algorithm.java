@@ -94,19 +94,21 @@ public class Algorithm implements Serializable {
 	public Map<String, DataAttribute> getSrcAttributes() {
 		if(dataSource == null)
 			return null;
-		if(srcAttributes != null && srcAttributes.isEmpty())
-			srcAttributes = null;
-		return Optional.ofNullable(srcAttributes).orElseGet(() -> dataSource.getAttributes());
+//		if(srcAttributes != null && srcAttributes.isEmpty())
+//			srcAttributes = null;
+//		return Optional.ofNullable(srcAttributes).orElseGet(() -> dataSource.getAttributes());
+		return srcAttributes.isEmpty() ? dataSource.getAttributes() : srcAttributes; 
 	}
 	
-//	public MetaData getDataSource() {
-//		if(srcAttributes.isEmpty())
-//			return dataSource;
-//		else {
-//			dataSource.setAttributes(srcAttributes);
-//			return dataSource;
-//		}
-//	}
+	public MetaData getDataSource() {
+		if(dataSource == null)
+			return null;
+		MetaData meta = dataSource.toBuilder().build();
+		if(!srcAttributes.isEmpty()){
+			meta.setAttributes(srcAttributes);
+		}
+		return meta;
+	}
 	
 //	public void setDataSource(MetaData meta) {
 //		log.debug("-== Setting MetaData to Algorith: {}", meta);

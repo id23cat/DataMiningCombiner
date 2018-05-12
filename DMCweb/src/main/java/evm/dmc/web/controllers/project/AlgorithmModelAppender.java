@@ -9,17 +9,25 @@ import org.springframework.ui.Model;
 import org.springframework.web.util.UriComponents;
 import org.springframework.web.util.UriComponentsBuilder;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+
 import evm.dmc.api.model.ProjectModel;
 import evm.dmc.api.model.algorithm.Algorithm;
+import evm.dmc.api.model.data.MetaData;
 import evm.dmc.web.exceptions.AlgorithmNotFoundException;
 import evm.dmc.web.service.AlgorithmService;
 import evm.dmc.web.service.DataStorageService;
+import evm.dmc.web.service.JsonService;
+import evm.dmc.web.service.dto.TreeNodeDTO;
 
 @Component
 //@Slf4j
 public class AlgorithmModelAppender {
 	@Autowired
 	private AlgorithmService algorithmService;
+	
+	@Autowired
+	private JsonService jsonService;
 	
 	@Autowired DataStorageService dataStorageService;
 	
@@ -33,17 +41,27 @@ public class AlgorithmModelAppender {
 	}
 	
 	public Model addAttributesToModel(Model model, ProjectModel project, Optional<Algorithm> optAlg) 
-			throws AlgorithmNotFoundException {
+			throws AlgorithmNotFoundException, JsonProcessingException {
 		model = setURLs(model, project);
 		if(optAlg.isPresent()){
-			if(optAlg.get().getDataSource() != null) {
-				model.addAttribute(DatasetController.MODEL_MetaData, 
-						algorithmService.getDataSource(optAlg.get()));
-				model.addAttribute(DatasetController.MODEL_Preview,
-						dataStorageService.getPreview(optAlg.get().getDataSource()));
+//			if(optAlg.get().getDataSource() != null) {
+//				model.addAttribute(DatasetController.MODEL_MetaData, 
+//						algorithmService.getDataSource(optAlg.get()));
+//				model.addAttribute(DatasetController.MODEL_Preview,
+//						dataStorageService.getPreview(optAlg.get().getDataSource()));
+//			}
+			Optional<MetaData> optSource = algorithmService.getDataSource(optAlg);
+			if(optSource.isPresent()) {
+				model.addAttribute(DatasetController.MODEL_MetaData, optSource.get());
+				model.addAttribute(DatasetController.MODEL_Preview, 
+						dataStorageService.getPreview(optSource.get()));
 			}
+			
 //			model.addAttribute(AlgorithmController.MODEL_Algorithm, optAlg.get());
 //			model.addAttribute(AlgorithmController.SESSION_CurrentAlgorithm, optAlg.get());
+			
+			List<TreeNodeDTO> functionsListDTO = algorithmService.getFrameworksAsTreeNodes();
+			model.addAttribute(AlgorithmController.MODEL_FunctionsList, jsonService.frameworksListToTreeView(functionsListDTO));
 		} else {
 //			return views.getErrors().getNotFound();
 			throw new AlgorithmNotFoundException("No such algorithm");
@@ -63,6 +81,9 @@ public class AlgorithmModelAppender {
 		
 		model.addAttribute(AlgorithmController.MODEL_URL_DelAlgorithm, 
 				setUriComponent(AlgorithmController.URL_Del_Algorithm, project.getName()).toUriString());
+		
+		model.addAttribute(AlgorithmController.MODEL_URL_SelectFunction,
+				setUriComponent(AlgorithmController.URL_Select_Function, project.getName()).toUriString());
 		
 		return model;
 	}

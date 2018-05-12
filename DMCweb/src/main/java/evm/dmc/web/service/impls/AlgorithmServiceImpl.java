@@ -21,6 +21,7 @@ import evm.dmc.web.service.AlgorithmService;
 import evm.dmc.web.service.FrameworkFrontendService;
 import evm.dmc.web.service.MetaDataService;
 import evm.dmc.web.service.ProjectService;
+import evm.dmc.web.service.dto.TreeNodeDTO;
 import lombok.extern.slf4j.Slf4j;
 
 @Service
@@ -91,7 +92,6 @@ public class AlgorithmServiceImpl implements AlgorithmService {
 		final ProjectModel project = algorithm.getProject();
 		Optional<MetaData> optMeta = metaDataService.getByProjectAndName(project, datasetName);
 		
-		log.debug("-== Setting datasource to algorithm: {}", optMeta.get());
 		algorithm.setDataSource(optMeta.orElseThrow(() ->
 				new MetaDataNotFoundException(
 						"No such dataset {" + datasetName +
@@ -99,16 +99,24 @@ public class AlgorithmServiceImpl implements AlgorithmService {
 		return algorithm;
 	}
 	
+//	@Override
+//	public MetaData getDataSource(Algorithm algorithm) {
+//		if(algorithm.getSrcAttributes().isEmpty())
+//			return algorithm.getDataSource();
+//		else {
+//			MetaData meta = algorithm.getDataSource().toBuilder().build();
+//			log.trace("-== Setting Algorithm's attributes to dataSource");
+//			meta.setAttributes(algorithm.getSrcAttributes());
+//			return meta;
+//		}
+//	}
+	
 	@Override
-	public MetaData getDataSource(Algorithm algorithm) {
-		if(algorithm.getSrcAttributes().isEmpty())
-			return algorithm.getDataSource();
-		else {
-			MetaData meta = algorithm.getDataSource().toBuilder().build();
-			log.trace("-== Setting Algorithm's attributes to dataSource");
-			meta.setAttributes(algorithm.getSrcAttributes());
-			return meta;
+	public Optional<MetaData> getDataSource(Optional<Algorithm> optAlgorithm) {
+		if(! optAlgorithm.isPresent()) {
+			return Optional.ofNullable(null);
 		}
+		return optAlgorithm.map(alg -> alg.getDataSource());
 	}
 	
 	@Override
@@ -135,6 +143,12 @@ public class AlgorithmServiceImpl implements AlgorithmService {
 	@Transactional
 	public List<FrameworkModel> getFrameworksList() {
 		return frameworkService.getFrameworksList();
+	}
+	
+	@Override
+	@Transactional
+	public List<TreeNodeDTO> getFrameworksAsTreeNodes() {
+		return frameworkService.getFrameworksAsTreeNodes();
 	}
 
 	private Algorithm merge(Algorithm algorithm) {

@@ -20,12 +20,14 @@ import org.hibernate.validator.constraints.Length;
 import org.hibernate.validator.constraints.NotBlank;
 
 import lombok.AccessLevel;
+import lombok.Builder;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.Setter;
 import lombok.ToString;
 
 @Data
+//@Builder
 @Entity
 @Table(name = "Framework")
 @EqualsAndHashCode(exclude={"functions"})

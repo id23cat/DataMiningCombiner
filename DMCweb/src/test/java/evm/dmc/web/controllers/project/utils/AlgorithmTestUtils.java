@@ -2,7 +2,9 @@ package evm.dmc.web.controllers.project.utils;
 
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.model;
 
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
@@ -13,6 +15,7 @@ import evm.dmc.api.model.datapreview.DataPreview;
 import evm.dmc.web.controllers.project.AlgorithmController;
 import evm.dmc.web.controllers.project.DatasetController;
 import evm.dmc.web.controllers.project.ProjectController;
+import evm.dmc.web.service.dto.TreeNodeDTO;
 
 public class AlgorithmTestUtils extends DatasetTestUtils{
 	public static final String TEST_ALG0_NAME = "alg0";
@@ -34,6 +37,36 @@ public class AlgorithmTestUtils extends DatasetTestUtils{
 			.project(TEST_session_project)
 			.build();
 	
+	public static final List<TreeNodeDTO> functionsListDTO = Collections.singletonList(TreeNodeDTO.builder()
+			.text("TestFramework")
+			.id(0L)
+			.nodes(Collections.singletonList(TreeNodeDTO.builder()
+					.text("TestFunction")
+					.id(1L)
+					.build()))
+			.build());
+	
+	public static final List<TreeNodeDTO> getFunctionsListDTO() {
+		List<TreeNodeDTO> list = new ArrayList<>();
+		list.add(TreeNodeDTO.builder()
+			.text("TestFramework")
+			.id(0L)
+			.nodes(Collections.singletonList(TreeNodeDTO.builder()
+					.text("TestFunction")
+					.id(0L)
+					.build()))
+			.build());
+		list.add(TreeNodeDTO.builder()
+			.text("TestFramework")
+			.id(1L)
+			.nodes(Collections.singletonList(TreeNodeDTO.builder()
+					.text("TestFunction1")
+					.id(1L)
+					.build()))
+			.build());
+		return list;
+	}
+	
 	public static final List<Algorithm> TEST_algList = Arrays.asList(TEST_alg0, TEST_alg2, TEST_alg2);
 	
 	public static final ResultActions assertAlgorithmURLs(ResultActions resultActions, String projectName) 
@@ -47,6 +80,8 @@ public class AlgorithmTestUtils extends DatasetTestUtils{
 		.andExpect(model().attribute(AlgorithmController.MODEL_URL_DelAlgorithm, 
 				cookURL(AlgorithmController.URL_Del_Algorithm, projectName)))
 		.andExpect(model().attributeExists(ProjectController.MODEL_BackBean))
+		.andExpect(model().attribute(AlgorithmController.MODEL_URL_SelectFunction, 
+				cookURL(AlgorithmController.URL_Select_Function, projectName)))
 		;
 	}
 	
@@ -67,6 +102,8 @@ public class AlgorithmTestUtils extends DatasetTestUtils{
 						.andExpect(model().attributeDoesNotExist(DatasetController.MODEL_Preview))
 						;
 			}
+			
+			
 		}
 		return resultActions;
 	}

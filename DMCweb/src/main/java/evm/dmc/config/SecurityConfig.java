@@ -42,6 +42,10 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 			"/h2-console/**"
 	};
 	
+	private static final String[] PUBLIC_ACTUATOR = {
+			"/management/**"
+	};
+	
 	private static final String[] ADMIN_MATCHERS = {
 			RequestPath.adminHome,
 			RequestPath.register
@@ -94,6 +98,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 		http.csrf().disable()
 			.authorizeRequests()
 				.antMatchers(PUBLIC_MATCHERS).permitAll()
+				.antMatchers(PUBLIC_ACTUATOR).permitAll()
 				.antMatchers(ADMIN_MATCHERS).hasAuthority(Role.ADMIN.getName())
 				.antMatchers(USER_MATCHERS).hasAuthority(Role.USER.getName())
 				.anyRequest().authenticated()

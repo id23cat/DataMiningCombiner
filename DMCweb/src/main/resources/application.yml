@@ -69,9 +69,6 @@ dmc:
       linesCount: 7
       retriesCount: 3
       fileWaitTimeoutMS: 500
-    
-
-    
 
   
 #welcome:

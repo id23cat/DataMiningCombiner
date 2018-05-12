@@ -2,6 +2,7 @@ package evm.dmc.web.service.impls;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,6 +20,7 @@ import evm.dmc.api.model.FunctionType;
 import evm.dmc.model.repositories.FrameworkFrontendRepository;
 import evm.dmc.model.repositories.FunctionFrontendRepository;
 import evm.dmc.web.service.FrameworkFrontendService;
+import evm.dmc.web.service.dto.TreeNodeDTO;
 
 @Service
 @Scope(value = ConfigurableBeanFactory.SCOPE_SINGLETON)
@@ -37,6 +39,35 @@ public class FrameworkFrontendServiceImpl implements FrameworkFrontendService {
 	@Transactional
 	public List<FrameworkModel> getFrameworksList() {
 		return frameworkRepo.findAll(new Sort("name"));
+	}
+	
+	@Override
+	@Transactional
+	public List<TreeNodeDTO> getFrameworksAsTreeNodes() {
+		// Recursively convert FrameworkModel->Set<Function> to TreeNodeDTO 
+		return frameworkRepo.streamAll()
+			.parallel()
+			.map((fm) -> {
+					return TreeNodeDTO
+						.builder()
+						.id(fm.getId())
+						.text(fm.getName())
+						.nodes(fm.getFunctions()
+								.stream()
+								.parallel()
+								.map((func) -> {
+									return TreeNodeDTO
+											.builder()
+											.id(func.getId())
+											.text(func.getName())
+											.tooltip(func.getDescription())
+											.selectable(true)
+											.build();
+								})
+								.collect(Collectors.toList()))
+						.build();
+				})
+				.collect(Collectors.toList());
 	}
 
 	@Override

@@ -1,12 +1,15 @@
 package evm.dmc.web.service;
 
 import static org.hamcrest.CoreMatchers.equalTo;
+import static org.hamcrest.CoreMatchers.hasItem;
 import static org.junit.Assert.*;
 
+import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.stream.Stream;
 
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,6 +28,7 @@ import evm.dmc.api.model.FunctionModel;
 import evm.dmc.api.model.FunctionSrcModel;
 import evm.dmc.web.exceptions.FrameworkNotFoundException;
 import evm.dmc.web.service.FrameworkFrontendService;
+import evm.dmc.web.service.dto.TreeNodeDTO;
 import lombok.extern.slf4j.Slf4j;
 
 @RunWith(SpringRunner.class)
@@ -38,10 +42,11 @@ import lombok.extern.slf4j.Slf4j;
 public class FrameworkFrontendServiceTest {
 	@Autowired
 	private FrameworkFrontendService service;
+	
+	private final static String wekaName = "wekaFramework";
 
 	@Test
 	public final void testGetFramework() throws FrameworkNotFoundException {
-		String wekaName = "wekaFramework";
 		assertNotNull(service);
 		FrameworkModel wekaModel = new FrameworkModel();
 		wekaModel.setName(wekaName);
@@ -55,6 +60,17 @@ public class FrameworkFrontendServiceTest {
 		assertTrue(wekaFramework.isPresent());
 		log.debug("=== {}", wekaFramework.get().toString());
 		assertTrue(wekaFramework.get().isSame(wekaModel));
+	}
+	
+	@Test
+	@Ignore
+	public final void testGetFrameworksAsTreeNodes() {
+		TreeNodeDTO testTree = TreeNodeDTO.builder()
+				.id(1L)
+				.text(wekaName)
+				.build();
+		List<TreeNodeDTO> tree = service.getFrameworksAsTreeNodes();
+		assertThat(tree, hasItem(testTree));
 	}
 
 	@Test

@@ -28,7 +28,9 @@
 			</div>
 		</div>
 		<div id="act1" class="tab-pane fade in active">
-			<div th:insert="fragments/algorithm/functionsTree :: functionsTree"></div>
+			<div th:insert="fragments/algorithm/functionsTree 
+				:: functionsTree(${__${algorithmController.MODEL_FunctionsList}__}, 
+								${__${algorithmController.MODEL_URL_SelectFunction}__})"></div>
 		</div>
 		
 	</div>

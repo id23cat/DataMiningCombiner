@@ -10,11 +10,16 @@
 <body>
 
 <th:block layout:fragment="content">
-	<h3>
-			Test Page: <span th:text="${currentAlgorithm.name}"></span>
-	</h3>
-			
-			<div th:insert="fragments/algorithm/functionsTree :: functionsTree"></div>
+	<div th:with=algorithmController=${T(evm.dmc.web.controllers.project.AlgorithmController)}>
+		<h3>
+				<!-- Test Page: <span th:text="${currentAlgorithm.name}"></span> -->
+				TEST page
+		</h3>
+				
+		<div th:insert="fragments/algorithm/functionsTree 
+			:: functionsTree(${__${algorithmController.MODEL_FunctionsList}__}, 
+								${__${algorithmController.MODEL_AlgBaseURL}__+'/postfunction'})"></div>
+	</div>
 </th:block>
  
 </body>
