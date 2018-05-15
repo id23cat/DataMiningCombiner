@@ -65,8 +65,11 @@ public class AlgorithmController {
 	
 	public static final String PATH_VAR_AlgorithmName = "algName";
 	public static final String PATH_VAR_DataName = DatasetController.PATH_VAR_DataName;
+	public static final String PATH_VAR_AlgorithmStep = "algstep";
+	
 	public static final String PATH_AlgorithmName = "/{" + PATH_VAR_AlgorithmName + "}";
 	public static final String PATH_DataName = DatasetController.PATH_DataName;
+	public static final String PATH_AlgorithmStep = "/{" + PATH_VAR_AlgorithmStep + "}";
 	
 	public final static String SESSION_CurrentAlgorithm = "currentAlgorithm";
 	
@@ -233,9 +236,13 @@ public class AlgorithmController {
 		return "project/algorithm/algTest";
 	}
 	
-	@PostMapping(value=URL_PART_SELECT_FUNCTION, consumes=MediaType.APPLICATION_JSON_VALUE)
+	@PostMapping(value=URL_PART_SELECT_FUNCTION + PATH_AlgorithmStep, consumes=MediaType.APPLICATION_JSON_VALUE)
 	@ResponseBody
-	public String postSelectedFunction(@RequestBody TreeNodeDTO function) { //@ModelAttribute("functionDTO") TreeNodeDTO function
+	public String postSelectedFunction(
+			@RequestBody TreeNodeDTO function,
+			@PathVariable(PATH_VAR_AlgorithmStep) Integer step
+			) {
+		log.debug("RequestParam: {}", step);
 		log.debug("Returned DTO: {}", function);
 		return "Ok";
 	}

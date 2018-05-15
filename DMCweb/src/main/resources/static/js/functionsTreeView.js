@@ -1,9 +1,9 @@
-function insertFunctionsTree(treeData, actionUrl) {
+function insertFunctionsTree(treeData, actionUrl, step) {
 	 $('#tree').treeview({
      	data: treeData,
      	onNodeSelected: function(event, node) {
      		$.ajax({
-     			url: actionUrl,
+     			url: actionUrl + "/" + step,
      			type: "POST",
      			contentType : 'application/json; charset=utf-8',
      			data: JSON.stringify(node),

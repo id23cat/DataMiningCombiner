@@ -14,6 +14,7 @@ import org.springframework.transaction.annotation.Transactional;
 import evm.dmc.api.model.FrameworkModel;
 import evm.dmc.api.model.ProjectModel;
 import evm.dmc.api.model.algorithm.Algorithm;
+import evm.dmc.api.model.algorithm.PatternMethod;
 import evm.dmc.api.model.data.MetaData;
 import evm.dmc.model.repositories.AlgorithmRepository;
 import evm.dmc.web.exceptions.MetaDataNotFoundException;
@@ -99,18 +100,6 @@ public class AlgorithmServiceImpl implements AlgorithmService {
 		return algorithm;
 	}
 	
-//	@Override
-//	public MetaData getDataSource(Algorithm algorithm) {
-//		if(algorithm.getSrcAttributes().isEmpty())
-//			return algorithm.getDataSource();
-//		else {
-//			MetaData meta = algorithm.getDataSource().toBuilder().build();
-//			log.trace("-== Setting Algorithm's attributes to dataSource");
-//			meta.setAttributes(algorithm.getSrcAttributes());
-//			return meta;
-//		}
-//	}
-	
 	@Override
 	public Optional<MetaData> getDataSource(Optional<Algorithm> optAlgorithm) {
 		if(! optAlgorithm.isPresent()) {
@@ -131,6 +120,12 @@ public class AlgorithmServiceImpl implements AlgorithmService {
 			return algorithm;
 		algorithm.setSrcAttributes(metaData.getAttributes());
 		return algorithm;
+	}
+	
+	@Override
+	@Transactional
+	public PatternMethod setFunction(Algorithm algorithm, TreeNodeDTO function, Integer step) {
+		return null;
 	}
 	
 	@Override

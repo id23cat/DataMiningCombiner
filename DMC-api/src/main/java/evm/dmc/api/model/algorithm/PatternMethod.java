@@ -4,6 +4,7 @@ import java.io.Serializable;
 import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
 
@@ -25,6 +26,7 @@ import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
+import javax.persistence.OrderColumn;
 import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
 
@@ -34,16 +36,24 @@ import org.hibernate.validator.constraints.NotBlank;
 import evm.dmc.api.model.FunctionModel;
 import evm.dmc.api.model.ProjectModel;
 import evm.dmc.api.model.algorithm.listeners.AlgorithmEntityListener;
+import evm.dmc.api.model.data.DataAttribute;
 import evm.dmc.api.model.data.MetaData;
 import lombok.AccessLevel;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
+import lombok.Singular;
 import lombok.ToString;
 
 @Data
-//@EqualsAndHashCode(exclude="dependentProjects")
-//@ToString(exclude="dependentProjects")
+@EqualsAndHashCode(exclude={"dependentAlgorithms", "steps"})
+@ToString(exclude={"dependentAlgorithms", "steps"})
+//@Builder
+@NoArgsConstructor
+@AllArgsConstructor
 @Entity
 //@EntityListeners(AlgorithmEntityListener.class)
 @Table(name="Method"
@@ -51,8 +61,8 @@ import lombok.ToString;
 )
 @Inheritance(strategy=InheritanceType.SINGLE_TABLE)
 @DiscriminatorColumn(name = "entity_type", discriminatorType = DiscriminatorType.STRING)
-@DiscriminatorValue("method")
-public abstract class Method implements Serializable {
+@DiscriminatorValue("pattern")
+public abstract class PatternMethod implements Serializable {
 	
 	/**
 	 * 
@@ -74,70 +84,24 @@ public abstract class Method implements Serializable {
 	@ManyToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE})
 	@JoinTable(name = "alg_subalg", joinColumns = @JoinColumn(name="alg_id", referencedColumnName = "id"),
 			inverseJoinColumns = @JoinColumn(name="subalg_id", referencedColumnName="id"))
-	private final List<Method> steps = new LinkedList<>();
+	@OrderColumn(name="INDEX")
+	@Singular
+	private List<PatternMethod> steps; //=new LinkedList<>();
 	
 	@OneToMany(mappedBy = "method", cascade = {CascadeType.ALL})
-	private Set<Algorithm> dependentAlgorithms = new HashSet<>();
+	@Singular
+	private Set<Algorithm> dependentAlgorithms;// = new HashSet<>();
 	
 	@Column(columnDefinition="boolean default false")
-	private boolean shared = false;
+	private Boolean shared = false;
 	
-	// null -- means getting source form previous function in hierarchy
-	@Column(nullable = true)
-	private MetaData dataSource = null;
-	
-	
-	
-	// null -- means redirect result to next function in hierarchy
-	@Column(nullable = true)
-	private MetaData dataDestination = null;
-	
-//	
-//	public abstract boolean isFunction();
-//	
-//	public abstract boolean isSubAlgorithm();
-//	
-//	public abstract Optional<FunctionModel> getFunction();
-//	
-//	public abstract List<Method> getAlgorithmSteps();
-//	
-//	public abstract boolean addStep(Method alg);
-//	
-//	public abstract boolean delStep(Method alg);
-	
-
-//	
-//	
-//	// Unidirectional One-to-many association
-//	@OneToMany
-//	@JoinColumn(name = "function_id")
-//	@OrderColumn(name = "functions_order")
-//	private List<FunctionModel> functions = new LinkedList<>();
-//	
-//	private FunctionDstModel dataDestination = null;
-//	
-
-//	
-//	public AlgorithmModel addFunction(FunctionModel func) {
-//		this.functions.add(func);
-//		return this;
+//	@Builder(builderMethodName="patternBuilder")
+//	public PatternMethod(Long id,
+//			String name,
+//			String description,
+////			@Singular List<PatternMethod> steps,
+//			@Singular Set<Algorithm>dependentAlgorithms, 
+//			Boolean shared) {
+//		
 //	}
-//	
-//	public AlgorithmModel delFunction(FunctionModel func) {
-//		this.functions.remove(func);
-//		return this;
-//	}
-//	
-//	public FunctionModel newFunction() {
-//		return new FunctionModel();
-//	}
-//	
-//	public FunctionSrcModel newSource() {
-//		return new FunctionSrcModel();
-//	}
-//	
-//	public FunctionDstModel newDestination() {
-//		return new FunctionDstModel();
-//	}
-
 }

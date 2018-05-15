@@ -1,8 +1,12 @@
 package evm.dmc.api.model;
 
 import java.io.Serializable;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Properties;
 
+import javax.persistence.Column;
+import javax.persistence.Convert;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
@@ -19,11 +23,19 @@ import javax.validation.constraints.NotNull;
 import org.hibernate.validator.constraints.Length;
 import org.hibernate.validator.constraints.NotBlank;
 
+import evm.dmc.api.model.converters.PropertiesMapToJson;
 import lombok.AccessLevel;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
+import lombok.Singular;
 
 @Data
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
 @Entity
 @Table(name = "Function")
 @Inheritance(strategy=InheritanceType.SINGLE_TABLE)
@@ -51,18 +63,45 @@ public class FunctionModel implements Serializable {
 	@NotNull
 	private FunctionType type;
 	
-	private Properties properties = new Properties();
+	@Singular
+	@Column( length = 100000 )
+	@Convert(converter = PropertiesMapToJson.class)
+	private Map<String, String> properties;
 	
 	private String description;
 	
-	public FunctionModel(){}
+//	public FunctionModel(FunctionModel funmodel){
+//		name = funmodel.getName();
+//		framework = funmodel.getFramework();
+//		type = funmodel.getType();
+//		properties = funmodel.getProperties();
+//		description = funmodel.getDescription();
+//	}
 	
-	public FunctionModel(FunctionModel funmodel){
-		name = funmodel.getName();
-		framework = funmodel.getFramework();
-		type = funmodel.getType();
-		properties = funmodel.getProperties();
-		description = funmodel.getDescription();
+	public String getProperty(String property) {
+		return properties.get(property);
+	}
+	
+	public void setProperty(String property, String value) {
+		properties.put(property, value);
+	}
+	
+	public final static Map<String,String> propertiesToMap(Properties props) {
+		if(props == null)
+			return null;
+		Map<String,String> map = new HashMap<String,String>();
+		for(final String name : props.stringPropertyNames()) {
+			map.put(name, props.getProperty(name));
+		}
+		return map;
+	}
+	
+	public final static Properties mapToProperties(Map<String, String> map) {
+		if(map == null)
+			return null;
+		Properties properties = new Properties();
+		properties.putAll(map);
+		return properties;
 	}
 	
 }

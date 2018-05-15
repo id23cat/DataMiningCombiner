@@ -1,15 +1,21 @@
 package evm.dmc.api.model;
 
+import java.util.Map;
+
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
 import javax.validation.constraints.NotNull;
 
 import evm.dmc.core.api.back.data.DataSrcDstType;
+import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+import lombok.NoArgsConstructor;
 
 @Data
+@NoArgsConstructor
+@AllArgsConstructor
 @EqualsAndHashCode(callSuper=true)
 @Entity
 public class FunctionSrcModel extends FunctionModel {
@@ -28,12 +34,21 @@ public class FunctionSrcModel extends FunctionModel {
 	@NotNull
 	private DataSrcDstType typeSrcDst = DataSrcDstType.LOCAL_FS;
 		
-	public FunctionSrcModel(){
-		super();
-	}
+//	public FunctionSrcModel(){
+//		super();
+//	}
 	
 	public FunctionSrcModel(FunctionModel funmodel){
-		super(funmodel);
+		super(funmodel.getId(), 
+				funmodel.getName(), 
+				funmodel.getFramework(), 
+				funmodel.getType(), 
+				funmodel.getProperties(), 
+				funmodel.getDescription());
+		if(funmodel instanceof FunctionSrcModel) {
+			this.source = ((FunctionSrcModel) funmodel).source;
+			this.typeSrcDst = ((FunctionSrcModel) funmodel).typeSrcDst;
+		}
 	}
 
 	/**
@@ -41,7 +56,7 @@ public class FunctionSrcModel extends FunctionModel {
 	 */
 	public String getSource() {
 		
-		return source==null ? super.getProperties().getProperty(SRC_PROPERTY_NAME) : source;
+		return source==null ? super.getProperty(SRC_PROPERTY_NAME) : source;
 	}
 
 	/**
@@ -49,7 +64,7 @@ public class FunctionSrcModel extends FunctionModel {
 	 */
 	public void setSource(String source) {
 		this.source = source;
-		super.getProperties().setProperty(SRC_PROPERTY_NAME, source);
+		super.setProperty(SRC_PROPERTY_NAME, source);
 		
 	}
 

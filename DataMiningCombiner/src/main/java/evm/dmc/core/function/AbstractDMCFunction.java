@@ -54,7 +54,7 @@ public abstract class AbstractDMCFunction<T> implements DMCFunction<T> {
 	protected void initFunction() {
 		functionModel.setName(getName());
 		functionModel.setType(getFunctionType());
-		functionModel.setProperties(getProperties());
+		functionModel.setProperties(FunctionModel.propertiesToMap(getProperties()));
 		functionModel.setDescription(getDescription());
 	}
 
@@ -87,7 +87,7 @@ public abstract class AbstractDMCFunction<T> implements DMCFunction<T> {
 
 	public DMCFunction<T> setFunctionModel(FunctionModel model) {
 		this.functionModel = model;
-		setFunctionProperties(this.functionModel.getProperties());
+		setFunctionProperties(FunctionModel.mapToProperties(this.functionModel.getProperties()));
 		return this;
 	}
 

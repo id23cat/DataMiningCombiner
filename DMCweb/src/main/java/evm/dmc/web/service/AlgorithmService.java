@@ -7,6 +7,7 @@ import java.util.Optional;
 import evm.dmc.api.model.FrameworkModel;
 import evm.dmc.api.model.ProjectModel;
 import evm.dmc.api.model.algorithm.Algorithm;
+import evm.dmc.api.model.algorithm.PatternMethod;
 import evm.dmc.api.model.data.MetaData;
 import evm.dmc.web.exceptions.MetaDataNotFoundException;
 import evm.dmc.web.service.dto.TreeNodeDTO;
@@ -20,6 +21,8 @@ public interface AlgorithmService extends EnityGetter<Algorithm>, EntityModifier
 	Optional<MetaData> getDataSource(Optional<Algorithm> optAlgorithm);
 	
 	Algorithm setAttributes(Algorithm algorithm, MetaData metaData);
+	
+	PatternMethod setFunction(Algorithm algorithm, TreeNodeDTO function, Integer step);
 	
 	List<FrameworkModel> getFrameworksList();
 	List<TreeNodeDTO> getFrameworksAsTreeNodes();

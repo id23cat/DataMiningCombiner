@@ -1,15 +1,20 @@
 package evm.dmc.api.model.algorithm;
 
-import java.util.Collections;
 import java.util.List;
-import java.util.Optional;
+import java.util.Map;
+import java.util.Set;
 
+import javax.persistence.Column;
+import javax.persistence.Convert;
 import javax.persistence.DiscriminatorValue;
 import javax.persistence.Entity;
 
 import evm.dmc.api.model.FunctionModel;
+import evm.dmc.api.model.converters.PropertiesMapToJson;
+import lombok.Builder;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+import lombok.Singular;
 import lombok.ToString;
 
 @Data
@@ -17,54 +22,31 @@ import lombok.ToString;
 @ToString(callSuper=true)
 @Entity
 @DiscriminatorValue("fw")
-public class FWMethod extends Method {
+public class FWMethod extends PatternMethod {
 	
 	/**
 	 * 
 	 */
 	private static final long serialVersionUID = -2208544525075109660L;
 	
-	private FunctionModel functionModel;
-
-//	@Override
-//	public boolean isFunction() {
-//		return true;
-//	}
-//
-//	@Override
-//	public boolean isSubAlgorithm() {
-//		return false;
-//	}
+	private FunctionModel frameworkFunction;
 	
-//	@Override
-//	public String getDescription() {
-//		return functionModel.getDescription();
-//	}
-//	
-//	@Override
-//	public String getName() {
-//		return functionModel.getName();
-//	}
-//
-//	@Override
-//	public boolean addStep(Method alg) {
-//		return false;
-//	}
-//
-//	@Override
-//	public boolean delStep(Method alg) {
-//		return false;
-//	}
-//
-//	@Override
-//	public Optional<FunctionModel> getFunction() {
-//		return Optional.of(functionModel);
-//	}
-//
-//	@Override
-//	public List<Method> getAlgorithmSteps() {
-//		return Collections.emptyList();
-//	}
+	@Column( length = 100000 )
+	@Convert(converter = PropertiesMapToJson.class)
+	private Map<String,String> overridenProperties;
 
-
+	@Builder
+	private FWMethod(Long id, 
+			String name, 
+			String description, 
+			List<PatternMethod> steps, 
+			Set<Algorithm> dependentAlgorithms, 
+			Boolean shared,
+			FunctionModel frameworkFunction,
+			@Singular Map<String,String> properties) {
+		super(id, name, description, steps, dependentAlgorithms, shared);
+//		super(id, name, description, dependentAlgorithms, shared);
+		this.frameworkFunction = frameworkFunction;
+		this.overridenProperties = properties;
+	}
 }

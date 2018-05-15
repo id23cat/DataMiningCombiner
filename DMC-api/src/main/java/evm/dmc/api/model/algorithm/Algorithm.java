@@ -36,7 +36,7 @@ import lombok.Setter;
 import lombok.Singular;
 
 @Data
-@Builder
+@Builder(toBuilder=true)
 @NoArgsConstructor
 @AllArgsConstructor
 @EqualsAndHashCode(exclude={"srcAttributes"})
@@ -89,7 +89,7 @@ public class Algorithm implements Serializable {
 //	@OneToOne(cascade = CascadeType.ALL, optional = false)
 	@OneToOne(cascade = CascadeType.ALL)
 	@JoinColumn(name = "function_id")
-	private Method method;
+	private PatternMethod method;
 	
 	public Map<String, DataAttribute> getSrcAttributes() {
 		if(dataSource == null)

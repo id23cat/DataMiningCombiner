@@ -6,10 +6,14 @@ import javax.persistence.Enumerated;
 import javax.validation.constraints.NotNull;
 
 import evm.dmc.core.api.back.data.DataSrcDstType;
+import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+import lombok.NoArgsConstructor;
 
 @Data
+@NoArgsConstructor
+@AllArgsConstructor
 @EqualsAndHashCode(callSuper=true)
 @Entity
 public class FunctionDstModel extends FunctionModel {
@@ -26,19 +30,28 @@ public class FunctionDstModel extends FunctionModel {
 	@NotNull
 	private DataSrcDstType typeSrcDst = DataSrcDstType.LOCAL_FS;
 	
-	public FunctionDstModel(){
-		super();
-	}
-	
+//	public FunctionDstModel(){
+//		super();
+//	}
+//	
 	public FunctionDstModel(FunctionModel funmodel){
-		super(funmodel);
+		super(funmodel.getId(), 
+				funmodel.getName(), 
+				funmodel.getFramework(), 
+				funmodel.getType(), 
+				funmodel.getProperties(), 
+				funmodel.getDescription());
+		if(funmodel instanceof FunctionDstModel) {
+			this.destination = ((FunctionDstModel) funmodel).destination;
+			this.typeSrcDst = ((FunctionDstModel) funmodel).typeSrcDst;
+		}
 	}
 
 	/**
 	 * @return the sourceDest
 	 */
 	public String getDestination() {
-		return destination==null ? super.getProperties().getProperty(DST_PROPERTY_NAME) : destination;
+		return destination==null ? super.getProperty(DST_PROPERTY_NAME) : destination;
 	}
 
 	/**
@@ -46,7 +59,7 @@ public class FunctionDstModel extends FunctionModel {
 	 */
 	public void setDestination(String dest) {
 		this.destination = dest;
-		super.getProperties().setProperty(DST_PROPERTY_NAME, dest);
+		super.setProperty(DST_PROPERTY_NAME, dest);
 	}
 
 }

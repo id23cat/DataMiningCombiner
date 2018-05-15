@@ -170,7 +170,7 @@ public class WekaCSVSave extends AbstractDMCFunction<String> implements CSVSaver
 	public DMCDataSaver setDstModel(FunctionDstModel model) {
 		this.model = model;
 		super.functionModel = this.model;
-		setFunctionProperties(this.model.getProperties());
+		setFunctionProperties(FunctionModel.mapToProperties(this.model.getProperties()));
 		
 		return this;
 	}
@@ -178,7 +178,7 @@ public class WekaCSVSave extends AbstractDMCFunction<String> implements CSVSaver
 	@Override
 	public WekaCSVSave setFunctionModel(FunctionModel model) {
 		this.model = new FunctionDstModel(model);
-		setFunctionProperties(this.model.getProperties());
+		setFunctionProperties(FunctionModel.mapToProperties(this.model.getProperties()));
 		return this;
 	}
 
