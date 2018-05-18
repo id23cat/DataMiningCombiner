@@ -4,16 +4,16 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import javax.persistence.Column;
-import javax.persistence.Convert;
+import javax.persistence.CascadeType;
 import javax.persistence.DiscriminatorValue;
 import javax.persistence.Entity;
+import javax.persistence.OneToOne;
 
 import evm.dmc.api.model.FunctionModel;
-import evm.dmc.api.model.converters.PropertiesMapToJson;
 import lombok.Builder;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+import lombok.NoArgsConstructor;
 import lombok.Singular;
 import lombok.ToString;
 
@@ -21,7 +21,8 @@ import lombok.ToString;
 @EqualsAndHashCode(callSuper=true)
 @ToString(callSuper=true)
 @Entity
-@DiscriminatorValue("fw")
+@NoArgsConstructor
+@DiscriminatorValue("fwMethod")
 public class FWMethod extends PatternMethod {
 	
 	/**
@@ -29,24 +30,23 @@ public class FWMethod extends PatternMethod {
 	 */
 	private static final long serialVersionUID = -2208544525075109660L;
 	
+	@OneToOne(cascade = {CascadeType.DETACH, CascadeType.MERGE, CascadeType.PERSIST}, optional = true)
 	private FunctionModel frameworkFunction;
 	
-	@Column( length = 100000 )
-	@Convert(converter = PropertiesMapToJson.class)
-	private Map<String,String> overridenProperties;
+	
 
 	@Builder
 	private FWMethod(Long id, 
 			String name, 
 			String description, 
-			List<PatternMethod> steps, 
-			Set<Algorithm> dependentAlgorithms, 
+			@Singular Map<String, String> properties,
+			List<PatternMethod> steps,
+			@Singular Set<Algorithm> dependentAlgorithms, 
 			Boolean shared,
-			FunctionModel frameworkFunction,
-			@Singular Map<String,String> properties) {
-		super(id, name, description, steps, dependentAlgorithms, shared);
+			FunctionModel frameworkFunction
+			) {
+		super(id, name, description, properties, steps, dependentAlgorithms, shared);
 //		super(id, name, description, dependentAlgorithms, shared);
 		this.frameworkFunction = frameworkFunction;
-		this.overridenProperties = properties;
 	}
 }

@@ -5,8 +5,10 @@ import java.util.List;
 import java.util.Optional;
 
 import evm.dmc.api.model.FrameworkModel;
+import evm.dmc.api.model.FunctionModel;
 import evm.dmc.api.model.ProjectModel;
 import evm.dmc.api.model.algorithm.Algorithm;
+import evm.dmc.api.model.algorithm.FWMethod;
 import evm.dmc.api.model.algorithm.PatternMethod;
 import evm.dmc.api.model.data.MetaData;
 import evm.dmc.web.exceptions.MetaDataNotFoundException;
@@ -22,13 +24,40 @@ public interface AlgorithmService extends EnityGetter<Algorithm>, EntityModifier
 	
 	Algorithm setAttributes(Algorithm algorithm, MetaData metaData);
 	
-	PatternMethod setFunction(Algorithm algorithm, TreeNodeDTO function, Integer step);
+	/**
+	 * Adds function at the end of functions queue
+	 * @param algorithm
+	 * @param dtoFunction
+	 * @return
+	 */
+	FWMethod addMethod(Algorithm algorithm, TreeNodeDTO dtoFunction);
+	FWMethod addMethod(Algorithm algorithm, TreeNodeDTO dtoFunction, Integer step);
 	
 	List<FrameworkModel> getFrameworksList();
 	List<TreeNodeDTO> getFrameworksAsTreeNodes();
 	
 	static Algorithm getNewAlgorithm(ProjectModel project) {
 		return Algorithm.builder().project(project).build();
+	}
+	
+	static FWMethod functionToFWMethod(FunctionModel function) {
+		return FWMethod.builder()
+			.name(function.getName())
+			.description(function.getDescription())
+			.frameworkFunction(function)
+			.properties(function.getProperties())
+			.build();
+	}
+	
+	static PatternMethod algorithmCreatePatternMethod(Algorithm algorithm) {
+		PatternMethod pattern = PatternMethod.patternBuilder()
+				.name(algorithm.getName())
+				.description(algorithm.getDescription())
+				.dependentAlgorithm(algorithm)
+				.build();
+//		pattern.getDependentAlgorithms().add(algorithm);
+		algorithm.setMethod(pattern);
+		return pattern;
 	}
 	
 //	static Algorithm getNewFunction(FunctionModel function) {

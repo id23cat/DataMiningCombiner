@@ -74,6 +74,12 @@ public class FrameworkFrontendServiceImpl implements FrameworkFrontendService {
 	public Optional<FrameworkModel> getFramework(String name) {
 		return frameworkRepo.findByName(name);
 	}
+	
+	@Override
+	@Transactional(readOnly=true)
+	public Optional<FunctionModel> getFunction(Long id) {
+		return functionRepo.findById(id);
+	}
 
 	@Override
 	public Optional<FunctionModel> getFunction(String name) {

@@ -1,5 +1,6 @@
 package evm.dmc.api.model;
 
+import java.io.Serializable;
 import java.util.HashSet;
 import java.util.Properties;
 import java.util.Set;
@@ -32,8 +33,13 @@ import lombok.ToString;
 @Table(name = "Framework")
 @EqualsAndHashCode(exclude={"functions"})
 @ToString(exclude="functions")
-public class FrameworkModel {
+public class FrameworkModel implements Serializable{
 	
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -6061011758502384732L;
+
 	@Id
 	@GeneratedValue(strategy=GenerationType.IDENTITY)
 	@Setter(AccessLevel.NONE) 

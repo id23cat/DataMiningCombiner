@@ -5,17 +5,15 @@ import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
-import java.util.Optional;
 import java.util.Set;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
+import javax.persistence.Convert;
 import javax.persistence.DiscriminatorColumn;
 import javax.persistence.DiscriminatorType;
 import javax.persistence.DiscriminatorValue;
 import javax.persistence.Entity;
-import javax.persistence.EntityListeners;
-import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -24,20 +22,14 @@ import javax.persistence.InheritanceType;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
-import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.OrderColumn;
 import javax.persistence.Table;
-import javax.validation.constraints.NotNull;
 
 import org.hibernate.validator.constraints.Length;
 import org.hibernate.validator.constraints.NotBlank;
 
-import evm.dmc.api.model.FunctionModel;
-import evm.dmc.api.model.ProjectModel;
-import evm.dmc.api.model.algorithm.listeners.AlgorithmEntityListener;
-import evm.dmc.api.model.data.DataAttribute;
-import evm.dmc.api.model.data.MetaData;
+import evm.dmc.api.model.converters.PropertiesMapToJson;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -51,7 +43,7 @@ import lombok.ToString;
 @Data
 @EqualsAndHashCode(exclude={"dependentAlgorithms", "steps"})
 @ToString(exclude={"dependentAlgorithms", "steps"})
-//@Builder
+@Builder(builderMethodName="patternBuilder")
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
@@ -62,7 +54,7 @@ import lombok.ToString;
 @Inheritance(strategy=InheritanceType.SINGLE_TABLE)
 @DiscriminatorColumn(name = "entity_type", discriminatorType = DiscriminatorType.STRING)
 @DiscriminatorValue("pattern")
-public abstract class PatternMethod implements Serializable {
+public class PatternMethod implements Serializable {
 	
 	/**
 	 * 
@@ -81,27 +73,42 @@ public abstract class PatternMethod implements Serializable {
 	@Length(max=1000)
 	private String description;
 	
+	@Column( length = 100000 )
+	@Convert(converter = PropertiesMapToJson.class)
+	@Singular 
+	private Map<String,String> overridenProperties;
+	
+//	@ManyToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE})
+//	@JoinTable(name = "alg_subalg", joinColumns = @JoinColumn(name="alg_id", referencedColumnName = "id"),
+//			inverseJoinColumns = @JoinColumn(name="subalg_id", referencedColumnName="id"))
+//	@OrderColumn(name="INDEX")
+//	@Singular
+//	private List<PatternMethod> steps; //=new LinkedList<>();
+	
 	@ManyToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE})
 	@JoinTable(name = "alg_subalg", joinColumns = @JoinColumn(name="alg_id", referencedColumnName = "id"),
 			inverseJoinColumns = @JoinColumn(name="subalg_id", referencedColumnName="id"))
 	@OrderColumn(name="INDEX")
-	@Singular
-	private List<PatternMethod> steps; //=new LinkedList<>();
+	@Builder.Default
+	private List<PatternMethod> steps = new LinkedList<>();
 	
 	@OneToMany(mappedBy = "method", cascade = {CascadeType.ALL})
-	@Singular
+//	@Singular
 	private Set<Algorithm> dependentAlgorithms;// = new HashSet<>();
 	
 	@Column(columnDefinition="boolean default false")
+	@Builder.Default
 	private Boolean shared = false;
 	
-//	@Builder(builderMethodName="patternBuilder")
-//	public PatternMethod(Long id,
-//			String name,
-//			String description,
-////			@Singular List<PatternMethod> steps,
-//			@Singular Set<Algorithm>dependentAlgorithms, 
-//			Boolean shared) {
-//		
-//	}
+	public static class PatternMethodBuilder {
+		public PatternMethodBuilder dependentAlgorithm(Algorithm algorithm) {
+			this.name = algorithm.getName();
+			this.description = algorithm.getDescription();
+			if(this.dependentAlgorithms == null) {
+				this.dependentAlgorithms = new HashSet<>();
+			}
+			this.dependentAlgorithms.add(algorithm);
+			return this;
+		}
+	}
 }

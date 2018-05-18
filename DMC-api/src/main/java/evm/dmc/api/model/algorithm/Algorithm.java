@@ -87,8 +87,8 @@ public class Algorithm implements Serializable {
 	private MetaData dataDestination;
 	
 //	@OneToOne(cascade = CascadeType.ALL, optional = false)
-	@OneToOne(cascade = CascadeType.ALL)
-	@JoinColumn(name = "function_id")
+	@ManyToOne(cascade = CascadeType.ALL)
+	@JoinColumn(name = "method_id")
 	private PatternMethod method;
 	
 	public Map<String, DataAttribute> getSrcAttributes() {

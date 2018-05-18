@@ -21,6 +21,7 @@ public interface FunctionFrontendRepository extends JpaRepository<FunctionModel,
 
 	<T extends FunctionModel> Stream<T> findByType(FunctionType type);
 	
+	Optional<FunctionModel> findById(Long id);
 	Optional<FunctionModel> findByName(String name);
 	
 	Optional<String> getDescriptionByName(String name);

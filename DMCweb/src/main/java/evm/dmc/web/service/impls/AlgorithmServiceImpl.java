@@ -12,11 +12,14 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import evm.dmc.api.model.FrameworkModel;
+import evm.dmc.api.model.FunctionModel;
 import evm.dmc.api.model.ProjectModel;
 import evm.dmc.api.model.algorithm.Algorithm;
+import evm.dmc.api.model.algorithm.FWMethod;
 import evm.dmc.api.model.algorithm.PatternMethod;
 import evm.dmc.api.model.data.MetaData;
 import evm.dmc.model.repositories.AlgorithmRepository;
+import evm.dmc.web.exceptions.FunctionNotFoundException;
 import evm.dmc.web.exceptions.MetaDataNotFoundException;
 import evm.dmc.web.service.AlgorithmService;
 import evm.dmc.web.service.FrameworkFrontendService;
@@ -124,8 +127,33 @@ public class AlgorithmServiceImpl implements AlgorithmService {
 	
 	@Override
 	@Transactional
-	public PatternMethod setFunction(Algorithm algorithm, TreeNodeDTO function, Integer step) {
-		return null;
+	public FWMethod addMethod(Algorithm algorithm, TreeNodeDTO dtoFunction) {
+		if(algorithm.getMethod() == null || algorithm.getMethod().getSteps().isEmpty()) {
+			return addMethod(algorithm, dtoFunction, 0);
+		} else {
+			Integer size = algorithm.getMethod().getSteps().size();
+			return addMethod(algorithm, dtoFunction, size);
+		}
+	}
+	
+	@Override
+	@Transactional
+	public FWMethod addMethod(Algorithm algorithm, TreeNodeDTO dtoFunction, Integer step) {
+		algorithm = merge(algorithm);
+		Optional<FunctionModel> optFunction = frameworkService.getFunction(dtoFunction.getId());
+		FWMethod method = AlgorithmService.functionToFWMethod(optFunction.orElseThrow(() ->
+				new FunctionNotFoundException(
+						"Function with ID=" + dtoFunction.getId() + " not found")));
+		
+		if(algorithm.getMethod() == null)
+			AlgorithmService.algorithmCreatePatternMethod(algorithm);
+
+		PatternMethod rootMethod = algorithm.getMethod();
+		step = step > rootMethod.getSteps().size() ? rootMethod.getSteps().size() : step;
+
+		rootMethod.getSteps().add(step, method);
+		
+		return method;
 	}
 	
 	@Override

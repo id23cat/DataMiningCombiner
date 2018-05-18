@@ -14,9 +14,21 @@ public interface FrameworkFrontendService {
 	List<FrameworkModel> getFrameworksList();
 	List<TreeNodeDTO> getFrameworksAsTreeNodes();
 	Optional<FrameworkModel> getFramework(String name);
+	Optional<FunctionModel> getFunction(Long id);
 	Optional<FunctionModel> getFunction(String name);
 	Stream<FunctionModel> findFunctionByWord(String word);
 	Stream<FunctionModel> getAllFunctions();
 	Stream<FunctionSrcModel> getDataLoaders();
 	Stream<FunctionDstModel> getDataSavers();
+	
+	static Optional<TreeNodeDTO> functionToDTO(Optional<FunctionModel> function) {
+		if(!function.isPresent())
+			return Optional.ofNullable(null);
+		return Optional.of(TreeNodeDTO.builder()
+			.id(function.get().getId())
+			.text(function.get().getName())
+			.tooltip(function.get().getDescription())
+			.build()
+			);
+	}
 }
