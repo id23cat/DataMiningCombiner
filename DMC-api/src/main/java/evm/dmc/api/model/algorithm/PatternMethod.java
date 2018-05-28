@@ -14,6 +14,7 @@ import javax.persistence.DiscriminatorColumn;
 import javax.persistence.DiscriminatorType;
 import javax.persistence.DiscriminatorValue;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -85,14 +86,17 @@ public class PatternMethod implements Serializable {
 //	@Singular
 //	private List<PatternMethod> steps; //=new LinkedList<>();
 	
-	@ManyToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE})
-	@JoinTable(name = "alg_subalg", joinColumns = @JoinColumn(name="alg_id", referencedColumnName = "id"),
-			inverseJoinColumns = @JoinColumn(name="subalg_id", referencedColumnName="id"))
-	@OrderColumn(name="INDEX")
+	@ManyToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE}, 
+			fetch = FetchType.EAGER)
+	@JoinTable(name = "METHOD_STEPS", joinColumns = @JoinColumn(name="METHOD_ID", referencedColumnName = "ID"),
+			inverseJoinColumns = @JoinColumn(name="STEP_ID", referencedColumnName="ID"))
+	@OrderColumn(name="STEP")
 	@Builder.Default
 	private List<PatternMethod> steps = new LinkedList<>();
 	
-	@OneToMany(mappedBy = "method", cascade = {CascadeType.ALL})
+	@OneToMany(mappedBy = "method", fetch = FetchType.LAZY, 
+			cascade = {CascadeType.DETACH, CascadeType.MERGE, CascadeType.PERSIST},
+			 orphanRemoval = true)
 //	@Singular
 	private Set<Algorithm> dependentAlgorithms;// = new HashSet<>();
 	

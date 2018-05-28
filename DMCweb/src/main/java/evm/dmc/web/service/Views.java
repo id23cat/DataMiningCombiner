@@ -53,6 +53,7 @@ public class Views {
 		@lombok.Data
 		public static class Algorithm {
 			public String algorithm;
+			public String methodDetails;
 		}
 		
 //		@lombok.Data

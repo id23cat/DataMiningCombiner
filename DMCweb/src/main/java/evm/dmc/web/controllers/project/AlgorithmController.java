@@ -30,9 +30,11 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 
 import evm.dmc.api.model.ProjectModel;
 import evm.dmc.api.model.algorithm.Algorithm;
+import evm.dmc.api.model.algorithm.PatternMethod;
 import evm.dmc.api.model.data.MetaData;
 import evm.dmc.web.controllers.CheckboxNamesBean;
 import evm.dmc.web.exceptions.AlgorithmNotFoundException;
+import evm.dmc.web.exceptions.FunctionNotFoundException;
 import evm.dmc.web.service.AlgorithmService;
 import evm.dmc.web.service.JsonService;
 import evm.dmc.web.service.RequestPath;
@@ -53,6 +55,7 @@ public class AlgorithmController {
 	private final static String URL_PART_DELETE_ALGORITHM = "/delete";
 	private final static String URL_PART_ADD_ALGORITHM = "/add";
 	private final static String URL_PART_SELECT_FUNCTION = "/selectFunction";
+	private final static String URL_PART_GET_FUNCTION_DETAILS = "/getfunction";
 //	private final static String URL_PART_GET_FUNCTIONS_LIST = "/getfunlist";
 	
 	public final static String BASE_URL = ProjectController.URL_GetPorject + URL_PART_ALGORITHM;
@@ -61,6 +64,7 @@ public class AlgorithmController {
 	public final static String URL_ModifyAttributes = BASE_URL + URL_PART_MODIFY_ATTRIBUTES;
 	public final static String URL_Select_DataSet = BASE_URL + URL_PART_SELECT_DATASET;
 	public final static String URL_Select_Function = BASE_URL + URL_PART_SELECT_FUNCTION;
+	public final static String URL_GetFunctionDetails = BASE_URL + URL_PART_GET_FUNCTION_DETAILS;
 //	public final static String URL_Get_Functions_List = BASE_URL + URL_PART_GET_FUNCTIONS_LIST;
 	
 	public static final String PATH_VAR_AlgorithmName = "algName";
@@ -73,6 +77,10 @@ public class AlgorithmController {
 	
 	public final static String SESSION_CurrentAlgorithm = "currentAlgorithm";
 	
+	public final static String FLASH_Method = "currentMethod";
+	
+	public final static String REQPARAM_Method_Id = "mid";
+	
 //	public final static String MODEL_Algorithm = "algorithm";
 	public final static String MODEL_PagesMap = "pagesMap";
 	public static final String MODEL_AlgBaseURL = "algBaseURL";
@@ -82,6 +90,7 @@ public class AlgorithmController {
 	public static final String MODEL_AlgorithmsList = "algorithmsSet";
 	public static final String MODEL_NewAlgorithm = "newAlgorithm";
 	public static final String MODEL_FunctionsList = "functionsList";
+	public static final String MODEL_MethodDetails = "methodDetails";
 //	public static final String MODEL_CurrentAlgorithm = "currentAlgorithm";
 	
 	@Autowired
@@ -225,26 +234,48 @@ public class AlgorithmController {
 		return new RedirectView(request.getHeader("Referer"));
 	}
 	
-	@GetMapping("/gettree") 
-	public String getTestTreePage(Model model,
-			@SessionAttribute(ProjectController.SESSION_CurrentProject) ProjectModel project)
-					throws JsonProcessingException {
-		List<TreeNodeDTO> functionsListDTO = algorithmService.getFrameworksAsTreeNodes();
-		model.addAttribute(MODEL_FunctionsList, jsonService.frameworksListToTreeView(functionsListDTO));
-		modelAppender.addAttributesToModel(model, project);
-		
-		return "project/algorithm/algTest";
+	
+	@GetMapping(URL_PART_GET_FUNCTION_DETAILS)
+	public String getFunctionDetails(
+			@SessionAttribute(SESSION_CurrentAlgorithm) Algorithm algorithm,
+			@ModelAttribute(FLASH_Method) Optional<PatternMethod> optMethod,
+			@RequestParam(value = REQPARAM_Method_Id, required = false) Long id,
+			Model model
+			) {
+		model.addAttribute(MODEL_MethodDetails, optMethod.orElseGet(() -> {
+			return algorithmService.getMethod(algorithm, id).orElseThrow(() ->{
+				return new FunctionNotFoundException("There is no method with id = " + id);
+				});
+			}));
+			
+		return views.getProject().algorithm.methodDetails;
 	}
 	
 	@PostMapping(value=URL_PART_SELECT_FUNCTION + PATH_AlgorithmStep, consumes=MediaType.APPLICATION_JSON_VALUE)
 	@ResponseBody
-	public String postSelectedFunction(
+	public RedirectView postSelectedFunction(
+			@SessionAttribute(SESSION_CurrentAlgorithm) Algorithm algorithm,
+			@SessionAttribute(ProjectController.SESSION_CurrentProject) ProjectModel project,
 			@RequestBody TreeNodeDTO function,
-			@PathVariable(PATH_VAR_AlgorithmStep) Integer step
+			@PathVariable(PATH_VAR_AlgorithmStep) Integer step,
+			RedirectAttributes ra,
+			Model model
 			) {
 		log.debug("RequestParam: {}", step);
 		log.debug("Returned DTO: {}", function);
-		return "Ok";
+		algorithm = algorithmService.setMethod(algorithm, function, step);
+		model.addAttribute(AlgorithmController.SESSION_CurrentAlgorithm, algorithm);
+		PatternMethod method = algorithmService.getStep(algorithm, step);
+		
+		ra.addFlashAttribute(FLASH_Method, Optional.of(method));
+		
+		return new RedirectView(cookURL(URL_GetFunctionDetails, project.getName()));
+	}
+	
+	private static String cookURL(String URL, String projectName) {
+		return UriComponentsBuilder.fromPath(URL)
+		.buildAndExpand(projectName)
+		.toUriString();
 	}
 	
 }

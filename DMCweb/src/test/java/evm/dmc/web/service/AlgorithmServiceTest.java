@@ -21,6 +21,7 @@ import evm.dmc.api.model.FunctionModel;
 import evm.dmc.api.model.ProjectModel;
 import evm.dmc.api.model.algorithm.Algorithm;
 import evm.dmc.api.model.algorithm.FWMethod;
+import evm.dmc.api.model.algorithm.PatternMethod;
 import evm.dmc.api.model.data.DataAttribute;
 import evm.dmc.api.model.data.MetaData;
 import evm.dmc.core.api.AttributeType;
@@ -118,13 +119,21 @@ public class AlgorithmServiceTest extends ServiceTest{
 		Optional<TreeNodeDTO> optDTO1 = FrameworkFrontendService.functionToDTO(optFunction1);
 		assertTrue(optDTO1.isPresent());
 		
-		FWMethod method0 = algorithmService.addMethod(algorithm, optDTO0.get());
+		int originalSize = algorithm.getMethod()==null? 0 : algorithm.getMethod().getSteps().size();
+		algorithm = algorithmService.addMethod(algorithm, optDTO0.get());
+		PatternMethod method0 = algorithm.getMethod().getSteps().get(algorithm.getMethod().getSteps().size()-1);
+//		em.merge(algorithm);
 		assertNotNull(method0);
 		
-		FWMethod method1 = algorithmService.addMethod(algorithm, optDTO1.get());
+		PatternMethod mainMethod = algorithm.getMethod();
+		
+		 algorithm = algorithmService.addMethod(algorithm, optDTO1.get());
+		 PatternMethod method1 = algorithm.getMethod().getSteps().get(algorithm.getMethod().getSteps().size()-1);
+//		em.merge(algorithm);
 		assertNotNull(method1);
 		
-		assertThat(algorithm.getMethod().getSteps().size(), equalTo(2));
+		assertThat(algorithm.getMethod().getSteps().size(), equalTo(originalSize + 2));
+		assertThat(algorithm.getMethod(), equalTo(mainMethod));
 	}
 	
 	@Test(expected=FunctionNotFoundException.class)
@@ -136,6 +145,39 @@ public class AlgorithmServiceTest extends ServiceTest{
 				.build();
 		
 		algorithmService.addMethod(algorithm, nExFunction);
+	}
+	
+	@Test
+	public final void testSetMethod() {
+		Algorithm algorithm =  getAlgorithm(project_1, ALGORITHM_0, DATASET_IRIS);
+
+		Optional<FunctionModel> optFunction0 = frameworkService.getFunction(WEKA_PCA); 
+		assertTrue(optFunction0.isPresent());
+		Optional<TreeNodeDTO> optDTO0 = FrameworkFrontendService.functionToDTO(optFunction0);
+		assertTrue(optDTO0.isPresent());
+		
+		Optional<FunctionModel> optFunction1 = frameworkService.getFunction(WEKA_KMEANS); 
+		assertTrue(optFunction1.isPresent());
+		Optional<TreeNodeDTO> optDTO1 = FrameworkFrontendService.functionToDTO(optFunction1);
+		assertTrue(optDTO1.isPresent());
+		
+		int index = 0;
+		
+		algorithm = algorithmService.setMethod(algorithm, optDTO0.get(), index);
+		PatternMethod method0 = algorithm.getMethod().getSteps().get(index);
+		assertNotNull(method0);
+		
+		PatternMethod mainMethod = algorithm.getMethod();
+		
+		algorithm = algorithmService.setMethod(algorithm, optDTO1.get(), 0); 
+		PatternMethod method1 = algorithm.getMethod().getSteps().get(index);
+		assertNotNull(method1);
+		
+		assertThat(algorithm.getMethod(), equalTo(mainMethod));
+		assertThat(algorithm.getMethod().getSteps(), hasItem(method1));
+		assertThat(algorithm.getMethod().getSteps(), not(hasItem(method0)));
+		
+		
 	}
 	
 	private Algorithm getAlgorithm(ProjectModel project, String algNamem, String setDataSource) {

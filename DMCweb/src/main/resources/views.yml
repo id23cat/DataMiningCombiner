@@ -21,6 +21,7 @@ views:
       dataSource: "project/data/datasource"
     algorithm:
       algorithm: "project/algorithm/algorithm"
+      methodDetails: "project/algorithm/methodDetails"
 #    wizardBase: "project/algorithm/wizard"
 #    wizard:
 #      datasource: "project/algorithm/wizard/datasource"

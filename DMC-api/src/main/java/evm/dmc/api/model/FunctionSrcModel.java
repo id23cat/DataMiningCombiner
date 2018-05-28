@@ -51,21 +51,21 @@ public class FunctionSrcModel extends FunctionModel {
 		}
 	}
 
-	/**
-	 * @return the sourceDest
-	 */
-	public String getSource() {
-		
-		return source==null ? super.getProperty(SRC_PROPERTY_NAME) : source;
-	}
+//	/**
+//	 * @return the sourceDest
+//	 */
+//	public String getSource() {
+//		
+//		return source==null ? super.getProperty(SRC_PROPERTY_NAME) : source;
+//	}
 
-	/**
-	 * @param source the source to set
-	 */
-	public void setSource(String source) {
-		this.source = source;
-		super.setProperty(SRC_PROPERTY_NAME, source);
-		
-	}
+//	/**
+//	 * @param source the source to set
+//	 */
+//	public void setSource(String source) {
+//		this.source = source;
+//		super.setProperty(SRC_PROPERTY_NAME, source);
+//		
+//	}
 
 }

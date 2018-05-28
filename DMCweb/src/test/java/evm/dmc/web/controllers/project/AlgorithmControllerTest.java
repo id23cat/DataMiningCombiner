@@ -1,6 +1,7 @@
 package evm.dmc.web.controllers.project;
 
 import static evm.dmc.web.controllers.project.utils.AlgorithmTestUtils.*;
+import static org.hamcrest.CoreMatchers.*;
 import static org.mockito.Matchers.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
@@ -34,6 +35,7 @@ import org.springframework.web.util.NestedServletException;
 import org.springframework.web.util.UriComponentsBuilder;
 
 import evm.dmc.api.model.algorithm.Algorithm;
+import evm.dmc.api.model.algorithm.FWMethod;
 import evm.dmc.api.model.data.MetaData;
 import evm.dmc.api.model.datapreview.DataPreview;
 import evm.dmc.web.exceptions.AlgorithmNotFoundException;
@@ -226,6 +228,46 @@ public class AlgorithmControllerTest {
 		;
 	}
 	
+	@Test
+	public final void testGetFunctionDetails_RequestParamSelects() throws Exception {
+		String url = cookURL(AlgorithmController.URL_GetFunctionDetails, TEST_PROJ_NAME);
+		final Long id = 1L;
+		FWMethod method = FWMethod.builder().name("testMethod").build();
+		
+		Mockito
+			.when(algorithmService.getMethod(eq(TEST_alg0), eq(id)))
+			.thenReturn(Optional.of(method));
+		
+		this.mockMvc.perform(get(url)
+				.sessionAttr(ProjectController.SESSION_CurrentProject, TEST_session_project)
+				.sessionAttr(AlgorithmController.SESSION_CurrentAlgorithm, TEST_alg0)
+				.param(AlgorithmController.REQPARAM_Method_Id,  id.toString()))
+		.andExpect(status().isOk())
+		.andExpect(view().name(views.getProject().algorithm.methodDetails))
+		.andExpect(model().attribute(AlgorithmController.MODEL_MethodDetails, equalTo(method)))
+		;
+	}
+	
+	@Test
+	public final void testGetFunctionDetails_FlashAttributeSelects() throws Exception {
+		String url = cookURL(AlgorithmController.URL_GetFunctionDetails, TEST_PROJ_NAME);
+		final Long id = 1L;
+		FWMethod method = FWMethod.builder().name("testMethod").build();
+		
+//		Mockito
+//			.when(algorithmService.getMethod(eq(TEST_alg0), eq(id)))
+//			.thenReturn(Optional.of(method));
+		
+		this.mockMvc.perform(get(url)
+				.sessionAttr(ProjectController.SESSION_CurrentProject, TEST_session_project)
+				.sessionAttr(AlgorithmController.SESSION_CurrentAlgorithm, TEST_alg0)
+				.flashAttr(AlgorithmController.FLASH_Method, Optional.of(method))
+				.param(AlgorithmController.REQPARAM_Method_Id,  id.toString()))
+		.andExpect(status().isOk())
+		.andExpect(view().name(views.getProject().algorithm.methodDetails))
+		.andExpect(model().attribute(AlgorithmController.MODEL_MethodDetails, equalTo(method)))
+		;
+	}
 	
 //	@Test
 //	public final void testPostSaveDataAtributes() throws Exception {

@@ -47,19 +47,19 @@ public class FunctionDstModel extends FunctionModel {
 		}
 	}
 
-	/**
-	 * @return the sourceDest
-	 */
-	public String getDestination() {
-		return destination==null ? super.getProperty(DST_PROPERTY_NAME) : destination;
-	}
+//	/**
+//	 * @return the sourceDest
+//	 */
+//	public String getDestination() {
+//		return destination==null ? super.getProperty(DST_PROPERTY_NAME) : destination;
+//	}
 
-	/**
-	 * @param sourceDest the sourceDest to set
-	 */
-	public void setDestination(String dest) {
-		this.destination = dest;
-		super.setProperty(DST_PROPERTY_NAME, dest);
-	}
+//	/**
+//	 * @param sourceDest the sourceDest to set
+//	 */
+//	public void setDestination(String dest) {
+//		this.destination = dest;
+//		super.setProperty(DST_PROPERTY_NAME, dest);
+//	}
 
 }

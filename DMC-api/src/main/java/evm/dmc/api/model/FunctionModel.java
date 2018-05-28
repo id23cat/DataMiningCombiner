@@ -23,17 +23,22 @@ import javax.validation.constraints.NotNull;
 import org.hibernate.validator.constraints.Length;
 import org.hibernate.validator.constraints.NotBlank;
 
+import evm.dmc.api.model.algorithm.PatternMethod;
 import evm.dmc.api.model.converters.PropertiesMapToJson;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.Singular;
+import lombok.ToString;
 
 @Data
 @Builder
+@EqualsAndHashCode(exclude={"property"})
+@ToString(exclude={"dependentAlgorithms", "steps"})
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity

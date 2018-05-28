@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layouts/layout}">
+
+<head>
+    <title>Algorithm</title>
+    <!-- <script th:src="@{/js/bootstrap-confirmation.min.js}"></script> -->
+</head>
+<body>
+
+<th:block layout:fragment="content">
+	<div th:id="methodDetails"
+		th:with=algorithmController=${T(evm.dmc.web.controllers.project.AlgorithmController)}>
+		<h3>
+				Method details
+		</h3>
+		<div th:text="${__${algorithmController.MODEL_MethodDetails}__}">
+			
+		</div>
+				
+<!-- 		<div th:insert="fragments/algorithm/functionsTree 
+			:: functionsTree(${__${algorithmController.MODEL_FunctionsList}__}, 
+								${__${algorithmController.MODEL_AlgBaseURL}__+'/postfunction'})">
+		</div>
+		 -->						
+	</div>
+</th:block>
+ 
+</body>
+</html>

@@ -9,6 +9,7 @@ import javax.persistence.EntityManager;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 import evm.dmc.api.model.FrameworkModel;
@@ -24,6 +25,7 @@ import evm.dmc.web.exceptions.MetaDataNotFoundException;
 import evm.dmc.web.service.AlgorithmService;
 import evm.dmc.web.service.FrameworkFrontendService;
 import evm.dmc.web.service.MetaDataService;
+import evm.dmc.web.service.MethodService;
 import evm.dmc.web.service.ProjectService;
 import evm.dmc.web.service.dto.TreeNodeDTO;
 import lombok.extern.slf4j.Slf4j;
@@ -85,6 +87,9 @@ public class AlgorithmServiceImpl implements AlgorithmService {
 		project = projectService.getOrSave(project);
 		algorithm.setProject(project);
 		project.getAlgorithms().add(algorithm);
+		algorithm.setMethod(PatternMethod.patternBuilder()
+				.dependentAlgorithm(algorithm)
+				.build());
 		return algorithmRepository.save(algorithm);
 	}
 	
@@ -127,37 +132,6 @@ public class AlgorithmServiceImpl implements AlgorithmService {
 	
 	@Override
 	@Transactional
-	public FWMethod addMethod(Algorithm algorithm, TreeNodeDTO dtoFunction) {
-		if(algorithm.getMethod() == null || algorithm.getMethod().getSteps().isEmpty()) {
-			return addMethod(algorithm, dtoFunction, 0);
-		} else {
-			Integer size = algorithm.getMethod().getSteps().size();
-			return addMethod(algorithm, dtoFunction, size);
-		}
-	}
-	
-	@Override
-	@Transactional
-	public FWMethod addMethod(Algorithm algorithm, TreeNodeDTO dtoFunction, Integer step) {
-		algorithm = merge(algorithm);
-		Optional<FunctionModel> optFunction = frameworkService.getFunction(dtoFunction.getId());
-		FWMethod method = AlgorithmService.functionToFWMethod(optFunction.orElseThrow(() ->
-				new FunctionNotFoundException(
-						"Function with ID=" + dtoFunction.getId() + " not found")));
-		
-		if(algorithm.getMethod() == null)
-			AlgorithmService.algorithmCreatePatternMethod(algorithm);
-
-		PatternMethod rootMethod = algorithm.getMethod();
-		step = step > rootMethod.getSteps().size() ? rootMethod.getSteps().size() : step;
-
-		rootMethod.getSteps().add(step, method);
-		
-		return method;
-	}
-	
-	@Override
-	@Transactional
 	public Algorithm save(Algorithm algorithm) {
 		return algorithmRepository.save(algorithm);
 	}
@@ -173,9 +147,101 @@ public class AlgorithmServiceImpl implements AlgorithmService {
 	public List<TreeNodeDTO> getFrameworksAsTreeNodes() {
 		return frameworkService.getFrameworksAsTreeNodes();
 	}
+	
+	@Override
+//	@Transactional(propagation =  Propagation.REQUIRES_NEW)
+	@Transactional
+	public Algorithm addMethod(Algorithm algorithm, TreeNodeDTO dtoFunction) 
+			throws FunctionNotFoundException {
+		if(algorithm.getMethod() == null || algorithm.getMethod().getSteps().isEmpty()) {
+			return addMethod(algorithm, dtoFunction, 0);
+		} else {
+			Integer size = algorithm.getMethod().getSteps().size();
+			return addMethod(algorithm, dtoFunction, size);
+		}
+	}
+	
+	@Override
+	@Transactional
+	public Algorithm addMethod(Algorithm algorithm, TreeNodeDTO dtoFunction, Integer step) 
+			throws FunctionNotFoundException {
+		algorithm = merge(algorithm);
+				
+		FWMethod method = getFWMethod(algorithm, dtoFunction);
+
+		// get root pattermMethod from algorithm for convenience
+		PatternMethod rootMethod = algorithm.getMethod();
+		
+		// check out of bounds
+		step = step > rootMethod.getSteps().size() ? rootMethod.getSteps().size() : step;
+
+		rootMethod.getSteps().add(step, method);
+		
+		return algorithm;
+	}
+	
+	/* (non-Javadoc)
+	 * @see evm.dmc.web.service.MethodService#setMethod(evm.dmc.api.model.algorithm.Algorithm, evm.dmc.web.service.dto.TreeNodeDTO, java.lang.Integer)
+	 * @see https://docs.oracle.com/javase/8/docs/api/java/util/List.html#set-int-E-
+	 */
+	@Override
+//	@Transactional(propagation =  Propagation.REQUIRES_NEW)
+	@Transactional
+	public Algorithm setMethod(Algorithm algorithm, TreeNodeDTO dtoFunction, Integer step) 
+			throws FunctionNotFoundException, IndexOutOfBoundsException {
+		algorithm = merge(algorithm);
+		FWMethod method = getFWMethod(algorithm, dtoFunction);
+
+		// get root pattermMethod from algorithm for convenience
+		PatternMethod rootMethod = algorithm.getMethod();
+
+		// add to the end
+		log.debug("-== Size: {}", rootMethod.getSteps().size());
+		log.debug("-== Strep: {}", step);
+		if(rootMethod.getSteps().size() == step) {
+			rootMethod.getSteps().add(step, method);
+			log.debug("-== Steps: {}", rootMethod.getSteps());
+		} else {
+			rootMethod.getSteps().set(step, method);
+		}
+		return algorithm;
+	}
+	
+	@Override
+	@Transactional(readOnly = true)
+	public Optional<PatternMethod> getMethod(Algorithm algorithm, Long id) {
+		if(id == null || algorithm.getMethod() == null)
+			return Optional.ofNullable(null);
+		PatternMethod method = algorithm.getMethod();
+		return method.getSteps().stream().filter(pm -> pm.getId().equals(id)).findFirst();
+	}
+	
+	@Override
+	@Transactional(readOnly = true)
+	public PatternMethod getStep(Algorithm algorithm, Integer step) {
+		algorithm = merge(algorithm);
+		return algorithm.getMethod().getSteps().get(step);
+	}
+
 
 	private Algorithm merge(Algorithm algorithm) {
 		return em.merge(algorithm);
+	}
+	
+	private FWMethod getFWMethod(Algorithm algorithm, TreeNodeDTO dtoFunction) 
+		throws FunctionNotFoundException {
+		// get function from framework repository
+		Optional<FunctionModel> optFunction = frameworkService.getFunction(dtoFunction.getId());
+		
+		// create method from function
+		FWMethod method = MethodService.functionToFWMethod(optFunction.orElseThrow(() ->
+				new FunctionNotFoundException(
+						"Function with ID=" + dtoFunction.getId() + " not found")));
+		
+		// if algorithm doesn't have initialized root method yet -- create it
+		if(algorithm.getMethod() == null)
+			MethodService.algorithmCreatePatternMethod(algorithm);
+		return method;
 	}
 	
 }

@@ -7,8 +7,10 @@ function insertFunctionsTree(treeData, actionUrl, step) {
      			type: "POST",
      			contentType : 'application/json; charset=utf-8',
      			data: JSON.stringify(node),
-     			success: function(){
+     			success: function(data){
      				$("#selected").text(node.text + ": " +node.id + "; URL=" + actionUrl);
+     				console.log($(data).find("#methodDetails").html());
+     				$("#details").html($(data).find("#methodDetails").html()).fadeIn();
      			}
      		})
      	}
