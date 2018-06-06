@@ -1,5 +1,7 @@
 package evm.dmc.api.model;
 
+import java.util.LinkedList;
+import java.util.List;
 import java.util.Map;
 
 import javax.persistence.Entity;
@@ -7,14 +9,18 @@ import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
 import javax.validation.constraints.NotNull;
 
+import evm.dmc.api.model.algorithm.PatternMethod;
+import evm.dmc.api.model.algorithm.PatternMethod.PatternMethodBuilder;
 import evm.dmc.core.api.back.data.DataSrcDstType;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 
 @Data
-@NoArgsConstructor
+//@NoArgsConstructor
+@Builder(builderMethodName="srcBuilder")
 @AllArgsConstructor
 @EqualsAndHashCode(callSuper=true)
 @Entity
@@ -32,6 +38,7 @@ public class FunctionSrcModel extends FunctionModel {
 	
 	@Enumerated(EnumType.STRING)
 	@NotNull
+	@Builder.Default
 	private DataSrcDstType typeSrcDst = DataSrcDstType.LOCAL_FS;
 		
 //	public FunctionSrcModel(){

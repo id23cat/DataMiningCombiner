@@ -51,7 +51,7 @@ import lombok.extern.slf4j.Slf4j;
 @Entity
 @Data
 @Builder
-@NoArgsConstructor
+//@NoArgsConstructor
 @AllArgsConstructor
 @Table(name="ACCOUNT")
 @Inheritance(strategy=InheritanceType.SINGLE_TABLE)

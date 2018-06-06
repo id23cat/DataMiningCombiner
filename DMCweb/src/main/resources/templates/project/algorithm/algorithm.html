@@ -6,22 +6,157 @@
 <head>
     <title>Algorithm</title>
     <!-- <script th:src="@{/js/bootstrap-confirmation.min.js}"></script> -->
+   	<script th:src="@{/webjars/Sortable/1.6.0/Sortable.js}"></script>
+   	<link th:href="@{/css/bootstrap-treeview.css}" rel="stylesheet" media="screen" />
+   	<script th:src="@{/js/bootstrap-treeview.js}"></script>
+	<script th:src="@{/js/functionsTreeView.js}"></script>
+	<script th:src="@{/js/dynamic_tabs.js}"></script>
+	<script th:inline="javascript">
+	/*<![CDATA[*/
+		$(document).ready(function () {
+			$('#btn-add-tab').click(
+					 addStepFunction( /* [[${tabId}]] */ 1, 
+							 [[${functionsList}]],
+							 '[[${urlSelFunction}]]' )
+			);
+			$('#tab-list').on('click','.close',function(){
+	                var tabID = $(this).parents('a').attr('href');
+	                $(this).parents('li').remove();
+	                $(tabID).remove();
+
+	                //display first tab
+	                var tabFirst = $('#tab-list a:first');
+	                tabFirst.tab('show');
+	            });
+		})
+	/*]]>*/
+	</script>
+<!--     <script th:inline="javascript">
+        $(document).ready(function () {
+            var tabID = 1;
+            var tabHead = '\
+            	<li class="fixed active"> \
+	    			<a data-toggle="pill" role="tab" href="#tab_ID_"> \
+	    				Tab _ID_\
+	    				<button class="close" type="button" title="Remove this page">×</button> \
+	    			</a> \
+    			</li> \
+            ';
+    		var tabContent = '\
+    			<div class="tab-pane fade" id="tab_ID_"> \
+	    			<div id="tree_ID_"></div> \
+	    			<div id="selected_ID_"></div> \
+	    			<div id="details_ID_"></div> \
+	    		</div> \
+    		';
+    			
+            $('#btn-add-tab').click(function () {
+                tabID++;
+                $('#tab-list').append( $(tabHead.replace(/_ID_/g, tabID)) );
+               
+                $('#tab-content').append(                		
+                		/* $('<div class="tab-pane fade" id="tab'+tabID 
+                				+ '">Tab '
+                				+ tabID 
+                				+' content</div>')); */
+                		$(tabContent.replace(/_ID_/g, tabID)
+                ));
+               // /*<![CDATA[*/
+                	var funList = [[${functionsList}]] ;
+               		console.log(funList);
+                	var urlSelectFunction = [[${selFunction}]] ;
+                	console.log(urlSelectFunction);
+                	insertFunctionsTree( funList, urlSelectFunction, tabID);
+               // /*]]>*/
+            });
+            
+            $('#tab-list').on('click','.close',function(){
+                var tabID = $(this).parents('a').attr('href');
+                $(this).parents('li').remove();
+                $(tabID).remove();
+
+                //display first tab
+                var tabFirst = $('#tab-list a:first');
+                tabFirst.tab('show');
+            });
+            
+            funOnEnd = function (evt) {
+            	console.log(evt.newIndex);
+            }
+			
+			var list = document.getElementById("tab-list");
+			var sortable = new Sortable(list, {
+				onEnd:funOnEnd,
+				filter: '.fixed'
+				});
+	
+        });
+    </script>
+     -->
 </head>
 <body>
 
+<!-- <div id=li_element>
+	<li>
+		<a data-toggle="pill" href="#tab_ID_">Source</a>
+	</li>
+</div> -->
+
 <th:block layout:fragment="content">
 	<h3>
+			Algorithm: <span th:text="${currentAlgorithm.name}"></span>
+	</h3>
+	<div class="container">
+	    <div class="row">
+	        <div class="col-md-12">
+	            <p>
+	                <button id="btn-add-tab" 
+	                	type="button" 
+	                	class="btn btn-primary pull-right">Add Step</button>
+	            </p>
+	            <!-- Nav tabs -->
+	            <ul id="tab-list" class="nav nav-tabs" role="tablist">
+	                <li class="fixed">
+	                	<!-- <a href="#tab1" role="tab"  data-toggle="tab">Tab 1</a> -->
+	                	<a data-toggle="pill" href="#datasource">Source</a>
+	                </li>
+	                <!-- <li class="active">
+	                	<a href="#tab2" role="tab" data-toggle="tab">Tab 2</a>
+	                </li> -->
+	            </ul>
+	
+	            <!-- Tab panes -->
+	            <div id="tab-content"
+	            	class="tab-content"
+	            	th:with=algorithmController=${T(evm.dmc.web.controllers.project.AlgorithmController)}>
+	                <!-- <div class="tab-pane fade in active" id="tab1">Tab 1 content</div> -->
+	                <div id="datasource" class="tab-pane fade in active">
+						<div th:insert="project/datasourcesList 
+							:: datasourcesListSelectable(${__${algorithmController.MODEL_SelDataURL}__})">
+						</div>
+					</div>
+	            </div>
+	        </div>
+	    </div>
+	</div>
+	
+<!-- 	<h3>
 			Algorithm: <span th:text="${currentAlgorithm.name}"></span>
 	</h3>
 	<ul class="nav nav-pills">
 	    <li ><a data-toggle="pill" href="#datasource">Source</a></li>
 	    <li class="active"><a data-toggle="pill" href="#act1">Action 1</a></li>
 	    <li><a data-toggle="pill" href="#menu2">Menu 2</a></li>
-	    <li><a data-toggle="pill" href="#menu3">Menu 3</a></li>
+		<li>
+			<a data-toggle="pill" role="tab" href="#tab_ID_">
+				Tab 3
+				<button class="close" type="button" title="Remove this page">×</button>
+			</a>
+		</li>
   	</ul>
 	<div class="tab-content" 
 			th:with=algorithmController=${T(evm.dmc.web.controllers.project.AlgorithmController)}>
-		<!-- <span th:text="${__${algorithmController.MODEL_SelDataURL}__}"></span> -->
+		<span th:text="${__${algorithmController.MODEL_SelDataURL}__}"></span>
 		<div id="datasource" class="tab-pane fade">
 			<div th:insert="project/datasourcesList 
 				:: datasourcesListSelectable(${__${algorithmController.MODEL_SelDataURL}__})">
@@ -34,7 +169,7 @@
 								'0')"></div>
 		</div>
 		
-	</div>
+	</div> -->
 </th:block>
  
 </body>

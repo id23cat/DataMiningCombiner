@@ -85,8 +85,8 @@ public class AlgorithmController {
 	public final static String MODEL_PagesMap = "pagesMap";
 	public static final String MODEL_AlgBaseURL = "algBaseURL";
 	public static final String MODEL_SelDataURL = "selDataURL";
-	public static final String MODEL_URL_DelAlgorithm = "algDelete";
-	public static final String MODEL_URL_SelectFunction = "selFunction";
+	public static final String MODEL_URL_DelAlgorithm = "urlAlgDelete";
+	public static final String MODEL_URL_SelectFunction = "urlSelFunction";
 	public static final String MODEL_AlgorithmsList = "algorithmsSet";
 	public static final String MODEL_NewAlgorithm = "newAlgorithm";
 	public static final String MODEL_FunctionsList = "functionsList";
@@ -272,10 +272,23 @@ public class AlgorithmController {
 		return new RedirectView(cookURL(URL_GetFunctionDetails, project.getName()));
 	}
 	
+	@GetMapping("tabs")
+	public String getTabs() {
+		return "project/algorithm/bootstrap-tabs";
+	}
+	
+	@GetMapping("alg0/algtest")
+	public String getTestAlg() {
+		return "project/algorithm/algTest";
+	}
+	
 	private static String cookURL(String URL, String projectName) {
 		return UriComponentsBuilder.fromPath(URL)
 		.buildAndExpand(projectName)
 		.toUriString();
 	}
+	
+//	@GetMapping(value="/getfunctree", produces = MediaType.APPLICATION_JSON_VALUE)
+//	public @RespnceBody 
 	
 }

@@ -91,7 +91,7 @@ public class DataStorageServiceTest {
     @Autowired
     private ProjectService projectService;
     
-    private Account account = new Account();
+    private Account account = Account.builder().build();
 	private ProjectModel project;
 	
 //	private Path relativePath;

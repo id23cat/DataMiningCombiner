@@ -26,7 +26,7 @@ public class SignInController {
 	
 	@ModelAttribute("registrationForm")
 	public Account setupRegistrationForm(){
-		return new Account();
+		return Account.builder().build();
 	}
 		
 	@GetMapping(RequestPath.signin)

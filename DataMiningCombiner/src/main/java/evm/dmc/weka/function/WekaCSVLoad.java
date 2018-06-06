@@ -45,7 +45,7 @@ public class WekaCSVLoad extends AbstractDMCFunction<Instances>
 	private static FunctionType type = FunctionType.CSV_DATASOURCE;
 	private Properties functionProperties = new Properties();
 	
-	private FunctionSrcModel model = new FunctionSrcModel();
+	private FunctionSrcModel model = FunctionSrcModel.srcBuilder().build();
 
 	private DataFactory dataFactory;
 

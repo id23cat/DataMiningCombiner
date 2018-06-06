@@ -3,6 +3,7 @@ package evm.dmc.web.service.impls;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
+import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
 import javax.persistence.EntityManager;
@@ -172,8 +173,8 @@ public class AlgorithmServiceImpl implements AlgorithmService {
 		// get root pattermMethod from algorithm for convenience
 		PatternMethod rootMethod = algorithm.getMethod();
 		
-		// check out of bounds
-		step = step > rootMethod.getSteps().size() ? rootMethod.getSteps().size() : step;
+//		// check out of bounds
+//		step = step > rootMethod.getSteps().size() ? rootMethod.getSteps().size() : step;
 
 		rootMethod.getSteps().add(step, method);
 		
@@ -208,6 +209,24 @@ public class AlgorithmServiceImpl implements AlgorithmService {
 	}
 	
 	@Override
+	@Transactional
+	public Algorithm moveMethod(Algorithm algorithm, TreeNodeDTO dtoFunction, Integer toStep) 
+		throws FunctionNotFoundException {
+		algorithm = merge(algorithm);
+		PatternMethod method = getMethod(algorithm, dtoFunction.getId()).orElseThrow(
+				fnNotFoundExc(PatternMethod.class.getName() + " step with ID = " 
+								+ dtoFunction.getId() + " not found"));
+		algorithm.getMethod().getSteps().remove(method);
+		
+		PatternMethod rootMethod = algorithm.getMethod();
+//		// check out of bounds
+//		toStep = toStep > rootMethod.getSteps().size() ? rootMethod.getSteps().size() : toStep;
+
+		rootMethod.getSteps().add(toStep, method);
+		return algorithm;
+	}
+	
+	@Override
 	@Transactional(readOnly = true)
 	public Optional<PatternMethod> getMethod(Algorithm algorithm, Long id) {
 		if(id == null || algorithm.getMethod() == null)
@@ -234,14 +253,17 @@ public class AlgorithmServiceImpl implements AlgorithmService {
 		Optional<FunctionModel> optFunction = frameworkService.getFunction(dtoFunction.getId());
 		
 		// create method from function
-		FWMethod method = MethodService.functionToFWMethod(optFunction.orElseThrow(() ->
-				new FunctionNotFoundException(
-						"Function with ID=" + dtoFunction.getId() + " not found")));
+		FWMethod method = MethodService.functionToFWMethod(optFunction.orElseThrow(
+				fnNotFoundExc("FWMethod with ID=" + dtoFunction.getId() + " not found")));
 		
 		// if algorithm doesn't have initialized root method yet -- create it
 		if(algorithm.getMethod() == null)
 			MethodService.algorithmCreatePatternMethod(algorithm);
 		return method;
+	}
+	
+	private Supplier<FunctionNotFoundException> fnNotFoundExc(String message) {
+		return () -> new FunctionNotFoundException(message);
 	}
 	
 }

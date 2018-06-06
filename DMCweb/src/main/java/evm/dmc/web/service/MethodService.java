@@ -6,6 +6,7 @@ import evm.dmc.api.model.FunctionModel;
 import evm.dmc.api.model.algorithm.Algorithm;
 import evm.dmc.api.model.algorithm.FWMethod;
 import evm.dmc.api.model.algorithm.PatternMethod;
+import evm.dmc.web.exceptions.FunctionNotFoundException;
 import evm.dmc.web.service.dto.TreeNodeDTO;
 
 public interface MethodService {
@@ -18,6 +19,7 @@ public interface MethodService {
 	Algorithm addMethod(Algorithm algorithm, TreeNodeDTO dtoFunction);
 	Algorithm addMethod(Algorithm algorithm, TreeNodeDTO dtoFunction, Integer step);
 	Algorithm setMethod(Algorithm algorithm, TreeNodeDTO dtoFunction, Integer step);
+	Algorithm moveMethod(Algorithm algorithm, TreeNodeDTO dtoFunction, Integer toStep) throws FunctionNotFoundException;
 	
 	/** Returns method from the specified step in algorithm.method.steps List 
 	 * @param algorithm

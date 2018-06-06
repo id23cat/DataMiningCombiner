@@ -41,7 +41,7 @@ public class RegisterController {
 	
 	@ModelAttribute
 	public Account setAccountToModel() {
-		return new Account();
+		return Account.builder().build();
 	}
 
 	@GetMapping(value={RequestPath.register})
@@ -71,7 +71,7 @@ public class RegisterController {
 		logger.debug("Cause: {}", ExceptionUtils.getRootCause(exception).getMessage());
 		if(ExceptionUtils.getRootCause(exception).getMessage().contains("Unique index or primary key violation")){
 			ModelAndView mav = new ModelAndView(views.getRegister());
-			mav.addObject(new Account());
+			mav.addObject(Account.builder().build());
 			mav.addObject("exception", ExceptionUtils.getRootCause(exception));
 			mav.addObject("errorMessage", userExistsMessage);
 			logger.debug("Catched UserExistsException");

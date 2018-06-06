@@ -5,14 +5,17 @@ import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
 import javax.validation.constraints.NotNull;
 
+import evm.dmc.api.model.FunctionSrcModel.FunctionSrcModelBuilder;
 import evm.dmc.core.api.back.data.DataSrcDstType;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 
 @Data
-@NoArgsConstructor
+//@NoArgsConstructor
+@Builder(builderMethodName="dstBuilder")
 @AllArgsConstructor
 @EqualsAndHashCode(callSuper=true)
 @Entity
@@ -28,6 +31,7 @@ public class FunctionDstModel extends FunctionModel {
 	
 	@Enumerated(EnumType.STRING)
 	@NotNull
+	@Builder.Default
 	private DataSrcDstType typeSrcDst = DataSrcDstType.LOCAL_FS;
 	
 //	public FunctionDstModel(){

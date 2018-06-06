@@ -13,10 +13,6 @@ public class CheckboxNamesBean {
 	private String[] names = null;
 //	private Set<String> names = null;
 	
-	public CheckboxNamesBean(String[] names) {
-		this.names = names;
-	}
-	
 	public Set<String> getNamesSet() {
 		return new HashSet<String>(Arrays.asList(names));
 	}

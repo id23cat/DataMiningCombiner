@@ -43,7 +43,7 @@ public class WekaCSVSave extends AbstractDMCFunction<String> implements CSVSaver
 	
 	private static FunctionType type = FunctionType.CSV_DATADESTINATION;
 	private Properties functionProperties = new Properties();
-	private FunctionDstModel model = new FunctionDstModel();
+	private FunctionDstModel model = FunctionDstModel.dstBuilder().build();
 
 	private File destination = null;
 	private Data<String> save = null;
