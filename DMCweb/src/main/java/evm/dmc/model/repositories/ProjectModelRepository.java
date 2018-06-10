@@ -27,6 +27,9 @@ public interface ProjectModelRepository extends JpaRepository<ProjectModel, Long
 //	Optional<ProjectModel> findById(Long id);
 	
 	Stream<ProjectModel> findAllByAccount(Account account);
+	Stream<ProjectModel> findAllByAccountId(Long accountId);
+	
+	Optional<ProjectModel> findByIdAndAccountId(Long id, Long accountId);
 	
 	@Query(FIND_ALL)
 	Stream<ProjectModel> straemAll();

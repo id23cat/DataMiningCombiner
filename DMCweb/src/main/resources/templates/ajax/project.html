@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layouts/layout}"
+      >
+
+<head>
+    <title>Projects List</title>
+    <script th:src="@{/js/ajax/project.js}"></script>
+	<script th:inline="javascript">
+	/*<![CDATA[*/
+		$(document).ready(function () {
+			$('#callListBtnId').click(
+					handlerGetProjectsList([[${projectsList}]], '#listId')
+			);
+		})
+	/*]]>*/
+	</script>
+</head>
+<body>
+<!-- Insert content into the layouts/layout.html -->
+<th:block layout:fragment="content">
+	<button id="callListBtnId"
+		type="button" 
+		class="btn" > <!-- onclick="getProjectList('http://localhost:8080/rest/2/project', 'list');" -->
+		Get projects list
+	</button>
+	<div id="listId"></div>
+	<div id="actionId"></div>
+	
+</th:block>
+
+</body>
+</html>

@@ -27,7 +27,9 @@ import javax.persistence.Transient;
 import javax.persistence.UniqueConstraint;
 import javax.validation.constraints.NotNull;
 
+import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.validator.constraints.NotBlank;
+import org.springframework.data.annotation.CreatedDate;
 
 import evm.dmc.api.model.account.Account;
 import evm.dmc.api.model.algorithm.Algorithm;
@@ -103,9 +105,13 @@ public class ProjectModel implements Serializable {
 	@Column(nullable = false)
 	private String name;
 	
+//	@CreatedDate
+	@CreationTimestamp
+	@Column(insertable = true, updatable = false)
 	@Setter(AccessLevel.NONE) 
-	@Builder.Default
-	private Instant created = Instant.now();
+//	@Builder.Default
+//	private Instant created = Instant.now();
+	private java.sql.Timestamp created;
 	
 	@OneToMany(mappedBy = "project" ,cascade = CascadeType.ALL, orphanRemoval = true)
 	@Singular

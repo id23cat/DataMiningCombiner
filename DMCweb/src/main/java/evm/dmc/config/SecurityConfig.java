@@ -55,6 +55,10 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 			RequestPath.userHome,
 	};
 	
+	private static final String[] REST_MATCHERS = {
+			"/rest/**",
+	};
+	
 	@Autowired
 	AccountService accountService;
 	
@@ -99,6 +103,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 			.authorizeRequests()
 				.antMatchers(PUBLIC_MATCHERS).permitAll()
 				.antMatchers(PUBLIC_ACTUATOR).permitAll()
+				.antMatchers(REST_MATCHERS).permitAll()
 				.antMatchers(ADMIN_MATCHERS).hasAuthority(Role.ADMIN.getName())
 				.antMatchers(USER_MATCHERS).hasAuthority(Role.USER.getName())
 				.anyRequest().authenticated()

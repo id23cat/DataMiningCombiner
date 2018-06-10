@@ -18,8 +18,11 @@ import evm.dmc.api.model.ProjectModel;
 import evm.dmc.api.model.account.Account;
 import evm.dmc.api.model.algorithm.Algorithm;
 import evm.dmc.api.model.data.MetaData;
+import evm.dmc.model.repositories.AccountRepository;
 import evm.dmc.model.repositories.ProjectModelRepository;
+import evm.dmc.web.exceptions.AccountNotFoundException;
 import evm.dmc.web.exceptions.ProjectNotFoundException;
+import evm.dmc.web.service.AccountService;
 import evm.dmc.web.service.MetaDataService;
 import evm.dmc.web.service.ProjectService;
 import lombok.extern.slf4j.Slf4j;
@@ -32,6 +35,9 @@ public class ProjectServiceImpl implements ProjectService {
 	
 	@Autowired
 	private MetaDataService metaDataService;
+	
+	@Autowired 
+	private AccountRepository accountRepository;
 	
 	@Autowired
 	private EntityManager em;
@@ -51,7 +57,17 @@ public class ProjectServiceImpl implements ProjectService {
 		return projectRepo.save(proModel);
 	}
 	
-
+	@Override
+	@Transactional
+	public ProjectModel addProject(Long accountId, ProjectModel project) {
+		Account account = accountRepository.findById(accountId)
+				.orElseThrow(AccountNotFoundException.supplier(accountId));
+		project.setAccount(account);
+		account.getProjects().add(project);
+		return project;
+		
+	}
+	
 	@Override
 	@Transactional
 	public ProjectService delete(Optional<ProjectModel> proModel) {

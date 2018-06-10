@@ -137,6 +137,12 @@
 		    <artifactId>spring-security-test</artifactId>
 		</dependency>
 		
+		<!-- Spring HATEOAS -->
+		<dependency>
+	    	<groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-hateoas</artifactId>
+    	</dependency>
+		
 		<!-- Bootstrap -->
 		<dependency>
 			<groupId>org.webjars</groupId>

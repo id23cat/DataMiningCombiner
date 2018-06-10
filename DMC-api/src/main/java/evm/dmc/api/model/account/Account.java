@@ -28,6 +28,7 @@ import javax.persistence.Transient;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
+import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.validator.constraints.Email;
 import org.hibernate.validator.constraints.NotBlank;
 
@@ -42,6 +43,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.Singular;
@@ -49,9 +51,11 @@ import lombok.ToString;
 import lombok.extern.slf4j.Slf4j;
 
 @Entity
-@Data
+//@Data
+@Setter
+@Getter
 @Builder
-//@NoArgsConstructor
+@NoArgsConstructor
 @AllArgsConstructor
 @Table(name="ACCOUNT")
 @Inheritance(strategy=InheritanceType.SINGLE_TABLE)
@@ -97,22 +101,17 @@ public class Account implements Serializable {
 	@Builder.Default
 	protected Role role = Role.USER;
 	
-	@Setter(AccessLevel.NONE) 
-	@Builder.Default
-	private Instant created = Instant.now();
+	@CreationTimestamp
+	@Column(insertable = true, updatable = false)
+	@Setter(AccessLevel.NONE)
+//	@Builder.Default
+//	private Instant created = Instant.now();
+	private java.sql.Timestamp created;
 	
 	@OneToMany(mappedBy="account", fetch = FetchType.LAZY,
 			orphanRemoval = true, cascade = CascadeType.ALL) //{CascadeType.REMOVE, CascadeType.PERSIST},
 	@Singular
 	private Set<ProjectModel> projects;
-//	private List<ProjectModel> projects = new LinkedList<>();
-
-//    public Account() {
-//    }
-//    
-//    public Account(String name) {
-//    	this.userName = name;
-//    }
 
 	public Account(String username, String password, String email, 
 			String firstName, String lastName) {
@@ -122,7 +121,7 @@ public class Account implements Serializable {
 		this.password = password;
 		this.firstName = firstName;
 		this.lastName = lastName;
-		this.created = Instant.now();
+//		this.created = Instant.now();
 	}
 	
 	public Account(String username, String password, String email, 
@@ -134,45 +133,8 @@ public class Account implements Serializable {
 		this.firstName = firstName;
 		this.lastName = lastName;
 		this.role = role;
-		this.created = Instant.now();
+//		this.created = Instant.now();
 	}
 	
-//	public Account(Account acc) {
-////		this.id = acc.id;
-//		this.userName = acc.userName;
-//		this.created = acc.created;
-//		this.email = acc.email;
-//		this.firstName = acc.firstName;
-//		this.lastName = acc.lastName;
-//		this.password = acc.password;
-//		this.role = acc.role;
-//	}
-	
-//	public Account addProject(ProjectModel project) {
-//		projects.add(project);
-//		project.setAccount(this);
-//		return this;
-//	}
-	
-//	public void removeProject(ProjectModel project) {
-//		projects.remove(project);
-//		project.setAccount(null);
-////		return this;
-//	}
-	
-//	
-//	public void removeProjectByName(String name) {
-//
-//		projects.removeIf((proj) -> proj.getName().equals(name));
-//	}
-//	
-//	public void removeProjectsByNames(String names[]) {
-////		projects.forEach((proj) -> {if( nameContainsOneOf(proj.getName(), names) ) removeProject(proj);});
-//		projects.removeIf((proj) -> nameContainsOneOf(proj.getName(), names));
-//	}
-//	
-//	private static boolean nameContainsOneOf(String name, String[] names) {
-//		return Arrays.stream(names).anyMatch(name :: contains);
-//	}
 
 }

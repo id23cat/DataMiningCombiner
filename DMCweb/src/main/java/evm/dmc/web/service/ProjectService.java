@@ -13,6 +13,8 @@ public interface ProjectService {
 	ProjectService save(Optional<ProjectModel> proModel);
 	ProjectModel save(ProjectModel proModel);
 	
+	ProjectModel addProject(Long accountId, ProjectModel project);
+	
 	ProjectService delete(Optional<ProjectModel> proModel);
 	ProjectService delete(ProjectModel proModel);
 	ProjectService deleteByName(String name);

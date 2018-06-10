@@ -22,5 +22,12 @@ public interface MetaDataRepository extends JpaRepository<MetaData, Long> {
 	Stream<MetaData> findByProjectAndNameIn(ProjectModel project, Set<String> names);
 	
 	void deleteByProjectAndNameIn(ProjectModel project, Set<String> names);
+	
+//	Stream<MetaData> findAllByProjectIdAndAccountId(Long projectId, Long accountId);
+	Stream<MetaData> findAllByProjectId(Long projectId);
+	
+	Optional<MetaData> findById(Long id);
+	
+	Optional<MetaData> findByIdAndProjectId(Long id, Long projectId);
 
 }

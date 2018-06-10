@@ -4,6 +4,7 @@ import java.util.Collections;
 import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import javax.annotation.PostConstruct;
 
@@ -155,6 +156,11 @@ public class AccountServiceImpl implements AccountService {
 	@Transactional
 	private User createUser(Account account) {
 		return new User(account.getUserName(), account.getPassword(), Collections.singleton(createAuthority(account)));
+	}
+	
+	@Transactional(readOnly=true)
+	public Stream<Account> getAll() {
+		return accountRepository.streamAll();
 	}
 
 	private GrantedAuthority createAuthority(Account account) {
