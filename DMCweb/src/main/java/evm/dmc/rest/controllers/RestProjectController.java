@@ -35,7 +35,7 @@ import lombok.extern.slf4j.Slf4j;
 @RequestMapping(RestProjectController.BASE_URL)	// /rest/{accountId}/project
 @Slf4j
 public class RestProjectController {
-	public final static String BASE_URL = "rest/{accountId}/project";
+	public final static String BASE_URL = "/rest/{accountId}/project";
 	
 	public final static String LINK_REL_projectsList = "projectsList";
 	

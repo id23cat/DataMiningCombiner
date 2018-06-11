@@ -56,7 +56,11 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 	};
 	
 	private static final String[] REST_MATCHERS = {
+			"/webjars/**",
+			"/*",
+			"/v2/api-docs",
 			"/rest/**",
+			"/**"
 	};
 	
 	@Autowired
