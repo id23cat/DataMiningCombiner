@@ -43,7 +43,7 @@
         
 	</properties>
 	
-	<profiles>
+	<!-- <profiles>
 		<profile>
 			<id>devH2</id>
 			<activation>
@@ -64,7 +64,7 @@
 		<profile>
 	        <id>devMySQL</id>
 	        <activation>
-	            <!-- <activeByDefault>true</activeByDefault> -->
+	            <activeByDefault>true</activeByDefault>
 	            <property>
 	                <name>spring.profiles.active</name>
 	                <value>devMySQL</value>
@@ -77,7 +77,7 @@
 	            </dependency>
 	        </dependencies>
 	    </profile>
-	</profiles>
+	</profiles> -->
 	
 	
 	<dependencies>

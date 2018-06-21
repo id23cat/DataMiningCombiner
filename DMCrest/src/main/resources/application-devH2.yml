@@ -1,13 +1,3 @@
-# devH2 -- H2 development profile
-management:
-  endpoints:
-    enabled-by-default: true
-  endpoint:
-    health:
-      enabled: true
-    beans:
-      enabled: true
-
 spring:
   include:
     - default
@@ -15,22 +5,20 @@ spring:
   datasource:
 #    driver-class-name: org.h2database.jdbcDriver
     url: jdbc:h2:mem:dmc
-
-# for H2 console frame
-security:
-  headers: 
-    frame: false
-        
+    
 logging:
   level:
     org.springframework: ERROR
     org.springframework.web: DEBUG
-    org.springframework.security: WARN
+#    org.springframework.security: WARN
     org.springframework.data: TRACE
     org.springframework.transaction: DEBUG
-    org.springframework.webflow: TRACE
     org.hibernate.SQL: TRACE
     org.hibernate.type.descriptor.sql.BasicBinder: TRACE
-    evm.dmc.web: TRACE
+    evm.dmc.rest: TRACE
     evm.dmc.api: DEBUG
-
+    
+# for H2 console frame
+security:
+  headers: 
+    frame: false

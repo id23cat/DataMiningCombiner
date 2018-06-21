@@ -1,0 +1,51 @@
+management:
+  server:
+    port: 9001
+    servlet:
+      context-path: /management
+  endpoint:
+    health:
+      enabled: true
+    beans:
+      enabled: true
+    shutdown:
+      enabled: true
+    
+spring:
+  servlet:
+    multipart:
+      max-file-size: 1024Mb
+      max-request-size: 1024Mb
+      
+server:
+  # Server Port Configuration
+  port: 8080
+  #Access log configuration
+  tomcat:
+    accesslog:
+      enabled: true
+    basedir: ../logs
+    
+# Logging Configuration
+logging:
+#  config: log4j2.xml
+  level:
+    org.springframework.web: DEBUG
+    org.springframework.security: WARN
+    org.springframework.data: WARN
+    evm.dmc.rest: DEBUG
+  file: ../logs/dmc-rest.log
+  
+dmc:
+  security:
+    admin:
+      username: admin
+      password: adminpass
+  datastorage:
+    root: userFiles
+    preview:
+      linesCount: 7
+      retriesCount: 3
+      fileWaitTimeoutMS: 500 
+  
+  

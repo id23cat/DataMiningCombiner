@@ -13,7 +13,8 @@
 	<parent>
 		<groupId>org.springframework.boot</groupId>
 		<artifactId>spring-boot-starter-parent</artifactId>
-		<version>1.5.6.RELEASE</version>
+		<!-- <version>1.5.6.RELEASE</version> -->
+		<version>2.0.3.RELEASE</version>
 		<!-- <relativePath /> lookup parent from repository -->
 	</parent>
 
@@ -22,6 +23,42 @@
 		<!-- Spring -->
 		<!-- <spring-framework.version>4.3.10.RELEASE</spring-framework.version> -->
 	</properties>
+	
+	<profiles>
+		<profile>
+			<id>devH2</id>
+			<activation>
+			 <activeByDefault>true</activeByDefault>
+	            <property>
+	                <name>spring.profiles.active</name>
+	                <value>devH2</value>
+	            </property>
+			</activation>
+			<dependencies>
+	            <dependency>
+	               <groupId>com.h2database</groupId>
+		            <artifactId>h2</artifactId>
+		       </dependency>
+	        </dependencies>
+		</profile>
+		
+		<profile>
+	        <id>devMySQL</id>
+	        <activation>
+	            <!-- <activeByDefault>true</activeByDefault> -->
+	            <property>
+	                <name>spring.profiles.active</name>
+	                <value>devMySQL</value>
+	            </property>
+	        </activation>
+	        <dependencies>
+	            <dependency>
+	                <groupId>mysql</groupId>
+            		<artifactId>mysql-connector-java</artifactId>
+	            </dependency>
+	        </dependencies>
+	    </profile>
+	</profiles>
 
 	<modules>
 		<module>DMC-api</module>
