@@ -9,7 +9,7 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 
 import evm.dmc.api.model.ProjectModel;
 import evm.dmc.api.model.account.Account;
-import evm.dmc.model.exceptions.ProjectNotFoundException;
+import evm.dmc.webApi.exceptions.ProjectNotFoundException;
 
 public interface AccountService extends UserDetailsService {
 	Account save(Account account);

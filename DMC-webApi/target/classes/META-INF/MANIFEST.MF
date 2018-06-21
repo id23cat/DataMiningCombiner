@@ -1,5 +1,10 @@
 Manifest-Version: 1.0
 Built-By: id23cat
 Build-Jdk: 10.0.1
+Implementation-Title: DMC-webApi
+Implementation-Version: 0.0.1-SNAPSHOT
+Implementation-Vendor-Id: by.bsuir.evm
+Implementation-Vendor: Pivotal Software, Inc.
+Implementation-URL: http://maven.apache.org
 Created-By: Maven Integration for Eclipse
 

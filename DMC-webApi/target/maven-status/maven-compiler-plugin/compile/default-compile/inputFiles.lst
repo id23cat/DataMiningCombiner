@@ -1,0 +1,11 @@
+/home/id23cat/Workspaces/workspace/datamining/DMC-webApi/src/main/java/evm/dmc/webApi/NotFoundException.java
+/home/id23cat/Workspaces/workspace/datamining/DMC-webApi/src/main/java/evm/dmc/webApi/ProjectNotFoundException.java
+/home/id23cat/Workspaces/workspace/datamining/DMC-webApi/src/main/java/evm/dmc/webApi/StorageFileNotFoundException.java
+/home/id23cat/Workspaces/workspace/datamining/DMC-webApi/src/main/java/evm/dmc/webApi/MetaDataNotFoundException.java
+/home/id23cat/Workspaces/workspace/datamining/DMC-webApi/src/main/java/evm/dmc/webApi/FrameworkNotFoundException.java
+/home/id23cat/Workspaces/workspace/datamining/DMC-webApi/src/main/java/evm/dmc/webApi/DataStructureException.java
+/home/id23cat/Workspaces/workspace/datamining/DMC-webApi/src/main/java/evm/dmc/webApi/AccountNotFoundException.java
+/home/id23cat/Workspaces/workspace/datamining/DMC-webApi/src/main/java/evm/dmc/webApi/UnsupportedFileTypeException.java
+/home/id23cat/Workspaces/workspace/datamining/DMC-webApi/src/main/java/evm/dmc/webApi/StorageException.java
+/home/id23cat/Workspaces/workspace/datamining/DMC-webApi/src/main/java/evm/dmc/webApi/FunctionNotFoundException.java
+/home/id23cat/Workspaces/workspace/datamining/DMC-webApi/src/main/java/evm/dmc/webApi/AlgorithmNotFoundException.java

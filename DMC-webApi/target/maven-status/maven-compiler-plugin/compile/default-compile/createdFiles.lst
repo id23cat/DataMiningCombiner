@@ -1,0 +1,11 @@
+evm/dmc/webApi/AccountNotFoundException.class
+evm/dmc/webApi/DataStructureException.class
+evm/dmc/webApi/StorageException.class
+evm/dmc/webApi/MetaDataNotFoundException.class
+evm/dmc/webApi/AlgorithmNotFoundException.class
+evm/dmc/webApi/UnsupportedFileTypeException.class
+evm/dmc/webApi/StorageFileNotFoundException.class
+evm/dmc/webApi/ProjectNotFoundException.class
+evm/dmc/webApi/FrameworkNotFoundException.class
+evm/dmc/webApi/NotFoundException.class
+evm/dmc/webApi/FunctionNotFoundException.class

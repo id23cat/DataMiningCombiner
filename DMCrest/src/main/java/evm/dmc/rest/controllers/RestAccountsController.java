@@ -3,6 +3,7 @@ package evm.dmc.rest.controllers;
 import static org.springframework.hateoas.mvc.ControllerLinkBuilder.*;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 import org.modelmapper.ModelMapper;
@@ -17,6 +18,9 @@ import org.springframework.web.bind.annotation.RestController;
 
 import evm.dmc.api.model.account.Account;
 import evm.dmc.model.repositories.AccountRepository;
+import evm.dmc.model.service.AccountService;
+import evm.dmc.webApi.dto.AccountDto;
+import evm.dmc.webApi.exceptions.AccountNotFoundException;
 
 @RestController
 @RequestMapping(RestAccountsController.BASE_URL)	// /rest/user
@@ -61,7 +65,8 @@ public class RestAccountsController {
 	@GetMapping("/{accountId}")
 	@Transactional
 	public AccountDto getAccount(@PathVariable Long accountId) {
-		return addLinks(convertToDto(accountRepository.findOne(accountId)));
+		return addLinks(convertToDto(accountRepository.findById(accountId)
+				.orElseThrow(AccountNotFoundException.supplier(accountId))));
 	}
 	
 	private AccountDto addLinks(AccountDto accDto) {
