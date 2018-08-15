@@ -20,6 +20,7 @@ public interface ProjectService {
 	ProjectService deleteByName(String name);
 	ProjectService deleteByAccountAndNames(Account account, Set<String> names);
 	ProjectService deleteAllByNames(List<String> names);
+	ProjectService deleteById(Account account, Long id);
 	
 	Stream<ProjectModel> getAll();
 	List<ProjectModel> getAllAsList();

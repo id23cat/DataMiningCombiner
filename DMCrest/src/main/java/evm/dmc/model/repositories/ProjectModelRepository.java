@@ -20,6 +20,8 @@ public interface ProjectModelRepository extends JpaRepository<ProjectModel, Long
 	
 	Long deleteByAccountAndNameIn(Account account, Set<String> names);
 	
+	Long deleteByAccountAndId(Account account, Long id);
+	
 	Stream<ProjectModel> findByName(String name);
 	
 	Optional<ProjectModel> findByNameAndAccount(String name, Account account);

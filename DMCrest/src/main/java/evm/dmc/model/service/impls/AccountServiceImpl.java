@@ -86,6 +86,12 @@ public class AccountServiceImpl implements AccountService {
 	}
 	
 	@Override
+	@Transactional
+	public Account get(Long id) {
+		return accountRepository.getOne(id);
+	}
+	
+	@Override
 	public void signin(Account account) {
 		SecurityContextHolder.getContext().setAuthentication(authenticate(account));
 	}

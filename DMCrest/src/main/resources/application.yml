@@ -16,10 +16,13 @@ spring:
     multipart:
       max-file-size: 1024Mb
       max-request-size: 1024Mb
+#  data:
+#    rest:
+#      basePath: /rest
       
 server:
   # Server Port Configuration
-  port: 8080
+  port: 8081
   #Access log configuration
   tomcat:
     accesslog:

@@ -5,6 +5,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Profile;
 import org.springframework.core.env.Environment;
+import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
@@ -19,13 +20,19 @@ import org.springframework.security.web.access.AccessDeniedHandler;
 import evm.dmc.api.model.account.Role;
 import evm.dmc.model.service.AccountService;
 
-//@Configuration
-//@EnableWebSecurity
-//@EnableGlobalMethodSecurity(securedEnabled = true)
-//@Profile({"devH2", "devMySQL", "test"})
+@Configuration
+@EnableWebSecurity
+//@EnableGlobalMethodSecurity(securedEnabled = false)
+@EnableGlobalMethodSecurity(prePostEnabled = true)
+@EnableScheduling	// We use scheduler for evicting EhCache tokens
+@Profile({"devH2", "devMySQL", "test"})
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
 	private static final String[] PUBLIC_MATCHERS = {
 			// Only for development period
+			
+	};
+	
+	private static final String[] H2_MATCHER = {
 			"/h2-console/**"
 	};
 	
@@ -49,8 +56,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 	
 	@Bean
 	public PasswordEncoder passwordEncoder() {
-		return new BCryptPasswordEncoder();
-//		return NoOpPasswordEncoder.getInstance();
+//		return new BCryptPasswordEncoder();
+		return NoOpPasswordEncoder.getInstance();
 	}
 	
 	
@@ -68,15 +75,17 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 		http//.csrf().disable()
 			.authorizeRequests()
 				.antMatchers(PUBLIC_MATCHERS).permitAll()
+				.antMatchers(H2_MATCHER).permitAll()
 				.antMatchers(PUBLIC_ACTUATOR).permitAll()
 				.antMatchers(SWAGGER_MATCHERS).permitAll()
 //				.antMatchers(ADMIN_MATCHERS).hasAuthority(Role.ADMIN.getName())
 //				.antMatchers(USER_MATCHERS).hasAuthority(Role.USER.getName())
 				.anyRequest().authenticated()
 			.and()
+			.httpBasic()
 			;
 		// # for H2 console frame
-//        http.csrf().disable();
+        http.csrf().disable();
         http.headers().frameOptions().disable();
 	}
 	

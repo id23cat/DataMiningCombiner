@@ -15,6 +15,7 @@ public interface AccountService extends UserDetailsService {
 	Account save(Account account);
 	
 	Account getAccountByName(String username) throws UsernameNotFoundException;
+	Account get(Long id);
 	
 	void signin(Account account);
 	

@@ -22,7 +22,7 @@ public interface AccountRepository extends JpaRepository<Account, Long> {
 	List<Account> findByRole(Role role);
 	
 //	@Async
-	List<Account> findByRole(Role role, Pageable pageable);
+//	List<Account> findByRole(Role role, Pageable pageable);
 	
 	@Query(FIND_ALL)
 	Stream<Account> streamAll();

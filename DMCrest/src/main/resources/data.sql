@@ -16,7 +16,7 @@
 --	
 -- account:
 INSERT INTO ACCOUNT(DTYPE, CREATED, EMAIL, FIRST_NAME, LAST_NAME, PASSWORD, ROLE, USER_NAME) VALUES
-('Account', CURRENT_TIMESTAMP(), 'devel@mail.org', 'Devel', 'Oper', 'devel', 'USER', 'devel');
+('Account', CURRENT_TIMESTAMP(), 'devel@mail.org', 'Devel', 'Oper', 'devel1', 'USER', 'devel');
 
 -- project:
 INSERT INTO PROJECT(CREATED, NAME, PROJECT_TYPE, ACCOUNT_ID) VALUES
@@ -67,9 +67,9 @@ INSERT INTO METADATA(ID, DESCRIPTION, NAME, PROJECT_ID, STORAGE_ID, ATTRIBUTES) 
 --(2, 3333, TRUE, 1.0, '5', 'NOMINAL', '5')
 --;
 
-INSERT INTO DATA_PREVIEW(DELIMITER, META_DATA_ID, HEADER) VALUES
-(',', 1, 'State,Account length,Area code,International plan,Voice mail plan,Number vmail messages,Total day minutes,Total day calls,Total day charge,Total eve minutes,Total eve calls,Total eve charge,Total night minutes,Total night calls,Total night charge,Total intl minutes,Total intl calls,Total intl charge,Customer service calls,Churn'),
-(',', 2, '0,1,2,3,4')
+INSERT INTO DATA_PREVIEW(ID, DELIMITER, META_DATA_ID, HEADER) VALUES
+(1,',', 1, 'State,Account length,Area code,International plan,Voice mail plan,Number vmail messages,Total day minutes,Total day calls,Total day charge,Total eve minutes,Total eve calls,Total eve charge,Total night minutes,Total night calls,Total night charge,Total intl minutes,Total intl calls,Total intl charge,Customer service calls,Churn'),
+(2,',', 2, '0,1,2,3,4')
 ;
 
 UPDATE METADATA SET PREVIEW_ID=1 WHERE NAME='telecom';

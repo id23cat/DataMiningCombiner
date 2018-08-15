@@ -23,8 +23,8 @@ import evm.dmc.webApi.dto.AccountDto;
 import evm.dmc.webApi.exceptions.AccountNotFoundException;
 
 @RestController
-@RequestMapping(RestAccountsController.BASE_URL)	// /rest/user
-public class RestAccountsController {
+@RequestMapping(RestAccountsControllerOld.BASE_URL)	// /rest/user
+public class RestAccountsControllerOld {
 	public final static String BASE_URL = "/rest/user";
 	
 	public final static String LINK_REL_accountsList = "accountsList";
@@ -38,7 +38,7 @@ public class RestAccountsController {
     private ModelMapper modelMapper;
 	
 	public static AccountDto selfLink(AccountDto dto) {
-		Link selfLink = linkTo(methodOn(RestAccountsController.class)
+		Link selfLink = linkTo(methodOn(RestAccountsControllerOld.class)
 				.getAccount(dto.getAccountId()))
 				.withSelfRel();
 		dto.add(selfLink);
@@ -46,7 +46,7 @@ public class RestAccountsController {
 	}
 	
 	public static ResourceSupport accountsListLink(ResourceSupport resSupport) {
-		Link listLink = linkTo(methodOn(RestAccountsController.class)
+		Link listLink = linkTo(methodOn(RestAccountsControllerOld.class)
 				.getAccountsList())
 				.withRel(LINK_REL_accountsList);
 		resSupport.add(listLink);
@@ -72,7 +72,7 @@ public class RestAccountsController {
 	private AccountDto addLinks(AccountDto accDto) {
 		selfLink(accDto);
 		accountsListLink(accDto);
-		RestProjectController.projectsListLink(accDto, accDto.getAccountId());
+		RestProjectControllerOld.projectsListLink(accDto, accDto.getAccountId());
 		return accDto;
 	}
 	

@@ -109,6 +109,13 @@ public class ProjectServiceImpl implements ProjectService {
 		projectRepo.deleteByNameIn(names);
 		return this;
 	}
+	
+	@Override
+	@Transactional
+	public ProjectService deleteById(Account account, Long id) {
+		projectRepo.deleteByAccountAndId(account, id);
+		return this;
+	}
 
 	@Override
 	@Transactional(readOnly = true)
