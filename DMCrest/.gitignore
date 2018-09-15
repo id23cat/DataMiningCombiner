@@ -23,6 +23,9 @@
 /dist/
 /nbdist/
 /.nb-gradle/
+<<<<<<< HEAD
 
 ## ignore local db ##
+=======
+>>>>>>> 2f4ddc377ea5cdc1de9a7df9d183f4ef7fad008b
 /h2-db/
