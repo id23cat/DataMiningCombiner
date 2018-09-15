@@ -1,6 +1,6 @@
 Manifest-Version: 1.0
 Built-By: id23cat
-Build-Jdk: 10.0.1
+Build-Jdk: 10.0.2
 Implementation-Title: DMC-webApi
 Implementation-Version: 0.0.1-SNAPSHOT
 Implementation-Vendor-Id: by.bsuir.evm
