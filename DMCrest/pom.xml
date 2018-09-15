@@ -27,6 +27,21 @@
         <DMC-webApi.version>${project.version}</DMC-webApi.version>
 	</properties>
 
+	<profiles>
+		<profile>
+			<id>devH2</id>
+			<activation>
+				<activeByDefault>true</activeByDefault>
+				<property>
+					<name>spring.profiles.active</name>
+					<value>devH2</value>
+				</property>
+			</activation>
+			<!-- <dependencies> <dependency> <groupId>com.h2database</groupId> <artifactId>h2</artifactId> 
+				</dependency> </dependencies> -->
+		</profile>
+	</profiles>
+
 	<dependencies>
 		<dependency>
 			<groupId>by.bsuir.evm</groupId>
