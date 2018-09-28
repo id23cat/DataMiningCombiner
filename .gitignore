@@ -5,3 +5,5 @@ Python/*.png
 DMCweb2
 logs/
 logs/*
+target
+*.iml
