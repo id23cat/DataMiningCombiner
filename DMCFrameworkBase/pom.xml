@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <parent>
+        <artifactId>DMC</artifactId>
+        <groupId>by.bsuir.evm</groupId>
+        <version>0.0.1-SNAPSHOT</version>
+    </parent>
+    <modelVersion>4.0.0</modelVersion>
+
+    <artifactId>DMCFrameworkBase</artifactId>
+
+    <properties>
+        <org.springframework.context.version>5.1.0.RELEASE</org.springframework.context.version>
+    </properties>
+
+    <!-- TODO: use dependencyManagement -->
+    <dependencies>
+        <!-- TODO: split api in data and communication levels-->
+        <!-- TODO: remove spring from api modules-->
+        <dependency>
+            <groupId>by.bsuir.evm</groupId>
+            <artifactId>DMC-api</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-context</artifactId>
+            <version>${org.springframework.context.version}</version>
+        </dependency>
+    </dependencies>
+</project>

@@ -4,18 +4,21 @@ import org.springframework.context.annotation.Scope;
 
 import evm.dmc.core.api.DMCFunction;
 
+/**
+ * Represents execution context of some framework
+ */
 @Scope("singleton")
 public interface FrameworkContext {
 	/**
 	 * Method is used for first initialization of function context or resetting
-	 * settings to default
+	 * settings to default.
 	 */
 	void initContext();
 
 	/**
-	 * Execute concrete function in context
+	 * Execute concrete function in context.
 	 * 
-	 * @param function
+	 * @param function      function to execute
 	 */
 	void executeInContext(DMCFunction function);
 
@@ -25,7 +28,7 @@ public interface FrameworkContext {
 	 * Pulls out value from possible environment or just copies from arg data to
 	 * result of function object.
 	 *
-	 * @return the value
+	 * @return      result of function execution
 	 */
 	void getValue(DMCFunction function);
 }

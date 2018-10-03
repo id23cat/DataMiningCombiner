@@ -1,5 +1,8 @@
 package evm.dmc.core.api.back;
 
+/**
+ * Describes object, that has name and description.
+ */
 public interface HasNameAndDescription {
 	/**
 	 * Returns name of function that should match the pattern:
