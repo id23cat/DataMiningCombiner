@@ -1,83 +1,121 @@
 package evm.dmc.rest.controllers;
 
-import java.util.List;
-
-import org.modelmapper.ModelMapper;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
-
-import evm.dmc.model.repositories.AccountRepository;
-import evm.dmc.model.repositories.ProjectModelRepository;
+import evm.dmc.api.model.ProjectModel;
+import evm.dmc.api.model.account.Account;
 import evm.dmc.model.service.AccountService;
 import evm.dmc.model.service.ProjectService;
+import evm.dmc.rest.annotation.HateoasRelation;
+import evm.dmc.rest.annotation.HateoasRelationChildren;
 import evm.dmc.webApi.dto.ProjectDto;
+import evm.dmc.webApi.exceptions.AccountNotFoundException;
+import evm.dmc.webApi.exceptions.ProjectNotFoundException;
 import lombok.extern.slf4j.Slf4j;
+import org.modelmapper.ModelMapper;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
+import java.util.List;
+
+/**
+ * HATEOAS REST API controller for Project model
+ *
+ * @see evm.dmc.api.model.ProjectModel
+ */
 @RestController
-@RequestMapping(RestProjectController.BASE_URL)	// /rest/{accountId}/project
+@RequestMapping(RestProjectController.BASE_URL)
+@HateoasRelationChildren({RestDatasetController.class})
 @Slf4j
 public class RestProjectController extends AbstractRestCrudController<ProjectDto> {
-public final static String BASE_URL = "/rest/{accountId}/project";
-	
-	public final static String LINK_REL_projectsList = "projectsList";
-	public final static String REQPARAM_projId = "id";
-	
+
+	final static String BASE_URL = "/rest/{accountId}/project";
+
+	private final ModelMapper modelMapper;
+	private final ProjectService projectService;
+	private final AccountService accountService;
+
 	@Autowired
-	private ModelMapper modelMapper;
-	
-	@Autowired
-	private ProjectService projectService;
-	
-	@Autowired
-	private AccountService accountService;
-	
-	@Autowired
-	private AccountRepository accountRepository;
-	
-	@Autowired
-	private ProjectModelRepository projectModelRepository;
+	public RestProjectController(
+			ModelMapper modelMapper,
+			ProjectService projectService,
+			AccountService accountService) {
 
-	@Override
-	public ProjectDto getInstance(Long accountId, Long id) {
-		// TODO Auto-generated method stub
-		return null;
+		this.modelMapper = modelMapper;
+		this.projectService = projectService;
+		this.accountService = accountService;
 	}
 
 	@Override
-	public List<ProjectDto> getInstancesList(Long accountId) {
-		// TODO Auto-generated method stub
-		return null;
+	@PostMapping
+	@HateoasRelation("addProject")
+	public ProjectDto addInstance(ProjectDto dto, @PathVariable Long accountId, Long projectId) {
+
+		Account account = accountService.get(accountId)
+				.orElseThrow(AccountNotFoundException.supplier(accountId));
+
+		ProjectModel projectModel = convertToEntity(dto);
+		projectModel = projectService.addProject(account.getId(), projectModel);
+
+		return convertToDto(projectModel);
 	}
 
 	@Override
-	public ProjectDto postNewInstance(Long accountId, ProjectDto dto) {
-		// TODO Auto-generated method stub
-		return null;
+	@PutMapping
+	@HateoasRelation("updateProject")
+	public ProjectDto updateInstance(ProjectDto dto, @PathVariable Long accountId, Long projectId) {
+
+		ProjectModel model = convertToEntity(dto);
+		projectService.save(model);
+
+		return convertToDto(projectService.getById(dto.getDtoId())
+				.orElseThrow(ProjectNotFoundException.supplier(dto.getDtoId())));
 	}
 
 	@Override
-	public ProjectDto psotUpdateInstance(Long accountId, ProjectDto dto) {
-		// TODO Auto-generated method stub
-		return null;
+	@DeleteMapping("/{projectId}")
+	@HateoasRelation("deleteProject")
+	public ProjectDto deleteInstance(@PathVariable Long accountId, @PathVariable Long projectId, Long entityId) {
+
+		Account account = accountService.get(accountId)
+				.orElseThrow(AccountNotFoundException.supplier(accountId));
+
+		ProjectDto dto = convertToDto(projectService.getById(projectId)
+				.orElseThrow(ProjectNotFoundException.supplier(projectId)));
+
+		projectService.deleteById(account, dto.getDtoId());
+		return dto;
 	}
 
 	@Override
-	public ProjectDto deleteInstance(Long accountId, Long id) {
-		// TODO Auto-generated method stub
-		return null;
+	@GetMapping("/{projectId}")
+	@HateoasRelation("getProject")
+	public ProjectDto getInstance(@PathVariable Long accountId, @PathVariable Long projectId, Long entityId) {
+
+		return convertToDto(projectService.getById(projectId)
+				.orElseThrow(ProjectNotFoundException.supplier(projectId)));
 	}
 
 	@Override
-	public ProjectDto deleteInstance(Long accountId, ProjectDto dto) {
-		// TODO Auto-generated method stub
-		return null;
+	@GetMapping("/all")
+	@HateoasRelation("getProjectList")
+	public List<ProjectDto> getInstanceList(@PathVariable Long accountId, Long projectId) {
+
+		List<ProjectModel> modelList = projectService.getAllAsList();
+		List<ProjectDto> dtoList = new ArrayList<>();
+		for (ProjectModel model : modelList) {
+			dtoList.add(convertToDto(model));
+		}
+
+		return dtoList;
 	}
 
-	@Override
-	public String getListRelatioinName() {
-		// TODO Auto-generated method stub
-		return null;
+	private ProjectDto convertToDto(ProjectModel account) {
+
+		return modelMapper.map(account, ProjectDto.class);
 	}
 
+	private ProjectModel convertToEntity(ProjectDto dto) {
+
+		return modelMapper.map(dto, ProjectModel.class);
+	}
 }
