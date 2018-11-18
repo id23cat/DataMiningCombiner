@@ -38,7 +38,9 @@ public interface MetaDataService extends EnityGetterService<MetaData>, EntityMod
 	List<DataAttribute> getDataAttributes(DataPreview preview);
 	
 	MetaData updateAttributes(ProjectModel project, MetaData meta);
-	
+
+	List<MetaData> getProjectDatasetsAsList(Long projectId);
+
 	public static DataStorageModel newDataStorageModel(Path baseDir, Path fullFilePath,
 			DataSrcDstType type, String delimiter, boolean hasHeader) {
 		DataStorageModel storageDesc = DataStorageModel
