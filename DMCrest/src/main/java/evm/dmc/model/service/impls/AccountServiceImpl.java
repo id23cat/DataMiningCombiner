@@ -1,6 +1,7 @@
 package evm.dmc.model.service.impls;
 
 import java.util.Collections;
+import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -68,27 +69,32 @@ public class AccountServiceImpl implements AccountService {
 	
 	@Override
 	@Transactional
-	public Account save(Account account) {
+	public Optional<Account> save(Account account) {
 		account.setPassword(passwordEncoder.encode(account.getPassword()));
-		return accountRepository.save(account);
+		return Optional.of(accountRepository.save(account));
 	}
 
 	@Override
 	@Transactional(readOnly = true)
 	public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-		return createUser(getAccountByName(username));
+		Optional<Account> accountOptional = getAccountByName(username);
+		UserDetails details = null;
+		if(accountOptional.isPresent()) {
+			details = createUser(accountOptional.get());
+		}
+		return details;
 	}
 	
 	@Override
 	@Transactional(readOnly = true)
-	public Account getAccountByName(String username) throws UsernameNotFoundException {
-		return  accountRepository.findByUserName(username).orElseThrow(() -> new UsernameNotFoundException(username));
+	public Optional<Account> getAccountByName(String username) throws UsernameNotFoundException {
+		return accountRepository.findByUserName(username);
 	}
 	
 	@Override
 	@Transactional
-	public Account get(Long id) {
-		return accountRepository.getOne(id);
+	public Optional<Account> get(Long id) {
+		return accountRepository.findById(id);
 	}
 	
 	@Override
@@ -150,7 +156,7 @@ public class AccountServiceImpl implements AccountService {
 //	}
 	
 	@Transactional
-	private Account merge(Account account) {
+	public Account merge(Account account) {
 //		return em.merge(account);
 		return accountRepository.getOne(account.getId());
 	}
@@ -160,7 +166,7 @@ public class AccountServiceImpl implements AccountService {
 	}
 	
 	@Transactional
-	private User createUser(Account account) {
+	public User createUser(Account account) {
 		return new User(account.getUserName(), account.getPassword(), Collections.singleton(createAuthority(account)));
 	}
 	
@@ -169,7 +175,12 @@ public class AccountServiceImpl implements AccountService {
 		return accountRepository.streamAll();
 	}
 
-	private GrantedAuthority createAuthority(Account account) {
+    @Override
+    public List<Account> getAllAsList() {
+        return accountRepository.findAll();
+    }
+
+    private GrantedAuthority createAuthority(Account account) {
 		return new SimpleGrantedAuthority(account.getRole().toString());
 	}
 	

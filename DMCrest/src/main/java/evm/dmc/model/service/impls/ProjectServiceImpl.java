@@ -144,10 +144,12 @@ public class ProjectServiceImpl implements ProjectService {
 	@Override
 	@Transactional(readOnly=true)
 	public Optional<ProjectModel> getById(Long id) throws ProjectNotFoundException {
-		Optional<ProjectModel> optProject = Optional.empty();
+		Optional<ProjectModel> optProject;
 		try {
-			optProject = Optional.ofNullable(projectRepo.findById(id)
-					.orElseThrow(ProjectNotFoundException.supplier(id)));
+			optProject = Optional.ofNullable(
+					projectRepo.findById(id)
+							.orElseThrow(ProjectNotFoundException.supplier(id))
+			);
 		} catch (ProjectNotFoundException exc) {
 			optProject = Optional.empty();
 		}
