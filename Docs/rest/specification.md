@@ -15,12 +15,12 @@
 >    "dtoId":1
 >    "_links": {
 >       "self": {"href":"http://localhost:8081/rest/user/1"},
->       "getAccount": {"href":"http://localhost:8081/rest/user/1"},
->       "updateAccount": {"href":"http://localhost:8081/rest/user/1"},
->       "addAccount": { "href":"http://localhost:8081/rest/user"},
->       "deleteAccount":{"href":"http://localhost:8081/rest/user/1"},
->       "getAccountList": {"href":"http://localhost:8081/rest/user/all"},
->       "getProjectList":{"href":"http://localhost:8081/rest/1/project/all"}
+>       "getAccount": {"href":"http://localhost:8081/rest/user/1","type":"GET"},
+>       "updateAccount": {"href":"http://localhost:8081/rest/user/1","type":"PUT"},
+>       "addAccount": { "href":"http://localhost:8081/rest/user","type":"POST"},
+>       "deleteAccount":{"href":"http://localhost:8081/rest/user/1","type":"DELETE"},
+>       "getAccountList": {"href":"http://localhost:8081/rest/user/all","type":"GET"},
+>       "getProjectList":{"href":"http://localhost:8081/rest/1/project/all","type":"GET"}
 >    }
 > }
 ```
@@ -43,7 +43,7 @@ accountId":1,"userName":"devel","email":"devel@mail.org","firstName":"Devel","la
 ```
 - На другие запросы связанные с запрашиваемой сущностью
 ```
-"_links":{"self":{"href":"http://localhost:8081/rest/user/1"},"addAccount":{"href":"http://localhost:8081/rest/user"},"getAccount":{"href":"http://localhost:8081/rest/user/1"},"getAccountList":{"href":"http://localhost:8081/rest/user/all"},"updateAccount":{"href":"http://localhost:8081/rest/user"},"deleteAccount":{"href":"http://localhost:8081/rest/user/1"},"getProjectList":{"href":"http://localhost:8081/rest/1/project/all"}}
+"_links":{"self":{"href":"http://localhost:8081/rest/user/1"},"addAccount":{"href":"http://localhost:8081/rest/user","type":"POST"},"getAccount":{"href":"http://localhost:8081/rest/user/1","type":"GET"},"getAccountList":{"href":"http://localhost:8081/rest/user/all","type":"GET"},"updateAccount":{"href":"http://localhost:8081/rest/user","type":"PUT"},"deleteAccount":{"href":"http://localhost:8081/rest/user/1","type":"GET"},"getProjectList":{"href":"http://localhost:8081/rest/1/project/all","type":"GET"}}
 ```
 | Имя ссылки | Типо HTTP запроса | Ссылка | Описание | Примечание |
 | ------ | ------ | ------ | ------ | ------ |
@@ -72,12 +72,12 @@ accountId":1,"userName":"devel","email":"devel@mail.org","firstName":"Devel","la
     "dtoId":1,
     "_links":{
         "self":{"href":"http://localhost:8081/rest/1/project/1"},
-        "addProject":{"href":"http://localhost:8081/rest/1/project"},
-        "getProjectList":{"href":"http://localhost:8081/rest/1/project/all"},
-        "updateProject":{"href":"http://localhost:8081/rest/1/project"},
-        "deleteProject":{"href":"http://localhost:8081/rest/1/project/1"},
-        "getProjectList":{"href":"http://localhost:8081/rest/1/project/all"},
-        "getDatasetList":{"href":"http://localhost:8081/rest/1/project/1/dataset/all"}
+        "addProject":{"href":"http://localhost:8081/rest/1/project","type":"POST"},
+        "getProjectList":{"href":"http://localhost:8081/rest/1/project/all","type":"GET"},
+        "updateProject":{"href":"http://localhost:8081/rest/1/project","type":"PUT"},
+        "deleteProject":{"href":"http://localhost:8081/rest/1/project/1","type":"DELETE"},
+        "getProjectList":{"href":"http://localhost:8081/rest/1/project/all","type":"GET"},
+        "getDatasetList":{"href":"http://localhost:8081/rest/1/project/1/dataset/all","type":"GET"}
     }
 }
 ```
@@ -101,13 +101,13 @@ http://localhost:8081/rest/1/project/1
 - На другие запросы связанные с запрашиваемой сущностью
 ```
 "_links":{
-    "self":{"href":"http://localhost:8081/rest/1/project/1"},
-    "addProject":{"href":"http://localhost:8081/rest/1/project"},
-    "getProjectList":{"href":"http://localhost:8081/rest/1/project/all"},
-    "updateProject":{"href":"http://localhost:8081/rest/1/project"},
-    "deleteProject":{"href":"http://localhost:8081/rest/1/project/1"},
-    "getProjectList":{"href":"http://localhost:8081/rest/1/project/all"},
-    "getDatasetList":{"href":"http://localhost:8081/rest/1/project/1/dataset/all"}
+    "self":{"href":"http://localhost:8081/rest/1/project/1","type":"GET"},
+    "addProject":{"href":"http://localhost:8081/rest/1/project","type":"POST"},
+    "getProjectList":{"href":"http://localhost:8081/rest/1/project/all","type":"GET"},
+    "updateProject":{"href":"http://localhost:8081/rest/1/project","type":"PUT"},
+    "deleteProject":{"href":"http://localhost:8081/rest/1/project/1","type":"DELETE"},
+    "getProjectList":{"href":"http://localhost:8081/rest/1/project/all","type":"GET"},
+    "getDatasetList":{"href":"http://localhost:8081/rest/1/project/1/dataset/all","type":"GET"}
 }
 ```
 | Имя ссылки | Типо HTTP запроса | Ссылка | Описание | Примечание |
@@ -257,11 +257,11 @@ http://localhost:8081/rest/1/project/1
     "dtoId":1,
     "_links":{
         "self":{"href":"http://localhost:8081/rest/1/project/1/dataset/1"},
-        "getDataset":{"href":"http://localhost:8081/rest/1/project/1/dataset/1"},
-        "addDataset":{"href":"http://localhost:8081/rest/1/project/1/dataset"},
-        "getDatasetList":{"href":"http://localhost:8081/rest/1/project/1/dataset/all"},
-        "updateDataset":{"href":"http://localhost:8081/rest/1/project/1/dataset"},
-        "deleteDataset":{"href":"http://localhost:8081/rest/1/project/1/dataset/1"}
+        "getDataset":{"href":"http://localhost:8081/rest/1/project/1/dataset/1","type":"GET"},
+        "addDataset":{"href":"http://localhost:8081/rest/1/project/1/dataset","type":"POST"},
+        "getDatasetList":{"href":"http://localhost:8081/rest/1/project/1/dataset/all","type":"GET"},
+        "updateDataset":{"href":"http://localhost:8081/rest/1/project/1/dataset","type":"PUT"},
+        "deleteDataset":{"href":"http://localhost:8081/rest/1/project/1/dataset/1","type":"DELETE"}
     }
 }
 ```
@@ -282,12 +282,12 @@ http://localhost:8081/rest/1/project/1
 - На другие запросы связанные с запрашиваемой сущностью
 ```
 "_links":{
-    "self":{"href":"http://localhost:8081/rest/1/project/1/dataset/1"},
-    "getDataset":{"href":"http://localhost:8081/rest/1/project/1/dataset/1"},
-    "addDataset":{"href":"http://localhost:8081/rest/1/project/1/dataset"},
-    "getDatasetList":{"href":"http://localhost:8081/rest/1/project/1/dataset/all"},
-    "updateDataset":{"href":"http://localhost:8081/rest/1/project/1/dataset"},
-    "deleteDataset":{"href":"http://localhost:8081/rest/1/project/1/dataset/1"}
+    "self":{"href":"http://localhost:8081/rest/1/project/1/dataset/1","type":"GET"},
+    "getDataset":{"href":"http://localhost:8081/rest/1/project/1/dataset/1","type":"GET"},
+    "addDataset":{"href":"http://localhost:8081/rest/1/project/1/dataset","type":"POST"},
+    "getDatasetList":{"href":"http://localhost:8081/rest/1/project/1/dataset/all","type":"GET"},
+    "updateDataset":{"href":"http://localhost:8081/rest/1/project/1/dataset","type":"PUT"},
+    "deleteDataset":{"href":"http://localhost:8081/rest/1/project/1/dataset/1","type":"DELETE"}
 }
 ```
 | Имя ссылки | Типо HTTP запроса | Ссылка | Описание | Примечание |
@@ -297,3 +297,60 @@ http://localhost:8081/rest/1/project/1
 | addDataset | POST | "href":"http://localhost:8081/rest/1/project/1/dataset" | добавляет новый набор данных к проекту у аккаунта | тело запроса содержит Data Set DTO |
 | deleteDataset | DELETE | "href":"http://localhost:8081/rest/1/project/1/dataset/1" | удаляет набор данных по ID | - |
 | getDatasetList | GET | "href":"http://localhost:8081/rest/1/project/1/dataset/all" | возвращает все наборы данных проекта у опреденного аккаунта | - |
+
+## Algorithm
+
+### Пример Структуры Algorithm DTO
+```
+{
+    "algorithmId":1,
+    "name":null,
+    "description":null,
+    "project":null,
+    "dataSource":null,
+    "srcAttributes":null,
+    "dataDestination":null,
+    "method":null,
+    "dtoId":1,
+    "_links":{
+        "self":{"href":"http://localhost:8081/rest/1/project/1/algorithm/1"},
+        "addAlgorithm":{"href":"http://localhost:8081/rest/1/project/1/algorithm","type":"POST"},
+        "getAlgorithm":{"href":"http://localhost:8081/rest/1/project/1/algorithm/1","type":"GET"},
+        "getAlgorithmList":{"href":"http://localhost:8081/rest/1/project/1/algorithm/all","type":"GET"},
+        "updateAlgorithm":{"href":"http://localhost:8081/rest/1/project/1/algorithm","type":"PUT"},
+        "deleteAlgorithm":{"href":"http://localhost:8081/rest/1/project/1/algorithm/1","type":"DELETE"}
+    }
+}
+```
+Пример запроса на сервер c целью получения набора данных с id = 1, где id проекта = 1, id aккаунта = 1:
+```
+http://localhost:8081/rest/1/project/1/algorithm/1
+```
+
+Пример ответа на вышеуказанный запрос можно увидеть в структуре Algorithm DTO.
+
+Далее детально рассмотрим структуру ответа.
+
+### Ссылки
+- На сам запрос (self link):
+```
+"self":{"href":"http://localhost:8081/rest/1/project/1/algorithm/1"}
+```
+- На другие запросы связанные с запрашиваемой сущностью
+```
+"_links":{
+    "self":{"href":"http://localhost:8081/rest/1/project/1/algorithm/1"},
+    "addAlgorithm":{"href":"http://localhost:8081/rest/1/project/1/algorithm","type":"POST"},
+    "getAlgorithm":{"href":"http://localhost:8081/rest/1/project/1/algorithm/1","type":"GET"},
+    "getAlgorithmList":{"href":"http://localhost:8081/rest/1/project/1/algorithm/all","type":"GET"},
+    "updateAlgorithm":{"href":"http://localhost:8081/rest/1/project/1/algorithm","type":"PUT"},
+    "deleteAlgorithm":{"href":"http://localhost:8081/rest/1/project/1/algorithm/1","type":"DELETE"}
+}
+```
+| Имя ссылки | Типо HTTP запроса | Ссылка | Описание | Примечание |
+| ------ | ------ | ------ | ------ | ------ |
+| getAlgorithm | GET | "href":"http://localhost:8081/rest/1/project/1/algorithm/1" | возвращает алгоритм по ID c определенным проектом по ID у соответсвующего аккаунта | - |
+| updateAlgorithm | PUT | "href":"http://localhost:8081/rest/1/project/1/algorithm" | редактирует существующий алгоритм | тело запроса содержит Data Set DTO |
+| addAlgorithm | POST | "href":"http://localhost:8081/rest/1/project/1/algorithm" | добавляет новый алгоритм к проекту у аккаунта | тело запроса содержит Data Set DTO |
+| deleteAlgorithm | DELETE | "href":"http://localhost:8081/rest/1/project/1/algorithm/1" | удаляет алгоритм по ID | - |
+| getAlgorithmList | GET | "href":"http://localhost:8081/rest/1/project/1/algorithm/all" | возвращает все алгоритмы проекта у опреденного аккаунта | - |
