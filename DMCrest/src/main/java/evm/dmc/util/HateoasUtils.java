@@ -101,7 +101,7 @@ public class HateoasUtils {
             Object ... params){
 
         try {
-            Method method = getMethodByName(clazz, methodName);
+            Method method = getHateoasRelationMethodByName(clazz, methodName);
             if (method != null && method.isAnnotationPresent(HateoasRelation.class)) {
                 String relationName = getMethodRelationName(method);
                 Link link = linkTo(clazz, method, params)
@@ -166,12 +166,13 @@ public class HateoasUtils {
         return dto;
     }
 
-    private static Method getMethodByName(Class<?> clazz, String methodName) {
+    private static Method getHateoasRelationMethodByName(Class<?> clazz, String methodName) {
         Method resultMethod = null;
-        Method[] methods = clazz.getMethods();
+        Method[] methods = clazz.getDeclaredMethods();
         for (Method method : methods) {
-            if (method.getName().equals(methodName)) {
+            if (method.getName().equals(methodName) && method.isAnnotationPresent(HateoasRelation.class) ) {
                 resultMethod = method;
+                break;
             }
         }
         return resultMethod;
@@ -215,7 +216,7 @@ public class HateoasUtils {
     private static Method getInstanceListRelationMethod(Class<?> clazz) {
 
         Method resultMethod = null;
-        Method method = getMethodByName(clazz, GET_INSTANCE_LIST_METHOD_NAME);
+        Method method = getHateoasRelationMethodByName(clazz, GET_INSTANCE_LIST_METHOD_NAME);
         if (method.isAnnotationPresent(HateoasRelation.class)) {
             resultMethod = method;
         }
