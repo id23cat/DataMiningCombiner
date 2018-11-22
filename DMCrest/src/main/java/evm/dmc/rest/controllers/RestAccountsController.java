@@ -2,8 +2,8 @@ package evm.dmc.rest.controllers;
 
 import evm.dmc.api.model.account.Account;
 import evm.dmc.model.service.AccountService;
-import evm.dmc.rest.annotation.HateoasRelation;
-import evm.dmc.rest.annotation.HateoasRelationChildren;
+import evm.dmc.rest.annotations.HateoasRelation;
+import evm.dmc.rest.annotations.HateoasRelationChildren;
 import evm.dmc.webApi.dto.AccountDto;
 import evm.dmc.webApi.exceptions.AccountNotFoundException;
 import lombok.extern.slf4j.Slf4j;
