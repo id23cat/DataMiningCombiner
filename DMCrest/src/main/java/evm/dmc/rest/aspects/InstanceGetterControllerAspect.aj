@@ -1,17 +1,15 @@
-package evm.dmc.rest.aspect;
+package evm.dmc.rest.aspects;
 
-import evm.dmc.util.HateoasUtils;
+import evm.dmc.utils.HateoasUtils;
 import evm.dmc.webApi.dto.AbstractDto;
 import lombok.extern.slf4j.Slf4j;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
-import org.aspectj.lang.reflect.MethodSignature;
 import org.springframework.stereotype.Component;
-
-import java.lang.reflect.Method;
-import java.util.ArrayList;
 import java.util.List;
+
+import static evm.dmc.utils.HateoasUtils.handleDtoListThroughJoinPoint;
 
 /**
  * Defines aspect around controllers that implement instance getter
@@ -29,6 +27,7 @@ public class InstanceGetterControllerAspect {
      * @param pjp Spring aspect join point
      * @param accountId Account model identifier
      * @param projectId Project model identifier
+     * @param entityId Dto identifier
      * @return DTO with HATEOAS Relation links
      * @throws Throwable when error occurs
      */
@@ -40,14 +39,7 @@ public class InstanceGetterControllerAspect {
             Long projectId,
             Long entityId) throws Throwable {
 
-        Class<?> clazz = pjp.getSignature().getDeclaringType();
-        MethodSignature methodSignature = (MethodSignature) pjp.getSignature();
-        Method calledMethod = methodSignature.getMethod();
-
-        AbstractDto dto = (AbstractDto) pjp.proceed();
-        HateoasUtils.addBasicLinkSetToDto(dto, clazz, calledMethod, accountId, projectId);
-
-        return dto;
+        return HateoasUtils.handleDtoThroughJoinPoint(pjp, accountId, projectId);
     }
 
     /**
@@ -65,18 +57,6 @@ public class InstanceGetterControllerAspect {
             Long accountId,
             Long projectId) throws Throwable {
 
-        Class<?> clazz = pjp.getSignature().getDeclaringType();
-        MethodSignature methodSignature = (MethodSignature) pjp.getSignature();
-        Method calledMethod = methodSignature.getMethod();
-
-        List dtoList = (List) pjp.proceed();
-        List<AbstractDto> proceedDtoList = new ArrayList<>(dtoList.size());
-        for(Object dto : dtoList) {
-            AbstractDto proceedDto = HateoasUtils.addBasicLinkSetToDto(
-                    (AbstractDto) dto, clazz, calledMethod, accountId, projectId);
-            proceedDtoList.add(proceedDto);
-        }
-
-        return proceedDtoList;
+        return handleDtoListThroughJoinPoint(pjp, accountId, projectId);
     }
 }
