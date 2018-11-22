@@ -4,7 +4,6 @@ import evm.dmc.api.model.data.MetaData;
 import evm.dmc.model.repositories.MetaDataRepository;
 import evm.dmc.model.service.MetaDataService;
 import evm.dmc.rest.annotations.HateoasRelation;
-import evm.dmc.rest.annotations.HateoasRelationChildren;
 import evm.dmc.webApi.dto.MetaDataDto;
 import evm.dmc.webApi.exceptions.MetaDataNotFoundException;
 import lombok.extern.slf4j.Slf4j;
@@ -23,7 +22,6 @@ import java.util.List;
 
 @RestController
 @RequestMapping(RestDatasetController.BASE_URL)
-@HateoasRelationChildren({RestDatasetController.class})
 @Slf4j
 public class RestDatasetController extends AbstractRestCrudController<MetaDataDto> {
 
