@@ -1,4 +1,4 @@
-package evm.dmc.rest.annotation;
+package evm.dmc.rest.annotations;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;

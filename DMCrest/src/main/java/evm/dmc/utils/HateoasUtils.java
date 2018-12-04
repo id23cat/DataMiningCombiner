@@ -1,9 +1,12 @@
-package evm.dmc.util;
+package evm.dmc.utils;
 
-import evm.dmc.rest.annotation.HateoasRelation;
-import evm.dmc.rest.annotation.HateoasRelationChildren;
+import evm.dmc.rest.annotations.HateoasRelation;
+import evm.dmc.rest.annotations.HateoasRelationChildren;
+import evm.dmc.rest.enums.HttpRequestMethod;
 import evm.dmc.webApi.dto.AbstractDto;
 import org.apache.commons.lang3.StringUtils;
+import org.aspectj.lang.ProceedingJoinPoint;
+import org.aspectj.lang.reflect.MethodSignature;
 import org.springframework.hateoas.Link;
 
 import java.lang.reflect.Method;
@@ -94,18 +97,73 @@ public class HateoasUtils {
         return dto;
     }
 
+    /**
+     * handles dto in order to extract service information and
+     * add HATEOAS relation links
+     * @param pjp Spring aspect join point
+     * @param accountId Account model identifier
+     * @param projectId Project model identifier
+     * @return DTO with HATEOAS Relation links
+     * @throws Throwable when error occurs
+     */
+    public static AbstractDto handleDtoThroughJoinPoint(
+            ProceedingJoinPoint pjp,
+            Long accountId,
+            Long projectId) throws Throwable {
+
+        Class<?> clazz = pjp.getSignature().getDeclaringType();
+        MethodSignature methodSignature = (MethodSignature) pjp.getSignature();
+        Method calledMethod = methodSignature.getMethod();
+
+        AbstractDto obtainedDto = (AbstractDto) pjp.proceed();
+        HateoasUtils.addBasicLinkSetToDto(obtainedDto, clazz, calledMethod, accountId, projectId);
+
+        return obtainedDto;
+    }
+
+    /**
+     * handles dto list in order to extract service information and
+     * add HATEOAS relation links
+     * @param pjp Spring aspect join point
+     * @param accountId Account model identifier
+     * @param projectId Project model identifier
+     * @return list of DTOs with HATEOAS Relation links
+     * @throws Throwable when error occurs
+     */
+    public static List<AbstractDto> handleDtoListThroughJoinPoint(
+            ProceedingJoinPoint pjp,
+            Long accountId,
+            Long projectId) throws Throwable {
+
+        Class<?> clazz = pjp.getSignature().getDeclaringType();
+        MethodSignature methodSignature = (MethodSignature) pjp.getSignature();
+        Method calledMethod = methodSignature.getMethod();
+
+        List dtoList = (List) pjp.proceed();
+        List<AbstractDto> proceedDtoList = new ArrayList<>(dtoList.size());
+        for(Object dto : dtoList) {
+            AbstractDto proceedDto = HateoasUtils.addBasicLinkSetToDto(
+                    (AbstractDto) dto, clazz, calledMethod, accountId, projectId);
+            proceedDtoList.add(proceedDto);
+        }
+
+        return proceedDtoList;
+    }
+
     private static AbstractDto addRelationLinkToDto(
             AbstractDto dto,
             Class<?> clazz,
             String methodName,
+            HttpRequestMethod httpRequestMethod,
             Object ... params){
 
         try {
-            Method method = getMethodByName(clazz, methodName);
+            Method method = getHateoasRelationMethodByName(clazz, methodName);
             if (method != null && method.isAnnotationPresent(HateoasRelation.class)) {
                 String relationName = getMethodRelationName(method);
                 Link link = linkTo(clazz, method, params)
-                        .withRel(relationName);
+                        .withRel(relationName)
+                        .withType(httpRequestMethod.name());
                 dto.add(link);
             }
         } catch (Exception ignored) {}
@@ -121,7 +179,7 @@ public class HateoasUtils {
 
         Object[] params = getDeleteRestParams(accountId, projectId, dto.getDtoId());
 
-        addRelationLinkToDto(dto, clazz, DELETE_INSTANCE_METHOD_NAME, params);
+        addRelationLinkToDto(dto, clazz, DELETE_INSTANCE_METHOD_NAME, HttpRequestMethod.DELETE, params);
 
         return dto;
     }
@@ -134,7 +192,7 @@ public class HateoasUtils {
 
         Object[] params = getUpdateRestParams(accountId, projectId);
 
-        addRelationLinkToDto(dto, clazz, UPDATE_INSTANCE_METHOD_NAME, params);
+        addRelationLinkToDto(dto, clazz, UPDATE_INSTANCE_METHOD_NAME, HttpRequestMethod.PUT, params);
 
         return dto;
     }
@@ -147,8 +205,8 @@ public class HateoasUtils {
 
         Object[] params = getReadRestParams(accountId, projectId, dto.getDtoId());
 
-        addRelationLinkToDto(dto, clazz, GET_INSTANCE_METHOD_NAME, params);
-        addRelationLinkToDto(dto, clazz, GET_INSTANCE_LIST_METHOD_NAME, params);
+        addRelationLinkToDto(dto, clazz, GET_INSTANCE_METHOD_NAME, HttpRequestMethod.GET, params);
+        addRelationLinkToDto(dto, clazz, GET_INSTANCE_LIST_METHOD_NAME, HttpRequestMethod.GET, params);
 
         return dto;
     }
@@ -161,17 +219,18 @@ public class HateoasUtils {
 
         Object[] params = getCreateRestParams(accountId, projectId);
 
-        addRelationLinkToDto(dto, clazz, ADD_INSTANCE_METHOD_NAME, params);
+        addRelationLinkToDto(dto, clazz, ADD_INSTANCE_METHOD_NAME, HttpRequestMethod.POST, params);
 
         return dto;
     }
 
-    private static Method getMethodByName(Class<?> clazz, String methodName) {
+    private static Method getHateoasRelationMethodByName(Class<?> clazz, String methodName) {
         Method resultMethod = null;
-        Method[] methods = clazz.getMethods();
+        Method[] methods = clazz.getDeclaredMethods();
         for (Method method : methods) {
-            if (method.getName().equals(methodName)) {
+            if (method.getName().equals(methodName) && method.isAnnotationPresent(HateoasRelation.class) ) {
                 resultMethod = method;
+                break;
             }
         }
         return resultMethod;
@@ -215,7 +274,7 @@ public class HateoasUtils {
     private static Method getInstanceListRelationMethod(Class<?> clazz) {
 
         Method resultMethod = null;
-        Method method = getMethodByName(clazz, GET_INSTANCE_LIST_METHOD_NAME);
+        Method method = getHateoasRelationMethodByName(clazz, GET_INSTANCE_LIST_METHOD_NAME);
         if (method.isAnnotationPresent(HateoasRelation.class)) {
             resultMethod = method;
         }
