@@ -11,7 +11,9 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
 import java.util.StringJoiner;
+import java.util.stream.Collector;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import javax.persistence.EntityManager;
 
@@ -86,11 +88,6 @@ public class MetaDataServiceImpl implements MetaDataService {
 	
 	/**
      * Use default delimiter MetaData.DEFAULT_DELIMITER
-	 * @param type
-	 * @param accountName
-	 * @param projectName
-	 * @param fileName
-	 * @return
      */
 	@Override
     public  MetaData getMetaData(ProjectModel project, Path fullFilePath,
@@ -261,8 +258,14 @@ public class MetaDataServiceImpl implements MetaDataService {
     	});
     	return meta;
     }
-	
-//	@Override
+
+	@Override
+	@Transactional
+	public List<MetaData> getProjectDatasetsAsList(Long projectId) {
+		return getAsCollection(metaDataRepository.findAllByProjectId(projectId), Collectors.toList());
+	}
+
+	//	@Override
 	private DataPreview getPreview(List<String> lines, boolean hasHeader, String delimiter) {
 		String headerLine;
 		delimiter = MetaDataService.getActiveDelimiters(lines.get(0), delimiter);
@@ -348,5 +351,12 @@ public class MetaDataServiceImpl implements MetaDataService {
     	return em.merge(meta);
     }
 
+	private static <T extends Collection<MetaData>> T getAsCollection(
+			Stream<MetaData> stream, Collector<MetaData,?,T> collector) {
+
+		T dataSetCollection = stream.collect(collector);
+		stream.close();
+		return dataSetCollection;
+	}
 
 }
