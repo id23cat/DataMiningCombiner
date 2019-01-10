@@ -5,7 +5,7 @@ pipeline {
     }
   }
   stages {
-    stage('test') {
+    stage('checkout') {
       steps {
         checkout(
           [$class: 'GitSCM', 
@@ -15,6 +15,11 @@ pipeline {
            submoduleCfg: [], 
            userRemoteConfigs: [[url: 'https://github.com/id23cat/DataMiningCombiner.git']]])
       }
+    }
+    
+    stage('build') {
+      steps {
+        sh 'mvn -Dmaven.test.failure.ignore=true package'
     }
   }
 }
