@@ -3,7 +3,13 @@ pipeline {
   stages {
     stage('test') {
       steps {
-        echo 'hello world'
+        checkout(
+          [$class: 'GitSCM', 
+           branches: [[name: '*/studDevel']], 
+           doGenerateSubmoduleConfigurations: false, 
+           extensions: [], 
+           submoduleCfg: [], 
+           userRemoteConfigs: [[url: 'https://github.com/id23cat/DataMiningCombiner.git']]])
       }
     }
   }
