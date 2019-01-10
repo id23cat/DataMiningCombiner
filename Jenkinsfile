@@ -1,5 +1,9 @@
 pipeline {
-  agent l508
+  agent {
+    node {
+      label 'main'
+    }
+  }
   stages {
     stage('test') {
       steps {
