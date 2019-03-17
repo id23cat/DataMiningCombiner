@@ -20,55 +20,55 @@ import lombok.extern.slf4j.Slf4j;
 @Component
 @Slf4j
 public class DatasetModelAppender {
-	@Autowired
-	private DataStorageService dataStorageService;
-	
-	@Autowired
-	private MetaDataService metaDataService;
-	
-	public Model addAttributesToModel(Model model, ProjectModel project) {
-		List<MetaData> dataSets = metaDataService.getForProjectSortedBy(project, "name");
-		
-		model.addAttribute(DatasetController.MODEL_DataSets, dataSets);
-		
-		DataSetProperties datasetProps = new DataSetProperties("","", true);
-		model.addAttribute(DatasetController.MODEL_DataSetProps, datasetProps);
-		
-		CheckboxNamesBean backNamesBean = new CheckboxNamesBean();
-		model.addAttribute(DatasetController.MODEL_SelectedNamesBean, backNamesBean);
-		
-		return setURLs(model, project);
-	}
-	
-	public Model addAttributesToModel(Model model, ProjectModel project, Optional<MetaData> metaData) {
-		model = setURLs(model, project);
-		if(metaData.isPresent()) {
-			log.debug("-== MetaData is found: {}", metaData.get());
-			log.debug("-== Attributes: {}", metaData.get().getAttributes());
-			model.addAttribute(DatasetController.MODEL_MetaData, metaData.get());
-			model.addAttribute(DatasetController.MODEL_Preview, dataStorageService.getPreview(metaData.get()));
-	
-			DataSetProperties datasetProps = DataSetProperties
-					.builder()
-					.hasHeader(dataStorageService.getDataStorage(metaData.get()).isHasHeader())
-					.build();
-			
-			model.addAttribute(DatasetController.MODEL_DataSetProps, datasetProps);
-		} else {
-			model = addAttributesToModel(model, project);
-		}
-		return model;
-	}
-	
-	private Model setURLs(Model model, ProjectModel project) {
-		UriComponents baseUri = UriComponentsBuilder.fromPath(DatasetController.BASE_URL)
-				.buildAndExpand(project.getName());
-		model.addAttribute(DatasetController.MODEL_DataBaseURL, baseUri.toString());
-		
-		UriComponents srcAttrdUri = UriComponentsBuilder.fromPath(DatasetController.URL_SetAttributes)
-				.buildAndExpand(project.getName());
-		model.addAttribute(DatasetController.MODEL_DataAttributesURL, srcAttrdUri.toUriString());
-		
-		return model;
-	}
+    @Autowired
+    private DataStorageService dataStorageService;
+
+    @Autowired
+    private MetaDataService metaDataService;
+
+    public Model addAttributesToModel(Model model, ProjectModel project) {
+        List<MetaData> dataSets = metaDataService.getForProjectSortedBy(project, "name");
+
+        model.addAttribute(DatasetController.MODEL_DataSets, dataSets);
+
+        DataSetProperties datasetProps = new DataSetProperties("", "", true);
+        model.addAttribute(DatasetController.MODEL_DataSetProps, datasetProps);
+
+        CheckboxNamesBean backNamesBean = new CheckboxNamesBean();
+        model.addAttribute(DatasetController.MODEL_SelectedNamesBean, backNamesBean);
+
+        return setURLs(model, project);
+    }
+
+    public Model addAttributesToModel(Model model, ProjectModel project, Optional<MetaData> metaData) {
+        model = setURLs(model, project);
+        if (metaData.isPresent()) {
+            log.debug("-== MetaData is found: {}", metaData.get());
+            log.debug("-== Attributes: {}", metaData.get().getAttributes());
+            model.addAttribute(DatasetController.MODEL_MetaData, metaData.get());
+            model.addAttribute(DatasetController.MODEL_Preview, dataStorageService.getPreview(metaData.get()));
+
+            DataSetProperties datasetProps = DataSetProperties
+                    .builder()
+                    .hasHeader(dataStorageService.getDataStorage(metaData.get()).isHasHeader())
+                    .build();
+
+            model.addAttribute(DatasetController.MODEL_DataSetProps, datasetProps);
+        } else {
+            model = addAttributesToModel(model, project);
+        }
+        return model;
+    }
+
+    private Model setURLs(Model model, ProjectModel project) {
+        UriComponents baseUri = UriComponentsBuilder.fromPath(DatasetController.BASE_URL)
+                .buildAndExpand(project.getName());
+        model.addAttribute(DatasetController.MODEL_DataBaseURL, baseUri.toString());
+
+        UriComponents srcAttrdUri = UriComponentsBuilder.fromPath(DatasetController.URL_SetAttributes)
+                .buildAndExpand(project.getName());
+        model.addAttribute(DatasetController.MODEL_DataAttributesURL, srcAttrdUri.toUriString());
+
+        return model;
+    }
 }

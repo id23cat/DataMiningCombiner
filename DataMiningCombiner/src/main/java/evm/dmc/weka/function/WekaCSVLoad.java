@@ -37,255 +37,255 @@ import weka.core.Instances;
 @Scope(ConfigurableBeanFactory.SCOPE_PROTOTYPE)
 @Function
 public class WekaCSVLoad extends AbstractDMCFunction<Instances>
-		implements CSVLoader, WekaFunction {
-	private static final String NAME = WekaFunctions.CSVLOADER;
-	private static final Integer ARGS_COUNT = 0;
-	private static final String SOURCE_PARAM = "source";
-	private static final String TYPE_PARAM = "srcType";
-	private static FunctionType type = FunctionType.CSV_DATASOURCE;
-	private Properties functionProperties = new Properties();
-	
-	private FunctionSrcModel model = FunctionSrcModel.srcBuilder().build();
+        implements CSVLoader, WekaFunction {
+    private static final String NAME = WekaFunctions.CSVLOADER;
+    private static final Integer ARGS_COUNT = 0;
+    private static final String SOURCE_PARAM = "source";
+    private static final String TYPE_PARAM = "srcType";
+    private static FunctionType type = FunctionType.CSV_DATASOURCE;
+    private Properties functionProperties = new Properties();
 
-	private DataFactory dataFactory;
+    private FunctionSrcModel model = FunctionSrcModel.srcBuilder().build();
 
-//	private String source = null;
-	private Data<Instances> result = null;
+    private DataFactory dataFactory;
 
-	private StringBuilder dateAttributes = new StringBuilder();
-	private StringBuilder numericAttributes = new StringBuilder();
-	private StringBuilder nominalAttributes = new StringBuilder();
-	private StringBuilder stringAttributes = new StringBuilder();
+    //	private String source = null;
+    private Data<Instances> result = null;
 
-	private boolean hasHeader = true;
+    private StringBuilder dateAttributes = new StringBuilder();
+    private StringBuilder numericAttributes = new StringBuilder();
+    private StringBuilder nominalAttributes = new StringBuilder();
+    private StringBuilder stringAttributes = new StringBuilder();
 
-	@Value("${weka.csvload_desc}")
-	private String description;
+    private boolean hasHeader = true;
 
-	private weka.core.converters.CSVLoader loader = new weka.core.converters.CSVLoader();
+    @Value("${weka.csvload_desc}")
+    private String description;
 
-	public WekaCSVLoad(@Autowired @WekaFW DataFactory dataFactory) {
-		super();
-		this.dataFactory = dataFactory;
-		functionProperties.setProperty(SOURCE_PARAM, "");
-		super.functionModel = model;
-	}
+    private weka.core.converters.CSVLoader loader = new weka.core.converters.CSVLoader();
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see evm.dmc.core.function.DMCDataLoader#get()
-	 *
-	 */
-	@Override
-	public Data<Instances> get() throws LoadDataException {
-		if (result == null)
-			this.execute();
-		return result;
-	}
+    public WekaCSVLoad(@Autowired @WekaFW DataFactory dataFactory) {
+        super();
+        this.dataFactory = dataFactory;
+        functionProperties.setProperty(SOURCE_PARAM, "");
+        super.functionModel = model;
+    }
 
-	@Override
-	public void restart() throws LoadDataException {
-		result = null;
-		try {
-			loader.reset();
-		} catch (IOException e) {
+    /*
+     * (non-Javadoc)
+     *
+     * @see evm.dmc.core.function.DMCDataLoader#get()
+     *
+     */
+    @Override
+    public Data<Instances> get() throws LoadDataException {
+        if (result == null)
+            this.execute();
+        return result;
+    }
 
-			throw new LoadDataException(e);
-		}
-	}
+    @Override
+    public void restart() throws LoadDataException {
+        result = null;
+        try {
+            loader.reset();
+        } catch (IOException e) {
 
-	@Override
-	public CSVLoader setSource(String source) {
-		if (!model.getSource().equals(source)) { // argument is not equal actual
-												// source
-			result = null;
-		}
-		model.setSource(source);
-		model.setTypeSrcDst(DataSrcDstType.LOCAL_FS);
-		return this;
-	}
+            throw new LoadDataException(e);
+        }
+    }
 
-	// public String getSourceDescription() throws LoadDataException {
-	// try {
-	// weka.core.converters.CSVLoader loader = new
-	// weka.core.converters.CSVLoader();
-	// loader.setNoHeaderRowPresent(!hasHeader);
-	// loader.setSource(new File(this.source));
-	// // loader.getNextInstance(structure)
-	// return loader.getFileDescription();
-	// } catch (Throwable e) {
-	// throw checkException(e);
-	// }
-	// }
+    @Override
+    public CSVLoader setSource(String source) {
+        if (model.getSource() != null && !model.getSource().equals(source)) { // argument is not equal actual
+            // source
+            result = null;
+        }
+        model.setSource(source);
+        model.setTypeSrcDst(DataSrcDstType.LOCAL_FS);
+        return this;
+    }
 
-	/**
-	 * Returns header (if present in file otherwise generated) and first line of
-	 * data
-	 * 
-	 * @return String contains header(with recognized types and first line of
-	 *         data
-	 * @throws LoadDataException
-	 */
-	public String getHead() throws LoadDataException {
-		try {
-			// weka.core.converters.CSVLoader loader = new
-			// weka.core.converters.CSVLoader();
-			setAttributes();
+    // public String getSourceDescription() throws LoadDataException {
+    // try {
+    // weka.core.converters.CSVLoader loader = new
+    // weka.core.converters.CSVLoader();
+    // loader.setNoHeaderRowPresent(!hasHeader);
+    // loader.setSource(new File(this.source));
+    // // loader.getNextInstance(structure)
+    // return loader.getFileDescription();
+    // } catch (Throwable e) {
+    // throw checkException(e);
+    // }
+    // }
 
-			Instances inst = loader.getStructure();
-			inst.add(loader.getNextInstance(inst));
+    /**
+     * Returns header (if present in file otherwise generated) and first line of
+     * data
+     *
+     * @return String contains header(with recognized types and first line of
+     * data
+     * @throws LoadDataException
+     */
+    public String getHead() throws LoadDataException {
+        try {
+            // weka.core.converters.CSVLoader loader = new
+            // weka.core.converters.CSVLoader();
+            setAttributes();
 
-			WekaData tmp = (WekaData) dataFactory.getData(WekaData.class);
-			tmp.setData(inst);
+            Instances inst = loader.getStructure();
+            inst.add(loader.getNextInstance(inst));
 
-			return tmp.getAllAsString();
-		} catch (Throwable e) {
-			throw checkException(e);
-		}
+            WekaData tmp = (WekaData) dataFactory.getData(WekaData.class);
+            tmp.setData(inst);
 
-	}
+            return tmp.getAllAsString();
+        } catch (Throwable e) {
+            throw checkException(e);
+        }
 
-	@SuppressWarnings("unchecked")
-	@Override
-	public void execute() throws LoadDataException {
-		Instances inst = null;
+    }
 
-		try {
-			// weka.core.converters.CSVLoader loader = new
-			// weka.core.converters.CSVLoader();
+    @SuppressWarnings("unchecked")
+    @Override
+    public void execute() throws LoadDataException {
+        Instances inst = null;
 
-			this.setAttributes();
+        try {
+            // weka.core.converters.CSVLoader loader = new
+            // weka.core.converters.CSVLoader();
 
-			inst = loader.getDataSet();
-		} catch (Throwable e) {
-			throw checkException(e);
-		}
-		result = dataFactory.getData(WekaData.class);
-		result.setData(inst);
-	}
+            this.setAttributes();
 
-	@Override
-	public String getName() {
-		return NAME;
-	}
+            inst = loader.getDataSet();
+        } catch (Throwable e) {
+            throw checkException(e);
+        }
+        result = dataFactory.getData(WekaData.class);
+        result.setData(inst);
+    }
 
-	@Override
-	public String getDescription() {
-		return description;
-	}
+    @Override
+    public String getName() {
+        return NAME;
+    }
 
-	@Override
-	public Integer getArgsCount() {
-		return ARGS_COUNT;
-	}
+    @Override
+    public String getDescription() {
+        return description;
+    }
 
-	@Override
-	public Data<Instances> getResult() {
-		return this.get();
-	}
+    @Override
+    public Integer getArgsCount() {
+        return ARGS_COUNT;
+    }
 
-	@Override
-	public CSVLoader hasHeader(boolean b) {
-		this.hasHeader = b;
-		loader.setNoHeaderRowPresent(!hasHeader);
-		return this;
-	}
+    @Override
+    public Data<Instances> getResult() {
+        return this.get();
+    }
 
-	public boolean getHasHeader() {
-		return hasHeader;
-	}
+    @Override
+    public CSVLoader hasHeader(boolean b) {
+        this.hasHeader = b;
+        loader.setNoHeaderRowPresent(!hasHeader);
+        return this;
+    }
 
-	@Override
-	public CSVLoader asDate(int index) {
-		dateAttributes.append(index + 1 + ",");
-		return this;
-	}
+    public boolean getHasHeader() {
+        return hasHeader;
+    }
 
-	@Override
-	public CSVLoader setDateFormat(String format) {
-		loader.setDateFormat(format);
-		return this;
-	}
+    @Override
+    public CSVLoader asDate(int index) {
+        dateAttributes.append(index + 1 + ",");
+        return this;
+    }
 
-	@Override
-	public CSVLoader asNumeric(int index) {
-		numericAttributes.append(index + 1 + ",");
-		return this;
-	}
+    @Override
+    public CSVLoader setDateFormat(String format) {
+        loader.setDateFormat(format);
+        return this;
+    }
 
-	@Override
-	public CSVLoader asNominal(int index) {
-		nominalAttributes.append(index + 1 + ",");
-		return this;
-	}
+    @Override
+    public CSVLoader asNumeric(int index) {
+        numericAttributes.append(index + 1 + ",");
+        return this;
+    }
 
-	@Override
-	public CSVLoader asString(int index) {
-		stringAttributes.append(index + 1 + ",");
-		return this;
-	}
+    @Override
+    public CSVLoader asNominal(int index) {
+        nominalAttributes.append(index + 1 + ",");
+        return this;
+    }
 
-	private LoadDataException checkException(Throwable e) {
-		// probably csv file hasn't header
-		if (e instanceof IllegalArgumentException && e.getMessage().startsWith("Attribute names are not unique!")) {
-			return new LoadHeaderException("Probably file has no header: " + e.getMessage(), e);
-		} else
-			return new LoadDataException(e);
-	}
+    @Override
+    public CSVLoader asString(int index) {
+        stringAttributes.append(index + 1 + ",");
+        return this;
+    }
 
-	private void setAttributes() throws IOException {
-		loader.setDateAttributes(dateAttributes.toString());
-		loader.setNominalAttributes(nominalAttributes.toString());
-		loader.setNumericAttributes(numericAttributes.toString());
-		loader.setStringAttributes(stringAttributes.toString());
-		loader.setSource(new File(model.getSource()));
-	}
+    private LoadDataException checkException(Throwable e) {
+        // probably csv file hasn't header
+        if (e instanceof IllegalArgumentException && e.getMessage().startsWith("Attribute names are not unique!")) {
+            return new LoadHeaderException("Probably file has no header: " + e.getMessage(), e);
+        } else
+            return new LoadDataException(e);
+    }
 
-	@Override
-	protected FunctionType getFunctionType() {
-		return type;
-	}
+    private void setAttributes() throws IOException {
+        loader.setDateAttributes(dateAttributes.toString());
+        loader.setNominalAttributes(nominalAttributes.toString());
+        loader.setNumericAttributes(numericAttributes.toString());
+        loader.setStringAttributes(stringAttributes.toString());
+        loader.setSource(new File(model.getSource()));
+    }
 
-	@Override
-	protected Properties getProperties() {
-		return functionProperties;
-	}
+    @Override
+    protected FunctionType getFunctionType() {
+        return type;
+    }
 
-	@Override
-	protected void setFunctionProperties(Properties funProperties) {
-			setSource(funProperties.getProperty(SOURCE_PARAM));
-	}
+    @Override
+    protected Properties getProperties() {
+        return functionProperties;
+    }
 
-	@Override
-	public Optional<Data<Instances>> getOptionalResult() {
-		return Optional.ofNullable(getResult());
-	}
+    @Override
+    protected void setFunctionProperties(Properties funProperties) {
+        setSource(funProperties.getProperty(SOURCE_PARAM));
+    }
 
-	@Override
-	public FunctionSrcModel getSrcModel() {
-		return model;
-	}
+    @Override
+    public Optional<Data<Instances>> getOptionalResult() {
+        return Optional.ofNullable(getResult());
+    }
 
-	@Override
-	public DMCDataLoader setSrcModel(FunctionSrcModel model) {
-		this.model = model;
-		super.functionModel = this.model;
-		setFunctionProperties(FunctionModel.mapToProperties(this.model.getProperties()));
-		
-		return this;
-	}
-	
-	@Override
-	public WekaCSVLoad setFunctionModel(FunctionModel model) {
-		this.model = new FunctionSrcModel(model);
-		setFunctionProperties(FunctionModel.mapToProperties(this.model.getProperties()));
-		return this;
-	}
+    @Override
+    public FunctionSrcModel getSrcModel() {
+        return model;
+    }
 
-	@Override
-	public FunctionModel getFunctionModel() {
-		return this.model;
-	}
+    @Override
+    public DMCDataLoader setSrcModel(FunctionSrcModel model) {
+        this.model = model;
+        super.functionModel = this.model;
+        setFunctionProperties(FunctionModel.mapToProperties(this.model.getProperties()));
+
+        return this;
+    }
+
+    @Override
+    public WekaCSVLoad setFunctionModel(FunctionModel model) {
+        this.model = new FunctionSrcModel(model);
+        setFunctionProperties(FunctionModel.mapToProperties(this.model.getProperties()));
+        return this;
+    }
+
+    @Override
+    public FunctionModel getFunctionModel() {
+        return this.model;
+    }
 
 }

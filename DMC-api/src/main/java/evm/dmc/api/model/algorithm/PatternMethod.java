@@ -42,77 +42,77 @@ import lombok.Singular;
 import lombok.ToString;
 
 @Data
-@EqualsAndHashCode(exclude={"dependentAlgorithms", "steps"})
-@ToString(exclude={"dependentAlgorithms", "steps"})
-@Builder(builderMethodName="patternBuilder")
+@EqualsAndHashCode(exclude = {"dependentAlgorithms", "steps"})
+@ToString(exclude = {"dependentAlgorithms", "steps"})
+@Builder(builderMethodName = "patternBuilder")
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
 //@EntityListeners(AlgorithmEntityListener.class)
-@Table(name="Method"
+@Table(name = "Method"
 //	,uniqueConstraints={@UniqueConstraint(columnNames = {"parentProject_id", "name"})}
 )
-@Inheritance(strategy=InheritanceType.SINGLE_TABLE)
+@Inheritance(strategy = InheritanceType.SINGLE_TABLE)
 @DiscriminatorColumn(name = "entity_type", discriminatorType = DiscriminatorType.STRING)
 @DiscriminatorValue("pattern")
 public class PatternMethod implements Serializable {
-	
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = 386821974686652567L;
 
-	@Id
-	@GeneratedValue(strategy=GenerationType.IDENTITY)
-	@Setter(AccessLevel.NONE) 
-	private Long id;
-	
-	@NotBlank
-	@Length(max = 100)
-	private String name;
-	
-	@Length(max=1000)
-	private String description;
-	
-	@Column( length = 100000 )
-	@Convert(converter = PropertiesMapToJson.class)
-	@Singular 
-	private Map<String,String> overridenProperties;
-	
+    /**
+     *
+     */
+    private static final long serialVersionUID = 386821974686652567L;
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Setter(AccessLevel.NONE)
+    private Long id;
+
+    @NotBlank
+    @Length(max = 100)
+    private String name;
+
+    @Length(max = 1000)
+    private String description;
+
+    @Column(length = 100000)
+    @Convert(converter = PropertiesMapToJson.class)
+    @Singular
+    private Map<String, String> overridenProperties;
+
 //	@ManyToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE})
 //	@JoinTable(name = "alg_subalg", joinColumns = @JoinColumn(name="alg_id", referencedColumnName = "id"),
 //			inverseJoinColumns = @JoinColumn(name="subalg_id", referencedColumnName="id"))
 //	@OrderColumn(name="INDEX")
 //	@Singular
 //	private List<PatternMethod> steps; //=new LinkedList<>();
-	
-	@ManyToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE}, 
-			fetch = FetchType.EAGER)
-	@JoinTable(name = "METHOD_STEPS", joinColumns = @JoinColumn(name="METHOD_ID", referencedColumnName = "ID"),
-			inverseJoinColumns = @JoinColumn(name="STEP_ID", referencedColumnName="ID"))
-	@OrderColumn(name="STEP")
-	@Builder.Default
-	private List<PatternMethod> steps = new LinkedList<>();
-	
-	@OneToMany(mappedBy = "method", fetch = FetchType.LAZY, 
-			cascade = {CascadeType.DETACH, CascadeType.MERGE, CascadeType.PERSIST},
-			 orphanRemoval = true)
+
+    @ManyToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE},
+            fetch = FetchType.EAGER)
+    @JoinTable(name = "METHOD_STEPS", joinColumns = @JoinColumn(name = "METHOD_ID", referencedColumnName = "ID"),
+            inverseJoinColumns = @JoinColumn(name = "STEP_ID", referencedColumnName = "ID"))
+    @OrderColumn(name = "STEP")
+    @Builder.Default
+    private List<PatternMethod> steps = new LinkedList<>();
+
+    @OneToMany(mappedBy = "method", fetch = FetchType.LAZY,
+            cascade = {CascadeType.DETACH, CascadeType.MERGE, CascadeType.PERSIST},
+            orphanRemoval = true)
 //	@Singular
-	private Set<Algorithm> dependentAlgorithms;// = new HashSet<>();
-	
-	@Column(columnDefinition="boolean default false")
-	@Builder.Default
-	private Boolean shared = false;
-	
-	public static class PatternMethodBuilder {
-		public PatternMethodBuilder dependentAlgorithm(Algorithm algorithm) {
-			this.name = algorithm.getName();
-			this.description = algorithm.getDescription();
-			if(this.dependentAlgorithms == null) {
-				this.dependentAlgorithms = new HashSet<>();
-			}
-			this.dependentAlgorithms.add(algorithm);
-			return this;
-		}
-	}
+    private Set<Algorithm> dependentAlgorithms;// = new HashSet<>();
+
+    @Column(columnDefinition = "boolean default false")
+    @Builder.Default
+    private Boolean shared = false;
+
+    public static class PatternMethodBuilder {
+        public PatternMethodBuilder dependentAlgorithm(Algorithm algorithm) {
+            this.name = algorithm.getName();
+            this.description = algorithm.getDescription();
+            if (this.dependentAlgorithms == null) {
+                this.dependentAlgorithms = new HashSet<>();
+            }
+            this.dependentAlgorithms.add(algorithm);
+            return this;
+        }
+    }
 }

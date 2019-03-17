@@ -10,16 +10,16 @@ management:
       enabled: true
     shutdown:
       enabled: true
-    
+
 spring:
   servlet:
     multipart:
       max-file-size: 1024Mb
       max-request-size: 1024Mb
-#  data:
-#    rest:
-#      basePath: /rest
-      
+      #  data:
+      #    rest:
+      #      basePath: /rest
+
 server:
   # Server Port Configuration
   port: 8081
@@ -28,17 +28,17 @@ server:
     accesslog:
       enabled: true
     basedir: ../logs
-    
+
 # Logging Configuration
 logging:
-#  config: log4j2.xml
+  #  config: log4j2.xml
   level:
     org.springframework.web: DEBUG
     org.springframework.security: WARN
     org.springframework.data: WARN
     evm.dmc.rest: DEBUG
   file: ../logs/dmc-rest.log
-  
+
 dmc:
   security:
     admin:

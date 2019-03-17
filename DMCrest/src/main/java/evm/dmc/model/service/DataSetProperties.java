@@ -11,8 +11,8 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor(access = AccessLevel.PUBLIC)
 @NoArgsConstructor
 public class DataSetProperties {
-	private String name;
-	private String Description;
-	private boolean hasHeader;
-	
+    private String name;
+    private String Description;
+    private boolean hasHeader;
+
 }

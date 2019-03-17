@@ -21,8 +21,9 @@ public class InstanceAdderControllerAspect {
 
     /**
      * Adds HATEOAS relation links to returned DTO
-     * @param pjp Spring aspect join point
-     * @param addedDto - Dto with new instance
+     *
+     * @param pjp       Spring aspect join point
+     * @param addedDto  - Dto with new instance
      * @param accountId Account model identifier
      * @param projectId Project model identifier
      * @return DTO with HATEOAS Relation links
@@ -41,10 +42,11 @@ public class InstanceAdderControllerAspect {
 
     /**
      * Adds HATEOAS relation links to returned DTO
-     * @param pjp Spring aspect join point
+     *
+     * @param pjp        Spring aspect join point
      * @param updatedDto - Dto with updated instance
-     * @param accountId Account model identifier
-     * @param projectId Project model identifier
+     * @param accountId  Account model identifier
+     * @param projectId  Project model identifier
      * @return DTO with HATEOAS Relation links
      * @throws Throwable when error occurs
      */

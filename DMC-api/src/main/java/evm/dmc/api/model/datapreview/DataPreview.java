@@ -27,37 +27,39 @@ import lombok.Setter;
 import lombok.Singular;
 
 @Entity
-@Table(name="DATA_PREVIEW")
+@Table(name = "DATA_PREVIEW")
 @NoArgsConstructor
 @AllArgsConstructor
 @Immutable
 @Data
 @Builder
 public class DataPreview implements Serializable {
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = 2667573835860510658L;
+    /**
+     *
+     */
+    private static final long serialVersionUID = 2667573835860510658L;
 
-	public static final String DEFAULT_DELIMITER = ",;\t|";
-	
-	@Id
-	@GeneratedValue(strategy=GenerationType.AUTO)
-	@Setter(AccessLevel.NONE)
-	private Long id;
-	
-	@Column(unique=true)
-	@NotNull
-	private Long metaDataId;
-	
-	@Lob
-	private String header;
-	
-	@Column
-	@Lob
-	@ElementCollection
-	@CollectionTable(name = "DATA_PREVIEW_LIST")
-	@Singular("line") private List<String> data = new ArrayList<>();
-	
-	@Builder.Default private String delimiter = DEFAULT_DELIMITER; 
+    public static final String DEFAULT_DELIMITER = ",;\t|";
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    @Setter(AccessLevel.NONE)
+    private Long id;
+
+    @Column(unique = true)
+    @NotNull
+    private Long metaDataId;
+
+    @Lob
+    private String header;
+
+    @Column
+    @Lob
+    @ElementCollection
+    @CollectionTable(name = "DATA_PREVIEW_LIST")
+    @Singular("line")
+    private List<String> data = new ArrayList<>();
+
+    @Builder.Default
+    private String delimiter = DEFAULT_DELIMITER;
 }

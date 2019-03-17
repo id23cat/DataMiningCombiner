@@ -5,10 +5,12 @@ package evm.dmc.webApi.exceptions;
  */
 public class UnsupportedFileTypeException extends StorageException {
 
-    /** Defined to avoid problems with serialization */
-	private static final long serialVersionUID = -8043122842843683644L;
+    /**
+     * Defined to avoid problems with serialization
+     */
+    private static final long serialVersionUID = -8043122842843683644L;
 
-	public UnsupportedFileTypeException(String message) {
+    public UnsupportedFileTypeException(String message) {
         super(message);
     }
 

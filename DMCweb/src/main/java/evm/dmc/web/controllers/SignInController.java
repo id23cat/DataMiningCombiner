@@ -19,28 +19,28 @@ import evm.dmc.web.service.Views;
 @Controller
 @RequestMapping
 public class SignInController {
-	private static final Logger logger = LoggerFactory.getLogger(SignInController.class);
-	
-	@Autowired
-	private Views views;
-	
-	@ModelAttribute("registrationForm")
-	public Account setupRegistrationForm(){
-		return Account.builder().build();
-	}
-		
-	@GetMapping(RequestPath.signin)
-	public String getSignInPage(Model model, @RequestHeader(value = "X-Requested-With", required = false) String requestedWith){
-		logger.debug("SignIn page controller");
-		
-		if (AjaxUtils.isAjaxRequest(requestedWith)) {
-			logger.debug("SignIn Ajax: {}", views.getSignin().concat(views.getFragments().getSignin()));
+    private static final Logger logger = LoggerFactory.getLogger(SignInController.class);
 
-			return views.getSignin().concat(views.getFragments().getSignin());
-		}
-		
-		return views.getSignin();
-		
-	}
-	
+    @Autowired
+    private Views views;
+
+    @ModelAttribute("registrationForm")
+    public Account setupRegistrationForm() {
+        return Account.builder().build();
+    }
+
+    @GetMapping(RequestPath.signin)
+    public String getSignInPage(Model model, @RequestHeader(value = "X-Requested-With", required = false) String requestedWith) {
+        logger.debug("SignIn page controller");
+
+        if (AjaxUtils.isAjaxRequest(requestedWith)) {
+            logger.debug("SignIn Ajax: {}", views.getSignin().concat(views.getFragments().getSignin()));
+
+            return views.getSignin().concat(views.getFragments().getSignin());
+        }
+
+        return views.getSignin();
+
+    }
+
 }

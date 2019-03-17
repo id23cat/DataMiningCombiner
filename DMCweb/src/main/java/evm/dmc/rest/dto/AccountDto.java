@@ -12,21 +12,21 @@ import lombok.EqualsAndHashCode;
 import lombok.Setter;
 
 @Data
-@EqualsAndHashCode(callSuper=false)
+@EqualsAndHashCode(callSuper = false)
 public class AccountDto extends ResourceSupport {
-	
-//	@Setter
-	private Long accountId;
-	
-	private String userName;
-	
-	private String email;
-	
-	private String firstName;
-	
-	private String lastName;
-	
-	protected Role role;
-	
-	private Instant created;
+
+    //	@Setter
+    private Long accountId;
+
+    private String userName;
+
+    private String email;
+
+    private String firstName;
+
+    private String lastName;
+
+    protected Role role;
+
+    private Instant created;
 }

@@ -40,60 +40,60 @@ import evm.dmc.weka.function.WekaFunctions;
 //@SpringBootTest	// https://github.com/spring-projects/spring-boot/issues/10465
 @DataJpaTest
 @Rollback
-@ComponentScan( basePackages = { "evm.dmc.core", "evm.dmc.model", "evm.dmc.api.model"})
+@ComponentScan(basePackages = {"evm.dmc.core", "evm.dmc.model", "evm.dmc.api.model"})
 //@SpringBootConfiguration
 //@AutoConfigurationPackage
 public class FrameworksServiceImplTest {
-	
-	@Autowired
-	FrameworksService repo;
 
-	@Test
-	public void testGetFrameworksDescriptors() {
-		assertNotNull(repo);
-		Set<String> names = repo.getFrameworksDescriptors();
-		assertThat(names, not(empty()));
-		System.out.println(Arrays.toString(names.toArray()));
+    @Autowired
+    FrameworksService repo;
 
-		assertThat(names, hasItems("wekaFramework"));
-	}
-	
-	@Test
-	public final void testGetFramework() {
-		Framework fw = repo.getFramework("wekaFramework");
-		assertNotNull(fw);
-		assertTrue(fw instanceof WekaFramework);
-		System.out.println(fw.getFunctionDescriptors());
-		System.out.println(fw.getLoaderDescriptors());
-		System.out.println(fw.getSaverDescriptors());
-	}
-	
-	@Test
-	public void testGetFunctionsDescriptors() {
-		Map<String, String> fdescriptors = repo.getFunctionsDescriptors();
-		assertThat(fdescriptors.values(), not(empty()));
+    @Test
+    public void testGetFrameworksDescriptors() {
+        assertNotNull(repo);
+        Set<String> names = repo.getFrameworksDescriptors();
+        assertThat(names, not(empty()));
+        System.out.println(Arrays.toString(names.toArray()));
 
-		System.out.println(TestUtils.printMap(fdescriptors));
-	}
-	
-	@Test
-	public void testGetFunction() {
-		DMCFunction func = repo.getFunction(WekaFunctions.CSVLOADER);
-		
-		assertNotNull(func);
-		assertTrue(func instanceof WekaCSVLoad);
-		 
-	}
-	
-	@Test
-	public void testGetFunctionByModel() {
-		FunctionModel fnModel = new FunctionModel();
-		fnModel.setFramework(repo.getFramework("wekaFramework").getFrameworkModel());
-		fnModel.setName(WekaFunctions.KMEANS);
-		fnModel.setType(FunctionType.CSV_DATASOURCE);
-		DMCFunction<?> fun = repo.getFunction(fnModel);
-		assertThat(fun.getName(), equalTo(WekaFunctions.KMEANS));
-	}
+        assertThat(names, hasItems("wekaFramework"));
+    }
+
+    @Test
+    public final void testGetFramework() {
+        Framework fw = repo.getFramework("wekaFramework");
+        assertNotNull(fw);
+        assertTrue(fw instanceof WekaFramework);
+        System.out.println(fw.getFunctionDescriptors());
+        System.out.println(fw.getLoaderDescriptors());
+        System.out.println(fw.getSaverDescriptors());
+    }
+
+    @Test
+    public void testGetFunctionsDescriptors() {
+        Map<String, String> fdescriptors = repo.getFunctionsDescriptors();
+        assertThat(fdescriptors.values(), not(empty()));
+
+        System.out.println(TestUtils.printMap(fdescriptors));
+    }
+
+    @Test
+    public void testGetFunction() {
+        DMCFunction func = repo.getFunction(WekaFunctions.CSVLOADER);
+
+        assertNotNull(func);
+        assertTrue(func instanceof WekaCSVLoad);
+
+    }
+
+    @Test
+    public void testGetFunctionByModel() {
+        FunctionModel fnModel = new FunctionModel();
+        fnModel.setFramework(repo.getFramework("wekaFramework").getFrameworkModel());
+        fnModel.setName(WekaFunctions.KMEANS);
+        fnModel.setType(FunctionType.CSV_DATASOURCE);
+        DMCFunction<?> fun = repo.getFunction(fnModel);
+        assertThat(fun.getName(), equalTo(WekaFunctions.KMEANS));
+    }
 
 
 }

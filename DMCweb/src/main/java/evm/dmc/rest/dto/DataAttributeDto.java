@@ -7,14 +7,14 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 
 @Data
-@EqualsAndHashCode(callSuper=false)
-public class DataAttributeDto  extends ResourceSupport {
-	private String name;
-	
-	private AttributeType type;
-	
-	private Double multiplier;
-	
-	private Boolean checked;
+@EqualsAndHashCode(callSuper = false)
+public class DataAttributeDto extends ResourceSupport {
+    private String name;
+
+    private AttributeType type;
+
+    private Double multiplier;
+
+    private Boolean checked;
 
 }

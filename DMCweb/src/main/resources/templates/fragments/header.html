@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org"
-		xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 
 <head>
 </head>
@@ -9,89 +9,94 @@
 <!-- Navbar -->
 <nav class="navbar navbar-inverse navbar-fixed-top" th:fragment="header">
     <div class="container-fluid" th:with="module=${#httpServletRequest.getServletPath()}">
-	        <div class="navbar-header">
-	            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#myNavbar">
-	                <span class="icon-bar"></span>
-	                <span class="icon-bar"></span>
-	                <span class="icon-bar"></span>
-	            </button>
-	            <a class="navbar-brand" href="#" th:href="@{/}">
-	            	 <img th:src="@{/images/logo.png}"  style="max-width:100px; margin-top: -15px;" class="img-rounded" alt="DMc Web" width="50" height="50"> 
-				</a>
-	        </div>
-	        <!-- Collect the nav links, forms, and other content for toggling -->
-			<div class="collapse navbar-collapse" id="myNavbar" th:with=projectController=${T(evm.dmc.web.controllers.project.ProjectController)}>
-				<ul class="nav navbar-nav">
-					<li sec:authorize="hasAuthority('USER')" th:classappend="${module == @requestPath.project ? 'active' : ''}">
-						<a th:href="${@requestPath.project}" >Projects</a>
-					</li>
-					<li class="dropdown" sec:authorize="hasAuthority('USER')" th:classappend="${module == @requestPath.project ? 'active' : ''}">
-				        <a class="dropdown-toggle" data-toggle="dropdown" href="#">Ajax
-				        <span class="caret"></span></a>
-				        <ul class="dropdown-menu">
-				          <li><a href="/ajax/project">Project</a></li>
-				          <li><a href="#">Page 1-2</a></li>
-				          <li><a href="#">Page 1-3</a></li>
-				        </ul>
-				    </li>
-					<li th:with="currentProject=${session.currentProject}" th:if="${currentProject != null}">
-						<!-- th:href="@{/project/{projectName}(projectName=${session.currentProject.name})}" -->
-						<a th:href="@{${projectController.URL_GetPorject}
-							(${projectController.PATH_VAR_ProjectName} = ${currentProject.name})}" 
-							th:text="'CurrentProject: '+${currentProject.name}">
-						</a>
-					</li>
-					<li sec:authorize="!isAuthenticated()" th:classappend="${module == '/' ? 'active' : ''}">
-						<a th:href="@{/}">Home</a>
-					</li>
-					<li th:classappend="${module == @requestPath.about ? 'active' : ''}">
-						<a th:href="${@requestPath.about}">About</a>
-					</li>
-					<li th:classappend="${module == @requestPath.about ? 'active' : ''}">
-						<a href="/project/proj0/algorithm/alg0/algtest">TestAlg</a>
-					</li>
-					
-					<!-- <li sec:authorize="hasAuthority(@roles.user)" th:classappend="${module == @requestPath.userHome ? 'active' : ''}"> -->
-					<!-- <li sec:authorize="hasAuthority('USER')" th:classappend="${module == @requestPath.userHome ? 'active' : ''}">
-						<a th:href="${@requestPath.userHome}">User home</a>
-					</li>
-					
-					<li sec:authorize="hasAuthority('ADMIN')" th:classappend="${module == @requestPath.adminHome ? 'active' : ''}">
-						<a th:href="${@requestPath.adminHome}">Admin home</a>
-					</li>
-					-->
-				</ul>
-				<div sec:authorize="!isAuthenticated()">
-					<ul class="nav navbar-nav navbar-right">
-						<li th:classappend="${module == @requestPath.signin ? 'active' : ''}">
-							<a href="#" id="header_signin"><span class="glyphicon glyphicon-log-in"></span>Sign In</a>
-						</li>
-					</ul>
-				</div>
-				
-				<div sec:authorize="isAuthenticated()">
-					<ul class="nav navbar-nav navbar-right">
-						<li><a th:href="${@requestPath.about}"> 
-							<span sec:authentication="name"></span>
-						</a></li>
-						<li sec:authorize="hasAuthority('ADMIN')" th:classappend="${module == @requestPath.register ? 'active' : ''}">
-							<a th:href="${@requestPath.register}" ><span class="glyphicon glyphicon-user"></span>Register</a>
-						</li>
-						<li>
-							<a href="${@requestPath.logout}" th:href="@{#}" onclick="$('#form').submit();">
-	                       		<span class="glyphicon glyphicon-log-out" aria-hidden="true"></span>&nbsp;Logout
-		                    </a>
-		                    <form style="visibility: hidden" id="form" method="post" action="#" th:action="${@requestPath.logout}"></form>
-						</li>
-						
-					</ul>
-				</div>
-			</div>
-			
-   </div>
-   
-</nav>
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#myNavbar">
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" href="#" th:href="@{/}">
+                <img th:src="@{/images/logo.png}" style="max-width:100px; margin-top: -15px;" class="img-rounded"
+                     alt="DMc Web" width="50" height="50">
+            </a>
+        </div>
+        <!-- Collect the nav links, forms, and other content for toggling -->
+        <div class="collapse navbar-collapse" id="myNavbar"
+             th:with=projectController=${T(evm.dmc.web.controllers.project.ProjectController)}>
+            <ul class="nav navbar-nav">
+                <li sec:authorize="hasAuthority('USER')"
+                    th:classappend="${module == @requestPath.project ? 'active' : ''}">
+                    <a th:href="${@requestPath.project}">Projects</a>
+                </li>
+                <li class="dropdown" sec:authorize="hasAuthority('USER')"
+                    th:classappend="${module == @requestPath.project ? 'active' : ''}">
+                    <a class="dropdown-toggle" data-toggle="dropdown" href="#">Ajax
+                        <span class="caret"></span></a>
+                    <ul class="dropdown-menu">
+                        <li><a href="/ajax/project">Project</a></li>
+                        <li><a href="#">Page 1-2</a></li>
+                        <li><a href="#">Page 1-3</a></li>
+                    </ul>
+                </li>
+                <li th:with="currentProject=${session.currentProject}" th:if="${currentProject != null}">
+                    <!-- th:href="@{/project/{projectName}(projectName=${session.currentProject.name})}" -->
+                    <a th:href="@{${projectController.URL_GetPorject}
+							(${projectController.PATH_VAR_ProjectName} = ${currentProject.name})}"
+                       th:text="'CurrentProject: '+${currentProject.name}">
+                    </a>
+                </li>
+                <li sec:authorize="!isAuthenticated()" th:classappend="${module == '/' ? 'active' : ''}">
+                    <a th:href="@{/}">Home</a>
+                </li>
+                <li th:classappend="${module == @requestPath.about ? 'active' : ''}">
+                    <a th:href="${@requestPath.about}">About</a>
+                </li>
+                <li th:classappend="${module == @requestPath.about ? 'active' : ''}">
+                    <a href="/project/proj0/algorithm/alg0/algtest">TestAlg</a>
+                </li>
 
+                <!-- <li sec:authorize="hasAuthority(@roles.user)" th:classappend="${module == @requestPath.userHome ? 'active' : ''}"> -->
+                <!-- <li sec:authorize="hasAuthority('USER')" th:classappend="${module == @requestPath.userHome ? 'active' : ''}">
+                    <a th:href="${@requestPath.userHome}">User home</a>
+                </li>
+
+                <li sec:authorize="hasAuthority('ADMIN')" th:classappend="${module == @requestPath.adminHome ? 'active' : ''}">
+                    <a th:href="${@requestPath.adminHome}">Admin home</a>
+                </li>
+                -->
+            </ul>
+            <div sec:authorize="!isAuthenticated()">
+                <ul class="nav navbar-nav navbar-right">
+                    <li th:classappend="${module == @requestPath.signin ? 'active' : ''}">
+                        <a href="#" id="header_signin"><span class="glyphicon glyphicon-log-in"></span>Sign In</a>
+                    </li>
+                </ul>
+            </div>
+
+            <div sec:authorize="isAuthenticated()">
+                <ul class="nav navbar-nav navbar-right">
+                    <li><a th:href="${@requestPath.about}">
+                        <span sec:authentication="name"></span>
+                    </a></li>
+                    <li sec:authorize="hasAuthority('ADMIN')"
+                        th:classappend="${module == @requestPath.register ? 'active' : ''}">
+                        <a th:href="${@requestPath.register}"><span class="glyphicon glyphicon-user"></span>Register</a>
+                    </li>
+                    <li>
+                        <a href="${@requestPath.logout}" th:href="@{#}" onclick="$('#form').submit();">
+                            <span class="glyphicon glyphicon-log-out" aria-hidden="true"></span>&nbsp;Logout
+                        </a>
+                        <form style="visibility: hidden" id="form" method="post" action="#"
+                              th:action="${@requestPath.logout}"></form>
+                    </li>
+
+                </ul>
+            </div>
+        </div>
+
+    </div>
+
+</nav>
 
 
 </body>

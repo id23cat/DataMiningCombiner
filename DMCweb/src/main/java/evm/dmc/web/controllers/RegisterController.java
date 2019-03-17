@@ -29,58 +29,57 @@ import evm.dmc.web.service.AccountService;
 @Controller
 @RequestMapping
 public class RegisterController {
-	private static final Logger logger = LoggerFactory.getLogger(RegisterController.class);
-	
-	@Autowired
-	private AccountService accountService;
+    private static final Logger logger = LoggerFactory.getLogger(RegisterController.class);
 
-	@Autowired
-	private Views views;
-	
-	private String userExistsMessage = "User with same name or email already exists";
-	
-	@ModelAttribute
-	public Account setAccountToModel() {
-		return Account.builder().build();
-	}
+    @Autowired
+    private AccountService accountService;
 
-	@GetMapping(value={RequestPath.register})
-	public String getRegistrationPage(Model model){
-		logger.debug(" ");		
-		return views.getRegister();
-	}
-	
-	@PostMapping(RequestPath.register)
-	public String register(@Valid @ModelAttribute Account account, 
-			Errors errors, RedirectAttributes ra) throws AccountNotFoundException{
-		if(errors.hasErrors()) {
-			
-			logger.debug("Invalid registration attempt: {}", errors);
-			return views.getRegister();
-		}
-		
-		account = accountService.save(account);
-		MessageHelper.addSuccessAttribute(ra, "registration success");
-		return "redirect:/";
-	}
-	
-	@ExceptionHandler(DataIntegrityViolationException.class)
-	public ModelAndView handleDataIntegrityViolation(HttpServletRequest req, 
-							DataIntegrityViolationException exception) throws Exception {
-		logger.debug("DataIntegrityViolationException catched");
-		logger.debug("Cause: {}", ExceptionUtils.getRootCause(exception).getMessage());
-		if(ExceptionUtils.getRootCause(exception).getMessage().contains("Unique index or primary key violation")){
-			ModelAndView mav = new ModelAndView(views.getRegister());
-			mav.addObject(Account.builder().build());
-			mav.addObject("exception", ExceptionUtils.getRootCause(exception));
-			mav.addObject("errorMessage", userExistsMessage);
-			logger.debug("Catched UserExistsException");
-			return mav;
-		}
-		throw exception;
-		
-	}
-	
-	
-	
+    @Autowired
+    private Views views;
+
+    private String userExistsMessage = "User with same name or email already exists";
+
+    @ModelAttribute
+    public Account setAccountToModel() {
+        return Account.builder().build();
+    }
+
+    @GetMapping(value = {RequestPath.register})
+    public String getRegistrationPage(Model model) {
+        logger.debug(" ");
+        return views.getRegister();
+    }
+
+    @PostMapping(RequestPath.register)
+    public String register(@Valid @ModelAttribute Account account,
+                           Errors errors, RedirectAttributes ra) throws AccountNotFoundException {
+        if (errors.hasErrors()) {
+
+            logger.debug("Invalid registration attempt: {}", errors);
+            return views.getRegister();
+        }
+
+        account = accountService.save(account);
+        MessageHelper.addSuccessAttribute(ra, "registration success");
+        return "redirect:/";
+    }
+
+    @ExceptionHandler(DataIntegrityViolationException.class)
+    public ModelAndView handleDataIntegrityViolation(HttpServletRequest req,
+                                                     DataIntegrityViolationException exception) throws Exception {
+        logger.debug("DataIntegrityViolationException catched");
+        logger.debug("Cause: {}", ExceptionUtils.getRootCause(exception).getMessage());
+        if (ExceptionUtils.getRootCause(exception).getMessage().contains("Unique index or primary key violation")) {
+            ModelAndView mav = new ModelAndView(views.getRegister());
+            mav.addObject(Account.builder().build());
+            mav.addObject("exception", ExceptionUtils.getRootCause(exception));
+            mav.addObject("errorMessage", userExistsMessage);
+            logger.debug("Catched UserExistsException");
+            return mav;
+        }
+        throw exception;
+
+    }
+
+
 }

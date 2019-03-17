@@ -21,10 +21,11 @@ public class InstanceDeleterControllerAspect {
 
     /**
      * Adds HATEOAS relation links to returned DTO
-     * @param pjp Spring aspect join point
+     *
+     * @param pjp       Spring aspect join point
      * @param accountId Account model identifier
      * @param projectId Project model identifier
-     * @param entityId Dto identifier
+     * @param entityId  Dto identifier
      * @return DTO with HATEOAS Relation links
      * @throws Throwable when error occurs
      */

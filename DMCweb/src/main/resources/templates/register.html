@@ -1,78 +1,83 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org"
-		xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
-		layout:decorate="~{layouts/layout}">
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layouts/layout}">
 <head>
     <title>Add new user</title>
     <meta charset="utf-8">
- 	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
     <link rel="stylesheet" th:href="@{/webjars/bootstrap/3.3.7/css/bootstrap.min.css}">
-    <link th:href="@{/css/core.css}" rel="stylesheet" media="screen" />
+    <link th:href="@{/css/core.css}" rel="stylesheet" media="screen"/>
 </head>
 <body>
 <th:block layout:fragment="content">
-<h1>Registration</h1>
-<form class="form-narrow form-horizontal" 
-		method="post" 
-		th:action="${@requestPath.register}" 
-		th:object="${account}" 
-		th:fragment="registerForm">
-    <!--/* Show general error message when form contains errors */-->
-    <th:block th:if="${#fields.hasErrors('${account.*}') or errorMessage != null}"
-   	   	th:with="errMsg= ${#strings.isEmpty(errorMessage)} ? 'Form contains errors. Please try again.' : ${errorMessage}">
-    	
-        <div th:replace="fragments/alert :: alert (type='danger', message=${errMsg})">Alert</div>
-    </th:block>
-    <fieldset>
-      	<legend></legend>
-      	<div class="form-group" th:classappend="${#fields.hasErrors('userName')}? 'has-error'">
-            <label for="userName" class="col-lg-2 control-label">User name</label>
-            <div class="col-lg-10">
-                <input type="text" class="form-control" id="userName" placeholder="User name" th:field="*{userName}" />
-                <span class="help-block" th:if="${#fields.hasErrors('userName')}" th:errors="*{userName}">Incorrect user name</span>
+    <h1>Registration</h1>
+    <form class="form-narrow form-horizontal"
+          method="post"
+          th:action="${@requestPath.register}"
+          th:object="${account}"
+          th:fragment="registerForm">
+        <!--/* Show general error message when form contains errors */-->
+        <th:block th:if="${#fields.hasErrors('${account.*}') or errorMessage != null}"
+                  th:with="errMsg= ${#strings.isEmpty(errorMessage)} ? 'Form contains errors. Please try again.' : ${errorMessage}">
+
+            <div th:replace="fragments/alert :: alert (type='danger', message=${errMsg})">Alert</div>
+        </th:block>
+        <fieldset>
+            <legend></legend>
+            <div class="form-group" th:classappend="${#fields.hasErrors('userName')}? 'has-error'">
+                <label for="userName" class="col-lg-2 control-label">User name</label>
+                <div class="col-lg-10">
+                    <input type="text" class="form-control" id="userName" placeholder="User name"
+                           th:field="*{userName}"/>
+                    <span class="help-block" th:if="${#fields.hasErrors('userName')}" th:errors="*{userName}">Incorrect user name</span>
+                </div>
             </div>
-        </div>
-        <div class="form-group" th:classappend="${#fields.hasErrors('email')}? 'has-error'">
-            <label for="email" class="col-lg-2 control-label">Email</label>
-            <div class="col-lg-10">
-                <input type="text" class="form-control" id="email" placeholder="Email address" th:field="*{email}" />
-                <span class="help-block" th:if="${#fields.hasErrors('email')}" th:errors="*{email}">Incorrect email</span>
+            <div class="form-group" th:classappend="${#fields.hasErrors('email')}? 'has-error'">
+                <label for="email" class="col-lg-2 control-label">Email</label>
+                <div class="col-lg-10">
+                    <input type="text" class="form-control" id="email" placeholder="Email address" th:field="*{email}"/>
+                    <span class="help-block" th:if="${#fields.hasErrors('email')}"
+                          th:errors="*{email}">Incorrect email</span>
+                </div>
             </div>
-        </div>
-        <div class="form-group" th:classappend="${#fields.hasErrors('password')}? 'has-error'">
-            <label for="password" class="col-lg-2 control-label">Password</label>
-            <div class="col-lg-10">
-                <input type="password" class="form-control" id="password" placeholder="Password" th:field="*{password}"/>
-                <span class="help-block" th:if="${#fields.hasErrors('password')}" th:errors="*{password}">Incorrect password</span>
+            <div class="form-group" th:classappend="${#fields.hasErrors('password')}? 'has-error'">
+                <label for="password" class="col-lg-2 control-label">Password</label>
+                <div class="col-lg-10">
+                    <input type="password" class="form-control" id="password" placeholder="Password"
+                           th:field="*{password}"/>
+                    <span class="help-block" th:if="${#fields.hasErrors('password')}" th:errors="*{password}">Incorrect password</span>
+                </div>
             </div>
-        </div>
-        
-        <div class="form-group" th:classappend="${#fields.hasErrors('firstName')}? 'has-error'">
-            <label for="firstName" class="col-lg-2 control-label">First name</label>
-            <div class="col-lg-10">
-                <input type="text" class="form-control" id="firstName" placeholder="User's first name" th:field="*{firstName}" />
-                <span class="help-block" th:if="${#fields.hasErrors('firstName')}" th:errors="*{firstName}">Incorrect user's first name</span>
+
+            <div class="form-group" th:classappend="${#fields.hasErrors('firstName')}? 'has-error'">
+                <label for="firstName" class="col-lg-2 control-label">First name</label>
+                <div class="col-lg-10">
+                    <input type="text" class="form-control" id="firstName" placeholder="User's first name"
+                           th:field="*{firstName}"/>
+                    <span class="help-block" th:if="${#fields.hasErrors('firstName')}" th:errors="*{firstName}">Incorrect user's first name</span>
+                </div>
             </div>
-        </div>
-        <div class="form-group" th:classappend="${#fields.hasErrors('lastName')}? 'has-error'">
-            <label for="lastName" class="col-lg-2 control-label">Last name</label>
-            <div class="col-lg-10">
-                <input type="text" class="form-control" id="lastName" placeholder="User's last name" th:field="*{lastName}" />
-                <span class="help-block" th:if="${#fields.hasErrors('lastName')}" th:errors="*{lastName}">Incorrect user's last name</span>
+            <div class="form-group" th:classappend="${#fields.hasErrors('lastName')}? 'has-error'">
+                <label for="lastName" class="col-lg-2 control-label">Last name</label>
+                <div class="col-lg-10">
+                    <input type="text" class="form-control" id="lastName" placeholder="User's last name"
+                           th:field="*{lastName}"/>
+                    <span class="help-block" th:if="${#fields.hasErrors('lastName')}" th:errors="*{lastName}">Incorrect user's last name</span>
+                </div>
             </div>
-        </div>
-        <div class="form-group">
-            <div class="col-lg-offset-2 col-lg-10">
-                <button type="submit" class="btn btn-success">Register</button>
+            <div class="form-group">
+                <div class="col-lg-offset-2 col-lg-10">
+                    <button type="submit" class="btn btn-success">Register</button>
+                </div>
             </div>
-        </div>
-        <!-- <div class="form-group">
-            <div class="col-lg-offset-2 col-lg-10">
-                <p>Already have an account? <a href="signin" th:href="@{/signin}">Sign In</a></p>
-            </div>
-        </div> -->
-    </fieldset>
-</form>
+            <!-- <div class="form-group">
+                <div class="col-lg-offset-2 col-lg-10">
+                    <p>Already have an account? <a href="signin" th:href="@{/signin}">Sign In</a></p>
+                </div>
+            </div> -->
+        </fieldset>
+    </form>
 </th:block>
 </body>
 </html>

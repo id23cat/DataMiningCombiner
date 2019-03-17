@@ -11,18 +11,18 @@ management:
 spring:
   include:
     - default
-    
+
   datasource:
-#    driver-class-name: org.h2database.jdbcDriver
+    #    driver-class-name: org.h2database.jdbcDriver
     url: jdbc:h2:mem:dmc
-#    url: jdbc:h2:file:./h2-db/app_db;AUTO_SERVER=TRUE
+    #    url: jdbc:h2:file:./h2-db/app_db;AUTO_SERVER=TRUE
     username: sa
-    
+
 # for H2 console frame
 security:
-  headers: 
+  headers:
     frame: false
-        
+
 logging:
   level:
     org.springframework: ERROR

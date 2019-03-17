@@ -29,39 +29,39 @@ import evm.dmc.web.service.Views;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest(
-		webEnvironment = WebEnvironment.RANDOM_PORT,
-		properties = {"management.port=-1", "security.headers.frame=true"},
-		classes = DmcWebApplication.class)
-@ActiveProfiles({"test", "devH2" })
+        webEnvironment = WebEnvironment.RANDOM_PORT,
+        properties = {"management.port=-1", "security.headers.frame=true"},
+        classes = DmcWebApplication.class)
+@ActiveProfiles({"test", "devH2"})
 //@TestPropertySource(
 //		  locations = "classpath:application-integrationtest.properties")
 @AutoConfigureMockMvc
 public class DatasetTest {
-	@Autowired
-	MockMvc mockMvc;
-	
-	@Autowired
-	private Views views;
-	
-	@Autowired
-	private ProjectService projectService;
-	
-	@Autowired
-	private AccountService accountService;
+    @Autowired
+    MockMvc mockMvc;
 
-	@Test
-	@PreAuthorize("authenticated")
-	@WithMockUser("id23cat")
-	public final void test() throws Exception {
-		Account account = accountService.getAccountByName(DatasetTestUtils.TEST_USER_NAME);
-		ProjectModel project = projectService.getByNameAndAccount(DatasetTestUtils.TEST_PROJ_NAME, account).orElseThrow(()->
-			new ProjectNotFoundException(DatasetTestUtils.TEST_PROJ_NAME));
-		
-		this.mockMvc.perform(get("/project/proj0/dataset/telecom")
-				.sessionAttr(ProjectController.SESSION_CurrentProject,project))
-		.andExpect(status().isOk())
-		.andExpect(view().name(views.project.data.dataSource))
-		;
-	}
+    @Autowired
+    private Views views;
+
+    @Autowired
+    private ProjectService projectService;
+
+    @Autowired
+    private AccountService accountService;
+
+    @Test
+    @PreAuthorize("authenticated")
+    @WithMockUser("id23cat")
+    public final void test() throws Exception {
+        Account account = accountService.getAccountByName(DatasetTestUtils.TEST_USER_NAME);
+        ProjectModel project = projectService.getByNameAndAccount(DatasetTestUtils.TEST_PROJ_NAME, account).orElseThrow(() ->
+                new ProjectNotFoundException(DatasetTestUtils.TEST_PROJ_NAME));
+
+        this.mockMvc.perform(get("/project/proj0/dataset/telecom")
+                .sessionAttr(ProjectController.SESSION_CurrentProject, project))
+                .andExpect(status().isOk())
+                .andExpect(view().name(views.project.data.dataSource))
+        ;
+    }
 
 }

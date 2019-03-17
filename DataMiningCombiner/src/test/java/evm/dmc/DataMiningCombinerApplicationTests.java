@@ -15,10 +15,10 @@ import org.springframework.test.context.junit4.SpringRunner;
 @AutoConfigurationPackage
 public class DataMiningCombinerApplicationTests {
 
-	@Test
-	public void contextLoads() {
-		// TODO
+    @Test
+    public void contextLoads() {
+        // TODO
 
-	}
+    }
 
 }

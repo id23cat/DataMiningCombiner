@@ -14,17 +14,17 @@ import springfox.documentation.swagger2.annotations.EnableSwagger2;
 @Configuration
 @EnableSwagger2
 public class SwaggerConfig {
-	@Bean
-    public Docket api() { 
-        return new Docket(DocumentationType.SWAGGER_2)  
-        		.apiInfo(apiInfo())
-        		.select()                                
-        		.apis(RequestHandlerSelectors.basePackage("evm.dmc.rest"))              
-        		.paths(PathSelectors.ant("/rest/**"))    	// PathSelectors.any()                      
-        		.build();                                           
+    @Bean
+    public Docket api() {
+        return new Docket(DocumentationType.SWAGGER_2)
+                .apiInfo(apiInfo())
+                .select()
+                .apis(RequestHandlerSelectors.basePackage("evm.dmc.rest"))
+                .paths(PathSelectors.ant("/rest/**"))        // PathSelectors.any()
+                .build();
     }
-	
-	private ApiInfo apiInfo() {
+
+    private ApiInfo apiInfo() {
         return new ApiInfoBuilder()
                 .title("DataMiningCombiner API")
                 .description("A implementation of an API Gateway")

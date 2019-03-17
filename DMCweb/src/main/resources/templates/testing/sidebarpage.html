@@ -4,34 +4,34 @@
       layout:decorate="~{testing/layouts/sidebarlayout}">
 
 <head>
-	<title>Welcome to Data Mining combiner</title>
-	<!-- Custom styles for this template -->
+    <title>Welcome to Data Mining combiner</title>
+    <!-- Custom styles for this template -->
     <link href="#" th:href="@{/css/simple-sidebar.css}" rel="stylesheet">
 
 
 <body>
-	<!-- Insert page content into the layouts/sidebarpage.html -->
-	<th:block layout:fragment="sidebar_pagecontent">
-		<h1>Simple Sidebar</h1>
-        <p>inside sidebarpage.html</p>
-		<div>Hello, Page</div>
-		<div id="sidebar" th:insert="testing/fragments/preview/previews :: table">
-		 	</div>
-	</th:block>
+<!-- Insert page content into the layouts/sidebarpage.html -->
+<th:block layout:fragment="sidebar_pagecontent">
+    <h1>Simple Sidebar</h1>
+    <p>inside sidebarpage.html</p>
+    <div>Hello, Page</div>
+    <div id="sidebar" th:insert="testing/fragments/preview/previews :: table">
+    </div>
+</th:block>
 
-	<!-- Insert bar content into the layouts/sidebarpage.html -->
-	<th:block layout:fragment="sidebar_barcontent">
-		<ul class="sidebar-nav">
-			<li class="sidebar-brand"><a href="#"> Start Bootstrap </a></li>
-			<li><a href="#">Link #1</a></li>
-			<li><a href="#">Link #2</a></li>
-			<li><a href="#">Link #3</a></li>
-			<li><a href="#">Link #4</a></li>
-			<li><a href="#">Link #5</a></li>
-			<li><a href="#">Link #6</a></li>
-			<li><a href="#">Link #7</a></li>
-		</ul>
-	</th:block>
+<!-- Insert bar content into the layouts/sidebarpage.html -->
+<th:block layout:fragment="sidebar_barcontent">
+    <ul class="sidebar-nav">
+        <li class="sidebar-brand"><a href="#"> Start Bootstrap </a></li>
+        <li><a href="#">Link #1</a></li>
+        <li><a href="#">Link #2</a></li>
+        <li><a href="#">Link #3</a></li>
+        <li><a href="#">Link #4</a></li>
+        <li><a href="#">Link #5</a></li>
+        <li><a href="#">Link #6</a></li>
+        <li><a href="#">Link #7</a></li>
+    </ul>
+</th:block>
 </body>
 
 </html>

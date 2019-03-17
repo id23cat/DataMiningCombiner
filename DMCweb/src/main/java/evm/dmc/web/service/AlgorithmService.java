@@ -14,24 +14,26 @@ import evm.dmc.api.model.data.MetaData;
 import evm.dmc.web.exceptions.MetaDataNotFoundException;
 import evm.dmc.web.service.dto.TreeNodeDTO;
 
-public interface AlgorithmService extends 
-	EnityGetter<Algorithm>, 
-	EntityModifier<Algorithm>, 
-	MethodService {
-	
-	Algorithm addNew(ProjectModel project, Algorithm algorithm);
-	Algorithm setDataSource(Algorithm algorithm, String datasetName) throws MetaDataNotFoundException;
-//	MetaData getDataSource(Algorithm algorithm);
-	Optional<MetaData> getDataSource(Optional<Algorithm> optAlgorithm);
-	
-	Algorithm setAttributes(Algorithm algorithm, MetaData metaData);
-	
-	
-	
-	List<FrameworkModel> getFrameworksList();
-	List<TreeNodeDTO> getFrameworksAsTreeNodes();
-	
-	static Algorithm getNewAlgorithm(ProjectModel project) {
-		return Algorithm.builder().project(project).build();
-	}
+public interface AlgorithmService extends
+        EnityGetter<Algorithm>,
+        EntityModifier<Algorithm>,
+        MethodService {
+
+    Algorithm addNew(ProjectModel project, Algorithm algorithm);
+
+    Algorithm setDataSource(Algorithm algorithm, String datasetName) throws MetaDataNotFoundException;
+
+    //	MetaData getDataSource(Algorithm algorithm);
+    Optional<MetaData> getDataSource(Optional<Algorithm> optAlgorithm);
+
+    Algorithm setAttributes(Algorithm algorithm, MetaData metaData);
+
+
+    List<FrameworkModel> getFrameworksList();
+
+    List<TreeNodeDTO> getFrameworksAsTreeNodes();
+
+    static Algorithm getNewAlgorithm(ProjectModel project) {
+        return Algorithm.builder().project(project).build();
+    }
 }

@@ -15,7 +15,7 @@ import java.util.Map;
  * @see evm.dmc.api.model.algorithm.Algorithm
  */
 @Data
-@EqualsAndHashCode(callSuper=false)
+@EqualsAndHashCode(callSuper = false)
 public class AlgorithmDto extends AbstractDto {
 
     private Long algorithmId;

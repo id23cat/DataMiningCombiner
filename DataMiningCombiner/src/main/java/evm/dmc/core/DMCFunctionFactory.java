@@ -4,9 +4,9 @@ import evm.dmc.core.api.DMCFunction;
 import evm.dmc.core.api.Framework;
 
 public interface DMCFunctionFactory {
-	DMCFunction getFunction(String descriptor);
+    DMCFunction getFunction(String descriptor);
 
-	void addFramework(Framework framework);
+    void addFramework(Framework framework);
 
-	void initFactory();
+    void initFactory();
 }

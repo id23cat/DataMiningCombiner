@@ -37,44 +37,44 @@ import lombok.ToString;
 
 @Data
 @Builder
-@EqualsAndHashCode(exclude={"property"})
-@ToString(exclude={"dependentAlgorithms", "steps"})
+@EqualsAndHashCode(exclude = {"property"})
+@ToString(exclude = {"dependentAlgorithms", "steps"})
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
 @Table(name = "Function")
-@Inheritance(strategy=InheritanceType.SINGLE_TABLE)
+@Inheritance(strategy = InheritanceType.SINGLE_TABLE)
 public class FunctionModel implements Serializable {
-	
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = -2557529452898863152L;
 
-	@Id
-	@GeneratedValue(strategy=GenerationType.IDENTITY)
-	@Setter(AccessLevel.NONE) 
-	private Long id;
-	
-	@NotBlank
-	@Length(max = 100)
-	private String name;
-	
-	@ManyToOne
-	@JoinColumn(name = "framework_id")
-	private FrameworkModel framework;
-	
-	@Enumerated(EnumType.STRING)
-	@NotNull
-	private FunctionType type;
-	
-	@Singular
-	@Column( length = 100000 )
-	@Convert(converter = PropertiesMapToJson.class)
-	private Map<String, String> properties;
-	
-	private String description;
-	
+    /**
+     *
+     */
+    private static final long serialVersionUID = -2557529452898863152L;
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Setter(AccessLevel.NONE)
+    private Long id;
+
+    @NotBlank
+    @Length(max = 100)
+    private String name;
+
+    @ManyToOne
+    @JoinColumn(name = "framework_id")
+    private FrameworkModel framework;
+
+    @Enumerated(EnumType.STRING)
+    @NotNull
+    private FunctionType type;
+
+    @Singular
+    @Column(length = 100000)
+    @Convert(converter = PropertiesMapToJson.class)
+    private Map<String, String> properties;
+
+    private String description;
+
 //	public FunctionModel(FunctionModel funmodel){
 //		name = funmodel.getName();
 //		framework = funmodel.getFramework();
@@ -82,31 +82,31 @@ public class FunctionModel implements Serializable {
 //		properties = funmodel.getProperties();
 //		description = funmodel.getDescription();
 //	}
-	
-	public String getProperty(String property) {
-		return properties.get(property);
-	}
-	
-	public void setProperty(String property, String value) {
-		properties.put(property, value);
-	}
-	
-	public final static Map<String,String> propertiesToMap(Properties props) {
-		if(props == null)
-			return null;
-		Map<String,String> map = new HashMap<String,String>();
-		for(final String name : props.stringPropertyNames()) {
-			map.put(name, props.getProperty(name));
-		}
-		return map;
-	}
-	
-	public final static Properties mapToProperties(Map<String, String> map) {
-		if(map == null)
-			return null;
-		Properties properties = new Properties();
-		properties.putAll(map);
-		return properties;
-	}
-	
+
+    public String getProperty(String property) {
+        return properties.get(property);
+    }
+
+    public void setProperty(String property, String value) {
+        properties.put(property, value);
+    }
+
+    public final static Map<String, String> propertiesToMap(Properties props) {
+        if (props == null)
+            return null;
+        Map<String, String> map = new HashMap<String, String>();
+        for (final String name : props.stringPropertyNames()) {
+            map.put(name, props.getProperty(name));
+        }
+        return map;
+    }
+
+    public final static Properties mapToProperties(Map<String, String> map) {
+        if (map == null)
+            return null;
+        Properties properties = new Properties();
+        properties.putAll(map);
+        return properties;
+    }
+
 }

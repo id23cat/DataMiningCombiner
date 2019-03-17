@@ -14,20 +14,20 @@ import weka.core.Instances;
 @Service
 public abstract class AbstractWekaFunction extends AbstractDMCFunction<Instances> implements WekaFunction {
 
-	protected Data<Instances> result = null;
+    protected Data<Instances> result = null;
 
-	@Override
-	public Data<Instances> getResult() {
-		return result;
-	}
-	
-	@Override
-	public Optional<Data<Instances>> getOptionalResult() {
-		return Optional.ofNullable(result);
-	}
+    @Override
+    public Data<Instances> getResult() {
+        return result;
+    }
 
-	protected void setResult(WekaData res) {
-		result = res;
-	}
+    @Override
+    public Optional<Data<Instances>> getOptionalResult() {
+        return Optional.ofNullable(result);
+    }
+
+    protected void setResult(WekaData res) {
+        result = res;
+    }
 
 }

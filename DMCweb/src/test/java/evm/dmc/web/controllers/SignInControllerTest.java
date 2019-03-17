@@ -25,40 +25,40 @@ import evm.dmc.web.service.Views;
 @AutoConfigureMockMvc
 public class SignInControllerTest {
 
-	@Autowired
-	MockMvc mockMvc;
-	
-	@Value("${views.regsign}")
-	String regSignView;
-	
-	@Value("${views.signin}")
-	String signinView;
-	
-		
-	@Autowired
-	Views views;
-	
-	@Before
-	public void ensureWiring(){
-		assertNotNull(views);
-		assertNotNull(views.getRegister());
-	}
-	
-	@Test
-	public final void getSignInTest() throws Exception {
-		this.mockMvc.perform(get(RequestPath.signin))
-		.andExpect(status().isOk())
-		.andExpect(view().name(signinView));
-	}
-	
-	@Test
-	public final void getSignInXreqTest() throws Exception {
-		this.mockMvc.perform(get(RequestPath.signin).header("X-Requested-With", "XMLHttpRequest"))
-		.andExpect(status().isOk())
-		.andExpect(view().name(signinView.concat(String.format(views.getFragments().getSignin(), "signin"))))
-		.andExpect(model().attributeExists("registrationForm"));
+    @Autowired
+    MockMvc mockMvc;
+
+    @Value("${views.regsign}")
+    String regSignView;
+
+    @Value("${views.signin}")
+    String signinView;
+
+
+    @Autowired
+    Views views;
+
+    @Before
+    public void ensureWiring() {
+        assertNotNull(views);
+        assertNotNull(views.getRegister());
+    }
+
+    @Test
+    public final void getSignInTest() throws Exception {
+        this.mockMvc.perform(get(RequestPath.signin))
+                .andExpect(status().isOk())
+                .andExpect(view().name(signinView));
+    }
+
+    @Test
+    public final void getSignInXreqTest() throws Exception {
+        this.mockMvc.perform(get(RequestPath.signin).header("X-Requested-With", "XMLHttpRequest"))
+                .andExpect(status().isOk())
+                .andExpect(view().name(signinView.concat(String.format(views.getFragments().getSignin(), "signin"))))
+                .andExpect(model().attributeExists("registrationForm"));
 //		.andExpect(content().string(containsString("<li class=\"active\"><a data-toggle=\"tab\" href=\"#signin\">Sign In</a></li>")));
-	}
+    }
 
 
 }

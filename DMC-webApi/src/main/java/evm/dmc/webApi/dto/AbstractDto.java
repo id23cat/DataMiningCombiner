@@ -7,5 +7,5 @@ import org.springframework.hateoas.ResourceSupport;
  */
 public abstract class AbstractDto extends ResourceSupport {
 
-	public abstract Long getDtoId();
+    public abstract Long getDtoId();
 }

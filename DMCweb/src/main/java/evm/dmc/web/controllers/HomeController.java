@@ -12,17 +12,17 @@ import evm.dmc.web.service.Views;
 @Controller
 @RequestMapping(RequestPath.home)
 public class HomeController {
-	
-	@Autowired
-	Views views;
-	
-	@GetMapping
-	public String getHome(Authentication authentication) {
-		if(authentication != null && authentication.isAuthenticated())
-			return "redirect:" + RequestPath.project;
-		else
-			return views.getIndex();
-		
-	}
+
+    @Autowired
+    Views views;
+
+    @GetMapping
+    public String getHome(Authentication authentication) {
+        if (authentication != null && authentication.isAuthenticated())
+            return "redirect:" + RequestPath.project;
+        else
+            return views.getIndex();
+
+    }
 
 }

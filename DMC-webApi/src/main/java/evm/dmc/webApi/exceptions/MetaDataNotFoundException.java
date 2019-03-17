@@ -7,19 +7,21 @@ import java.util.function.Supplier;
  */
 public class MetaDataNotFoundException extends NotFoundException {
 
-	/** Defined to avoid problems with serialization */
-	private static final long serialVersionUID = -7557190537228887032L;
+    /**
+     * Defined to avoid problems with serialization
+     */
+    private static final long serialVersionUID = -7557190537228887032L;
 
-	public static Supplier<ProjectNotFoundException> supplier(Long id) {
-		return ()-> new ProjectNotFoundException("Dataset with id=" + id + " not found");
-	}
+    public static Supplier<ProjectNotFoundException> supplier(Long id) {
+        return () -> new ProjectNotFoundException("Dataset with id=" + id + " not found");
+    }
 
-	public MetaDataNotFoundException(String message) {
-		super(message);
-	}
+    public MetaDataNotFoundException(String message) {
+        super(message);
+    }
 
-	public MetaDataNotFoundException(String message, Throwable cause) {
-		super(message, cause);
-	}
+    public MetaDataNotFoundException(String message, Throwable cause) {
+        super(message, cause);
+    }
 
 }

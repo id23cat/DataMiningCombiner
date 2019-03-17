@@ -21,62 +21,63 @@ import evm.dmc.rest.dto.AccountDto;
 import evm.dmc.web.service.AccountService;
 
 @RestController
-@RequestMapping(RestAccountsController.BASE_URL)	// /rest/user
+@RequestMapping(RestAccountsController.BASE_URL)    // /rest/user
 public class RestAccountsController {
-	public final static String BASE_URL = "/rest/user";
-	
-	public final static String LINK_REL_accountsList = "accountsList";
-	
-	@Autowired
-	private AccountService accountService;
-	
-	@Autowired AccountRepository accountRepository;
-	
-	@Autowired
+    public final static String BASE_URL = "/rest/user";
+
+    public final static String LINK_REL_accountsList = "accountsList";
+
+    @Autowired
+    private AccountService accountService;
+
+    @Autowired
+    AccountRepository accountRepository;
+
+    @Autowired
     private ModelMapper modelMapper;
-	
-	public static AccountDto selfLink(AccountDto dto) {
-		Link selfLink = linkTo(methodOn(RestAccountsController.class)
-				.getAccount(dto.getAccountId()))
-				.withSelfRel();
-		dto.add(selfLink);
-		return dto;
-	}
-	
-	public static ResourceSupport accountsListLink(ResourceSupport resSupport) {
-		Link listLink = linkTo(methodOn(RestAccountsController.class)
-				.getAccountsList())
-				.withRel(LINK_REL_accountsList);
-		resSupport.add(listLink);
-		return resSupport;
-	}
-	
-	@GetMapping
-	@Transactional
-	public List<AccountDto> getAccountsList() {
-		return accountService.getAll()
-				.map(this :: convertToDto)
-				.map((accDto) -> addLinks(accDto))
-				.collect(Collectors.toList());
-	}
-	
-	@GetMapping("/{accountId}")
-	@Transactional
-	public AccountDto getAccount(@PathVariable Long accountId) {
-		return addLinks(convertToDto(accountRepository.findOne(accountId)));
-	}
-	
-	private AccountDto addLinks(AccountDto accDto) {
-		selfLink(accDto);
-		accountsListLink(accDto);
-		RestProjectController.projectsListLink(accDto, accDto.getAccountId());
-		return accDto;
-	}
-	
-	private AccountDto convertToDto(Account acc) {
-		return modelMapper.map(acc, AccountDto.class);
-	}
-	
+
+    public static AccountDto selfLink(AccountDto dto) {
+        Link selfLink = linkTo(methodOn(RestAccountsController.class)
+                .getAccount(dto.getAccountId()))
+                .withSelfRel();
+        dto.add(selfLink);
+        return dto;
+    }
+
+    public static ResourceSupport accountsListLink(ResourceSupport resSupport) {
+        Link listLink = linkTo(methodOn(RestAccountsController.class)
+                .getAccountsList())
+                .withRel(LINK_REL_accountsList);
+        resSupport.add(listLink);
+        return resSupport;
+    }
+
+    @GetMapping
+    @Transactional
+    public List<AccountDto> getAccountsList() {
+        return accountService.getAll()
+                .map(this::convertToDto)
+                .map((accDto) -> addLinks(accDto))
+                .collect(Collectors.toList());
+    }
+
+    @GetMapping("/{accountId}")
+    @Transactional
+    public AccountDto getAccount(@PathVariable Long accountId) {
+        return addLinks(convertToDto(accountRepository.findOne(accountId)));
+    }
+
+    private AccountDto addLinks(AccountDto accDto) {
+        selfLink(accDto);
+        accountsListLink(accDto);
+        RestProjectController.projectsListLink(accDto, accDto.getAccountId());
+        return accDto;
+    }
+
+    private AccountDto convertToDto(Account acc) {
+        return modelMapper.map(acc, AccountDto.class);
+    }
+
 //	private Account convertToEntity(AccountDto dto) {
 //		return modelMapper.map(dto, Account.class);
 //	}

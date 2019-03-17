@@ -15,24 +15,30 @@
 --INSERT INTO PROJECT_ALGORITHM (project_id, algorithm_id)
 --	
 -- account:
-INSERT INTO ACCOUNT(DTYPE, CREATED, EMAIL, FIRST_NAME, LAST_NAME, PASSWORD, ROLE, USER_NAME) VALUES
+INSERT INTO ACCOUNT(DTYPE, CREATED, EMAIL, FIRST_NAME, LAST_NAME, PASSWORD, ROLE, USER_NAME)
+VALUES
 ('Account', CURRENT_TIMESTAMP(), 'devel@mail.org', 'Devel', 'Oper', 'devel', 'USER', 'devel');
 
 -- project:
-INSERT INTO PROJECT(CREATED, NAME, PROJECT_TYPE, ACCOUNT_ID) VALUES
-(CURRENT_TIMESTAMP(), 'proj0', 'SIMPLEST_PROJECT', (SELECT id FROM ACCOUNT WHERE user_name='devel')),
-(CURRENT_TIMESTAMP(), 'proj1', 'SIMPLEST_PROJECT', (SELECT id FROM ACCOUNT WHERE user_name='devel')),
-(CURRENT_TIMESTAMP(), 'proj2', 'SIMPLEST_PROJECT', (SELECT id FROM ACCOUNT WHERE user_name='devel'));   
+INSERT INTO PROJECT(CREATED, NAME, PROJECT_TYPE, ACCOUNT_ID)
+VALUES
+(CURRENT_TIMESTAMP(), 'proj0', 'SIMPLEST_PROJECT', (SELECT id FROM ACCOUNT WHERE user_name = 'devel')),
+(CURRENT_TIMESTAMP(), 'proj1', 'SIMPLEST_PROJECT', (SELECT id FROM ACCOUNT WHERE user_name = 'devel')),
+(CURRENT_TIMESTAMP(), 'proj2', 'SIMPLEST_PROJECT', (SELECT id FROM ACCOUNT WHERE user_name = 'devel'));
 
 -- metadata:
-INSERT INTO DATA_STORAGE(ID, DELIMITER, HAS_HEADER, STORAGE_TYPE, relative_path) VALUES
+INSERT INTO DATA_STORAGE(ID, DELIMITER, HAS_HEADER, STORAGE_TYPE, relative_path)
+VALUES
 (1, STRINGDECODE(',;\t|'), TRUE, 'LOCAL_FS', 'devel/proj0/telecom_churn.csv'),
 (2, STRINGDECODE(',;\t|'), TRUE, 'LOCAL_FS', 'devel/proj0/iris.csv')
-;      
+;
 
-INSERT INTO METADATA(ID, DESCRIPTION, NAME, PROJECT_ID, STORAGE_ID, ATTRIBUTES) VALUES
-(1, '', 'telecom', (SELECT id FROM PROJECT WHERE name='proj0'), 1, '{"Total intl minutes":{"name":"Total intl minutes","type":"NUMERIC","multiplier":1.0,"checked":true},"Total day charge":{"name":"Total day charge","type":"NUMERIC","multiplier":1.0,"checked":true},"Total day calls":{"name":"Total day calls","type":"NUMERIC","multiplier":1.0,"checked":true},"Number vmail messages":{"name":"Number vmail messages","type":"NUMERIC","multiplier":1.0,"checked":true},"Total night charge":{"name":"Total night charge","type":"NUMERIC","multiplier":1.0,"checked":true},"Churn":{"name":"Churn","type":"NOMINAL","multiplier":1.0,"checked":true},"Total night minutes":{"name":"Total night minutes","type":"NUMERIC","multiplier":1.0,"checked":true},"Total eve calls":{"name":"Total eve calls","type":"NUMERIC","multiplier":1.0,"checked":true},"Total day minutes":{"name":"Total day minutes","type":"NUMERIC","multiplier":1.0,"checked":true},"Customer service calls":{"name":"Customer service calls","type":"NUMERIC","multiplier":1.0,"checked":true},"Total intl charge":{"name":"Total intl charge","type":"NUMERIC","multiplier":1.0,"checked":true},"Area code":{"name":"Area code","type":"NUMERIC","multiplier":1.0,"checked":true},"Total night calls":{"name":"Total night calls","type":"NUMERIC","multiplier":1.0,"checked":true},"International plan":{"name":"International plan","type":"NOMINAL","multiplier":1.0,"checked":true},"State":{"name":"State","type":"NOMINAL","multiplier":1.0,"checked":true},"Account length":{"name":"Account length","type":"NUMERIC","multiplier":1.0,"checked":true},"Total intl calls":{"name":"Total intl calls","type":"NUMERIC","multiplier":1.0,"checked":true},"Total eve minutes":{"name":"Total eve minutes","type":"NUMERIC","multiplier":1.0,"checked":true},"Total eve charge":{"name":"Total eve charge","type":"NUMERIC","multiplier":1.0,"checked":true},"Voice mail plan":{"name":"Voice mail plan","type":"NOMINAL","multiplier":1.0,"checked":true}}),'),
-(2, '', 'iris', (SELECT id FROM PROJECT WHERE name='proj0'), 2, '{"0":{"name":"0","type":"NUMERIC","multiplier":1.0,"checked":true},"1":{"name":"1","type":"NUMERIC","multiplier":1.0,"checked":true},"2":{"name":"2","type":"NUMERIC","multiplier":1.0,"checked":true},"3":{"name":"3","type":"NOMINAL","multiplier":1.0,"checked":true},"4":{"name":"4","type":"NOMINAL","multiplier":1.0,"checked":true}}')
+INSERT INTO METADATA(ID, DESCRIPTION, NAME, PROJECT_ID, STORAGE_ID, ATTRIBUTES)
+VALUES
+(1, '', 'telecom', (SELECT id FROM PROJECT WHERE name = 'proj0'), 1,
+ '{"Total intl minutes":{"name":"Total intl minutes","type":"NUMERIC","multiplier":1.0,"checked":true},"Total day charge":{"name":"Total day charge","type":"NUMERIC","multiplier":1.0,"checked":true},"Total day calls":{"name":"Total day calls","type":"NUMERIC","multiplier":1.0,"checked":true},"Number vmail messages":{"name":"Number vmail messages","type":"NUMERIC","multiplier":1.0,"checked":true},"Total night charge":{"name":"Total night charge","type":"NUMERIC","multiplier":1.0,"checked":true},"Churn":{"name":"Churn","type":"NOMINAL","multiplier":1.0,"checked":true},"Total night minutes":{"name":"Total night minutes","type":"NUMERIC","multiplier":1.0,"checked":true},"Total eve calls":{"name":"Total eve calls","type":"NUMERIC","multiplier":1.0,"checked":true},"Total day minutes":{"name":"Total day minutes","type":"NUMERIC","multiplier":1.0,"checked":true},"Customer service calls":{"name":"Customer service calls","type":"NUMERIC","multiplier":1.0,"checked":true},"Total intl charge":{"name":"Total intl charge","type":"NUMERIC","multiplier":1.0,"checked":true},"Area code":{"name":"Area code","type":"NUMERIC","multiplier":1.0,"checked":true},"Total night calls":{"name":"Total night calls","type":"NUMERIC","multiplier":1.0,"checked":true},"International plan":{"name":"International plan","type":"NOMINAL","multiplier":1.0,"checked":true},"State":{"name":"State","type":"NOMINAL","multiplier":1.0,"checked":true},"Account length":{"name":"Account length","type":"NUMERIC","multiplier":1.0,"checked":true},"Total intl calls":{"name":"Total intl calls","type":"NUMERIC","multiplier":1.0,"checked":true},"Total eve minutes":{"name":"Total eve minutes","type":"NUMERIC","multiplier":1.0,"checked":true},"Total eve charge":{"name":"Total eve charge","type":"NUMERIC","multiplier":1.0,"checked":true},"Voice mail plan":{"name":"Voice mail plan","type":"NOMINAL","multiplier":1.0,"checked":true}}),'),
+(2, '', 'iris', (SELECT id FROM PROJECT WHERE name = 'proj0'), 2,
+ '{"0":{"name":"0","type":"NUMERIC","multiplier":1.0,"checked":true},"1":{"name":"1","type":"NUMERIC","multiplier":1.0,"checked":true},"2":{"name":"2","type":"NUMERIC","multiplier":1.0,"checked":true},"3":{"name":"3","type":"NOMINAL","multiplier":1.0,"checked":true},"4":{"name":"4","type":"NOMINAL","multiplier":1.0,"checked":true}}')
 ;
 --
 
@@ -67,40 +73,49 @@ INSERT INTO METADATA(ID, DESCRIPTION, NAME, PROJECT_ID, STORAGE_ID, ATTRIBUTES) 
 --(2, 3333, TRUE, 1.0, '5', 'NOMINAL', '5')
 --;
 
-INSERT INTO DATA_PREVIEW(DELIMITER, META_DATA_ID, HEADER) VALUES
-(',', 1, 'State,Account length,Area code,International plan,Voice mail plan,Number vmail messages,Total day minutes,Total day calls,Total day charge,Total eve minutes,Total eve calls,Total eve charge,Total night minutes,Total night calls,Total night charge,Total intl minutes,Total intl calls,Total intl charge,Customer service calls,Churn'),
+INSERT INTO DATA_PREVIEW(DELIMITER, META_DATA_ID, HEADER)
+VALUES
+(',', 1,
+ 'State,Account length,Area code,International plan,Voice mail plan,Number vmail messages,Total day minutes,Total day calls,Total day charge,Total eve minutes,Total eve calls,Total eve charge,Total night minutes,Total night calls,Total night charge,Total intl minutes,Total intl calls,Total intl charge,Customer service calls,Churn'),
 (',', 2, '0,1,2,3,4')
 ;
 
-UPDATE METADATA SET PREVIEW_ID=1 WHERE NAME='telecom';
-UPDATE METADATA SET PREVIEW_ID=2 WHERE NAME='iris';
+UPDATE METADATA
+SET PREVIEW_ID=1
+WHERE NAME = 'telecom';
+UPDATE METADATA
+SET PREVIEW_ID=2
+WHERE NAME = 'iris';
 
-INSERT INTO DATA_PREVIEW_LIST(DATA_PREVIEW_ID, DATA) VALUES
---((SELECT id FROM DATA_PREVIEW WHERE META_DATA_ID=(SELECT id FROM METADATA WHERE name='telecom')), 'KS,128,415,No,Yes,25,265.1,110,45.07,197.4,99,16.78,244.7,91,11.01,10.0,3,2.7,1,False'),
-(1, 'KS,128,415,No,Yes,25,265.1,110,45.07,197.4,99,16.78,244.7,91,11.01,10.0,3,2.7,1,False'),
-(1, 'OH,107,415,No,Yes,26,161.6,123,27.47,195.5,103,16.62,254.4,103,11.45,13.7,3,3.7,1,False'),
-(1, 'NJ,137,415,No,No,0,243.4,114,41.38,121.2,110,10.3,162.6,104,7.32,12.2,5,3.29,0,False'),
-(1, 'OH,84,408,Yes,No,0,299.4,71,50.9,61.9,88,5.26,196.9,89,8.86,6.6,7,1.78,2,False'),
-(1, 'OK,75,415,Yes,No,0,166.7,113,28.34,148.3,122,12.61,186.9,121,8.41,10.1,3,2.73,3,False'),
-(1, 'AL,118,510,Yes,No,0,223.4,98,37.98,220.6,101,18.75,203.9,118,9.18,6.3,6,1.7,0,False'),
-(1, 'MA,121,510,No,Yes,24,218.2,88,37.09,348.5,108,29.62,212.6,118,9.57,7.5,7,2.03,3,False'),
-(2, '5.1,3.5,1.4,0.2,Iris-setosa'),
-(2, '4.9,3.0,1.4,0.2,Iris-setosa'),
-(2, '4.7,3.2,1.3,0.2,Iris-setosa'),
-(2, '4.6,3.1,1.5,0.2,Iris-setosa'),
-(2, '5.0,3.6,1.4,0.2,Iris-setosa'),
-(2, '5.4,3.9,1.7,0.4,Iris-setosa'),
-(2, '4.6,3.4,1.4,0.3,Iris-setosa')
+INSERT INTO DATA_PREVIEW_LIST(DATA_PREVIEW_ID, DATA)
+VALUES
+  --((SELECT id FROM DATA_PREVIEW WHERE META_DATA_ID=(SELECT id FROM METADATA WHERE name='telecom')), 'KS,128,415,No,Yes,25,265.1,110,45.07,197.4,99,16.78,244.7,91,11.01,10.0,3,2.7,1,False'),
+  (1, 'KS,128,415,No,Yes,25,265.1,110,45.07,197.4,99,16.78,244.7,91,11.01,10.0,3,2.7,1,False'),
+  (1, 'OH,107,415,No,Yes,26,161.6,123,27.47,195.5,103,16.62,254.4,103,11.45,13.7,3,3.7,1,False'),
+  (1, 'NJ,137,415,No,No,0,243.4,114,41.38,121.2,110,10.3,162.6,104,7.32,12.2,5,3.29,0,False'),
+  (1, 'OH,84,408,Yes,No,0,299.4,71,50.9,61.9,88,5.26,196.9,89,8.86,6.6,7,1.78,2,False'),
+  (1, 'OK,75,415,Yes,No,0,166.7,113,28.34,148.3,122,12.61,186.9,121,8.41,10.1,3,2.73,3,False'),
+  (1, 'AL,118,510,Yes,No,0,223.4,98,37.98,220.6,101,18.75,203.9,118,9.18,6.3,6,1.7,0,False'),
+  (1, 'MA,121,510,No,Yes,24,218.2,88,37.09,348.5,108,29.62,212.6,118,9.57,7.5,7,2.03,3,False'),
+  (2, '5.1,3.5,1.4,0.2,Iris-setosa'),
+  (2, '4.9,3.0,1.4,0.2,Iris-setosa'),
+  (2, '4.7,3.2,1.3,0.2,Iris-setosa'),
+  (2, '4.6,3.1,1.5,0.2,Iris-setosa'),
+  (2, '5.0,3.6,1.4,0.2,Iris-setosa'),
+  (2, '5.4,3.9,1.7,0.4,Iris-setosa'),
+  (2, '4.6,3.4,1.4,0.3,Iris-setosa')
 ;
 
 -- method
-INSERT INTO METHOD(Entity_Type, ID, NAME) VALUES
-('pattern', 1, 'alg0');
+INSERT INTO METHOD(Entity_Type, ID, NAME)
+VALUES
+  ('pattern', 1, 'alg0');
 -- algorithm:
 --INSERT INTO ALGORITHM(ENTITY_TYPE, DATA_DESTINATION, DATA_SOURCE, DESCRIPTION, NAME, SHARED, FUNCTION_MODEL, PARENT_PROJECT_ID) VALUES
 --('subalg', NULL, NULL, 'devel Algorithm', 'alg1', FALSE, NULL, (SELECT id FROM PROJECT WHERE name='proj0'));
-INSERT INTO ALGORITHM(NAME, PROJECT_ID, DATA_SOURCE_ID, SRC_ATTRIBUTES, METHOD_ID) VALUES
-('alg0', (SELECT id FROM PROJECT WHERE name='proj0'), 2, '{}', 1);
+INSERT INTO ALGORITHM(NAME, PROJECT_ID, DATA_SOURCE_ID, SRC_ATTRIBUTES, METHOD_ID)
+VALUES
+  ('alg0', (SELECT id FROM PROJECT WHERE name = 'proj0'), 2, '{}', 1);
 
 --INSERT INTO PROJECT_ALGORITHM(PROJECT_ID, ALGORITHM_ID) VALUES
 --((SELECT id FROM PROJECT WHERE name='proj0'), (SELECT id FROM ALGORITHM WHERE name='alg1'));  

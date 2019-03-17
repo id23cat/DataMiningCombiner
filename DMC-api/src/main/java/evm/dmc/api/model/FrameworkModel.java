@@ -31,51 +31,51 @@ import lombok.ToString;
 //@Builder
 @Entity
 @Table(name = "Framework")
-@EqualsAndHashCode(exclude={"functions"})
-@ToString(exclude="functions")
-public class FrameworkModel implements Serializable{
-	
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = -6061011758502384732L;
+@EqualsAndHashCode(exclude = {"functions"})
+@ToString(exclude = "functions")
+public class FrameworkModel implements Serializable {
 
-	@Id
-	@GeneratedValue(strategy=GenerationType.IDENTITY)
-	@Setter(AccessLevel.NONE) 
-	private Long id;
-	
-	@NotBlank
-	@Length(max = 100)
-	private String name;
-	
-	@OneToMany(mappedBy = "framework", fetch = FetchType.LAZY,
-			cascade = CascadeType.ALL, orphanRemoval = true)
-	private Set<FunctionModel> functions = new HashSet<>();
-	
-	@Enumerated(EnumType.STRING)
-	@NotNull
-	private FrameworkType type;
-	
-	@NotNull
-	private boolean active = false;
-	
-	private Properties properties = new Properties();
-	
-	public FrameworkModel() {
-		super();
-	}
-	
-	public FrameworkModel(String name, FrameworkType type) {
-		super();
-		this.name = name;
-		this.type = type;
-	}
-	
-	public boolean isSame(FrameworkModel model) {
-		return name.equals(model.getName()) 
-				&& type.equals(model.getType()) 
-				&& active == model.isActive();
-	}
-	
+    /**
+     *
+     */
+    private static final long serialVersionUID = -6061011758502384732L;
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Setter(AccessLevel.NONE)
+    private Long id;
+
+    @NotBlank
+    @Length(max = 100)
+    private String name;
+
+    @OneToMany(mappedBy = "framework", fetch = FetchType.LAZY,
+            cascade = CascadeType.ALL, orphanRemoval = true)
+    private Set<FunctionModel> functions = new HashSet<>();
+
+    @Enumerated(EnumType.STRING)
+    @NotNull
+    private FrameworkType type;
+
+    @NotNull
+    private boolean active = false;
+
+    private Properties properties = new Properties();
+
+    public FrameworkModel() {
+        super();
+    }
+
+    public FrameworkModel(String name, FrameworkType type) {
+        super();
+        this.name = name;
+        this.type = type;
+    }
+
+    public boolean isSame(FrameworkModel model) {
+        return name.equals(model.getName())
+                && type.equals(model.getType())
+                && active == model.isActive();
+    }
+
 }

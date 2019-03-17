@@ -18,35 +18,34 @@ import lombok.Singular;
 import lombok.ToString;
 
 @Data
-@EqualsAndHashCode(callSuper=true)
-@ToString(callSuper=true)
+@EqualsAndHashCode(callSuper = true)
+@ToString(callSuper = true)
 @Entity
 //@NoArgsConstructor
 @DiscriminatorValue("fwMethod")
 public class FWMethod extends PatternMethod {
-	
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = -2208544525075109660L;
-	
-	@OneToOne(cascade = {CascadeType.DETACH, CascadeType.MERGE, CascadeType.PERSIST}, optional = true)
-	private FunctionModel frameworkFunction;
-	
-	
 
-	@Builder
-	private FWMethod(Long id, 
-			String name, 
-			String description, 
-			@Singular Map<String, String> properties,
-			List<PatternMethod> steps,
-			@Singular Set<Algorithm> dependentAlgorithms, 
-			Boolean shared,
-			FunctionModel frameworkFunction
-			) {
-		super(id, name, description, properties, steps, dependentAlgorithms, shared);
+    /**
+     *
+     */
+    private static final long serialVersionUID = -2208544525075109660L;
+
+    @OneToOne(cascade = {CascadeType.DETACH, CascadeType.MERGE, CascadeType.PERSIST}, optional = true)
+    private FunctionModel frameworkFunction;
+
+
+    @Builder
+    private FWMethod(Long id,
+                     String name,
+                     String description,
+                     @Singular Map<String, String> properties,
+                     List<PatternMethod> steps,
+                     @Singular Set<Algorithm> dependentAlgorithms,
+                     Boolean shared,
+                     FunctionModel frameworkFunction
+    ) {
+        super(id, name, description, properties, steps, dependentAlgorithms, shared);
 //		super(id, name, description, dependentAlgorithms, shared);
-		this.frameworkFunction = frameworkFunction;
-	}
+        this.frameworkFunction = frameworkFunction;
+    }
 }

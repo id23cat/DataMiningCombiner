@@ -7,70 +7,73 @@
     <title>Hello Spring Boot!</title>
 </head>
 <body>
-	<!-- Insert content into the layouts/layout.html -->
-	<th:block layout:fragment="content">
-		<div class="form-group">
-		<h2>Finish</h2>
-		<!-- <button type="button" class="btn btn-info">Execute <span class="glyphicon glyphicon-play"></span></button> -->
-		<a th:href="@{/testing/UID/project/12/viewalg_execute}" class="btn btn-success" role="button">Re-run <span class="glyphicon glyphicon-repeat"></span></a>
-		</div>
-		
-		<ul class="nav nav-tabs">
-			<li><a data-toggle="tab" href="#tab0">Data load</a></li>
-			<li class="active"><a data-toggle="tab" href="#tab1">Select features</a></li>
-			<li><a data-toggle="tab" href="#tab2">KMeans</a></li>
-			<li><a data-toggle="tab" href="#tab3">PCA</a></li>
-		</ul>
-		
+<!-- Insert content into the layouts/layout.html -->
+<th:block layout:fragment="content">
+    <div class="form-group">
+        <h2>Finish</h2>
+        <!-- <button type="button" class="btn btn-info">Execute <span class="glyphicon glyphicon-play"></span></button> -->
+        <a th:href="@{/testing/UID/project/12/viewalg_execute}" class="btn btn-success" role="button">Re-run <span
+                class="glyphicon glyphicon-repeat"></span></a>
+    </div>
 
-		<div class="tab-content">
-			<div id="tab0" class="tab-pane fade ">
-				<h3>Selected file: </h3>
-				<div th:insert="testing/fragments/funoptions/func_opts :: src_opts">
-		 		</div>
-			</div>
-			<div id="tab1" class="tab-pane fade in active">
-				<div th:insert="testing/fragments/funoptions/func_opts :: table_features">
-		 		</div>
-			</div>
-			<div id="tab2" class="tab-pane fade">
-				<div th:insert="testing/fragments/funoptions/func_opts :: kmeans_opts">
-		 		</div>
-		 		<!-- Trigger the modal with a button -->
-			<button type="button" class="btn btn-info btn-md" data-toggle="modal"
-				data-target="#myModal">View result</button>
+    <ul class="nav nav-tabs">
+        <li><a data-toggle="tab" href="#tab0">Data load</a></li>
+        <li class="active"><a data-toggle="tab" href="#tab1">Select features</a></li>
+        <li><a data-toggle="tab" href="#tab2">KMeans</a></li>
+        <li><a data-toggle="tab" href="#tab3">PCA</a></li>
+    </ul>
 
-			<!-- Modal -->
-			<div id="myModal" class="modal fade" role="dialog">
-				<div class="modal-dialog modal-lg">
 
-					<!-- Modal content-->
-					<div class="modal-content">
-						<div class="modal-header">
-							<button type="button" class="close" data-dismiss="modal">&times;</button>
-							<h4 class="modal-title">KMeans result</h4>
-						</div>
-						<div class="modal-body">
-							<div class="container">
-								<div id="sidebar" th:insert="testing/fragments/preview/previews :: plot2d_result">
-						 		</div>
-						 	</div>
-						</div>
-						<div class="modal-footer">
-							<button type="button" class="btn btn-default"
-								data-dismiss="modal">Close</button>
-						</div>
-					</div>
+    <div class="tab-content">
+        <div id="tab0" class="tab-pane fade ">
+            <h3>Selected file: </h3>
+            <div th:insert="testing/fragments/funoptions/func_opts :: src_opts">
+            </div>
+        </div>
+        <div id="tab1" class="tab-pane fade in active">
+            <div th:insert="testing/fragments/funoptions/func_opts :: table_features">
+            </div>
+        </div>
+        <div id="tab2" class="tab-pane fade">
+            <div th:insert="testing/fragments/funoptions/func_opts :: kmeans_opts">
+            </div>
+            <!-- Trigger the modal with a button -->
+            <button type="button" class="btn btn-info btn-md" data-toggle="modal"
+                    data-target="#myModal">View result
+            </button>
 
-				</div>
-			</div>
-			</div>
-			<div id="tab3" class="tab-pane fade">
-				<div th:insert="testing/fragments/funoptions/func_opts :: pca_opts">
-		 		</div>
-			</div>
-		</div>
-	</th:block>
+            <!-- Modal -->
+            <div id="myModal" class="modal fade" role="dialog">
+                <div class="modal-dialog modal-lg">
+
+                    <!-- Modal content-->
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <button type="button" class="close" data-dismiss="modal">&times;</button>
+                            <h4 class="modal-title">KMeans result</h4>
+                        </div>
+                        <div class="modal-body">
+                            <div class="container">
+                                <div id="sidebar" th:insert="testing/fragments/preview/previews :: plot2d_result">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-default"
+                                    data-dismiss="modal">Close
+                            </button>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+        <div id="tab3" class="tab-pane fade">
+            <div th:insert="testing/fragments/funoptions/func_opts :: pca_opts">
+            </div>
+        </div>
+    </div>
+</th:block>
 
 </body>
 </html>

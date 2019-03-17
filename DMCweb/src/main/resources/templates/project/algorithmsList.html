@@ -2,7 +2,7 @@
 <html xmlns:th="http://www.thymeleaf.org"
       xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
       layout:decorate="~{layouts/layout}"
-      >
+>
 
 <head>
     <title>Algorithms List</title>
@@ -16,53 +16,53 @@
         <div th:replace="fragments/alert :: alert (type='danger', message=${errMsg})">Alert</div>
 </th:block> -->
 <th:block layout:fragment="content">
-	<div th:fragment="algorithmsList" 
-	th:with="algController=${T(evm.dmc.web.controllers.project.AlgorithmController)}">
-		<!-- <div class="col-sm-6 text-center bg-info"> -->
-		<!-- <div class="container"> -->
-			<div class="row">
-				<div id="algList"  
-					th:insert="fragments/lists :: deletable_list('alg', 'Algorithms',
+    <div th:fragment="algorithmsList"
+         th:with="algController=${T(evm.dmc.web.controllers.project.AlgorithmController)}">
+        <!-- <div class="col-sm-6 text-center bg-info"> -->
+        <!-- <div class="container"> -->
+        <div class="row">
+            <div id="algList"
+                 th:insert="fragments/lists :: deletable_list('alg', 'Algorithms',
 												 ${__${algController.MODEL_URL_DelAlgorithm}__},
 												 ${backBean}, ${algorithmsSet}, ${algBaseURL})">
-				</div>
-			</div>
-			<div class="row">
-				<!-- <form method="post" th:action="${@requestPath.projAddAlgorithm}"
-					th:object="${newAlgorithm}"> -->
-				<form method="post" 
-					th:action="${algController.URL_Add_Algorithm}"
-					th:object="${newAlgorithm}">
-					<div class="col-sm-8">
-						<label for="newName" class="control-label">Add new	algorithm</label>
-						<div class="alert alert-danger"
-							th:if="${#fields.hasErrors('name')}">
-							<strong>Important!</strong> 
-							<span class="help-block"
-								th:if="${#fields.hasErrors('name')}" th:errors="*{name}">
+            </div>
+        </div>
+        <div class="row">
+            <!-- <form method="post" th:action="${@requestPath.projAddAlgorithm}"
+                th:object="${newAlgorithm}"> -->
+            <form method="post"
+                  th:action="${algController.URL_Add_Algorithm}"
+                  th:object="${newAlgorithm}">
+                <div class="col-sm-8">
+                    <label for="newName" class="control-label">Add new algorithm</label>
+                    <div class="alert alert-danger"
+                         th:if="${#fields.hasErrors('name')}">
+                        <strong>Important!</strong>
+                        <span class="help-block"
+                              th:if="${#fields.hasErrors('name')}" th:errors="*{name}">
 								Incorrect algorithm name
 							</span>
-						</div>
-						<div class="input-group">
-							<input type="text"
-								th:field=*{project}
-								th:value=${newAlgorithm.project}
-								hidden=true
-							>
-							<input type="text" 
-								class="form-control"
-								placeholder="New algorithm name" 
-								th:field="*{name}" />
-							<span class="input-group-btn">
+                    </div>
+                    <div class="input-group">
+                        <input type="text"
+                               th:field=*{project}
+                               th:value=${newAlgorithm.project}
+                               hidden=true
+                        >
+                        <input type="text"
+                               class="form-control"
+                               placeholder="New algorithm name"
+                               th:field="*{name}"/>
+                        <span class="input-group-btn">
 								<button class="btn btn-primary" type="submit">Add</button>
 							</span>
-						</div>
-					</div>
-				</form>
-			</div>
-		<!-- </div> -->
-		<!-- </div> -->
-	</div>
+                    </div>
+                </div>
+            </form>
+        </div>
+        <!-- </div> -->
+        <!-- </div> -->
+    </div>
 </th:block>
 
 </body>

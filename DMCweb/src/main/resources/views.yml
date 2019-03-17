@@ -6,7 +6,7 @@ views:
   regsign: "register_signin"
   userHome: "project/list"
   adminHome: adminHome
-  fragments: 
+  fragments:
     signin: " :: signinForm"
     regsign: " :: regsignForm(active='%s')"
   errors:
@@ -17,14 +17,14 @@ views:
     main: "project/project"
     algorithmsList: "project/algorithmsList"
     datasourcesList: "project/datasourcesList"
-    data: 
+    data:
       dataSource: "project/data/datasource"
     algorithm:
       algorithm: "project/algorithm/algorithm"
       methodDetails: "project/algorithm/methodDetails"
-#    wizardBase: "project/algorithm/wizard"
-#    wizard:
-#      datasource: "project/algorithm/wizard/datasource"
+  #    wizardBase: "project/algorithm/wizard"
+  #    wizard:
+  #      datasource: "project/algorithm/wizard/datasource"
   testing:
     testindex:  testing/testindex
     hello:  testing/hello?name=Alex

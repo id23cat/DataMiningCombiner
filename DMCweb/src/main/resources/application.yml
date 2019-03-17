@@ -6,33 +6,33 @@ endpoints:
 management:
   security:
     enabled: false
-  
+
   port: 9001
   context-path: /management
-  
+
 spring:
-#  profiles: default
-#    active: devH2
-#  datasource:
-#    driver-class-name: org.h2database.jdbcDriver
-#    url: jdbc:h2:mem:dmc
-#    username: sa
-#    password: sa
+  #  profiles: default
+  #    active: devH2
+  #  datasource:
+  #    driver-class-name: org.h2database.jdbcDriver
+  #    url: jdbc:h2:mem:dmc
+  #    username: sa
+  #    password: sa
   http:
     multipart:
       max-file-size: 1024Mb
       max-request-size: 1024Mb
-    
+
   mvc:
     favicon:
       enabled: true
   thymeleaf:
-#    check-template-location: true
+    #    check-template-location: true
     cache: false
-#    prefix: classpath:templates/
-#    suffix: .html
+    #    prefix: classpath:templates/
+    #    suffix: .html
     mode: HTML
-  
+
 #    encoding: UTF-8
 #    content-type: text/html
 #    view-names: thymeleaf/*
@@ -41,7 +41,7 @@ spring:
 # Server Port Configuration
 server:
   port: 8080
-#Access log configuration
+  #Access log configuration
   tomcat:
     accesslog:
       enabled: true
@@ -50,7 +50,7 @@ server:
 
 # Logging Configuration
 logging:
-#  config: log4j2.xml
+  #  config: log4j2.xml
   level:
     org.springframework.web: DEBUG
     org.springframework.security: WARN
@@ -70,7 +70,7 @@ dmc:
       retriesCount: 3
       fileWaitTimeoutMS: 500
 
-  
+
 #welcome:
 #  message: "Hello ID#cat:)!!"
 #  

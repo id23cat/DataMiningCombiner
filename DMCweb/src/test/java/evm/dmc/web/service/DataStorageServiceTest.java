@@ -57,124 +57,123 @@ import static org.hamcrest.Matchers.*;
 
 /**
  * @author Dave Syer
- *
  */
 @RunWith(SpringRunner.class)
 @SpringBootTest
 @DataJpaTest
 @ActiveProfiles({"test", "devH2"})
-@ComponentScan( basePackages = { "evm.dmc.web", "evm.dmc.core", "evm.dmc.service", "evm.dmc.model", "evm.dmc.web.service"})
+@ComponentScan(basePackages = {"evm.dmc.web", "evm.dmc.core", "evm.dmc.service", "evm.dmc.model", "evm.dmc.web.service"})
 @Rollback
 @Slf4j
 public class DataStorageServiceTest {
-	private static final int PREVIEW_LINES_COUNT = 5;
-	private static final String USER_NAME = "id23cat"; 
-    
+    private static final int PREVIEW_LINES_COUNT = 5;
+    private static final String USER_NAME = "id23cat";
+
     @Autowired
-    private	MetaDataService metaDataService;
-    
+    private MetaDataService metaDataService;
+
     @Autowired
     private DataPreviewService previewService;
-    
-//    @Autowired
+
+    //    @Autowired
     private DataStorageService service;
-    
+
 //    @Autowired
 //    private TestEntityManager entityManager;
-    
+
     @Autowired
     private AccountRepository accRepo;
-    
+
     @Autowired
     private ExecutorService executorService;
-    
+
     @Autowired
     private ProjectService projectService;
-    
+
     private Account account = Account.builder().build();
-	private ProjectModel project;
-	
-//	private Path relativePath;
-	private String destRoot = "target/files/";
-	private String srcRoot = "Data/";
-//	private String realFilename = "telecom.csv";
-	private String realFilename = "telecom_churn.csv";
-	private File sourceFile = new File(srcRoot, realFilename);
-	private File destFile;
+    private ProjectModel project;
+
+    //	private Path relativePath;
+    private String destRoot = "target/files/";
+    private String srcRoot = "Data/";
+    //	private String realFilename = "telecom.csv";
+    private String realFilename = "telecom_churn.csv";
+    private File sourceFile = new File(srcRoot, realFilename);
+    private File destFile;
 //	private ClassPathResource realResource = new ClassPathResource(realFilename, getClass());
 //	private ClassPathResource realResource = new ClassPathResource(realFilename, getClass());
-	
-	FileStorageConfig properties;
-	
+
+    FileStorageConfig properties;
+
     @Before
 //    @Transactional
     public void init() {
-    	properties = new FileStorageConfig();
-		properties.setLocation(destRoot + Math.abs(new Random().nextLong())+File.separator);
+        properties = new FileStorageConfig();
+        properties.setLocation(destRoot + Math.abs(new Random().nextLong()) + File.separator);
         properties.setPreviewLinesCount(PREVIEW_LINES_COUNT);
         properties.setRetriesCount(3);
         properties.setFileWaitTimeoutMS(500);
-        
+
         service = new FileStorageServiceImpl(properties, metaDataService, executorService, projectService);
-        
+
         account = accRepo.findByUserName(USER_NAME).get();
         assertNotNull(account);
 //        account.setUserName("user1");
 //        project.setName("project1");
         project = account.getProjects().stream().findFirst().get();
         assertNotNull(project);
-        
-        
+
+
         String dstRoot = properties.getLocation();
-    	destFile = new File(dstRoot + DataStorageService.relativePath(account, project).toString(),
-    			realFilename);
-        
+        destFile = new File(dstRoot + DataStorageService.relativePath(account, project).toString(),
+                realFilename);
+
 //        relativePath = DataStorageService.relativePath(account, project);
     }
-    
+
     @Test
     public void relativePathTest() {
-    	
-    	assertThat(DataStorageService.relativePath(account, project).toString())
-    	.isEqualTo(String.format("%s/%s", account.getUserName(), project.getName()));
+
+        assertThat(DataStorageService.relativePath(account, project).toString())
+                .isEqualTo(String.format("%s/%s", account.getUserName(), project.getName()));
     }
 
     @Test
     public void storeAndLoadValidFile() throws IOException {
-    	
-		MockMultipartFile file = new MockMultipartFile("file", realFilename, 
-					MediaType.TEXT_PLAIN_VALUE, new FileInputStream(sourceFile));
-			
-		DataSetProperties dataProps = new DataSetProperties("testDataSet", "description", true);
-			
-			/**********/
-		MetaData metaData = service.saveData(account, project, file, dataProps);
-		assertNotNull(metaData);
-		URI uri = metaData.getStorage().getUri(properties.getLocation());
-		junitx.framework.FileAssert.assertEquals(sourceFile,
-				new File(uri));
-		log.debug("SourceFile: {}", sourceFile);
-		log.debug("SourceFile size: {}", Files.size(sourceFile.toPath()));
-		log.debug("DestFile: {}", destFile);
-		log.debug("DestFile size: {}", Files.size(destFile.toPath()));
 
-        DataPreview preview = previewService.getForMetaData(metaData).orElseThrow( IllegalArgumentException::new);
-        assertThat(preview.getHeader(), not(isEmptyString()));
+        MockMultipartFile file = new MockMultipartFile("file", realFilename,
+                MediaType.TEXT_PLAIN_VALUE, new FileInputStream(sourceFile));
+
+        DataSetProperties dataProps = new DataSetProperties("testDataSet", "description", true);
+
+        /**********/
+        MetaData metaData = service.saveData(account, project, file, dataProps);
+        assertNotNull(metaData);
+        URI uri = metaData.getStorage().getUri(properties.getLocation());
+        junitx.framework.FileAssert.assertEquals(sourceFile,
+                new File(uri));
+        log.debug("SourceFile: {}", sourceFile);
+        log.debug("SourceFile size: {}", Files.size(sourceFile.toPath()));
+        log.debug("DestFile: {}", destFile);
+        log.debug("DestFile size: {}", Files.size(destFile.toPath()));
+
+        DataPreview preview = previewService.getForMetaData(metaData).orElseThrow(IllegalArgumentException::new);
+//        assertThat(preview.getHeader(), not(isEmptyString()));
 //        log.debug("Header line: {}", preview.getHeaderItems());
-        assertThat(preview.getData().size(), equalTo(PREVIEW_LINES_COUNT));
+//        assertThat(preview.getData().size(), equalTo(PREVIEW_LINES_COUNT));
 //        log.debug("Data lines: 0 {}", preview.getDataItems(0));
 //        log.debug("Data lines: 1 {}", preview.getDataItems(1));
     }
-    
+
     @Test(expected = UnsupportedFileTypeException.class)
     public void storeAndLoadInvalidFile() throws IOException {
-    	String filename = "testupload.txt";
-    	ClassPathResource resource = new ClassPathResource(filename, getClass());
+        String filename = "testupload.txt";
+        ClassPathResource resource = new ClassPathResource(filename, getClass());
 
-		MockMultipartFile file = new MockMultipartFile("file", filename,
-				MediaType.TEXT_PLAIN_VALUE, resource.getInputStream());
-		
-		service.saveData(account, project, file, null);
+        MockMultipartFile file = new MockMultipartFile("file", filename,
+                MediaType.TEXT_PLAIN_VALUE, resource.getInputStream());
+
+        service.saveData(account, project, file, null);
     }
 
     @Test(expected = StorageException.class)
@@ -185,30 +184,29 @@ public class DataStorageServiceTest {
 
     @Test
     public void deleteTest() throws FileNotFoundException, IOException {
-    	MockMultipartFile file = new MockMultipartFile("file", realFilename, 
-				MediaType.TEXT_PLAIN_VALUE, new FileInputStream(sourceFile));
-		DataSetProperties dataProps = new DataSetProperties("testDataSet", "description", true);
-    	service.saveData(account, project, file, dataProps);
-    	Set<MetaData> metaSet = metaDataService.getForProject(project);
-    	
-    	int initSize = metaSet.size();
-    	MetaData first = metaSet.stream().findFirst().get();
-    	metaSet = null;
+        MockMultipartFile file = new MockMultipartFile("file", realFilename,
+                MediaType.TEXT_PLAIN_VALUE, new FileInputStream(sourceFile));
+        DataSetProperties dataProps = new DataSetProperties("testDataSet", "description", true);
+        service.saveData(account, project, file, dataProps);
+        Set<MetaData> metaSet = metaDataService.getForProject(project);
+
+        int initSize = metaSet.size();
+        MetaData first = metaSet.stream().findFirst().get();
+        metaSet = null;
 //    	DataStorageModel storage = dataStorageService.getDataStorage(first);
-    	
-    	Set<String> names = new HashSet<String>();
-    	names.add(first.getName());
-    	service.delete(project, names);
 
-    	
-    	//    	assertNull(dataStorageService.getDataStorage(first));
-    	assertFalse(previewService.getForMetaData(first).isPresent());
-    	
-    	Set<MetaData> metaSet2 = metaDataService.getForProject(project);
-    	assertThat(metaSet2.size(), equalTo(initSize - 1));
-    	assertFalse(metaSet2.contains(first) );
-    	
+        Set<String> names = new HashSet<>();
+        names.add(first.getName());
+        service.delete(project, names);
+
+
+        //    	assertNull(dataStorageService.getDataStorage(first));
+        assertFalse(previewService.getForMetaData(first).isPresent());
+
+        Set<MetaData> metaSet2 = metaDataService.getForProject(project);
+        assert (metaSet2.size() == initSize - 1);
+        assertFalse(metaSet2.contains(first));
+
     }
-
 
 }

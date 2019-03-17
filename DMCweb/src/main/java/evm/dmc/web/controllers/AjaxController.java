@@ -21,25 +21,25 @@ import lombok.extern.slf4j.Slf4j;
 @RequestMapping("/ajax")
 @Slf4j
 public class AjaxController {
-	public final static String BASE_URL = "/ajax";
-	
-	public final static String MODEL_URL_projectsList = "projectsList";
-	
-	@GetMapping("/project")
-	public String getProject(
-			@SessionAttribute(ProjectController.SESSION_Account) Account account, 
-			Model model) {
-		Link link = RestProjectController.projectsListLink(new ResourceSupport(), account.getId())
-				.getLink(RestProjectController.LINK_REL_projectsList);
-		log.debug("Link {}", link);
-		model.addAttribute(MODEL_URL_projectsList, link.getHref());
-		return "/ajax/project";
-	}
-	
-	private URI cookUri(String uri, String ...strings) {
-		return UriComponentsBuilder.fromPath(uri).buildAndExpand(strings).toUri();
-	}
-	
+    public final static String BASE_URL = "/ajax";
+
+    public final static String MODEL_URL_projectsList = "projectsList";
+
+    @GetMapping("/project")
+    public String getProject(
+            @SessionAttribute(ProjectController.SESSION_Account) Account account,
+            Model model) {
+        Link link = RestProjectController.projectsListLink(new ResourceSupport(), account.getId())
+                .getLink(RestProjectController.LINK_REL_projectsList);
+        log.debug("Link {}", link);
+        model.addAttribute(MODEL_URL_projectsList, link.getHref());
+        return "/ajax/project";
+    }
+
+    private URI cookUri(String uri, String... strings) {
+        return UriComponentsBuilder.fromPath(uri).buildAndExpand(strings).toUri();
+    }
+
 //	private URI cookUri()
 
 }

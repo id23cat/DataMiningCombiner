@@ -29,28 +29,28 @@ import evm.dmc.web.service.dto.TreeNodeDTO;
 @EnableAutoConfiguration
 @ComponentScan
 public class ApplicationConfiguration {
-	@Autowired
-	BeanFactory beanFactory;
-	
-	@Bean
+    @Autowired
+    BeanFactory beanFactory;
+
+    @Bean
     public Service service(ServiceProperties properties) {
         return new Service(properties.getMessage());
     }
-	
-	@Bean
-	public ExecutorService executorService() {
-		return Executors.newCachedThreadPool();
-		// new ThreadPoolExecutor
-	}
+
+    @Bean
+    public ExecutorService executorService() {
+        return Executors.newCachedThreadPool();
+        // new ThreadPoolExecutor
+    }
 	
 	/*@Bean
 	public ObjectMapper jsonObjectMapper() {
 		return new ObjectMapper();
 	}*/
-	
-	@Bean
-	public ModelMapper modelMapper() {
-		return new ModelMapper();
-	}
-	
+
+    @Bean
+    public ModelMapper modelMapper() {
+        return new ModelMapper();
+    }
+
 }

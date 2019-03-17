@@ -4,21 +4,21 @@
       layout:decorate="~{layouts/sidebarlayout}">
 
 <body>
-	<div th:fragment="functionsTree(treeData, actionURL, step)">
-		<div th:id="tree"></div>
-		<div th:id="selected"></div>
-		<div th:id="details"></div>
-		<link itemprop="url" th:href="@{/css/bootstrap-treeview.css}" rel="stylesheet" media="screen" />
-		<script th:src="@{/js/bootstrap-treeview.js}"></script>
-		<script th:src="@{/js/functionsTreeView.js}"></script>
-		<script th:inline="javascript" type="text/javascript">
-		/*<![CDATA[*/
-			$(document).ready(function () {
-	            insertFunctionsTree(/*[[${treeData}]]*/, /*[[${actionURL}]]*/, /*[[${step}]]*/);
-	        });
-		/*]]>*/
-		</script>
-	</div>
+<div th:fragment="functionsTree(treeData, actionURL, step)">
+    <div th:id="tree"></div>
+    <div th:id="selected"></div>
+    <div th:id="details"></div>
+    <link itemprop="url" th:href="@{/css/bootstrap-treeview.css}" rel="stylesheet" media="screen"/>
+    <script th:src="@{/js/bootstrap-treeview.js}"></script>
+    <script th:src="@{/js/functionsTreeView.js}"></script>
+    <script th:inline="javascript" type="text/javascript">
+        /*<![CDATA[*/
+        $(document).ready(function () {
+            insertFunctionsTree(/*[[${treeData}]]*/, /*[[${actionURL}]]*/, /*[[${step}]]*/);
+        });
+        /*]]>*/
+    </script>
+</div>
 
 <body>
 </html>

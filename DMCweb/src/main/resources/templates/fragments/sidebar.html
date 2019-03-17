@@ -1,6 +1,6 @@
 <!DOCTYPE html>
-<html	xmlns:th="http://www.thymeleaf.org"
-		xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout">
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout">
 
 <head>
     <!-- Custom styles for this template -->
@@ -8,47 +8,46 @@
 </head>
 
 <body>
- 	<div th:fragment="sidebar">
-	 	<div id="wrapper">
+<div th:fragment="sidebar">
+    <div id="wrapper">
 
         <!-- Sidebar -->
         <div id="sidebar-wrapper">
             <div layout:fragment="sidebar_barcontent">
-				<p>Content goes here...</p>
-			</div>
+                <p>Content goes here...</p>
+            </div>
         </div>
         <!-- Page content -->
         <div id="page-content-wrapper">
             <div class="container-fluid">
-            	<a href="#menu-toggle" class="btn btn-info" id="menu-toggle">--> Open Menu</a>
+                <a href="#menu-toggle" class="btn btn-info" id="menu-toggle">--> Open Menu</a>
                 <div layout:fragment="sidebar_pagecontent">
-			        <p>Content goes here...</p>
-			    </div>
-                               
+                    <p>Content goes here...</p>
+                </div>
+
             </div>
         </div>
-     </div>
+    </div>
 
     <!-- /#wrapper -->
 
- 	<!-- <script src="#" th:src="@{/webjars/jquery/3.2.1/jquery.min.js}"></script>
-    <script src="#" th:href="@{/webjars/popper/popper.min.js}"></script>
-    <script src="#" th:href="@{/webjars/bootstrap/3.3.7/css/bootstrap.min.js}"></script>
- -->
+    <!-- <script src="#" th:src="@{/webjars/jquery/3.2.1/jquery.min.js}"></script>
+   <script src="#" th:href="@{/webjars/popper/popper.min.js}"></script>
+   <script src="#" th:href="@{/webjars/bootstrap/3.3.7/css/bootstrap.min.js}"></script>
+-->
     <!-- Menu Toggle Script -->
     <script>
-    $("#menu-toggle").click(function(e) {
-        e.preventDefault();
-        if($(this).text()=="--> Open Menu")
-        {
-            $(this).text("<-- Hide Menu");
-        } else {
-            $(this).text("--> Open Menu");
-        }
-        $("#wrapper").toggleClass("toggled");
-    });
+        $("#menu-toggle").click(function (e) {
+            e.preventDefault();
+            if ($(this).text() == "--> Open Menu") {
+                $(this).text("<-- Hide Menu");
+            } else {
+                $(this).text("--> Open Menu");
+            }
+            $("#wrapper").toggleClass("toggled");
+        });
     </script>
-	</div>
+</div>
 </body>
 
 </html>

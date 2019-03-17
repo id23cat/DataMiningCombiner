@@ -12,13 +12,13 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 
 @Data
-@EqualsAndHashCode(callSuper=false)
+@EqualsAndHashCode(callSuper = false)
 public class ProjectDto extends ResourceSupport {
-	private Long projectId;
-	
-	private ProjectType projectType;
-	
-	private String name;
-	
-	private Timestamp created;
+    private Long projectId;
+
+    private ProjectType projectType;
+
+    private String name;
+
+    private Timestamp created;
 }

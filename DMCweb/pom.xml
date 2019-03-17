@@ -1,27 +1,27 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
-	<modelVersion>4.0.0</modelVersion>
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
 
-	<groupId>bsuir.lhpc</groupId>
-	<artifactId>dmc-web</artifactId>
-	<version>0.0.1-SNAPSHOT</version>
-	<packaging>war</packaging>
+    <groupId>bsuir.lhpc</groupId>
+    <artifactId>dmc-web</artifactId>
+    <version>0.0.1-SNAPSHOT</version>
+    <packaging>war</packaging>
 
-	<name>dmc-web</name>
-	<description>Web client to DataMiningCombiner environment</description>
+    <name>dmc-web</name>
+    <description>Web client to DataMiningCombiner environment</description>
 
-	<parent>
-		<groupId>org.springframework.boot</groupId>
-		<artifactId>spring-boot-starter-parent</artifactId>
-		<version>1.5.9.RELEASE</version>
-		<relativePath /> <!-- lookup parent from repository -->
-	</parent>
+    <parent>
+        <groupId>org.springframework.boot</groupId>
+        <artifactId>spring-boot-starter-parent</artifactId>
+        <version>1.5.9.RELEASE</version>
+        <relativePath/> <!-- lookup parent from repository -->
+    </parent>
 
-	<properties>
-		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-		<java.version>1.8</java.version>
-		<failOnMissingWebXml>false</failOnMissingWebXml>
+    <properties>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <java.version>1.8</java.version>
+        <failOnMissingWebXml>false</failOnMissingWebXml>
         <!-- Overriding version of selected dependencies -->
         <!-- Work when using spring-boot-starter-parent, not platform-bom -->
         <thymeleaf.version>3.0.9.RELEASE</thymeleaf.version>
@@ -40,81 +40,81 @@
         <DMC-api.version>${project.version}</DMC-api.version>
         <assertj-core.version>3.8.0</assertj-core.version>
         <junit-addons.version>1.4</junit-addons.version>
-        
-	</properties>
-	
-	<!-- <profiles>
-		<profile>
-			<id>devH2</id>
-			<activation>
-			 <activeByDefault>true</activeByDefault>
-	            <property>
-	                <name>spring.profiles.active</name>
-	                <value>devH2</value>
-	            </property>
-			</activation>
-			<dependencies>
-	            <dependency>
-	               <groupId>com.h2database</groupId>
-		            <artifactId>h2</artifactId>
-		       </dependency>
-	        </dependencies>
-		</profile>
-		
-		<profile>
-	        <id>devMySQL</id>
-	        <activation>
-	            <activeByDefault>true</activeByDefault>
-	            <property>
-	                <name>spring.profiles.active</name>
-	                <value>devMySQL</value>
-	            </property>
-	        </activation>
-	        <dependencies>
-	            <dependency>
-	                <groupId>mysql</groupId>
-            		<artifactId>mysql-connector-java</artifactId>
-	            </dependency>
-	        </dependencies>
-	    </profile>
-	</profiles> -->
-	
-	
-	<dependencies>
-		<dependency>
+
+    </properties>
+
+    <!-- <profiles>
+        <profile>
+            <id>devH2</id>
+            <activation>
+             <activeByDefault>true</activeByDefault>
+                <property>
+                    <name>spring.profiles.active</name>
+                    <value>devH2</value>
+                </property>
+            </activation>
+            <dependencies>
+                <dependency>
+                   <groupId>com.h2database</groupId>
+                    <artifactId>h2</artifactId>
+               </dependency>
+            </dependencies>
+        </profile>
+
+        <profile>
+            <id>devMySQL</id>
+            <activation>
+                <activeByDefault>true</activeByDefault>
+                <property>
+                    <name>spring.profiles.active</name>
+                    <value>devMySQL</value>
+                </property>
+            </activation>
+            <dependencies>
+                <dependency>
+                    <groupId>mysql</groupId>
+                    <artifactId>mysql-connector-java</artifactId>
+                </dependency>
+            </dependencies>
+        </profile>
+    </profiles> -->
+
+
+    <dependencies>
+        <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>org.springframework.boot</groupId>
-			<artifactId>spring-boot-starter-actuator</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>org.springframework.boot</groupId>
-			<artifactId>spring-boot-starter-web</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>org.springframework.boot</groupId>
-			<artifactId>spring-boot-starter-thymeleaf</artifactId>
-		</dependency>
-		<dependency>
-		    <groupId>org.springframework.webflow</groupId>
-		    <artifactId>spring-webflow</artifactId>
-		    <version>${spring-webflow-version}</version>
-		</dependency>
-		<dependency>
-			<groupId>org.thymeleaf.extras</groupId>
-			<artifactId>thymeleaf-extras-java8time</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>org.thymeleaf.extras</groupId>
-			<artifactId>thymeleaf-extras-springsecurity4</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>org.springframework.boot</groupId>
-			<artifactId>spring-boot-starter-aop</artifactId>
-		</dependency>
-		<dependency>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-actuator</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-web</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-thymeleaf</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.webflow</groupId>
+            <artifactId>spring-webflow</artifactId>
+            <version>${spring-webflow-version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.thymeleaf.extras</groupId>
+            <artifactId>thymeleaf-extras-java8time</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.thymeleaf.extras</groupId>
+            <artifactId>thymeleaf-extras-springsecurity4</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-aop</artifactId>
+        </dependency>
+        <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-data-jpa</artifactId>
         </dependency>
@@ -124,191 +124,189 @@
 			<scope>runtime</scope>
 		</dependency>
 		 -->
-		 <!-- H2 Database -->
-		 <dependency>
-			 <groupId>com.h2database</groupId>
-			 <artifactId>h2</artifactId>
-		 </dependency>
-        
-		
-		<!-- Spring Security -->
-		<dependency>
-			<groupId>org.springframework.boot</groupId>
-			<artifactId>spring-boot-starter-security</artifactId> 
-		</dependency>
-		
-		<dependency>
-		    <groupId>org.springframework.security</groupId>
-		    <artifactId>spring-security-test</artifactId>
-		</dependency>
-		
-		<!-- Spring HATEOAS -->
-		<dependency>
-	    	<groupId>org.springframework.boot</groupId>
+        <!-- H2 Database -->
+        <dependency>
+            <groupId>com.h2database</groupId>
+            <artifactId>h2</artifactId>
+        </dependency>
+
+
+        <!-- Spring Security -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-security</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>org.springframework.security</groupId>
+            <artifactId>spring-security-test</artifactId>
+        </dependency>
+
+        <!-- Spring HATEOAS -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-hateoas</artifactId>
-    	</dependency>
-		
-		<!-- Bootstrap -->
-		<dependency>
-			<groupId>org.webjars</groupId>
-			<artifactId>bootstrap</artifactId>
-			<version>${bootstrap.version}</version>
-		</dependency>
+        </dependency>
 
-		<!-- JQuery -->
-		<dependency>
-			<groupId>org.webjars</groupId>
-			<artifactId>jquery</artifactId>
-			<version>${jquery.version}</version>
-		</dependency>
-		
-		<!--  Need for sidebar -->
-		<!-- https://mvnrepository.com/artifact/org.webjars.bower/popper.js -->
-		<dependency>
-		    <groupId>org.webjars.bower</groupId>
-		    <artifactId>popper.js</artifactId>
-		    <version>${popper.js.version}</version>
-		</dependency>
-	
-		<!-- https://mvnrepository.com/artifact/org.webjars.bower/bootstrap-toggle -->
-		<dependency>
-		    <groupId>org.webjars.bower</groupId>
-		    <artifactId>bootstrap-toggle</artifactId>
-		    <version>${bootstrap-toggle.version}</version>
-		</dependency>
-		
-		<!-- https://mvnrepository.com/artifact/li.rudin.mavenjs/ajax-utils -->
+        <!-- Bootstrap -->
+        <dependency>
+            <groupId>org.webjars</groupId>
+            <artifactId>bootstrap</artifactId>
+            <version>${bootstrap.version}</version>
+        </dependency>
 
-		<dependency>
-			<groupId>org.springframework.boot</groupId>
-			<artifactId>spring-boot-starter-test</artifactId>
-			<scope>test</scope>
-		</dependency>
-		
-		<!-- https://mvnrepository.com/artifact/junit-addons/junit-addons -->
-		<dependency>
-		    <groupId>junit-addons</groupId>
-		    <artifactId>junit-addons</artifactId>
-		    <version>${junit-addons.version}</version>
-		    <scope>test</scope>
-		</dependency>
-		
-		
-		
-		<!-- Tomcat embedded container -->
-		<dependency>
-			<groupId>org.springframework.boot</groupId>
-			<artifactId>spring-boot-starter-tomcat</artifactId>
-			<scope>provided</scope>
-		</dependency>
-		
-		<dependency>
-			<groupId>org.springframework.boot</groupId>
-			<artifactId>spring-boot-configuration-processor</artifactId>
-			<optional>true</optional>
-		</dependency>
-		<dependency>
-			<groupId>org.projectlombok</groupId>
-			<artifactId>lombok</artifactId>
-			<!-- <scope>provided</scope> -->
-		</dependency>
-		<!-- https://mvnrepository.com/artifact/org.apache.commons/commons-lang3 -->
-		<dependency>
-		    <groupId>org.apache.commons</groupId>
-		    <artifactId>commons-lang3</artifactId>
-		    <version>${commons-lang3.version}</version>
-		</dependency>
-		<!-- https://mvnrepository.com/artifact/commons-beanutils/commons-beanutils -->
-		<dependency>
-		    <groupId>commons-beanutils</groupId>
-		    <artifactId>commons-beanutils</artifactId>
-		</dependency>
-		<!-- https://mvnrepository.com/artifact/commons-collections/commons-collections -->
-		<dependency>
-		    <groupId>commons-collections</groupId>
-		    <artifactId>commons-collections</artifactId>
-		</dependency>
-				
-		
+        <!-- JQuery -->
+        <dependency>
+            <groupId>org.webjars</groupId>
+            <artifactId>jquery</artifactId>
+            <version>${jquery.version}</version>
+        </dependency>
 
-		<!-- <dependency> <groupId>org.springframework.boot</groupId> <artifactId>spring-boot-starter-log4j2</artifactId> 
-			</dependency> -->
+        <!--  Need for sidebar -->
+        <!-- https://mvnrepository.com/artifact/org.webjars.bower/popper.js -->
+        <dependency>
+            <groupId>org.webjars.bower</groupId>
+            <artifactId>popper.js</artifactId>
+            <version>${popper.js.version}</version>
+        </dependency>
 
-		<dependency>
-			<groupId>org.springframework.boot</groupId>
-			<artifactId>spring-boot-devtools</artifactId>
-		</dependency>
+        <!-- https://mvnrepository.com/artifact/org.webjars.bower/bootstrap-toggle -->
+        <dependency>
+            <groupId>org.webjars.bower</groupId>
+            <artifactId>bootstrap-toggle</artifactId>
+            <version>${bootstrap-toggle.version}</version>
+        </dependency>
 
-		<dependency>
-			<groupId>by.bsuir.evm</groupId>
-			<artifactId>dmcombiner</artifactId>
-			<version>${dmcombiner.version}</version>
-		</dependency>
-		<dependency>
-			<groupId>by.bsuir.evm</groupId>
-			<artifactId>DMC-api</artifactId>
-			<version>${DMC-api.version}</version>
-		</dependency>
-		
-		<!-- https://mvnrepository.com/artifact/org.modelmapper.extensions/modelmapper-spring -->
-		<dependency>
-		    <groupId>org.modelmapper.extensions</groupId>
-		    <artifactId>modelmapper-spring</artifactId>
-		    <version>1.1.3</version>
-		</dependency>
-		<!-- https://mvnrepository.com/artifact/org.webjars.bower/Sortable -->
-		<dependency>
-		    <groupId>org.webjars.bower</groupId>
-		    <artifactId>Sortable</artifactId>
-		    <version>1.6.0</version>
-		</dependency>
-		
-		<!-- Swagger -->
-		<!-- https://mvnrepository.com/artifact/io.springfox/springfox-swagger2 -->
-		<dependency>
-		    <groupId>io.springfox</groupId>
-		    <artifactId>springfox-swagger2</artifactId>
-		    <version>2.8.0</version>
-		</dependency>
-		<!-- https://mvnrepository.com/artifact/io.springfox/springfox-swagger-ui -->
-		<dependency>
-		    <groupId>io.springfox</groupId>
-		    <artifactId>springfox-swagger-ui</artifactId>
-		    <version>2.8.0</version>
-		</dependency>
-				
-	</dependencies>
+        <!-- https://mvnrepository.com/artifact/li.rudin.mavenjs/ajax-utils -->
 
-	<build>
-		<plugins>
-			<plugin>
-				<groupId>org.springframework.boot</groupId>
-				<artifactId>spring-boot-maven-plugin</artifactId>
-				<configuration>
-		          <profiles>
-		            <!-- <profile>devH2</profile> -->
-		            <profile>devMySQL</profile>
-		          </profiles>
-		        </configuration>
-			</plugin>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-test</artifactId>
+            <scope>test</scope>
+        </dependency>
 
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-assembly-plugin</artifactId>
-				<configuration>
-					<descriptor>src/main/resources/distribution/dmc-web.xml</descriptor>
-					<finalName>dmc-web</finalName>
-				</configuration>
-				<executions>
-					<execution>
-						<phase>package</phase>
-						<goals>
-							<goal>single</goal>
-						</goals>
-					</execution>
-				</executions>
-			</plugin>
-		</plugins>
-	</build>
+        <!-- https://mvnrepository.com/artifact/junit-addons/junit-addons -->
+        <dependency>
+            <groupId>junit-addons</groupId>
+            <artifactId>junit-addons</artifactId>
+            <version>${junit-addons.version}</version>
+            <scope>test</scope>
+        </dependency>
+
+
+        <!-- Tomcat embedded container -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-tomcat</artifactId>
+            <scope>provided</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-configuration-processor</artifactId>
+            <optional>true</optional>
+        </dependency>
+        <dependency>
+            <groupId>org.projectlombok</groupId>
+            <artifactId>lombok</artifactId>
+            <!-- <scope>provided</scope> -->
+        </dependency>
+        <!-- https://mvnrepository.com/artifact/org.apache.commons/commons-lang3 -->
+        <dependency>
+            <groupId>org.apache.commons</groupId>
+            <artifactId>commons-lang3</artifactId>
+            <version>${commons-lang3.version}</version>
+        </dependency>
+        <!-- https://mvnrepository.com/artifact/commons-beanutils/commons-beanutils -->
+        <dependency>
+            <groupId>commons-beanutils</groupId>
+            <artifactId>commons-beanutils</artifactId>
+        </dependency>
+        <!-- https://mvnrepository.com/artifact/commons-collections/commons-collections -->
+        <dependency>
+            <groupId>commons-collections</groupId>
+            <artifactId>commons-collections</artifactId>
+        </dependency>
+
+
+        <!-- <dependency> <groupId>org.springframework.boot</groupId> <artifactId>spring-boot-starter-log4j2</artifactId>
+            </dependency> -->
+
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-devtools</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>by.bsuir.evm</groupId>
+            <artifactId>dmcombiner</artifactId>
+            <version>${dmcombiner.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>by.bsuir.evm</groupId>
+            <artifactId>DMC-api</artifactId>
+            <version>${DMC-api.version}</version>
+        </dependency>
+
+        <!-- https://mvnrepository.com/artifact/org.modelmapper.extensions/modelmapper-spring -->
+        <dependency>
+            <groupId>org.modelmapper.extensions</groupId>
+            <artifactId>modelmapper-spring</artifactId>
+            <version>1.1.3</version>
+        </dependency>
+        <!-- https://mvnrepository.com/artifact/org.webjars.bower/Sortable -->
+        <dependency>
+            <groupId>org.webjars.bower</groupId>
+            <artifactId>Sortable</artifactId>
+            <version>1.6.0</version>
+        </dependency>
+
+        <!-- Swagger -->
+        <!-- https://mvnrepository.com/artifact/io.springfox/springfox-swagger2 -->
+        <dependency>
+            <groupId>io.springfox</groupId>
+            <artifactId>springfox-swagger2</artifactId>
+            <version>2.8.0</version>
+        </dependency>
+        <!-- https://mvnrepository.com/artifact/io.springfox/springfox-swagger-ui -->
+        <dependency>
+            <groupId>io.springfox</groupId>
+            <artifactId>springfox-swagger-ui</artifactId>
+            <version>2.8.0</version>
+        </dependency>
+
+    </dependencies>
+
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-maven-plugin</artifactId>
+                <configuration>
+                    <profiles>
+                        <!-- <profile>devH2</profile> -->
+                        <profile>devMySQL</profile>
+                    </profiles>
+                </configuration>
+            </plugin>
+
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-assembly-plugin</artifactId>
+                <configuration>
+                    <descriptor>src/main/resources/distribution/dmc-web.xml</descriptor>
+                    <finalName>dmc-web</finalName>
+                </configuration>
+                <executions>
+                    <execution>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>single</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+        </plugins>
+    </build>
 
 </project>

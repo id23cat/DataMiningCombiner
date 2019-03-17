@@ -8,24 +8,24 @@ import lombok.EqualsAndHashCode;
 
 /**
  * DTO for Account model
- * 
+ *
  * @see evm.dmc.api.model.account.Account
  */
 @Data
-@EqualsAndHashCode(callSuper=false)
+@EqualsAndHashCode(callSuper = false)
 public class AccountDto extends AbstractDto {
 
-	private Long accountId;
-	private String userName;
-	private String email;
-	private String firstName;
-	private String lastName;
-	private Instant created;
+    private Long accountId;
+    private String userName;
+    private String email;
+    private String firstName;
+    private String lastName;
+    private Instant created;
 
-	protected Role role;
+    protected Role role;
 
-	@Override
-	public Long getDtoId() {
-		return getAccountId();
-	}
+    @Override
+    public Long getDtoId() {
+        return getAccountId();
+    }
 }

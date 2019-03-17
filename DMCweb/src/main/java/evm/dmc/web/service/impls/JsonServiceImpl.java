@@ -17,13 +17,13 @@ import evm.dmc.web.service.dto.TreeNodeDTO;
 
 @Service
 public class JsonServiceImpl implements JsonService {
-	
-	@Autowired
-	private ObjectMapper mapper;
-	
-	@Override
-	public String frameworksListToTreeView(List<?> list) throws JsonProcessingException {
-		return mapper.writeValueAsString(list);
-	}
+
+    @Autowired
+    private ObjectMapper mapper;
+
+    @Override
+    public String frameworksListToTreeView(List<?> list) throws JsonProcessingException {
+        return mapper.writeValueAsString(list);
+    }
 
 }

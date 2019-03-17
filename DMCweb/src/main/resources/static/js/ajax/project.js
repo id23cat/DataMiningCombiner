@@ -11,30 +11,30 @@ function handlerGetProjectsList(getUrl, divId) {
 //			}
 //		})
 //	}
-	
-	function insertDataToHtml(data) {
-		var items = [];
-		console.log(data);
-		$.each(data, function(index, element) {
-			var selfLink = jQuery.grep(element.links, function(link) {
-				console.log(link.rel == "self");
-				return link.rel == "self";
-			})[0].href;
-			console.log(selfLink);
-			items.push("<li> <a id='" + element.projectId + "' "
-					+ "href='" + selfLink + "'"
-					+ ">" 
-					+ element.name
-					+ "<\a> </li>")
-		});
-		
-		$( "<ul/>", {
-		    "class": "my-new-list",
-		    html: items.join( "" )
-		  }).appendTo( divId );
-	}
-	
-	return function() {
-		$.getJSON(getUrl, insertDataToHtml);
-	}
+
+    function insertDataToHtml(data) {
+        var items = [];
+        console.log(data);
+        $.each(data, function (index, element) {
+            var selfLink = jQuery.grep(element.links, function (link) {
+                console.log(link.rel == "self");
+                return link.rel == "self";
+            })[0].href;
+            console.log(selfLink);
+            items.push("<li> <a id='" + element.projectId + "' "
+                + "href='" + selfLink + "'"
+                + ">"
+                + element.name
+                + "<\a> </li>")
+        });
+
+        $("<ul/>", {
+            "class": "my-new-list",
+            html: items.join("")
+        }).appendTo(divId);
+    }
+
+    return function () {
+        $.getJSON(getUrl, insertDataToHtml);
+    }
 }

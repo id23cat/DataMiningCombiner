@@ -24,46 +24,46 @@ import evm.dmc.weka.data.WekaData;
 @RunWith(SpringRunner.class)
 @TestPropertySource("classpath:wekatest.properties")
 @ContextConfiguration(classes = {DataMiningCombinerApplicationTests.class})
-@ComponentScan( basePackages="evm.dmc.core, evm.dmc.weka")
+@ComponentScan(basePackages = "evm.dmc.core, evm.dmc.weka")
 @DataJpaTest  // TODO: remove where unneeded
 public class NormalizationTest {
-	@Autowired
-	WekaCSVLoad loader;
+    @Autowired
+    WekaCSVLoad loader;
 
-	@Autowired
-	WekaFramework frmwk;
+    @Autowired
+    WekaFramework frmwk;
 
-	@Value("${wekatest.datasourceSmall}")
-	String file;
+    @Value("${wekatest.datasourceSmall}")
+    String file;
 
-	WekaData data;
+    WekaData data;
 
-	@Before
-	public void init() {
-		data = (WekaData) loader.setSource(file).get();
-	}
+    @Before
+    public void init() {
+        data = (WekaData) loader.setSource(file).get();
+    }
 
-	@Test
-	public final void testExecute() {
-		DMCFunction normal = frmwk.getDMCFunction(WekaFunctions.NORMALIZATION);
-		normal.setArgs(data);
-		normal.execute();
+    @Test
+    public final void testExecute() {
+        DMCFunction normal = frmwk.getDMCFunction(WekaFunctions.NORMALIZATION);
+        normal.setArgs(data);
+        normal.execute();
 
-		double[] res0 = data.getAllValuesAsDoubleAt(0);
-		double[] res1 = data.getAllValuesAsDoubleAt(1);
+        double[] res0 = data.getAllValuesAsDoubleAt(0);
+        double[] res1 = data.getAllValuesAsDoubleAt(1);
 
-		int max0 = (int) Arrays.stream(res0).max().getAsDouble();
-		int max1 = (int) Arrays.stream(res1).max().getAsDouble();
+        int max0 = (int) Arrays.stream(res0).max().getAsDouble();
+        int max1 = (int) Arrays.stream(res1).max().getAsDouble();
 
-		int min0 = (int) Arrays.stream(res0).min().getAsDouble();
-		int min1 = (int) Arrays.stream(res1).min().getAsDouble();
+        int min0 = (int) Arrays.stream(res0).min().getAsDouble();
+        int min1 = (int) Arrays.stream(res1).min().getAsDouble();
 
-		assertEquals(max0, 1);
-		assertEquals(max1, 1);
+        assertEquals(max0, 1);
+        assertEquals(max1, 1);
 
-		assertEquals(min0, 0);
-		assertEquals(min1, 0);
+        assertEquals(min0, 0);
+        assertEquals(min1, 0);
 
-	}
+    }
 
 }

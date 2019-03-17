@@ -15,48 +15,48 @@ import weka.filters.unsupervised.attribute.Standardize;
 @PropertySource("classpath:weka.properties")
 @Function
 public class Standardization extends AbstaractWekaFilter {
-	public static final String name = WekaFunctions.STANDARDIZATION;
-	private static final FunctionType TYPE = FunctionType.STANDARDIZATION;
-	private Properties functionProperties = new Properties();
-	
-	@Value("${weka.standart_desc}")
-	String description;
+    public static final String name = WekaFunctions.STANDARDIZATION;
+    private static final FunctionType TYPE = FunctionType.STANDARDIZATION;
+    private Properties functionProperties = new Properties();
 
-	public Standardization() {
-		super();
-	}
+    @Value("${weka.standart_desc}")
+    String description;
 
-	@Override
-	public String getName() {
-		return name;
-	}
+    public Standardization() {
+        super();
+    }
 
-	@Override
-	public String getDescription() {
-		return description;
-	}
+    @Override
+    public String getName() {
+        return name;
+    }
 
-	@Override
-	protected Filter getFilter() {
-		Standardize std = new Standardize();
-		std.setIgnoreClass(true);
-		return std;
-	}
+    @Override
+    public String getDescription() {
+        return description;
+    }
 
-	@Override
-	protected FunctionType getFunctionType() {
-		return TYPE;
-	}
+    @Override
+    protected Filter getFilter() {
+        Standardize std = new Standardize();
+        std.setIgnoreClass(true);
+        return std;
+    }
 
-	@Override
-	protected Properties getProperties() {
-		return functionProperties;
-	}
+    @Override
+    protected FunctionType getFunctionType() {
+        return TYPE;
+    }
 
-	@Override
-	protected void setFunctionProperties(Properties funProperties) {
-		// TODO Auto-generated method stub
-		
-	}
+    @Override
+    protected Properties getProperties() {
+        return functionProperties;
+    }
+
+    @Override
+    protected void setFunctionProperties(Properties funProperties) {
+        // TODO Auto-generated method stub
+
+    }
 
 }

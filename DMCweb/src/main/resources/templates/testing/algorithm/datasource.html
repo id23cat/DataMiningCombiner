@@ -4,32 +4,32 @@
       layout:decorate="~{testing/layouts/sidebarlayout}">
 
 <head>
-	<title>New algorithm: data source</title>
-	<!-- Custom styles for this template -->
-	<link href="#" th:href="@{/css/simple-sidebar.css}" rel="stylesheet">
-	
+    <title>New algorithm: data source</title>
+    <!-- Custom styles for this template -->
+    <link href="#" th:href="@{/css/simple-sidebar.css}" rel="stylesheet">
+
 </head>
 <body>
-	<form>
-		<!-- Insert page content into the layouts/sidebarpage.html -->
-		<th:block layout:fragment="sidebar_pagecontent">
-			<div th:insert="testing/fragments/funoptions/func_opts :: src_opts">
-		 	</div>
-		 	<ul class="pager">
-				<li><a th:href="@{/testing/UID/project/12/newalg?step=function_datapreview}">Next</a></li>
-			</ul>
-		</th:block>
-	</form>
-	
+<form>
+    <!-- Insert page content into the layouts/sidebarpage.html -->
+    <th:block layout:fragment="sidebar_pagecontent">
+        <div th:insert="testing/fragments/funoptions/func_opts :: src_opts">
+        </div>
+        <ul class="pager">
+            <li><a th:href="@{/testing/UID/project/12/newalg?step=function_datapreview}">Next</a></li>
+        </ul>
+    </th:block>
+</form>
 
-	<!-- Insert bar content into the layouts/sidebarpage.html -->
-	<th:block layout:fragment="sidebar_barcontent">
-		<ul class="sidebar-nav">
-			<li class="sidebar-brand">Algorithm flow</li>
-			<li><a href="#">File source</a></li>
-			
-		</ul>
-	</th:block>
+
+<!-- Insert bar content into the layouts/sidebarpage.html -->
+<th:block layout:fragment="sidebar_barcontent">
+    <ul class="sidebar-nav">
+        <li class="sidebar-brand">Algorithm flow</li>
+        <li><a href="#">File source</a></li>
+
+    </ul>
+</th:block>
 </body>
 
 </html>

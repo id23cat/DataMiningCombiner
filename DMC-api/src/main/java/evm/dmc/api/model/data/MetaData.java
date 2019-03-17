@@ -31,53 +31,52 @@ import lombok.Singular;
 
 /**
  * @author id23cat
- *
  */
 @Data
-@Builder(toBuilder=true)
+@Builder(toBuilder = true)
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
-@Table(name="METADATA"
-	,uniqueConstraints={@UniqueConstraint(columnNames = {"project_id", "name"})}
+@Table(name = "METADATA"
+        , uniqueConstraints = {@UniqueConstraint(columnNames = {"project_id", "name"})}
 )
 //@EqualsAndHashCode(exclude={"storage"})
 //@ToString(exclude={"storage"})
 public class MetaData implements Serializable {
-	
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = -6801760958025220213L;
 
-//	@Deprecated
-	public static final String DUPLICATION_POSTFIX = "-DUP";
-	
-	@Id
-	@GeneratedValue(strategy=GenerationType.IDENTITY)
-	@Setter(AccessLevel.NONE) 
-	private Long id;
-	
-	@NotNull
-	private String name;
-	
-	private String description;
-	
-	/**
-	 * what project this data belongs to
-	 */
-	@ManyToOne
-	@JoinColumn(name = "project_id")
-	private ProjectModel project;
+    /**
+     *
+     */
+    private static final long serialVersionUID = -6801760958025220213L;
 
-	@Column( length = 100000 )
-	@Convert(converter = MapAttributesToJson.class)
+    //	@Deprecated
+    public static final String DUPLICATION_POSTFIX = "-DUP";
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Setter(AccessLevel.NONE)
+    private Long id;
+
+    @NotNull
+    private String name;
+
+    private String description;
+
+    /**
+     * what project this data belongs to
+     */
+    @ManyToOne
+    @JoinColumn(name = "project_id")
+    private ProjectModel project;
+
+    @Column(length = 100000)
+    @Convert(converter = MapAttributesToJson.class)
 //	@Setter(AccessLevel.PROTECTED)
 //	@Getter
 //	@Singular
-	@Builder.Default
-	private Map<String, DataAttribute> attributes = Collections.synchronizedMap(new HashMap<>());
-	
+    @Builder.Default
+    private Map<String, DataAttribute> attributes = Collections.synchronizedMap(new HashMap<>());
+
 //	@Column
 ////	@Column(columnDefinition = "TEXT")
 //	@Lob
@@ -85,36 +84,34 @@ public class MetaData implements Serializable {
 //	@ElementCollection
 //	@CollectionTable(name = "PREVIEW_DATA", joinColumns=@JoinColumn(name="METADATA_ID"))
 //	private List<String> preview = new ArrayList<>();
-	
-	private Long previewId;
-	
-	
-	// delimiter for preview
-	// also can be used for parsing data files instead of storage.delimiter
+
+    private Long previewId;
+
+
+    // delimiter for preview
+    // also can be used for parsing data files instead of storage.delimiter
 //	private String previewDelimiter = DEFAULT_DELIMITER;
-	
+
 //	
 
-	@OneToOne(cascade = CascadeType.ALL, optional = false)
-	@JoinColumn(name = "storage_id")
-	private DataStorageModel storage;
-	
+    @OneToOne(cascade = CascadeType.ALL, optional = false)
+    @JoinColumn(name = "storage_id")
+    private DataStorageModel storage;
+
 //	@Version
 //    private Long version;
-	
-	public void setStorage(DataStorageModel storage) {
-		storage.setMeta(this);
-		this.storage = storage;
-	}
-	
+
+    public void setStorage(DataStorageModel storage) {
+        storage.setMeta(this);
+        this.storage = storage;
+    }
+
 //	/**
 //	 * @return unmodifiable List
 //	 */
 //	public List<String> getPreview() {
 //		return Collections.unmodifiableList(preview);
 //	}
-	
-	
-	
-	
+
+
 }

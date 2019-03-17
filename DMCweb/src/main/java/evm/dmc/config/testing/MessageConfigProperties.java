@@ -8,14 +8,14 @@ import org.springframework.context.annotation.PropertySource;
 @PropertySource("classpath:messages_en.properties")
 @ConfigurationProperties(prefix = "message")
 public class MessageConfigProperties {
-	private String greetings;
+    private String greetings;
 
-	public String getGreetings() {
-		return greetings;
-	}
+    public String getGreetings() {
+        return greetings;
+    }
 
-	public void setGreetings(String greetings) {
-		this.greetings = greetings;
-	}
+    public void setGreetings(String greetings) {
+        this.greetings = greetings;
+    }
 
 }

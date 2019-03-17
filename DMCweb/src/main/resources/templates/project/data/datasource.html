@@ -2,67 +2,67 @@
 <html xmlns:th="http://www.thymeleaf.org"
       xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
       layout:decorate="~{layouts/layout}">
-      <!-- layout:decorate="~{layouts/sidebarlayout}" -->
+<!-- layout:decorate="~{layouts/sidebarlayout}" -->
 
 <head>
-	<title>Data source</title>
-	<!-- Custom styles for this template -->
-	<!-- <link href="#" th:href="@{/css/simple-sidebar.css}" rel="stylesheet">
-	<link th:href="@{/webjars/bootstrap-toggle/2.2.2/css/bootstrap-toggle.min.css}" rel="stylesheet">
-	<script th:src="@{/webjars/bootstrap-toggle/2.2.2/js/bootstrap-toggle.min.js}"></script> -->
-	
-	
+    <title>Data source</title>
+    <!-- Custom styles for this template -->
+    <!-- <link href="#" th:href="@{/css/simple-sidebar.css}" rel="stylesheet">
+    <link th:href="@{/webjars/bootstrap-toggle/2.2.2/css/bootstrap-toggle.min.css}" rel="stylesheet">
+    <script th:src="@{/webjars/bootstrap-toggle/2.2.2/js/bootstrap-toggle.min.js}"></script> -->
+
+
 </head>
 <body>
-	<!-- Insert page content into the layouts/sidebarpage.html -->
-	<!-- <th:block layout:fragment="sidebar_pagecontent"> -->
-	<th:block layout:fragment="content">
-	<div th:fragment="dataSource" th:with=datasetController=${T(evm.dmc.web.controllers.project.DatasetController)}>
-		<!-- <ul class="breadcrumb">
-			<li><a href="#">Home</a></li>
-		    <li><a href="#">Private</a></li>
-		    <li><a href="#">Pictures</a></li>
-		    <li class="active">Vacation</li>        
-		</ul> -->
-		
-		<!-- IF DATASOURCE NOT NULL-->		
-		<div th:if="${metaData != null}" class="form-group">
-			<!-- I wonder, if variable exists...  -->
-				
-			<!-- <div th:insert="fragments/datapreview :: dataPreview(${previewData})"></div> -->
-			
-			<div th:insert="fragments/datapreview :: dataPreview( ${metaData}, 
+<!-- Insert page content into the layouts/sidebarpage.html -->
+<!-- <th:block layout:fragment="sidebar_pagecontent"> -->
+<th:block layout:fragment="content">
+    <div th:fragment="dataSource" th:with=datasetController=${T(evm.dmc.web.controllers.project.DatasetController)}>
+        <!-- <ul class="breadcrumb">
+            <li><a href="#">Home</a></li>
+            <li><a href="#">Private</a></li>
+            <li><a href="#">Pictures</a></li>
+            <li class="active">Vacation</li>
+        </ul> -->
+
+        <!-- IF DATASOURCE NOT NULL-->
+        <div th:if="${metaData != null}" class="form-group">
+            <!-- I wonder, if variable exists...  -->
+
+            <!-- <div th:insert="fragments/datapreview :: dataPreview(${previewData})"></div> -->
+
+            <div th:insert="fragments/datapreview :: dataPreview( ${metaData},
 							 ${preview}, 
 							 ${__${datasetController.MODEL_ActionURL}__},
 							 ${showCheckboxes})">
-			</div>
-		</div>
-		<!-- ELSE -->
-		<div th:unless="${metaData != null}">
-			<div id="fileSource"
-					th:insert="fragments/control_elements :: fileSelector('file_id', 
+            </div>
+        </div>
+        <!-- ELSE -->
+        <div th:unless="${metaData != null}">
+            <div id="fileSource"
+                 th:insert="fragments/control_elements :: fileSelector('file_id',
 												${dataSetProps},
 												${datasetController.URL_SetSource})">
-			</div>
-		</div>
+            </div>
+        </div>
 
-		<!-- 	<a class="btn btn-warning" role="button" th:href="@{${flowExecutionUrl}(_eventId='cancel')}" >Cancel</a>
-			<div class="btn-group">
-				<a class="btn btn-info disabled" role="button" th:href="@{${flowExecutionUrl}(_eventId='prev')}" >Previous</a>
-				
-				<a class="btn btn-info" role="button" th:href="@{${flowExecutionUrl}(_eventId='next')}">Next</a>
-			</div> -->
-	</div>
-	</th:block>
+        <!-- 	<a class="btn btn-warning" role="button" th:href="@{${flowExecutionUrl}(_eventId='cancel')}" >Cancel</a>
+            <div class="btn-group">
+                <a class="btn btn-info disabled" role="button" th:href="@{${flowExecutionUrl}(_eventId='prev')}" >Previous</a>
 
-	<!-- Insert bar content into the layouts/sidebarpage.html -->
-	<!-- <th:block layout:fragment="sidebar_barcontent">
-		<ul class="sidebar-nav">
-			<li class="sidebar-brand">Algorithm flow</li>
-			<li><a href="#">File source</a></li>
-			
-		</ul>
-	</th:block> -->
+                <a class="btn btn-info" role="button" th:href="@{${flowExecutionUrl}(_eventId='next')}">Next</a>
+            </div> -->
+    </div>
+</th:block>
+
+<!-- Insert bar content into the layouts/sidebarpage.html -->
+<!-- <th:block layout:fragment="sidebar_barcontent">
+    <ul class="sidebar-nav">
+        <li class="sidebar-brand">Algorithm flow</li>
+        <li><a href="#">File source</a></li>
+
+    </ul>
+</th:block> -->
 </body>
 
 </html>

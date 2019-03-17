@@ -2,7 +2,7 @@
 <html xmlns:th="http://www.thymeleaf.org"
       xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
       layout:decorate="~{layouts/layout}"
-      >
+>
 
 <head>
     <title>Projects List</title>
@@ -16,45 +16,45 @@
         <div th:replace="fragments/alert :: alert (type='danger', message=${errMsg})">Alert</div>
 </th:block> -->
 <th:block layout:fragment="content"
-	th:with="projectController=${T(evm.dmc.web.controllers.project.ProjectController)}">
-	<!-- <div th:insert="fragments/control_elements :: common_modal(id='deleteButton', page='${@requestPath.delete}', title='Do you really want to delete')"></div> -->
-	<div class="row">
-		<div class="row">
-			<div id="algList"  
-				th:insert="fragments/lists :: deletable_list('proj', 'Projects:',
+          th:with="projectController=${T(evm.dmc.web.controllers.project.ProjectController)}">
+    <!-- <div th:insert="fragments/control_elements :: common_modal(id='deleteButton', page='${@requestPath.delete}', title='Do you really want to delete')"></div> -->
+    <div class="row">
+        <div class="row">
+            <div id="algList"
+                 th:insert="fragments/lists :: deletable_list('proj', 'Projects:',
 											 ${projectController.URL_DeleteProject},
 											 ${backBean}, ${projectsSet}, 
 											 ${T(evm.dmc.web.controllers.project.ProjectController).BASE_URL})">
-			</div>
-		</div>
-		<!-- <div class="row">
-		</div> -->
-		
-	</div>
-	<div class="col-xs-12" style="height:50px;"></div>
-	<div class="form-group">
-		<form method="post" 
-			th:action="${projectController.URL_AddProject}" 
-			th:object="${newProject}">
-           
+            </div>
+        </div>
+        <!-- <div class="row">
+        </div> -->
+
+    </div>
+    <div class="col-xs-12" style="height:50px;"></div>
+    <div class="form-group">
+        <form method="post"
+              th:action="${projectController.URL_AddProject}"
+              th:object="${newProject}">
+
             <div class="col-sm-4">
-	            <label for="newName" class="control-label">Add new project</label>
-	            <div class="alert alert-danger" th:if="${#fields.hasErrors('name')}">
-				  <strong>Important!</strong> 
-				  <span class="help-block" th:if="${#fields.hasErrors('name')}" th:errors="*{name}">Incorrect project name</span>
-				</div>
-	            <div class="input-group">
-	                <input type="text" class="form-control" placeholder="New project name"
-	                	th:field="*{name}" />
-	                <span class="input-group-btn">
+                <label for="newName" class="control-label">Add new project</label>
+                <div class="alert alert-danger" th:if="${#fields.hasErrors('name')}">
+                    <strong>Important!</strong>
+                    <span class="help-block" th:if="${#fields.hasErrors('name')}" th:errors="*{name}">Incorrect project name</span>
+                </div>
+                <div class="input-group">
+                    <input type="text" class="form-control" placeholder="New project name"
+                           th:field="*{name}"/>
+                    <span class="input-group-btn">
 	                <button class="btn btn-primary" type="submit">Add</button>
 	                </span>
-	                <!-- <span class="help-block" th:if="${#fields.hasErrors('projectName')}" th:errors="*{projectName}">Incorrect project name</span> -->
-	            </div>
+                    <!-- <span class="help-block" th:if="${#fields.hasErrors('projectName')}" th:errors="*{projectName}">Incorrect project name</span> -->
+                </div>
             </div>
         </form>
-   </div>
-		
+    </div>
+
 </th:block>
 
 </body>
