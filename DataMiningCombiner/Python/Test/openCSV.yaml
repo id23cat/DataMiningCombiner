@@ -1,0 +1,8 @@
+operation:
+  id: 6296f97c-c7c1-49fe-b50d-38e555705ee8
+  name: openCSV
+  type: python
+  arguments:
+    - name: fileName
+      type: string
+  
