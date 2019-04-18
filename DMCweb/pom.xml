@@ -296,6 +296,7 @@
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-assembly-plugin</artifactId>
 				<configuration>
+					<tarLongFileMode>posix</tarLongFileMode>
 					<descriptor>src/main/resources/distribution/dmc-web.xml</descriptor>
 					<finalName>dmc-web</finalName>
 				</configuration>
