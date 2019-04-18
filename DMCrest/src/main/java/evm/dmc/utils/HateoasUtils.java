@@ -23,7 +23,9 @@ import static org.springframework.hateoas.mvc.ControllerLinkBuilder.linkTo;
  */
 public class HateoasUtils {
 
-    /** Name of methods according REST CRUD controller interfaces */
+    /**
+     * Name of methods according REST CRUD controller interfaces
+     */
     private static final String GET_INSTANCE_LIST_METHOD_NAME = "getInstanceList";
     private static final String GET_INSTANCE_METHOD_NAME = "getInstance";
     private static final String ADD_INSTANCE_METHOD_NAME = "addInstance";
@@ -32,9 +34,10 @@ public class HateoasUtils {
 
     /**
      * adds HATEOAS self, relation and child links to DTO
-     * @param dto DTO
-     * @param clazz class of called method
-     * @param method called method
+     *
+     * @param dto       DTO
+     * @param clazz     class of called method
+     * @param method    called method
      * @param accountId Account model identifier
      * @param projectId Project model identifier
      * @return DTO with self link
@@ -55,9 +58,10 @@ public class HateoasUtils {
 
     /**
      * adds HATEOAS self link to DTO
-     * @param dto DTO
-     * @param clazz class of called method
-     * @param method called method
+     *
+     * @param dto       DTO
+     * @param clazz     class of called method
+     * @param method    called method
      * @param accountId Account model identifier
      * @param projectId Project model identifier
      * @return DTO with self link
@@ -77,8 +81,9 @@ public class HateoasUtils {
 
     /**
      * adds HATEOAS relation links to DTO
-     * @param dto DTO
-     * @param clazz class of called method
+     *
+     * @param dto       DTO
+     * @param clazz     class of called method
      * @param accountId Account model identifier
      * @param projectId Project model identifier
      * @return DTO with self link
@@ -100,7 +105,8 @@ public class HateoasUtils {
     /**
      * handles dto in order to extract service information and
      * add HATEOAS relation links
-     * @param pjp Spring aspect join point
+     *
+     * @param pjp       Spring aspect join point
      * @param accountId Account model identifier
      * @param projectId Project model identifier
      * @return DTO with HATEOAS Relation links
@@ -124,7 +130,8 @@ public class HateoasUtils {
     /**
      * handles dto list in order to extract service information and
      * add HATEOAS relation links
-     * @param pjp Spring aspect join point
+     *
+     * @param pjp       Spring aspect join point
      * @param accountId Account model identifier
      * @param projectId Project model identifier
      * @return list of DTOs with HATEOAS Relation links
@@ -141,7 +148,7 @@ public class HateoasUtils {
 
         List dtoList = (List) pjp.proceed();
         List<AbstractDto> proceedDtoList = new ArrayList<>(dtoList.size());
-        for(Object dto : dtoList) {
+        for (Object dto : dtoList) {
             AbstractDto proceedDto = HateoasUtils.addBasicLinkSetToDto(
                     (AbstractDto) dto, clazz, calledMethod, accountId, projectId);
             proceedDtoList.add(proceedDto);
@@ -155,7 +162,7 @@ public class HateoasUtils {
             Class<?> clazz,
             String methodName,
             HttpRequestMethod httpRequestMethod,
-            Object ... params){
+            Object... params) {
 
         try {
             Method method = getHateoasRelationMethodByName(clazz, methodName);
@@ -166,7 +173,8 @@ public class HateoasUtils {
                         .withType(httpRequestMethod.name());
                 dto.add(link);
             }
-        } catch (Exception ignored) {}
+        } catch (Exception ignored) {
+        }
 
         return dto;
     }
@@ -228,7 +236,7 @@ public class HateoasUtils {
         Method resultMethod = null;
         Method[] methods = clazz.getDeclaredMethods();
         for (Method method : methods) {
-            if (method.getName().equals(methodName) && method.isAnnotationPresent(HateoasRelation.class) ) {
+            if (method.getName().equals(methodName) && method.isAnnotationPresent(HateoasRelation.class)) {
                 resultMethod = method;
                 break;
             }
@@ -238,8 +246,9 @@ public class HateoasUtils {
 
     /**
      * adds HATEOAS child relation links to DTO
-     * @param dto DTO
-     * @param clazz class of called method
+     *
+     * @param dto       DTO
+     * @param clazz     class of called method
      * @param accountId Account model identifier
      * @param projectId Project model identifier
      * @return DTO with child relation links
@@ -256,7 +265,7 @@ public class HateoasUtils {
             for (Class<?> childClass : childClasses) {
                 Method relationMethod = getInstanceListRelationMethod(childClass);
                 String relationName = getMethodRelationName(relationMethod);
-                if (!StringUtils.isBlank(relationName)){
+                if (!StringUtils.isBlank(relationName)) {
                     Link link = linkTo(childClass, relationMethod, accountId, projectId)
                             .withRel(relationName);
                     dto.add(link);
@@ -268,6 +277,7 @@ public class HateoasUtils {
 
     /**
      * gets get instance list method with HATEOAS relation
+     *
      * @param clazz class contains get instance list relation name
      * @return name of HATEOAS relation
      */
@@ -284,6 +294,7 @@ public class HateoasUtils {
 
     /**
      * gets HATEOAS relation name of get instance list method
+     *
      * @param method method that contains get instance list relation name
      * @return name of HATEOAS relation
      */
@@ -334,8 +345,7 @@ public class HateoasUtils {
 
         if (accountId == null) {
             params.add(dtoId);
-        }
-        else if (projectId == null) {
+        } else if (projectId == null) {
             params.add(accountId);
         } else {
             params.add(accountId);

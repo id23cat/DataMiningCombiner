@@ -20,43 +20,43 @@ import lombok.NoArgsConstructor;
 
 @Data
 //@NoArgsConstructor
-@Builder(builderMethodName="srcBuilder")
+@Builder(builderMethodName = "srcBuilder")
 @AllArgsConstructor
-@EqualsAndHashCode(callSuper=true)
+@EqualsAndHashCode(callSuper = true)
 @Entity
 public class FunctionSrcModel extends FunctionModel {
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = -2433829450685223249L;
+    /**
+     *
+     */
+    private static final long serialVersionUID = -2433829450685223249L;
 
-	public final static String SRC_PROPERTY_NAME = "source";
-	
-	private String description;
-	
-	private String source = null;
-	
-	@Enumerated(EnumType.STRING)
-	@NotNull
-	@Builder.Default
-	private DataSrcDstType typeSrcDst = DataSrcDstType.LOCAL_FS;
-		
+    public final static String SRC_PROPERTY_NAME = "source";
+
+    private String description;
+
+    private String source = null;
+
+    @Enumerated(EnumType.STRING)
+    @NotNull
+    @Builder.Default
+    private DataSrcDstType typeSrcDst = DataSrcDstType.LOCAL_FS;
+
 //	public FunctionSrcModel(){
 //		super();
 //	}
-	
-	public FunctionSrcModel(FunctionModel funmodel){
-		super(funmodel.getId(), 
-				funmodel.getName(), 
-				funmodel.getFramework(), 
-				funmodel.getType(), 
-				funmodel.getProperties(), 
-				funmodel.getDescription());
-		if(funmodel instanceof FunctionSrcModel) {
-			this.source = ((FunctionSrcModel) funmodel).source;
-			this.typeSrcDst = ((FunctionSrcModel) funmodel).typeSrcDst;
-		}
-	}
+
+    public FunctionSrcModel(FunctionModel funmodel) {
+        super(funmodel.getId(),
+                funmodel.getName(),
+                funmodel.getFramework(),
+                funmodel.getType(),
+                funmodel.getProperties(),
+                funmodel.getDescription());
+        if (funmodel instanceof FunctionSrcModel) {
+            this.source = ((FunctionSrcModel) funmodel).source;
+            this.typeSrcDst = ((FunctionSrcModel) funmodel).typeSrcDst;
+        }
+    }
 
 //	/**
 //	 * @return the sourceDest

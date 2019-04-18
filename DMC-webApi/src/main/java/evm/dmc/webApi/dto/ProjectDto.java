@@ -9,20 +9,20 @@ import lombok.EqualsAndHashCode;
 
 /**
  * DTO for Project model
- * 
+ *
  * @see evm.dmc.api.model.ProjectModel
  */
 @Data
-@EqualsAndHashCode(callSuper=false)
+@EqualsAndHashCode(callSuper = false)
 public class ProjectDto extends AbstractDto {
 
-	private Long projectId;
-	private ProjectType projectType;
-	private String name;
-	private Timestamp created;
+    private Long projectId;
+    private ProjectType projectType;
+    private String name;
+    private Timestamp created;
 
-	@Override
-	public Long getDtoId() {
-		return getProjectId();
-	}
+    @Override
+    public Long getDtoId() {
+        return getProjectId();
+    }
 }

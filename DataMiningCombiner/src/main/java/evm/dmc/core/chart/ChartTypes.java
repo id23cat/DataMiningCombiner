@@ -1,6 +1,6 @@
 package evm.dmc.core.chart;
 
 public interface ChartTypes {
-	String HISTOGRAM = "Chart_Histogram";
+    String HISTOGRAM = "Chart_Histogram";
 
 }

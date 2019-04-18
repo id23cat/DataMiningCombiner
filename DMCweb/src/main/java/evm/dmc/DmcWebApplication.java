@@ -13,29 +13,28 @@ import evm.dmc.config.ApplicationConfiguration;
 
 //for jsr310 java 8 java.time.*
 @EntityScan(
-      basePackageClasses = {DmcWebApplication.class, Jsr310JpaConverters.class}
+        basePackageClasses = {DmcWebApplication.class, Jsr310JpaConverters.class}
 )
 
 @SpringBootApplication
 @Import(ApplicationConfiguration.class)
 public class DmcWebApplication extends SpringBootServletInitializer {
-	
+
 //	@Autowired
 //    Environment environment;
-	
+
 //	@Value("${spring.profiles.active}")
 //	private String activeProfile;
 
-	public static void main(String[] args) {
-		SpringApplication.run(DmcWebApplication.class, args);
-	}
+    public static void main(String[] args) {
+        SpringApplication.run(DmcWebApplication.class, args);
+    }
 
-	
 
-	@Override
-	protected SpringApplicationBuilder configure(SpringApplicationBuilder application) {
-		return application.sources(DmcWebApplication.class);
-	}
+    @Override
+    protected SpringApplicationBuilder configure(SpringApplicationBuilder application) {
+        return application.sources(DmcWebApplication.class);
+    }
 
 //	@Bean
 //	public CommandLineRunner commandLineRunner(ApplicationContext ctx) {
@@ -57,5 +56,5 @@ public class DmcWebApplication extends SpringBootServletInitializer {
 //			}
 //		};
 //	}
-	
+
 }

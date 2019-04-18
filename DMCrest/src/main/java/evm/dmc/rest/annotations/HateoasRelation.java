@@ -13,8 +13,8 @@ import java.lang.annotation.Target;
 @Target(ElementType.METHOD)
 public @interface HateoasRelation {
 
-     /**
-      * @return name of relation provided by method
-      */
-     String value();
+    /**
+     * @return name of relation provided by method
+     */
+    String value();
 }

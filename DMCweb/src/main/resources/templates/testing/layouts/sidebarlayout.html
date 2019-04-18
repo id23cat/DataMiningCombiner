@@ -1,18 +1,18 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org"
       xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
-      >
+>
 
 <head>
     <title>Hello Spring Boot!</title>
     <meta charset="utf-8">
- 	<meta name="viewport" content="width=device-width, initial-scale=1, , shrink-to-fit=no">
+    <meta name="viewport" content="width=device-width, initial-scale=1, , shrink-to-fit=no">
     <link rel="stylesheet" th:href="@{/webjars/bootstrap/3.3.7/css/bootstrap.min.css}">
-  	<script th:src="@{/webjars/jquery/3.2.1/jquery.min.js}"></script>
-  	<script th:href="@{/webjars/bootstrap/3.3.7/css/bootstrap.min.js}"></script>
-  	<link href="../../static/css/core.css"
+    <script th:src="@{/webjars/jquery/3.2.1/jquery.min.js}"></script>
+    <script th:href="@{/webjars/bootstrap/3.3.7/css/bootstrap.min.js}"></script>
+    <link href="../../static/css/core.css"
           th:href="@{/css/core.css}"
-          rel="stylesheet" media="screen" />
+          rel="stylesheet" media="screen"/>
     <link th:href="@{/css/simple-sidebar.css}" rel="stylesheet">
 
 </head>
@@ -22,21 +22,21 @@
 </div>
 
 <div class="container-fluid">
-	 <div class="page-container">
-		
-	 	<div id="sidebar" th:insert="testing/fragments/sidebar :: sidebar">
-	 	</div>
-	
-	</div>
-	
-	<hr>
+    <div class="page-container">
+
+        <div id="sidebar" th:insert="testing/fragments/sidebar :: sidebar">
+        </div>
+
+    </div>
+
+    <hr>
     <div class="row">
         <div class="col-sm-12">
-		<footer>
-	       	<div th:replace="testing/fragments/footer :: footer"></div>
-	    </footer>
-	    </div>
-	</div>
+            <footer>
+                <div th:replace="testing/fragments/footer :: footer"></div>
+            </footer>
+        </div>
+    </div>
 </div>
 
 </body>

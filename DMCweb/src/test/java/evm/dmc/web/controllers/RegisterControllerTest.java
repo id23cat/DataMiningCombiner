@@ -26,24 +26,24 @@ import evm.dmc.web.service.Views;
 @EnableConfigurationProperties(Views.class)
 public class RegisterControllerTest {
 
-	@Autowired
-	MockMvc mockMvc;
-	
-	@Autowired
-	Views views;
-	
-		
-	@Test
-	@WithMockUser(authorities = "ROLE_ADMIN")
-	public final void getRegisterTest() throws Exception {
-		assertNotNull(views);
-		assertNotNull(views.getRegister());
-		
-		this.mockMvc.perform(get(RequestPath.register))
-		.andExpect(status().isOk())
-		.andExpect(view().name(views.getRegister()))
-		.andExpect(model().attributeExists("account"));
-		
-	}
-	
+    @Autowired
+    MockMvc mockMvc;
+
+    @Autowired
+    Views views;
+
+
+    @Test
+    @WithMockUser(authorities = "ROLE_ADMIN")
+    public final void getRegisterTest() throws Exception {
+        assertNotNull(views);
+        assertNotNull(views.getRegister());
+
+        this.mockMvc.perform(get(RequestPath.register))
+                .andExpect(status().isOk())
+                .andExpect(view().name(views.getRegister()))
+                .andExpect(model().attributeExists("account"));
+
+    }
+
 }

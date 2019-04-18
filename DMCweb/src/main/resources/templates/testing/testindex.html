@@ -4,7 +4,7 @@
       layout:decorate="~{/testing/layouts/layout}">
 
 <head>
-	<title>Welcome to Data Mining combiner</title>
+    <title>Welcome to Data Mining combiner</title>
 </head>
 <body>
 
@@ -12,12 +12,12 @@
 <th:block layout:fragment="content">
     <div class="hero-unit">
         <h1>Hello World</h1>
-        
+
         <p th:text="'The time on the server is ' + ${serverTime} + '.'"></p>
-		<P th:text="'Locale is ' + ${locale}"></P>
-		<p>
-		
-		</p>
+        <P th:text="'Locale is ' + ${locale}"></P>
+        <p>
+
+        </p>
         <p>
             <a href="#" th:href="@{properties}" class="btn btn-large btn-success">System Properties</a>
         </p>
@@ -28,7 +28,7 @@
             Actuator endpoints allow you to monitor and interact with your application.
             Spring Boot includes a number of built-in endpoints and you can also add your own.
         </p>
-        
+
         <a th:href="@{/testing/sidebar}">Sidebar page</a> <br>
         <a th:href="${@testingViewsService.hello}">Click to get Hello</a> <br>
         <a th:href="${@testingViewsService.hellorest}">Click to get Hello from REST</a> <br>
@@ -47,11 +47,11 @@
         <a th:href="@{/testing/UID/project/12/newalg?step=datadest}">Data destination</a> <br>
         <a th:href="@{/testing/UID/project/12/viewalg}">View full algorithm</a> <br>
         <a th:href="@{/testing/UID/project/12/viewalg_execute}">View full algorithm _execute</a> <br>
-       
+
 
     </div>
-    
+
 </th:block>
-	
+
 </body>
 </html>

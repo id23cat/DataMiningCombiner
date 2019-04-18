@@ -49,226 +49,222 @@ import evm.dmc.web.service.dto.TreeNodeDTO;
 @RunWith(SpringRunner.class)
 @SpringBootTest(webEnvironment = WebEnvironment.RANDOM_PORT, properties = "management.port=-1")
 @AutoConfigureMockMvc
-@EnableAutoConfiguration(exclude = { SecurityAutoConfiguration.class})
+@EnableAutoConfiguration(exclude = {SecurityAutoConfiguration.class})
 @EnableConfigurationProperties(Views.class)
 @WithMockUser("devel")
 public class AlgorithmControllerTest {
-	
-	@MockBean
-	private AlgorithmService algorithmService;
-	
-	@MockBean
-	private MetaData metaData;
-	
-	@MockBean
-	private MetaDataService metaDataService;
-	
-	@Autowired
-	private JsonService jsonService;
-	
-	@MockBean
-	private DataStorageService dataStorageService;
-	
+
+    @MockBean
+    private AlgorithmService algorithmService;
+
+    @MockBean
+    private MetaData metaData;
+
+    @MockBean
+    private MetaDataService metaDataService;
+
+    @Autowired
+    private JsonService jsonService;
+
+    @MockBean
+    private DataStorageService dataStorageService;
+
 //	@MockBean
 //	private DatasetController datasetController;
-	
+
 //	@MockBean
 //	private Model model;
-	
-	@Autowired
-	private MockMvc mockMvc;
-	
-	@Autowired
-	private Views views;
-	
-	@Test
-	public final void testGetAlgorithmsList() throws Exception {
-		String url = cookURL(AlgorithmController.BASE_URL, TEST_PROJ_NAME);
-		
-		Mockito
-			.when(algorithmService.getForProjectSortedBy(eq(TEST_session_project), eq("name")))
-			.thenReturn(TEST_algList);
-		
-		ResultActions checkResult = this.mockMvc.perform(get(url)
-				.sessionAttr(ProjectController.SESSION_CurrentProject, TEST_session_project))
-		.andExpect(status().isOk())
-		.andExpect(view().name(views.project.getAlgorithmsList()))
-		.andExpect(model().attribute(AlgorithmController.MODEL_AlgorithmsList, TEST_algList))
-		.andExpect(model().attributeExists(AlgorithmController.MODEL_NewAlgorithm))
-		;
-		
-		// AlgorithmController URLs:
-		assertAlgorithmURLs(checkResult, TEST_PROJ_NAME);
-	}
 
-	@Test
-	public final void testGetAlgorithm_withoutDataSource() throws Exception {
-		String url = cookURL(AlgorithmController.BASE_URL+AlgorithmController.PATH_AlgorithmName, 
-				TEST_PROJ_NAME, TEST_ALG0_NAME);
-		
-		Mockito
-			.when(algorithmService.getByProjectAndName(eq(TEST_session_project), eq(TEST_ALG0_NAME)))
-			.thenReturn(Optional.of(TEST_alg0));
-		List<TreeNodeDTO> funcList = getFunctionsListDTO();
-		Mockito
-			.when(algorithmService.getFrameworksAsTreeNodes())
-			.thenReturn(funcList);
-		Mockito
-			.when(algorithmService.getDataSource(Optional.of(TEST_alg0)))
-			.thenReturn(Optional.ofNullable(TEST_alg0.getDataSource()));
-		
-		ResultActions checkResult = this.mockMvc.perform(get(url)
-				.sessionAttr(ProjectController.SESSION_CurrentProject, TEST_session_project))
-		.andExpect(status().isOk())
-		.andExpect(view().name(views.project.algorithm.algorithm))
-		.andExpect(model().attribute(AlgorithmController.SESSION_CurrentAlgorithm, TEST_alg0))
-		.andExpect(model().attribute(AlgorithmController.MODEL_FunctionsList, 
-				jsonService.frameworksListToTreeView(funcList)))
-		;
-		
-		// model attributes set in addAttributesToModel
-		assertAlgorithmAttributesToModel(checkResult, Optional.of(TEST_alg0), null);
-		
-		// AlgorithmController URLs:
-		assertAlgorithmURLs(checkResult, TEST_PROJ_NAME);
-	}
-	
-	@Test
-	public final void testGetAlgorithm_withDataSource() throws Exception {
-		String url = cookURL(AlgorithmController.BASE_URL+AlgorithmController.PATH_AlgorithmName, 
-				TEST_PROJ_NAME, TEST_ALG0_NAME);
-		
-		MetaData meta = getMetaData(TEST_session_project);
-		TEST_alg0.setDataSource(meta);
-		Mockito
-			.when(algorithmService.getByProjectAndName(eq(TEST_session_project), eq(TEST_ALG0_NAME)))
-			.thenReturn(Optional.of(TEST_alg0));
-		List<TreeNodeDTO> funcList = getFunctionsListDTO();
-		Mockito
-			.when(algorithmService.getFrameworksAsTreeNodes())
-			.thenReturn(funcList);
-		
-		Mockito
-			.when(algorithmService.getDataSource(Optional.of(TEST_alg0)))
-			.thenReturn(Optional.ofNullable(TEST_alg0.getDataSource()));
-		
-		DataPreview preview = getDataPreview();
-		Mockito
-			.when(dataStorageService.getPreview(eq(meta)))
-			.thenReturn(preview);
-		
-		ResultActions checkResult = this.mockMvc.perform(get(url)
-				.sessionAttr(ProjectController.SESSION_CurrentProject, TEST_session_project))
-			.andExpect(status().isOk())
-			.andExpect(view().name(views.project.algorithm.algorithm))
-			.andExpect(model().attribute(AlgorithmController.SESSION_CurrentAlgorithm, TEST_alg0))
-			.andExpect(model().attribute(AlgorithmController.MODEL_FunctionsList, 
-					jsonService.frameworksListToTreeView(funcList)))
-			;
-		
-		// model attributes set in addAttributesToModel
-		assertAlgorithmAttributesToModel(checkResult, Optional.of(TEST_alg0), preview);
-				
-		// AlgorithmController URLs:
-		assertAlgorithmURLs(checkResult, TEST_PROJ_NAME);
-	}
-	
-	@Test(expected=AlgorithmNotFoundException.class)
-	public final void testGetAlgorithm_NotExists() throws Throwable {
-		String notExists = "none";
-		String url = cookURL(AlgorithmController.BASE_URL+AlgorithmController.PATH_AlgorithmName, 
-				TEST_PROJ_NAME, notExists);
-		
-		Mockito
-			.when(algorithmService.getByProjectAndName(eq(TEST_session_project), eq(notExists)))
-			.thenReturn(Optional.ofNullable(null));
-		try {
-		this.mockMvc.perform(get(url)
-				.sessionAttr(ProjectController.SESSION_CurrentProject, TEST_session_project))
-		;
-		} catch (NestedServletException ex) {
-			throw ex.getCause();
-		}
-	}
-	
-	@Test
-	public final void testGetSelectedDataset() throws Exception {
-		String url = cookURL(AlgorithmController.URL_Select_DataSet+AlgorithmController.PATH_AlgorithmName, 
-				TEST_PROJ_NAME, TEST_DATA_NAME);
-		
-		Algorithm algorithm = TEST_alg0;
-		algorithm.setDataSource(getMetaData(TEST_session_project));
-		
-		Mockito
-			.when(algorithmService.setDataSource(eq(TEST_alg0), eq(TEST_DATA_NAME)))
-			.thenReturn(algorithm);
-		
-		String dataName= "dataname"; 
-		
-		Map<String, String> urlMap = new HashMap<>();
-		urlMap.put(ProjectController.PATH_VAR_ProjectName, TEST_PROJ_NAME);
-		urlMap.put(dataName, TEST_DATA_NAME);
-		
-		String expectedUrl = UriComponentsBuilder
-			.fromPath(DatasetController.BASE_URL + "/{" + dataName +"}")
-			.queryParam(DatasetController.REQPARAM_ShowCheckboxes, "true")
-			.queryParam(DatasetController.REQPARAM_ActionURL, 
-					URLEncoder.encode(AlgorithmController.URL_ModifyAttributes, "UTF-8"))
-			.buildAndExpand(urlMap)
-			.toUriString()
-		;
-		
-		this.mockMvc.perform(get(url)
-				.sessionAttr(ProjectController.SESSION_CurrentProject, TEST_session_project)
-				.sessionAttr(AlgorithmController.SESSION_CurrentAlgorithm, TEST_alg0)
-				.param(DatasetController.REQPARAM_ShowCheckboxes, "true"))
-			.andExpect(status().isFound())
-			.andExpect(redirectedUrl(expectedUrl))
-			.andExpect(flash().attribute(DatasetController.FLASH_MetaData, Optional.of(algorithm.getDataSource())))
-		;
-	}
-	
-	@Test
-	public final void testGetFunctionDetails_RequestParamSelects() throws Exception {
-		String url = cookURL(AlgorithmController.URL_GetFunctionDetails, TEST_PROJ_NAME);
-		final Long id = 1L;
-		FWMethod method = FWMethod.builder().name("testMethod").build();
-		
-		Mockito
-			.when(algorithmService.getMethod(eq(TEST_alg0), eq(id)))
-			.thenReturn(Optional.of(method));
-		
-		this.mockMvc.perform(get(url)
-				.sessionAttr(ProjectController.SESSION_CurrentProject, TEST_session_project)
-				.sessionAttr(AlgorithmController.SESSION_CurrentAlgorithm, TEST_alg0)
-				.param(AlgorithmController.REQPARAM_Method_Id,  id.toString()))
-		.andExpect(status().isOk())
-		.andExpect(view().name(views.getProject().algorithm.methodDetails))
-		.andExpect(model().attribute(AlgorithmController.MODEL_MethodDetails, equalTo(method)))
-		;
-	}
-	
-	@Test
-	public final void testGetFunctionDetails_FlashAttributeSelects() throws Exception {
-		String url = cookURL(AlgorithmController.URL_GetFunctionDetails, TEST_PROJ_NAME);
-		final Long id = 1L;
-		FWMethod method = FWMethod.builder().name("testMethod").build();
-		
+    @Autowired
+    private MockMvc mockMvc;
+
+    @Autowired
+    private Views views;
+
+    @Test
+    public final void testGetAlgorithmsList() throws Exception {
+        String url = cookURL(AlgorithmController.BASE_URL, TEST_PROJ_NAME);
+
+        Mockito
+                .when(algorithmService.getForProjectSortedBy(eq(TEST_session_project), eq("name")))
+                .thenReturn(TEST_algList);
+
+        ResultActions checkResult = this.mockMvc.perform(get(url)
+                .sessionAttr(ProjectController.SESSION_CurrentProject, TEST_session_project))
+                .andExpect(status().isOk())
+                .andExpect(view().name(views.project.getAlgorithmsList()))
+                .andExpect(model().attribute(AlgorithmController.MODEL_AlgorithmsList, TEST_algList))
+                .andExpect(model().attributeExists(AlgorithmController.MODEL_NewAlgorithm));
+
+        // AlgorithmController URLs:
+        assertAlgorithmURLs(checkResult, TEST_PROJ_NAME);
+    }
+
+    @Test
+    public final void testGetAlgorithm_withoutDataSource() throws Exception {
+        String url = cookURL(AlgorithmController.BASE_URL + AlgorithmController.PATH_AlgorithmName,
+                TEST_PROJ_NAME, TEST_ALG0_NAME);
+
+        Mockito
+                .when(algorithmService.getByProjectAndName(eq(TEST_session_project), eq(TEST_ALG0_NAME)))
+                .thenReturn(Optional.of(TEST_alg0));
+        List<TreeNodeDTO> funcList = getFunctionsListDTO();
+        Mockito
+                .when(algorithmService.getFrameworksAsTreeNodes())
+                .thenReturn(funcList);
+        Mockito
+                .when(algorithmService.getDataSource(Optional.of(TEST_alg0)))
+                .thenReturn(Optional.ofNullable(TEST_alg0.getDataSource()));
+
+        ResultActions checkResult = this.mockMvc.perform(get(url)
+                .sessionAttr(ProjectController.SESSION_CurrentProject, TEST_session_project))
+                .andExpect(status().isOk())
+                .andExpect(view().name(views.project.algorithm.algorithm))
+                .andExpect(model().attribute(AlgorithmController.SESSION_CurrentAlgorithm, TEST_alg0))
+                .andExpect(model().attribute(AlgorithmController.MODEL_FunctionsList,
+                        jsonService.frameworksListToTreeView(funcList)));
+
+        // model attributes set in addAttributesToModel
+        assertAlgorithmAttributesToModel(checkResult, Optional.of(TEST_alg0), null);
+
+        // AlgorithmController URLs:
+        assertAlgorithmURLs(checkResult, TEST_PROJ_NAME);
+    }
+
+    @Test
+    public final void testGetAlgorithm_withDataSource() throws Exception {
+        String url = cookURL(AlgorithmController.BASE_URL + AlgorithmController.PATH_AlgorithmName,
+                TEST_PROJ_NAME, TEST_ALG0_NAME);
+
+        MetaData meta = getMetaData(TEST_session_project);
+        TEST_alg0.setDataSource(meta);
+        Mockito
+                .when(algorithmService.getByProjectAndName(eq(TEST_session_project), eq(TEST_ALG0_NAME)))
+                .thenReturn(Optional.of(TEST_alg0));
+        List<TreeNodeDTO> funcList = getFunctionsListDTO();
+        Mockito
+                .when(algorithmService.getFrameworksAsTreeNodes())
+                .thenReturn(funcList);
+
+        Mockito
+                .when(algorithmService.getDataSource(Optional.of(TEST_alg0)))
+                .thenReturn(Optional.ofNullable(TEST_alg0.getDataSource()));
+
+        DataPreview preview = getDataPreview();
+        Mockito
+                .when(dataStorageService.getPreview(eq(meta)))
+                .thenReturn(preview);
+
+        ResultActions checkResult = this.mockMvc.perform(get(url)
+                .sessionAttr(ProjectController.SESSION_CurrentProject, TEST_session_project))
+                .andExpect(status().isOk())
+                .andExpect(view().name(views.project.algorithm.algorithm))
+                .andExpect(model().attribute(AlgorithmController.SESSION_CurrentAlgorithm, TEST_alg0))
+                .andExpect(model().attribute(AlgorithmController.MODEL_FunctionsList,
+                        jsonService.frameworksListToTreeView(funcList)));
+
+        // model attributes set in addAttributesToModel
+        assertAlgorithmAttributesToModel(checkResult, Optional.of(TEST_alg0), preview);
+
+        // AlgorithmController URLs:
+        assertAlgorithmURLs(checkResult, TEST_PROJ_NAME);
+    }
+
+    @Test(expected = AlgorithmNotFoundException.class)
+    public final void testGetAlgorithm_NotExists() throws Throwable {
+        String notExists = "none";
+        String url = cookURL(AlgorithmController.BASE_URL + AlgorithmController.PATH_AlgorithmName,
+                TEST_PROJ_NAME, notExists);
+
+        Mockito
+                .when(algorithmService.getByProjectAndName(eq(TEST_session_project), eq(notExists)))
+                .thenReturn(Optional.ofNullable(null));
+        try {
+            this.mockMvc.perform(get(url)
+                    .sessionAttr(ProjectController.SESSION_CurrentProject, TEST_session_project))
+            ;
+        } catch (NestedServletException ex) {
+            throw ex.getCause();
+        }
+    }
+
+    @Test
+    public final void testGetSelectedDataset() throws Exception {
+        String url = cookURL(AlgorithmController.URL_Select_DataSet + AlgorithmController.PATH_AlgorithmName,
+                TEST_PROJ_NAME, TEST_DATA_NAME);
+
+        Algorithm algorithm = TEST_alg0;
+        algorithm.setDataSource(getMetaData(TEST_session_project));
+
+        Mockito
+                .when(algorithmService.setDataSource(eq(TEST_alg0), eq(TEST_DATA_NAME)))
+                .thenReturn(algorithm);
+
+        String dataName = "dataname";
+
+        Map<String, String> urlMap = new HashMap<>();
+        urlMap.put(ProjectController.PATH_VAR_ProjectName, TEST_PROJ_NAME);
+        urlMap.put(dataName, TEST_DATA_NAME);
+
+        String expectedUrl = UriComponentsBuilder
+                .fromPath(DatasetController.BASE_URL + "/{" + dataName + "}")
+                .queryParam(DatasetController.REQPARAM_ShowCheckboxes, "true")
+                .queryParam(DatasetController.REQPARAM_ActionURL,
+                        URLEncoder.encode(AlgorithmController.URL_ModifyAttributes, "UTF-8"))
+                .buildAndExpand(urlMap)
+                .toUriString();
+
+        this.mockMvc.perform(get(url)
+                .sessionAttr(ProjectController.SESSION_CurrentProject, TEST_session_project)
+                .sessionAttr(AlgorithmController.SESSION_CurrentAlgorithm, TEST_alg0)
+                .param(DatasetController.REQPARAM_ShowCheckboxes, "true"))
+                .andExpect(status().isFound())
+                .andExpect(redirectedUrl(expectedUrl))
+                .andExpect(flash().attribute(DatasetController.FLASH_MetaData, Optional.of(algorithm.getDataSource())))
+        ;
+    }
+
+    @Test
+    public final void testGetFunctionDetails_RequestParamSelects() throws Exception {
+        String url = cookURL(AlgorithmController.URL_GetFunctionDetails, TEST_PROJ_NAME);
+        final Long id = 1L;
+        FWMethod method = FWMethod.builder().name("testMethod").build();
+
+        Mockito
+                .when(algorithmService.getMethod(eq(TEST_alg0), eq(id)))
+                .thenReturn(Optional.of(method));
+
+        this.mockMvc.perform(get(url)
+                .sessionAttr(ProjectController.SESSION_CurrentProject, TEST_session_project)
+                .sessionAttr(AlgorithmController.SESSION_CurrentAlgorithm, TEST_alg0)
+                .param(AlgorithmController.REQPARAM_Method_Id, id.toString()))
+                .andExpect(status().isOk())
+                .andExpect(view().name(views.getProject().algorithm.methodDetails))
+                .andExpect(model().attribute(AlgorithmController.MODEL_MethodDetails, equalTo(method)))
+        ;
+    }
+
+    @Test
+    public final void testGetFunctionDetails_FlashAttributeSelects() throws Exception {
+        String url = cookURL(AlgorithmController.URL_GetFunctionDetails, TEST_PROJ_NAME);
+        final Long id = 1L;
+        FWMethod method = FWMethod.builder().name("testMethod").build();
+
 //		Mockito
 //			.when(algorithmService.getMethod(eq(TEST_alg0), eq(id)))
 //			.thenReturn(Optional.of(method));
-		
-		this.mockMvc.perform(get(url)
-				.sessionAttr(ProjectController.SESSION_CurrentProject, TEST_session_project)
-				.sessionAttr(AlgorithmController.SESSION_CurrentAlgorithm, TEST_alg0)
-				.flashAttr(AlgorithmController.FLASH_Method, Optional.of(method))
-				.param(AlgorithmController.REQPARAM_Method_Id,  id.toString()))
-		.andExpect(status().isOk())
-		.andExpect(view().name(views.getProject().algorithm.methodDetails))
-		.andExpect(model().attribute(AlgorithmController.MODEL_MethodDetails, equalTo(method)))
-		;
-	}
-	
+
+        this.mockMvc.perform(get(url)
+                .sessionAttr(ProjectController.SESSION_CurrentProject, TEST_session_project)
+                .sessionAttr(AlgorithmController.SESSION_CurrentAlgorithm, TEST_alg0)
+                .flashAttr(AlgorithmController.FLASH_Method, Optional.of(method))
+                .param(AlgorithmController.REQPARAM_Method_Id, id.toString()))
+                .andExpect(status().isOk())
+                .andExpect(view().name(views.getProject().algorithm.methodDetails))
+                .andExpect(model().attribute(AlgorithmController.MODEL_MethodDetails, equalTo(method)))
+        ;
+    }
+
 //	@Test
 //	public final void testPostSaveDataAtributes() throws Exception {
 //		String url = DatasetTestUtils.cookURL(AlgorithmController.URL_ModifyAttributes, 
@@ -287,7 +283,6 @@ public class AlgorithmControllerTest {
 //					
 //					
 //	}
-	
-	
+
 
 }

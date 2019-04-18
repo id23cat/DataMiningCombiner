@@ -27,57 +27,57 @@ import evm.dmc.weka.WekaTestBaseClass;
 @DataJpaTest  // TODO: remove where unneeded
 public class HistogramTest extends WekaTestBaseClass {
 
-	@Autowired
-	Histogram histogram;
+    @Autowired
+    Histogram histogram;
 
-	@Test
-	public final void testSaveToPng() throws IOException {
-		histogram.setAttribIndexesToPlot(data.getIndexByName("Account length"));
-		List<String> list = histogram.saveToPng(data, "Data/test");
-		assertFalse(list.isEmpty());
-		assertEquals(1, list.size());
-		assertNotNull(list.get(0));
-		File file = new File(list.get(0));
-		assertTrue(file.length() > 0);
-		file.delete();
+    @Test
+    public final void testSaveToPng() throws IOException {
+        histogram.setAttribIndexesToPlot(data.getIndexByName("Account length"));
+        List<String> list = histogram.saveToPng(data, "Data/test");
+        assertFalse(list.isEmpty());
+        assertEquals(1, list.size());
+        assertNotNull(list.get(0));
+        File file = new File(list.get(0));
+        assertTrue(file.length() > 0);
+        file.delete();
 
-	}
+    }
 
-	@Test
-	public final void testSaveToPngSeveralArgs() throws IOException {
-		histogram
-				.setAttribIndexesToPlot(data.getIndexByName("State"), data.getIndexByName("Account length"),
-						data.getIndexByName("Total day minutes"), data.getIndexByName("Total day calls"))
-				.setWidth(2048);
+    @Test
+    public final void testSaveToPngSeveralArgs() throws IOException {
+        histogram
+                .setAttribIndexesToPlot(data.getIndexByName("State"), data.getIndexByName("Account length"),
+                        data.getIndexByName("Total day minutes"), data.getIndexByName("Total day calls"))
+                .setWidth(2048);
 
-		List<String> list = histogram.saveToPng(data, "Data/testSeveral");
-		assertFalse(list.isEmpty());
-		assertEquals(4, list.size());
-		for (String fname : list) {
-			assertNotNull(fname);
-			File file = new File(fname);
-			assertTrue(file.length() > 0);
-			// file.delete();
-		}
+        List<String> list = histogram.saveToPng(data, "Data/testSeveral");
+        assertFalse(list.isEmpty());
+        assertEquals(4, list.size());
+        for (String fname : list) {
+            assertNotNull(fname);
+            File file = new File(fname);
+            assertTrue(file.length() > 0);
+            // file.delete();
+        }
 
-	}
+    }
 
-	@Test
-	public final void testGetBufferedImage() {
-		histogram.setAttribIndexesToPlot(data.getIndexByName("Account length"));
-		List<BufferedImage> list = histogram.getBufferedImage(data);
+    @Test
+    public final void testGetBufferedImage() {
+        histogram.setAttribIndexesToPlot(data.getIndexByName("Account length"));
+        List<BufferedImage> list = histogram.getBufferedImage(data);
 
-		assertFalse(list.isEmpty());
-		assertEquals(1, list.size());
-		assertNotNull(list.get(0));
-		assertNotNull(list.get(0).getData().getDataBuffer());
+        assertFalse(list.isEmpty());
+        assertEquals(1, list.size());
+        assertNotNull(list.get(0));
+        assertNotNull(list.get(0).getData().getDataBuffer());
 
-		// this gets the actual Raster data as a byte array
-		// int[] byteArrayToCheck = ((DataBufferInt)
-		// histogram.getBufferedImage(data).get(0).getData().getDataBuffer())
-		// .getData();
+        // this gets the actual Raster data as a byte array
+        // int[] byteArrayToCheck = ((DataBufferInt)
+        // histogram.getBufferedImage(data).get(0).getData().getDataBuffer())
+        // .getData();
 
-		// assertArrayEquals(byteArrayTest, byteArrayToCheck);
-	}
+        // assertArrayEquals(byteArrayTest, byteArrayToCheck);
+    }
 
 }

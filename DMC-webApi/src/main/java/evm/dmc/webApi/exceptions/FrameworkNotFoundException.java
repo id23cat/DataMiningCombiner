@@ -5,15 +5,17 @@ package evm.dmc.webApi.exceptions;
  */
 public class FrameworkNotFoundException extends NotFoundException {
 
-	/** Defined to avoid problems with serialization */
-	private static final long serialVersionUID = 8935412243515578391L;
+    /**
+     * Defined to avoid problems with serialization
+     */
+    private static final long serialVersionUID = 8935412243515578391L;
 
-	public FrameworkNotFoundException(String message) {
-		super(message);
-	}
+    public FrameworkNotFoundException(String message) {
+        super(message);
+    }
 
-	public FrameworkNotFoundException(String message, Throwable cause) {
-		super(message, cause);
-	}
+    public FrameworkNotFoundException(String message, Throwable cause) {
+        super(message, cause);
+    }
 
 }

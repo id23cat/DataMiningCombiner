@@ -28,94 +28,94 @@ import java.util.List;
 @Slf4j
 public class RestProjectController extends AbstractRestCrudController<ProjectDto> {
 
-	final static String BASE_URL = "/rest/{accountId}/project";
+    final static String BASE_URL = "/rest/{accountId}/project";
 
-	private final ModelMapper modelMapper;
-	private final ProjectService projectService;
-	private final AccountService accountService;
+    private final ModelMapper modelMapper;
+    private final ProjectService projectService;
+    private final AccountService accountService;
 
-	@Autowired
-	public RestProjectController(
-			ModelMapper modelMapper,
-			ProjectService projectService,
-			AccountService accountService) {
+    @Autowired
+    public RestProjectController(
+            ModelMapper modelMapper,
+            ProjectService projectService,
+            AccountService accountService) {
 
-		this.modelMapper = modelMapper;
-		this.projectService = projectService;
-		this.accountService = accountService;
-	}
+        this.modelMapper = modelMapper;
+        this.projectService = projectService;
+        this.accountService = accountService;
+    }
 
-	@Override
-	@PostMapping
-	@HateoasRelation("addProject")
-	public ProjectDto addInstance(ProjectDto dto, @PathVariable Long accountId, Long projectId) {
+    @Override
+    @PostMapping
+    @HateoasRelation("addProject")
+    public ProjectDto addInstance(ProjectDto dto, @PathVariable Long accountId, Long projectId) {
 
-		Account account = accountService.get(accountId)
-				.orElseThrow(AccountNotFoundException.supplier(accountId));
+        Account account = accountService.get(accountId)
+                .orElseThrow(AccountNotFoundException.supplier(accountId));
 
-		ProjectModel projectModel = convertToEntity(dto);
-		projectModel = projectService.addProject(account.getId(), projectModel);
+        ProjectModel projectModel = convertToEntity(dto);
+        projectModel = projectService.addProject(account.getId(), projectModel);
 
-		return convertToDto(projectModel);
-	}
+        return convertToDto(projectModel);
+    }
 
-	@Override
-	@PutMapping
-	@HateoasRelation("updateProject")
-	public ProjectDto updateInstance(ProjectDto dto, @PathVariable Long accountId, Long projectId) {
+    @Override
+    @PutMapping
+    @HateoasRelation("updateProject")
+    public ProjectDto updateInstance(ProjectDto dto, @PathVariable Long accountId, Long projectId) {
 
-		ProjectModel model = convertToEntity(dto);
-		projectService.save(model);
+        ProjectModel model = convertToEntity(dto);
+        projectService.save(model);
 
-		return convertToDto(projectService.getById(dto.getDtoId())
-				.orElseThrow(ProjectNotFoundException.supplier(dto.getDtoId())));
-	}
+        return convertToDto(projectService.getById(dto.getDtoId())
+                .orElseThrow(ProjectNotFoundException.supplier(dto.getDtoId())));
+    }
 
-	@Override
-	@DeleteMapping("/{projectId}")
-	@HateoasRelation("deleteProject")
-	public ProjectDto deleteInstance(@PathVariable Long accountId, @PathVariable Long projectId, Long entityId) {
+    @Override
+    @DeleteMapping("/{projectId}")
+    @HateoasRelation("deleteProject")
+    public ProjectDto deleteInstance(@PathVariable Long accountId, @PathVariable Long projectId, Long entityId) {
 
-		Account account = accountService.get(accountId)
-				.orElseThrow(AccountNotFoundException.supplier(accountId));
+        Account account = accountService.get(accountId)
+                .orElseThrow(AccountNotFoundException.supplier(accountId));
 
-		ProjectDto dto = convertToDto(projectService.getById(projectId)
-				.orElseThrow(ProjectNotFoundException.supplier(projectId)));
+        ProjectDto dto = convertToDto(projectService.getById(projectId)
+                .orElseThrow(ProjectNotFoundException.supplier(projectId)));
 
-		projectService.deleteById(account, dto.getDtoId());
-		return dto;
-	}
+        projectService.deleteById(account, dto.getDtoId());
+        return dto;
+    }
 
-	@Override
-	@GetMapping("/{projectId}")
-	@HateoasRelation("getProject")
-	public ProjectDto getInstance(@PathVariable Long accountId, @PathVariable Long projectId, Long entityId) {
+    @Override
+    @GetMapping("/{projectId}")
+    @HateoasRelation("getProject")
+    public ProjectDto getInstance(@PathVariable Long accountId, @PathVariable Long projectId, Long entityId) {
 
-		return convertToDto(projectService.getById(projectId)
-				.orElseThrow(ProjectNotFoundException.supplier(projectId)));
-	}
+        return convertToDto(projectService.getById(projectId)
+                .orElseThrow(ProjectNotFoundException.supplier(projectId)));
+    }
 
-	@Override
-	@GetMapping("/all")
-	@HateoasRelation("getProjectList")
-	public List<ProjectDto> getInstanceList(@PathVariable Long accountId, Long projectId) {
+    @Override
+    @GetMapping("/all")
+    @HateoasRelation("getProjectList")
+    public List<ProjectDto> getInstanceList(@PathVariable Long accountId, Long projectId) {
 
-		List<ProjectModel> modelList = projectService.getAllAsList();
-		List<ProjectDto> dtoList = new ArrayList<>();
-		for (ProjectModel model : modelList) {
-			dtoList.add(convertToDto(model));
-		}
+        List<ProjectModel> modelList = projectService.getAllAsList();
+        List<ProjectDto> dtoList = new ArrayList<>();
+        for (ProjectModel model : modelList) {
+            dtoList.add(convertToDto(model));
+        }
 
-		return dtoList;
-	}
+        return dtoList;
+    }
 
-	private ProjectDto convertToDto(ProjectModel account) {
+    private ProjectDto convertToDto(ProjectModel account) {
 
-		return modelMapper.map(account, ProjectDto.class);
-	}
+        return modelMapper.map(account, ProjectDto.class);
+    }
 
-	private ProjectModel convertToEntity(ProjectDto dto) {
+    private ProjectModel convertToEntity(ProjectDto dto) {
 
-		return modelMapper.map(dto, ProjectModel.class);
-	}
+        return modelMapper.map(dto, ProjectModel.class);
+    }
 }

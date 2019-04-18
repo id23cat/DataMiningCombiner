@@ -10,7 +10,7 @@ import org.springframework.context.annotation.Import;
 // @ComponentScan(basePackages="evm.dmc.core.arithmetic")
 // @ComponentScan(basePackageClasses={/*AbstractArithmeticFunction.class,
 // ArithmeticContext.class*/})
-@ComponentScan( basePackages="evm.dmc.core, evm.dmc.weka")
+@ComponentScan(basePackages = "evm.dmc.core, evm.dmc.weka")
 //@Import({evm.dmc.weka.DMCWekaConfig.class})
 public class DMCCoreConfig {
 

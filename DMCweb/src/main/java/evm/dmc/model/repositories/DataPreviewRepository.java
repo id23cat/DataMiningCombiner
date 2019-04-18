@@ -10,15 +10,15 @@ import org.springframework.transaction.annotation.Transactional;
 
 import evm.dmc.api.model.datapreview.DataPreview;
 
-public interface DataPreviewRepository extends JpaRepository<DataPreview, Long>{
-	Optional<DataPreview> findByMetaDataId(Long metaDataId);
-	
-	@Query("SELECT DISTINCT preview.metaDataId FROM DataPreview preview")
-	Set<Long> findDistinctMetaDataId();
+public interface DataPreviewRepository extends JpaRepository<DataPreview, Long> {
+    Optional<DataPreview> findByMetaDataId(Long metaDataId);
 
-	@Transactional(propagation=Propagation.REQUIRES_NEW)
-	void deleteByMetaDataId(Long metaDataId);
-	
-//	void deleteByMetaDataIdIn(Stream<Long> metaDataIds);
-	void deleteByMetaDataIdIn(Set<Long> metaDataIds);
+    @Query("SELECT DISTINCT preview.metaDataId FROM DataPreview preview")
+    Set<Long> findDistinctMetaDataId();
+
+    @Transactional(propagation = Propagation.REQUIRES_NEW)
+    void deleteByMetaDataId(Long metaDataId);
+
+    //	void deleteByMetaDataIdIn(Stream<Long> metaDataIds);
+    void deleteByMetaDataIdIn(Set<Long> metaDataIds);
 }

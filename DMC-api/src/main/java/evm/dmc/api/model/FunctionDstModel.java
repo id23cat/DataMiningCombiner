@@ -15,41 +15,41 @@ import lombok.NoArgsConstructor;
 
 @Data
 //@NoArgsConstructor
-@Builder(builderMethodName="dstBuilder")
+@Builder(builderMethodName = "dstBuilder")
 @AllArgsConstructor
-@EqualsAndHashCode(callSuper=true)
+@EqualsAndHashCode(callSuper = true)
 @Entity
 public class FunctionDstModel extends FunctionModel {
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = -2340660026774788869L;
+    /**
+     *
+     */
+    private static final long serialVersionUID = -2340660026774788869L;
 
-	public final static String DST_PROPERTY_NAME = "destination";
-	
-	private String destination = null;
-	
-	@Enumerated(EnumType.STRING)
-	@NotNull
-	@Builder.Default
-	private DataSrcDstType typeSrcDst = DataSrcDstType.LOCAL_FS;
-	
-//	public FunctionDstModel(){
+    public final static String DST_PROPERTY_NAME = "destination";
+
+    private String destination = null;
+
+    @Enumerated(EnumType.STRING)
+    @NotNull
+    @Builder.Default
+    private DataSrcDstType typeSrcDst = DataSrcDstType.LOCAL_FS;
+
+    //	public FunctionDstModel(){
 //		super();
 //	}
 //	
-	public FunctionDstModel(FunctionModel funmodel){
-		super(funmodel.getId(), 
-				funmodel.getName(), 
-				funmodel.getFramework(), 
-				funmodel.getType(), 
-				funmodel.getProperties(), 
-				funmodel.getDescription());
-		if(funmodel instanceof FunctionDstModel) {
-			this.destination = ((FunctionDstModel) funmodel).destination;
-			this.typeSrcDst = ((FunctionDstModel) funmodel).typeSrcDst;
-		}
-	}
+    public FunctionDstModel(FunctionModel funmodel) {
+        super(funmodel.getId(),
+                funmodel.getName(),
+                funmodel.getFramework(),
+                funmodel.getType(),
+                funmodel.getProperties(),
+                funmodel.getDescription());
+        if (funmodel instanceof FunctionDstModel) {
+            this.destination = ((FunctionDstModel) funmodel).destination;
+            this.typeSrcDst = ((FunctionDstModel) funmodel).typeSrcDst;
+        }
+    }
 
 //	/**
 //	 * @return the sourceDest

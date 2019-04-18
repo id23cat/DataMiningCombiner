@@ -1,10 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <data-sources>
-	<data-source id="h2_embedded-161fb8bb41c-174cfaf3cfe61d5a" provider="generic" driver="h2_embedded" name="H2 - dmc" save-password="true" show-system-objects="true" read-only="false">
-		<connection server="" database="mem:dmc" url="jdbc:h2:mem:dmc" user="sa" type="dev"/>
-	</data-source>
-	<data-source id="h2_embedded-161fb8d7579-45b9086e26a0d7e7" provider="generic" driver="h2_embedded" name="H2 - dmc" save-password="true" show-system-objects="true" read-only="false">
-		<connection server="" database="mem:dmc" url="jdbc:h2:mem:dmc" user="sa" type="dev"/>
-	</data-source>
-	<filters/>
+    <data-source id="h2_embedded-161fb8bb41c-174cfaf3cfe61d5a" provider="generic" driver="h2_embedded" name="H2 - dmc"
+                 save-password="true" show-system-objects="true" read-only="false">
+        <connection server="" database="mem:dmc" url="jdbc:h2:mem:dmc" user="sa" type="dev"/>
+    </data-source>
+    <data-source id="h2_embedded-161fb8d7579-45b9086e26a0d7e7" provider="generic" driver="h2_embedded" name="H2 - dmc"
+                 save-password="true" show-system-objects="true" read-only="false">
+        <connection server="" database="mem:dmc" url="jdbc:h2:mem:dmc" user="sa" type="dev"/>
+    </data-source>
+    <filters/>
 </data-sources>

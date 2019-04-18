@@ -1,135 +1,135 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
-	<modelVersion>4.0.0</modelVersion>
-	
-	<!-- <groupId>by.bsuir.evm</groupId> -->
-	<artifactId>dmcombiner</artifactId>
-	<!-- <version>0.0.1-SNAPSHOT</version> -->
-	<packaging>jar</packaging>
-	
-	<parent>
-		<groupId>by.bsuir.evm</groupId>
-		<artifactId>DMC</artifactId>
-		<version>0.0.1-SNAPSHOT</version>
-	</parent>
-	
-	<!-- <parent>
-		<groupId>org.springframework.boot</groupId>
-		<artifactId>spring-boot-starter-parent</artifactId>
-		<version>1.5.9.RELEASE</version>
-		<relativePath />
-	</parent> -->
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
 
-	<!-- <name>dmcombiner</name> -->
-	<description>Combiner of DM approaches</description>
+    <!-- <groupId>by.bsuir.evm</groupId> -->
+    <artifactId>dmcombiner</artifactId>
+    <!-- <version>0.0.1-SNAPSHOT</version> -->
+    <packaging>jar</packaging>
 
-	<properties>
-		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
-		<java.version>1.8</java.version>
-		<stefanbirkner.system-rulesVersion>1.16.1</stefanbirkner.system-rulesVersion>
-		<weka.weka-devVersion>3.9.1</weka.weka-devVersion>
-		<jfree.jfreechartVersion>1.0.19</jfree.jfreechartVersion>
-		<apache.commons-lang3Version>3.6</apache.commons-lang3Version>
-		<dmc-apiVersion>${project.version}</dmc-apiVersion>
-	</properties>
+    <parent>
+        <groupId>by.bsuir.evm</groupId>
+        <artifactId>DMC</artifactId>
+        <version>0.0.1-SNAPSHOT</version>
+    </parent>
 
-	<dependencies>
-		<dependency>
-			<groupId>by.bsuir.evm</groupId>
-			<artifactId>DMC-api</artifactId>
-			<version>${dmc-apiVersion}</version>
-		</dependency>
+    <!-- <parent>
+        <groupId>org.springframework.boot</groupId>
+        <artifactId>spring-boot-starter-parent</artifactId>
+        <version>1.5.9.RELEASE</version>
+        <relativePath />
+    </parent> -->
 
-<!-- 		<dependency>
-			<groupId>org.springframework.boot</groupId>
-			<artifactId>spring-boot-starter</artifactId>
-		</dependency>
- -->
-		<!-- <dependency>
+    <!-- <name>dmcombiner</name> -->
+    <description>Combiner of DM approaches</description>
+
+    <properties>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
+        <java.version>1.8</java.version>
+        <stefanbirkner.system-rulesVersion>1.16.1</stefanbirkner.system-rulesVersion>
+        <weka.weka-devVersion>3.9.1</weka.weka-devVersion>
+        <jfree.jfreechartVersion>1.0.19</jfree.jfreechartVersion>
+        <apache.commons-lang3Version>3.6</apache.commons-lang3Version>
+        <dmc-apiVersion>${project.version}</dmc-apiVersion>
+    </properties>
+
+    <dependencies>
+        <dependency>
+            <groupId>by.bsuir.evm</groupId>
+            <artifactId>DMC-api</artifactId>
+            <version>${dmc-apiVersion}</version>
+        </dependency>
+
+        <!-- 		<dependency>
+                    <groupId>org.springframework.boot</groupId>
+                    <artifactId>spring-boot-starter</artifactId>
+                </dependency>
+         -->
+        <!-- <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-actuator</artifactId>
         </dependency> -->
-		
-<!-- 		<dependency>
-			<groupId>org.springframework.boot</groupId>
-			<artifactId>spring-boot-devtools</artifactId>
-			<scope>runtime</scope>
-		</dependency>
- -->
-		<dependency>
-			<groupId>org.springframework.boot</groupId>
-			<artifactId>spring-boot-starter-test</artifactId>
-			<scope>test</scope>
-		</dependency>
-		<dependency>
-	    	<groupId>com.h2database</groupId>
-		    <artifactId>h2</artifactId>
-		    <scope>test</scope>
-		</dependency>
-		<dependency>
+
+        <!-- 		<dependency>
+                    <groupId>org.springframework.boot</groupId>
+                    <artifactId>spring-boot-devtools</artifactId>
+                    <scope>runtime</scope>
+                </dependency>
+         -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-test</artifactId>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>com.h2database</groupId>
+            <artifactId>h2</artifactId>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-data-jpa</artifactId>
-           <!--  <scope>test</scope> -->
+            <!--  <scope>test</scope> -->
         </dependency>
 
-		<!-- https://mvnrepository.com/artifact/org.mockito/mockito-core -->
-		<dependency>
-			<groupId>org.mockito</groupId>
-			<artifactId>mockito-core</artifactId>
-			<scope>test</scope>
-		</dependency>
+        <!-- https://mvnrepository.com/artifact/org.mockito/mockito-core -->
+        <dependency>
+            <groupId>org.mockito</groupId>
+            <artifactId>mockito-core</artifactId>
+            <scope>test</scope>
+        </dependency>
 
-		<!-- https://mvnrepository.com/artifact/com.github.stefanbirkner/system-rules -->
-		<dependency>
-			<groupId>com.github.stefanbirkner</groupId>
-			<artifactId>system-rules</artifactId>
-			<version>${stefanbirkner.system-rulesVersion}</version>
-		</dependency>
-			
-			
-		<!-- https://mvnrepository.com/artifact/nz.ac.waikato.cms.weka/weka-dev -->
- 		<dependency>
-		    <groupId>nz.ac.waikato.cms.weka</groupId>
-		    <artifactId>weka-dev</artifactId>
-		    <version>${weka.weka-devVersion}</version>
-		</dependency>
+        <!-- https://mvnrepository.com/artifact/com.github.stefanbirkner/system-rules -->
+        <dependency>
+            <groupId>com.github.stefanbirkner</groupId>
+            <artifactId>system-rules</artifactId>
+            <version>${stefanbirkner.system-rulesVersion}</version>
+        </dependency>
 
-		<!-- https://mvnrepository.com/artifact/nz.ac.waikato.cms.weka/weka-stable -->
-<!-- 		<dependency>
-		    <groupId>nz.ac.waikato.cms.weka</groupId>
-		    <artifactId>weka-stable</artifactId>
-		    <version>3.8.1</version>
-		</dependency>
- -->		
-		<!-- https://mvnrepository.com/artifact/org.jfree/jfreechart -->
-		<dependency>
-			<groupId>org.jfree</groupId>
-			<artifactId>jfreechart</artifactId>
-			<version>${jfree.jfreechartVersion}</version>
-		</dependency>
-		<!-- https://mvnrepository.com/artifact/org.apache.commons/commons-lang3 -->
-		<dependency>
-			<groupId>org.apache.commons</groupId>
-			<artifactId>commons-lang3</artifactId>
-			<version>${apache.commons-lang3Version}</version>
-		</dependency>
 
-	</dependencies>
+        <!-- https://mvnrepository.com/artifact/nz.ac.waikato.cms.weka/weka-dev -->
+        <dependency>
+            <groupId>nz.ac.waikato.cms.weka</groupId>
+            <artifactId>weka-dev</artifactId>
+            <version>${weka.weka-devVersion}</version>
+        </dependency>
 
-	<build>
-	<plugins>
-<!-- 		<plugin>
-			<groupId>org.springframework.boot</groupId>
-			<artifactId>spring-boot-maven-plugin</artifactId>
-			<configuration>
-				<includeSystemScope>true</includeSystemScope>
-			</configuration>
-		</plugin>
- -->
-	</plugins>
-	</build>
+        <!-- https://mvnrepository.com/artifact/nz.ac.waikato.cms.weka/weka-stable -->
+        <!-- 		<dependency>
+                    <groupId>nz.ac.waikato.cms.weka</groupId>
+                    <artifactId>weka-stable</artifactId>
+                    <version>3.8.1</version>
+                </dependency>
+         -->
+        <!-- https://mvnrepository.com/artifact/org.jfree/jfreechart -->
+        <dependency>
+            <groupId>org.jfree</groupId>
+            <artifactId>jfreechart</artifactId>
+            <version>${jfree.jfreechartVersion}</version>
+        </dependency>
+        <!-- https://mvnrepository.com/artifact/org.apache.commons/commons-lang3 -->
+        <dependency>
+            <groupId>org.apache.commons</groupId>
+            <artifactId>commons-lang3</artifactId>
+            <version>${apache.commons-lang3Version}</version>
+        </dependency>
+
+    </dependencies>
+
+    <build>
+        <plugins>
+            <!-- 		<plugin>
+                        <groupId>org.springframework.boot</groupId>
+                        <artifactId>spring-boot-maven-plugin</artifactId>
+                        <configuration>
+                            <includeSystemScope>true</includeSystemScope>
+                        </configuration>
+                    </plugin>
+             -->
+        </plugins>
+    </build>
 
 
 </project>

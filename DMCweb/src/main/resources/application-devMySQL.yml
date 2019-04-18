@@ -22,7 +22,7 @@ logging:
     org.hibernate.SQL: DEBUG
     org.hibernate.type.descriptor.sql.BasicBinder: TRACE
     evm.dmc.web: DEBUG
-    
+
 views2:
   showtable: /showtable/table
   hellorest:  /helloREST

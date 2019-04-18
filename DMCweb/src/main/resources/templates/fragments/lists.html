@@ -4,98 +4,99 @@
       layout:decorate="~{layouts/sidebarlayout}">
 
 <body>
-	<div th:fragment="deletable_list(id, title, action, backBean, valuesList, refBase)">
-		<h3>
-			<span th:text="${title}"></span>
-		</h3>
-		<form method="post" 
-			th:action="${action}"
-			th:object="${backBean}">
-			<div class="col-sm-6 form-group pull-left">
-				<div th:each="value, stat : ${valuesList}">
-					<h4>
-						<input th:id="${id}+'_'+${value.name}" type="checkbox" 
-							th:field="*{names}"
-							th:value="${value.name}" /> 
-						
-						<a	th:href="@{__${refBase}__/__${value.name}__}">
-							<span th:text="${value.name}">Algorithm name</span>
-						</a>
-						<br>
-					</h4>
-				</div>
-				<!-- </ul> -->
-				<div th:if="${not #lists.isEmpty(valuesList)}">
-					<button th:id="deleteButton_ + ${id}" data-toggle="confirmation"
-						class="btn btn-primary" type="submit" disabled>Delete</button>
-					<!-- <script>
-						$('[data-toggle="confirmation"]')
-							.confirmation()
-					</script> -->
-				</div>
+<div th:fragment="deletable_list(id, title, action, backBean, valuesList, refBase)">
+    <h3>
+        <span th:text="${title}"></span>
+    </h3>
+    <form method="post"
+          th:action="${action}"
+          th:object="${backBean}">
+        <div class="col-sm-6 form-group pull-left">
+            <div th:each="value, stat : ${valuesList}">
+                <h4>
+                    <input th:id="${id}+'_'+${value.name}" type="checkbox"
+                           th:field="*{names}"
+                           th:value="${value.name}"/>
 
-			</div>
-		</form>
-		<script >
-			$(function() {
-				var checkboxes = $("input[id^='[[${id}]]_']")
-				var submitButt = $("#deleteButton_[[${id}]]");
-				
-				checkboxes.click(function() {
-					if (checkboxes.is(":checked")) {
-						submitButt.attr("disabled", false);
-					} else {
-						submitButt.attr("disabled", true);
-					}
-				});
-			});
-		</script>
-	</div>
-	
-	<div th:fragment="selectable_datasets_list(id, title, action, backBean, 
+                    <a th:href="@{__${refBase}__/__${value.name}__}">
+                        <span th:text="${value.name}">Algorithm name</span>
+                    </a>
+                    <br>
+                </h4>
+            </div>
+            <!-- </ul> -->
+            <div th:if="${not #lists.isEmpty(valuesList)}">
+                <button th:id="deleteButton_ + ${id}" data-toggle="confirmation"
+                        class="btn btn-primary" type="submit" disabled>Delete
+                </button>
+                <!-- <script>
+                    $('[data-toggle="confirmation"]')
+                        .confirmation()
+                </script> -->
+            </div>
+
+        </div>
+    </form>
+    <script>
+        $(function () {
+            var checkboxes = $("input[id^='[[${id}]]_']")
+            var submitButt = $("#deleteButton_[[${id}]]");
+
+            checkboxes.click(function () {
+                if (checkboxes.is(":checked")) {
+                    submitButt.attr("disabled", false);
+                } else {
+                    submitButt.attr("disabled", true);
+                }
+            });
+        });
+    </script>
+</div>
+
+<div th:fragment="selectable_datasets_list(id, title, action, backBean,
 		valuesList, selectedValue, previewURL, preview, modifyDataUrl)">
-		<h3>
-			<span th:text="${title}"></span>
-			<!-- <span th:text="${selectedValue}"></span> -->
-		</h3>
-		<div class="row">
-		<form th:id="'form_select_' + ${id}"
-			method="post" 
-			th:action="${action}"
-			th:object="${backBean}">
-			<div class="col-sm-6 form-group pull-left" th:with="defaultSelected=' -- select an dataset -- '">
-				<select
-						class="form-control" th:id="'selector_id_' + ${id}"
-						th:onchange="'selectAndGetPreview(
+    <h3>
+        <span th:text="${title}"></span>
+        <!-- <span th:text="${selectedValue}"></span> -->
+    </h3>
+    <div class="row">
+        <form th:id="'form_select_' + ${id}"
+              method="post"
+              th:action="${action}"
+              th:object="${backBean}">
+            <div class="col-sm-6 form-group pull-left" th:with="defaultSelected=' -- select an dataset -- '">
+                <select
+                        class="form-control" th:id="'selector_id_' + ${id}"
+                        th:onchange="'selectAndGetPreview(
 								\'#previewTable\', 
 								this.value,
 								\''+ ${action} +'\')'">
-								<!-- \''+ ${previewURL} +'\')'"> -->
-					<!-- th:field="*{attributes['__name__'].type}" -->
-					<option th:if="${selectedValue==null}" disabled selected value=" "> -- select an dataset -- </option> 
-					<option
-						th:each="value: ${valuesList}"
-						th:value="${value.name}"
-						th:text="${value.name}"
-						th:selected="${selectedValue!=null && selectedValue.name == value.name}"
-						> <!--  --><!-- th:selected="${type == metaData.attributes['__${name}__'].type}"  -->
-						
-				</select>
-			</div>
-		</form>
-		</div>
-		
-		<div class="row" id="previewTable">
-			<div th:if="${selectedValue!=null}"
-				th:insert="fragments/datapreview :: dataPreview(${selectedValue}, ${preview}, ${modifyDataUrl}, true)"
-			>
-		</div>
-			<!-- <script>
-				
-			</script> -->
-		</div>
-		<script th:src="@{/js/selectable_list.js}"></script>
-	</div>
-	
+                    <!-- \''+ ${previewURL} +'\')'"> -->
+                    <!-- th:field="*{attributes['__name__'].type}" -->
+                    <option th:if="${selectedValue==null}" disabled selected value=" "> -- select an dataset --</option>
+                    <option
+                            th:each="value: ${valuesList}"
+                            th:value="${value.name}"
+                            th:text="${value.name}"
+                            th:selected="${selectedValue!=null && selectedValue.name == value.name}"
+                    > <!--  --><!-- th:selected="${type == metaData.attributes['__${name}__'].type}"  -->
+
+                </select>
+            </div>
+        </form>
+    </div>
+
+    <div class="row" id="previewTable">
+        <div th:if="${selectedValue!=null}"
+             th:insert="fragments/datapreview :: dataPreview(${selectedValue}, ${preview}, ${modifyDataUrl}, true)"
+        >
+        </div>
+        <!-- <script>
+
+        </script> -->
+    </div>
+    <script th:src="@{/js/selectable_list.js}"></script>
+</div>
+
 <body>
 </html>

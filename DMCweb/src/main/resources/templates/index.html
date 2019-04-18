@@ -5,39 +5,40 @@
       xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 
 <head>
-	<title>Welcome to Data MiningCombiner</title>
+    <title>Welcome to Data MiningCombiner</title>
 </head>
 <body>
 
 <!-- Insert content into the layouts/layout.html -->
 <th:block layout:fragment="content">
-	<!-- <div th:insert="fragments/control_elements :: common_modal(id='index_reg', page='register', title='Index registration')">
-	</div> -->
-	
-	<div sec:authorize="!isAuthenticated()" class="text-center">
-		<h1>Welcome to DataMiningCombiner</h1>
+    <!-- <div th:insert="fragments/control_elements :: common_modal(id='index_reg', page='register', title='Index registration')">
+    </div> -->
 
-		<div class="lead"
-			th:insert="~{fragments/dmchello :: hello_descripion}">Please
-			Sign in or Register to continue</div>
+    <div sec:authorize="!isAuthenticated()" class="text-center">
+        <h1>Welcome to DataMiningCombiner</h1>
 
-		<!-- <p>	<div th:insert="fragments/register_modal :: reg_button"></div>
-       	<div th:insert="fragments/register_modal :: register_modal"></div> -->
-		<!-- <a id="index_reg" class="btn btn-success btn-lg">Register</a> -->
-		
-		
-		<a th:href="${@requestPath.register}" class="btn btn-success btn-lg">Register</a>
-	</div>
-	
-	<div sec:authorize="hasAuthority('ADMIN')">
-		<div th:insert="adminHome :: homeContent">
-		</div>
-	</div>
-	
-	<div sec:authorize="hasAuthority('USER')">
-		<div th:insert="userHome :: homeContent">
-		</div>
-	</div>
-	</th:block>
+        <div class="lead"
+             th:insert="~{fragments/dmchello :: hello_descripion}">Please
+            Sign in or Register to continue
+        </div>
+
+        <!-- <p>	<div th:insert="fragments/register_modal :: reg_button"></div>
+           <div th:insert="fragments/register_modal :: register_modal"></div> -->
+        <!-- <a id="index_reg" class="btn btn-success btn-lg">Register</a> -->
+
+
+        <a th:href="${@requestPath.register}" class="btn btn-success btn-lg">Register</a>
+    </div>
+
+    <div sec:authorize="hasAuthority('ADMIN')">
+        <div th:insert="adminHome :: homeContent">
+        </div>
+    </div>
+
+    <div sec:authorize="hasAuthority('USER')">
+        <div th:insert="userHome :: homeContent">
+        </div>
+    </div>
+</th:block>
 </body>
 </html>

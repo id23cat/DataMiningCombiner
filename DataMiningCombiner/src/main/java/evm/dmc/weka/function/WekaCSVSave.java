@@ -36,155 +36,155 @@ import weka.core.converters.AbstractSaver;
 @PropertySource("classpath:weka.properties")
 @Scope(ConfigurableBeanFactory.SCOPE_PROTOTYPE)
 @Function
-public class WekaCSVSave extends AbstractDMCFunction<String> implements CSVSaver, WekaFunction  {
-	private static final String NAME = WekaFunctions.CSVSAVER;
-	private static final Integer ARGS_COUNT = 1;
-	private static final String DEST_PARAM = "destination";
-	
-	private static FunctionType type = FunctionType.CSV_DATADESTINATION;
-	private Properties functionProperties = new Properties();
-	private FunctionDstModel model = FunctionDstModel.dstBuilder().build();
+public class WekaCSVSave extends AbstractDMCFunction<String> implements CSVSaver, WekaFunction {
+    private static final String NAME = WekaFunctions.CSVSAVER;
+    private static final Integer ARGS_COUNT = 1;
+    private static final String DEST_PARAM = "destination";
 
-	private File destination = null;
-	private Data<String> save = null;
+    private static FunctionType type = FunctionType.CSV_DATADESTINATION;
+    private Properties functionProperties = new Properties();
+    private FunctionDstModel model = FunctionDstModel.dstBuilder().build();
 
-	@Autowired
-	WekaFramework framework;
+    private File destination = null;
+    private Data<String> save = null;
 
-	@Value("${weka.csvsave_desc}")
-	String description;
-	
-	public WekaCSVSave() {
-		functionProperties.setProperty(DEST_PARAM, "");
-		super.functionModel = model;
-	}
+    @Autowired
+    WekaFramework framework;
 
-	@Override
-	public void save(Data data) throws ClassCastException, StoreDataException {
-		save = data;
-		try {
-			execute();
-		} catch (UncheckedStoringException e) {
-			throw new StoreDataException("Trying to save data to csv failed", e);
-		}
-	}
+    @Value("${weka.csvsave_desc}")
+    String description;
 
-	@Override
-	public CSVSaver setDestination(String filename) {
-		destination = new File(filename);
-		model.setDestination(filename);
-		model.setTypeSrcDst(DataSrcDstType.LOCAL_FS);
-		return this;
-	}
+    public WekaCSVSave() {
+        functionProperties.setProperty(DEST_PARAM, "");
+        super.functionModel = model;
+    }
 
-	@Override
-	public CSVSaver setDestination(File file) {
-		this.destination = file;
-		return this;
-	}
+    @Override
+    public void save(Data data) throws ClassCastException, StoreDataException {
+        save = data;
+        try {
+            execute();
+        } catch (UncheckedStoringException e) {
+            throw new StoreDataException("Trying to save data to csv failed", e);
+        }
+    }
 
-	@Override
-	public void execute() throws ClassCastException, UncheckedStoringException {
+    @Override
+    public CSVSaver setDestination(String filename) {
+        destination = new File(filename);
+        model.setDestination(filename);
+        model.setTypeSrcDst(DataSrcDstType.LOCAL_FS);
+        return this;
+    }
 
-		AbstractSaver saver = new weka.core.converters.CSVSaver();
-		if (destination == null)
-			throw new UncheckedStoringException("Destination file does not declred");
-		try {
-			saver.setFile(destination);
-			saver.setInstances(framework.castToWekaData(save).getData());
-			saver.writeBatch();
-		} catch (IOException e) {
-			throw new UncheckedStoringException(e);
-		}
-	}
+    @Override
+    public CSVSaver setDestination(File file) {
+        this.destination = file;
+        return this;
+    }
 
-	@Override
-	public String getName() {
-		return NAME;
-	}
+    @Override
+    public void execute() throws ClassCastException, UncheckedStoringException {
 
-	@Override
-	public String getDescription() {
-		return description;
-	}
+        AbstractSaver saver = new weka.core.converters.CSVSaver();
+        if (destination == null)
+            throw new UncheckedStoringException("Destination file does not declred");
+        try {
+            saver.setFile(destination);
+            saver.setInstances(framework.castToWekaData(save).getData());
+            saver.writeBatch();
+        } catch (IOException e) {
+            throw new UncheckedStoringException(e);
+        }
+    }
 
-	@Override
-	public Integer getArgsCount() {
-		return ARGS_COUNT;
-	}
+    @Override
+    public String getName() {
+        return NAME;
+    }
 
-	@Override
-	public void setArgs(Data<String>... datas) {
-		setDestination(datas[0].getData());
+    @Override
+    public String getDescription() {
+        return description;
+    }
 
-	}
+    @Override
+    public Integer getArgsCount() {
+        return ARGS_COUNT;
+    }
 
-	@Override
-	public void setArgs(List<Data<String>> largs) {
-		setDestination(largs.get(0).getData());
+    @Override
+    public void setArgs(Data<String>... datas) {
+        setDestination(datas[0].getData());
 
-	}
+    }
 
-	/*
-	 * Returns destination file name
-	 * (non-Javadoc)
-	 * 
-	 * 
-	 * @see evm.dmc.core.function.DMCFunction#getResult()
-	 */
-	@Override
-	public Data<String> getResult() {
-		@SuppressWarnings("unchecked")
-		Data<String> data = (Data<String>) framework.getData(String.class);
-		data.setData(destination.getAbsolutePath());
-		return data;
-	}
+    @Override
+    public void setArgs(List<Data<String>> largs) {
+        setDestination(largs.get(0).getData());
 
-	@Override
-	protected FunctionType getFunctionType() {
-		return type;
-	}
+    }
 
-	@Override
-	protected Properties getProperties() {
-		return functionProperties;
-	}
+    /*
+     * Returns destination file name
+     * (non-Javadoc)
+     *
+     *
+     * @see evm.dmc.core.function.DMCFunction#getResult()
+     */
+    @Override
+    public Data<String> getResult() {
+        @SuppressWarnings("unchecked")
+        Data<String> data = (Data<String>) framework.getData(String.class);
+        data.setData(destination.getAbsolutePath());
+        return data;
+    }
 
-	@Override
-	protected void setFunctionProperties(Properties funProperties) {
-		setDestination(funProperties.getProperty(DEST_PARAM));
-		
-	}
-	
-	@Override
-	public Optional<Data<String>> getOptionalResult() {
-		return Optional.ofNullable(getResult());
-	}
+    @Override
+    protected FunctionType getFunctionType() {
+        return type;
+    }
 
-	@Override
-	public FunctionDstModel getDstModel() {
-		return model;
-	}
+    @Override
+    protected Properties getProperties() {
+        return functionProperties;
+    }
 
-	@Override
-	public DMCDataSaver setDstModel(FunctionDstModel model) {
-		this.model = model;
-		super.functionModel = this.model;
-		setFunctionProperties(FunctionModel.mapToProperties(this.model.getProperties()));
-		
-		return this;
-	}
-	
-	@Override
-	public WekaCSVSave setFunctionModel(FunctionModel model) {
-		this.model = new FunctionDstModel(model);
-		setFunctionProperties(FunctionModel.mapToProperties(this.model.getProperties()));
-		return this;
-	}
+    @Override
+    protected void setFunctionProperties(Properties funProperties) {
+        setDestination(funProperties.getProperty(DEST_PARAM));
 
-	@Override
-	public FunctionModel getFunctionModel() {
-		return this.model;
-	}
+    }
+
+    @Override
+    public Optional<Data<String>> getOptionalResult() {
+        return Optional.ofNullable(getResult());
+    }
+
+    @Override
+    public FunctionDstModel getDstModel() {
+        return model;
+    }
+
+    @Override
+    public DMCDataSaver setDstModel(FunctionDstModel model) {
+        this.model = model;
+        super.functionModel = this.model;
+        setFunctionProperties(FunctionModel.mapToProperties(this.model.getProperties()));
+
+        return this;
+    }
+
+    @Override
+    public WekaCSVSave setFunctionModel(FunctionModel model) {
+        this.model = new FunctionDstModel(model);
+        setFunctionProperties(FunctionModel.mapToProperties(this.model.getProperties()));
+        return this;
+    }
+
+    @Override
+    public FunctionModel getFunctionModel() {
+        return this.model;
+    }
 
 }

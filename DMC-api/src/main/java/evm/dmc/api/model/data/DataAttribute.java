@@ -25,26 +25,30 @@ import lombok.ToString;
 @NoArgsConstructor
 @AllArgsConstructor
 //@NoArgsConstructor(force = true)
-@EqualsAndHashCode(exclude={"lines"})
-@ToString(exclude={"lines"})
-public class DataAttribute  implements Serializable{
+@EqualsAndHashCode(exclude = {"lines"})
+@ToString(exclude = {"lines"})
+public class DataAttribute implements Serializable {
 
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = -3020317305095468013L;
+    /**
+     *
+     */
+    private static final long serialVersionUID = -3020317305095468013L;
 
-	private String name;
-	
-	@Enumerated(EnumType.STRING)
-	@Builder.Default private AttributeType type = AttributeType.STRING;
-	
-	@Builder.Default private Double multiplier = 1.0;
-	@Builder.Default private Boolean checked = true;
-	
-	@Transient
-	@JsonIgnore
-	@Builder.Default private List<String> lines = new ArrayList<>();
+    private String name;
+
+    @Enumerated(EnumType.STRING)
+    @Builder.Default
+    private AttributeType type = AttributeType.STRING;
+
+    @Builder.Default
+    private Double multiplier = 1.0;
+    @Builder.Default
+    private Boolean checked = true;
+
+    @Transient
+    @JsonIgnore
+    @Builder.Default
+    private List<String> lines = new ArrayList<>();
 
 //	public DataAttribute(String name) {
 //		this.name = name;
@@ -54,15 +58,15 @@ public class DataAttribute  implements Serializable{
 //		this.name = name;
 //		lines.add(value);
 //	}
-	
-	/**
-	 * @return unmodifiable List
-	 */
-	public List<String> getLines() {
-		return Collections.unmodifiableList(lines);
-	}
-	
-	public synchronized void addLine(String line) {
-		lines.add(line);
-	}
+
+    /**
+     * @return unmodifiable List
+     */
+    public List<String> getLines() {
+        return Collections.unmodifiableList(lines);
+    }
+
+    public synchronized void addLine(String line) {
+        lines.add(line);
+    }
 }

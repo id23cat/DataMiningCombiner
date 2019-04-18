@@ -5,10 +5,12 @@ package evm.dmc.webApi.exceptions;
  */
 public class StorageException extends RuntimeException {
 
-    /** Defined to avoid problems with serialization */
-	private static final long serialVersionUID = -3268906588922725839L;
+    /**
+     * Defined to avoid problems with serialization
+     */
+    private static final long serialVersionUID = -3268906588922725839L;
 
-	public StorageException(String message) {
+    public StorageException(String message) {
         super(message);
     }
 

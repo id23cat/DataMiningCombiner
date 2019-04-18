@@ -13,19 +13,20 @@ import evm.dmc.api.model.account.Account;
 import evm.dmc.api.model.account.Role;
 
 public interface AccountRepository extends JpaRepository<Account, Long> {
-	public final static String FIND_ALL = "SELECT p FROM Account p ORDER BY userName ";
-	Optional<Account> findByEmail(String email);
-	
-	Optional<Account> findByUserName(String userName);
-	
-//	@Async
-	List<Account> findByRole(Role role);
-	
+    public final static String FIND_ALL = "SELECT p FROM Account p ORDER BY userName ";
+
+    Optional<Account> findByEmail(String email);
+
+    Optional<Account> findByUserName(String userName);
+
+    //	@Async
+    List<Account> findByRole(Role role);
+
 //	@Async
 //	List<Account> findByRole(Role role, Pageable pageable);
-	
-	@Query(FIND_ALL)
-	Stream<Account> streamAll();
-	
-	Optional<Account> findById(Long id);
+
+    @Query(FIND_ALL)
+    Stream<Account> streamAll();
+
+    Optional<Account> findById(Long id);
 }

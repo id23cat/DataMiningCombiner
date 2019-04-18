@@ -16,22 +16,22 @@ import evm.dmc.weka.data.WekaData;
 @ContextConfiguration(classes = DMCWekaConfig.class)
 @TestPropertySource("classpath:wekatest.properties")
 public class WekaTestBaseClass {
-	protected WekaData data;
+    protected WekaData data;
 
-	@Autowired
-	protected WekaFramework fw;
+    @Autowired
+    protected WekaFramework fw;
 
-	@Autowired
-	CSVLoader csv;
-	@Value("${wekatest.datasource}")
-	String sourceFile;
+    @Autowired
+    CSVLoader csv;
+    @Value("${wekatest.datasource}")
+    String sourceFile;
 
-	@Before
-	public void loadData() {
-		assertNotNull(csv);
-		assertThat(sourceFile, startsWith("Data"));
-		csv.setSource(sourceFile);
-		data = fw.castToWekaData(csv.get());
-		// data.load(souceFile);
-	}
+    @Before
+    public void loadData() {
+        assertNotNull(csv);
+        assertThat(sourceFile, startsWith("Data"));
+        csv.setSource(sourceFile);
+        data = fw.castToWekaData(csv.get());
+        // data.load(souceFile);
+    }
 }

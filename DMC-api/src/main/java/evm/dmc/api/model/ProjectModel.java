@@ -50,74 +50,74 @@ import lombok.ToString;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-@Table(name="PROJECT"
-	,uniqueConstraints={@UniqueConstraint(columnNames = {"account_id", "name"})}
+@Table(name = "PROJECT"
+        , uniqueConstraints = {@UniqueConstraint(columnNames = {"account_id", "name"})}
 )
-@EqualsAndHashCode(exclude={"algorithms", "dataSources"})
-@ToString(exclude={"algorithms", "dataSources"})
+@EqualsAndHashCode(exclude = {"algorithms", "dataSources"})
+@ToString(exclude = {"algorithms", "dataSources"})
 public class ProjectModel implements Serializable {
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = -5045386144743151365L;
-	
-	@Transient
-	private static final String NOT_BLANK_MESSAGE = "{error.emptyField}";
+    /**
+     *
+     */
+    private static final long serialVersionUID = -5045386144743151365L;
 
-	
-	@Id
-	@GeneratedValue(strategy=GenerationType.IDENTITY)
-	@Setter(AccessLevel.NONE) 
-	private Long id;
-	
+    @Transient
+    private static final String NOT_BLANK_MESSAGE = "{error.emptyField}";
+
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Setter(AccessLevel.NONE)
+    private Long id;
+
 //	@Version
 //	private Long version;
-	
-	@ManyToOne(cascade = CascadeType.MERGE)	//(optional = false)
-	@JoinColumn(name = "account_id")
-	private Account account;
-	
-	@Enumerated(EnumType.STRING)
-	@NotNull
-	@Builder.Default 
-	private ProjectType projectType = ProjectType.SIMPLEST_PROJECT;
-	
-//	@ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+
+    @ManyToOne(cascade = CascadeType.MERGE)    //(optional = false)
+    @JoinColumn(name = "account_id")
+    private Account account;
+
+    @Enumerated(EnumType.STRING)
+    @NotNull
+    @Builder.Default
+    private ProjectType projectType = ProjectType.SIMPLEST_PROJECT;
+
+    //	@ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
 //	@JoinTable(name = "project_algorithm", 
 //			joinColumns = @JoinColumn(name = "project_id", referencedColumnName = "id"),
 //			inverseJoinColumns = @JoinColumn(name = "algorithm_id", referencedColumnName = "id")
 //	)
-	@OneToMany(mappedBy="project", fetch = FetchType.LAZY,
-			cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "project", fetch = FetchType.LAZY,
+            cascade = CascadeType.ALL, orphanRemoval = true)
 //	@Singular
-	@Builder.Default
-	private Set<Algorithm> algorithms = new HashSet<>();
-	
-	
+    @Builder.Default
+    private Set<Algorithm> algorithms = new HashSet<>();
+
+
 //	@ElementCollection
 //	@MapKeyColumn(name = "property")
 //	@Column(name = "value")
 //	@CollectionTable(name = "projectProps")
 //	@Singular
 //	private Map<String, String> properties;
-	
-	@NotBlank(message = ProjectModel.NOT_BLANK_MESSAGE)
-	@Column(nullable = false)
-	private String name;
-	
-//	@CreatedDate
-	@CreationTimestamp
-	@Column(insertable = true, updatable = false)
-	@Setter(AccessLevel.NONE) 
+
+    @NotBlank(message = ProjectModel.NOT_BLANK_MESSAGE)
+    @Column(nullable = false)
+    private String name;
+
+    //	@CreatedDate
+    @CreationTimestamp
+    @Column(insertable = true, updatable = false)
+    @Setter(AccessLevel.NONE)
 //	@Builder.Default
 //	private Instant created = Instant.now();
-	private java.sql.Timestamp created;
-	
-	@OneToMany(mappedBy = "project" ,cascade = CascadeType.ALL, orphanRemoval = true)
-	@Singular
-	private Set<MetaData> dataSources;
-	
-	
+    private java.sql.Timestamp created;
+
+    @OneToMany(mappedBy = "project", cascade = CascadeType.ALL, orphanRemoval = true)
+    @Singular
+    private Set<MetaData> dataSources;
+
+
 //	public Properties getProperties() {
 //		Properties props = new Properties();
 //		props.putAll(properties);
@@ -131,10 +131,10 @@ public class ProjectModel implements Serializable {
 //			properties.put(name, prop.getProperty(name));
 //		}
 //	}
-	
-	public synchronized void addMetaData(MetaData meta) {
-		meta.setProject(this);
-		this.dataSources.add(meta);
-	}
+
+    public synchronized void addMetaData(MetaData meta) {
+        meta.setProject(this);
+        this.dataSources.add(meta);
+    }
 
 }

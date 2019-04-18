@@ -9,25 +9,25 @@
 <body>
 
 <th:block layout:fragment="content">
-<h3>
-	Project: <span th:text="${currentProject.name}">Project Name</span>
-</h3>
+    <h3>
+        Project: <span th:text="${currentProject.name}">Project Name</span>
+    </h3>
 
-<div class="container-fluid">
-	<div class="row">
-		<div class="col-sm-6 text-center bg-success">
-			<div th:insert="project/algorithmsList :: algorithmsList">
-			</div>
-		</div>
-		<div class="col-sm-6 text-center bg-info">
-			<div th:insert="project/datasourcesList :: datasourcesList">
-			</div>
-		</div>
-		
-	</div>
-</div>
-<a href="proj0/dataset">DataSet</a>
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-sm-6 text-center bg-success">
+                <div th:insert="project/algorithmsList :: algorithmsList">
+                </div>
+            </div>
+            <div class="col-sm-6 text-center bg-info">
+                <div th:insert="project/datasourcesList :: datasourcesList">
+                </div>
+            </div>
+
+        </div>
+    </div>
+    <a href="proj0/dataset">DataSet</a>
 </th:block>
- 
+
 </body>
 </html>

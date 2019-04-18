@@ -5,14 +5,16 @@ package evm.dmc.webApi.exceptions;
  */
 public class FunctionNotFoundException extends NotFoundException {
 
-	/** Defined to avoid problems with serialization */
-	private static final long serialVersionUID = -2662782984482995244L;
+    /**
+     * Defined to avoid problems with serialization
+     */
+    private static final long serialVersionUID = -2662782984482995244L;
 
-	public FunctionNotFoundException(String message){
-		super(message);
-	}
+    public FunctionNotFoundException(String message) {
+        super(message);
+    }
 
-	public FunctionNotFoundException(String message, Throwable cause){
-		super(message, cause);
-	}
+    public FunctionNotFoundException(String message, Throwable cause) {
+        super(message, cause);
+    }
 }

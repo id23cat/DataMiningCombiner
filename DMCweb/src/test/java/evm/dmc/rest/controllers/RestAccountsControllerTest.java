@@ -38,46 +38,46 @@ import evm.dmc.web.service.Views;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest(classes = {DmcWebApplication.class, ApplicationConfiguration.class, MvcConfig.class, Views.class},
-	webEnvironment = WebEnvironment.RANDOM_PORT, properties = "management.port=-1")
+        webEnvironment = WebEnvironment.RANDOM_PORT, properties = "management.port=-1")
 //@DataJpaTest
 @AutoConfigureMockMvc
 //@EnableConfigurationProperties(Views.class)
 //@WebAppConfiguration
 public class RestAccountsControllerTest {
-	private MediaType contentType = new MediaType(MediaType.APPLICATION_JSON.getType(),
+    private MediaType contentType = new MediaType(MediaType.APPLICATION_JSON.getType(),
             MediaType.APPLICATION_JSON.getSubtype(),
             Charset.forName("utf8"));
-	
-	private List<Account> accountsList = new ArrayList<>();
-	
-	@Autowired
-	private MockMvc mockMvc;
-	
+
+    private List<Account> accountsList = new ArrayList<>();
+
+    @Autowired
+    private MockMvc mockMvc;
+
 //	@Autowired
 //	private AccountRepository accRepo;
-	
-	@MockBean
-	private AccountService accService;
-	
-	@Before
-	@Transactional(readOnly=true)
-	public void setup() {
-//		accountsList = accRepo.streamAll().collect(Collectors.toList());
-		accountsList.add(Account.builder().id(0L).userName("user0").firstName("User0").build());
-		accountsList.add(Account.builder().id(1L).userName("user1").firstName("User1").build());
-	}
 
-	@Test
-	public final void testGetAccountsList() throws Exception {
-		Mockito
-			.when(accService.getAll())
-			.thenReturn(accountsList.stream());
-		
-		mockMvc.perform(get(RestAccountsController.BASE_URL))
-			.andExpect(status().isOk())
-			.andExpect(content().contentType(contentType))
-			.andExpect(jsonPath("$", hasSize(2)))
-		;
-	}
+    @MockBean
+    private AccountService accService;
+
+    @Before
+    @Transactional(readOnly = true)
+    public void setup() {
+//		accountsList = accRepo.streamAll().collect(Collectors.toList());
+        accountsList.add(Account.builder().id(0L).userName("user0").firstName("User0").build());
+        accountsList.add(Account.builder().id(1L).userName("user1").firstName("User1").build());
+    }
+
+    @Test
+    public final void testGetAccountsList() throws Exception {
+        Mockito
+                .when(accService.getAll())
+                .thenReturn(accountsList.stream());
+
+        mockMvc.perform(get(RestAccountsController.BASE_URL))
+                .andExpect(status().isOk())
+                .andExpect(content().contentType(contentType))
+                .andExpect(jsonPath("$", hasSize(2)))
+        ;
+    }
 
 }

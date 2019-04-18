@@ -10,27 +10,29 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import evm.dmc.api.model.ProjectModel;
 import evm.dmc.api.model.account.Account;
 import evm.dmc.web.exceptions.ProjectNotFoundException;
+import org.springframework.stereotype.Service;
 
+@Service
 public interface AccountService extends UserDetailsService {
-	Account save(Account account);
-	
-	Account getAccountByName(String username) throws UsernameNotFoundException;
-	
-	void signin(Account account);
-	
-	void delete(Account account);
-	
+    Account save(Account account);
+
+    Account getAccountByName(String username) throws UsernameNotFoundException;
+
+    void signin(Account account);
+
+    void delete(Account account);
+
 //	void refresh(Account account);
 //	
 //	Account merge(Account account);
-	
-	ProjectModel addProject(Account account, ProjectModel project) throws ProjectNotFoundException;
-	
-	Account delProject(Account account, ProjectModel project);
-	
-	Account delProjectsByNames(Account account, Set<String> names);
 
-	Optional<ProjectModel> findProjectByName(Account account, String name);
-	
-	Stream<Account> getAll();
+    ProjectModel addProject(Account account, ProjectModel project) throws ProjectNotFoundException;
+
+    Account delProject(Account account, ProjectModel project);
+
+    Account delProjectsByNames(Account account, Set<String> names);
+
+    Optional<ProjectModel> findProjectByName(Account account, String name);
+
+    Stream<Account> getAll();
 }

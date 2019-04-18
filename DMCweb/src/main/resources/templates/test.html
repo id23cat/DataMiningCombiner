@@ -5,15 +5,15 @@
       xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 
 <head>
-	<title>Welcome to Data MiningCombiner</title>
-	<!-- <script>
-	$(function() {
-		var checkboxes = $("input[type='checkbox']"), submitButt = $("input[type='submit']");
+    <title>Welcome to Data MiningCombiner</title>
+    <!-- <script>
+    $(function() {
+        var checkboxes = $("input[type='checkbox']"), submitButt = $("input[type='submit']");
 
-		checkboxes.click(function() {
-			submitButt.attr("disabled", !checkboxes.is(":checked"));
-		});
-	});
+        checkboxes.click(function() {
+            submitButt.attr("disabled", !checkboxes.is(":checked"));
+        });
+    });
 </script> -->
 </head>
 <body>
@@ -22,56 +22,56 @@
 <th:block layout:fragment="content">
 
 
-<h1>Button should be enabled if at least one checkbox is checked</h1>
-			<div class="container-fluid">
-				<div class="row" >
-					<div class="col-sm-6 text-center bg-success">
-						<div>
-							<input type="checkbox" name="option-1" id="option-1"> 
-							<label	for="option-1">Option 1</label>
-						</div>
-						<div>
-							<input type="checkbox" name="option-2" id="option-2"> 
-							<label	for="option-2">Option 2</label>
-						</div>
-						<div>
-							<input type="checkbox" name="option-2" id="option-2"> 
-							<label	for="option-2">Option 2</label>
-						</div>
-					</div>
-					<div class="col-sm-6 text-center bg-info">
-						<div>
-							<input type="checkbox" name="option-3" id="option-3"> 
-							<label for="option-3">Option 3</label>
-						</div>
-						<div>
-							<input type="checkbox" name="option-4" id="option-4"> 
-							<label	for="option-4">Option 4</label>
-						</div>
-						<div>
-							<input type="checkbox" name="option-5" id="option-5"> 
-							<label	for="option-5">Option 5</label>
-						</div>
-					</div>
-				</div>
-			</div>
+    <h1>Button should be enabled if at least one checkbox is checked</h1>
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-sm-6 text-center bg-success">
+                <div>
+                    <input type="checkbox" name="option-1" id="option-1">
+                    <label for="option-1">Option 1</label>
+                </div>
+                <div>
+                    <input type="checkbox" name="option-2" id="option-2">
+                    <label for="option-2">Option 2</label>
+                </div>
+                <div>
+                    <input type="checkbox" name="option-2" id="option-2">
+                    <label for="option-2">Option 2</label>
+                </div>
+            </div>
+            <div class="col-sm-6 text-center bg-info">
+                <div>
+                    <input type="checkbox" name="option-3" id="option-3">
+                    <label for="option-3">Option 3</label>
+                </div>
+                <div>
+                    <input type="checkbox" name="option-4" id="option-4">
+                    <label for="option-4">Option 4</label>
+                </div>
+                <div>
+                    <input type="checkbox" name="option-5" id="option-5">
+                    <label for="option-5">Option 5</label>
+                </div>
+            </div>
+        </div>
+    </div>
 
-		<form>
+    <form>
 
 
-			<div>
-				<input type="submit" value="Do thing" disabled>
-			</div>
-		</form>
-		<script>
-	$(function() {
-		var checkboxes = $("input[type='checkbox']"), submitButt = $("input[type='submit']");
+        <div>
+            <input type="submit" value="Do thing" disabled>
+        </div>
+    </form>
+    <script>
+        $(function () {
+            var checkboxes = $("input[type='checkbox']"), submitButt = $("input[type='submit']");
 
-		checkboxes.click(function() {
-			submitButt.attr("disabled", !checkboxes.is(":checked"));
-		});
-	});
-</script>
+            checkboxes.click(function () {
+                submitButt.attr("disabled", !checkboxes.is(":checked"));
+            });
+        });
+    </script>
 </th:block>
 </body>
 </html>

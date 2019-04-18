@@ -18,35 +18,35 @@
  * ========================================================= */
 
 .treeview .list-group-item {
-	cursor: pointer;
+    cursor: pointer;
 }
 
 .treeview span.indent {
-	margin-left: 10px;
-	margin-right: 10px;
+    margin-left: 10px;
+    margin-right: 10px;
 }
 
 .treeview span.icon {
-	width: 12px;
-	margin-right: 5px;
+    width: 12px;
+    margin-right: 5px;
 }
 
 .treeview .node-disabled {
-	color: silver;
-	cursor: not-allowed;
+    color: silver;
+    cursor: not-allowed;
 }
 
 .treeview .node-hidden {
-	display: none;
+    display: none;
 }
 
 .treeview span.image {
-  display: inline-block;
-  width: 12px;
-  height: 1.19em;
-  vertical-align: middle;
-  background-size: contain;
-  background-repeat: no-repeat;
-  margin-right: 5px;
-  line-height: 1em;
+    display: inline-block;
+    width: 12px;
+    height: 1.19em;
+    vertical-align: middle;
+    background-size: contain;
+    background-repeat: no-repeat;
+    margin-right: 5px;
+    line-height: 1em;
 }

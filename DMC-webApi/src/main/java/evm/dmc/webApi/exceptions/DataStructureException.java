@@ -5,10 +5,12 @@ package evm.dmc.webApi.exceptions;
  */
 public class DataStructureException extends StorageException {
 
-    /** Defined to avoid problems with serialization */
-	private static final long serialVersionUID = 8062739962560746393L;
+    /**
+     * Defined to avoid problems with serialization
+     */
+    private static final long serialVersionUID = 8062739962560746393L;
 
-	public DataStructureException(String message) {
+    public DataStructureException(String message) {
         super(message);
     }
 

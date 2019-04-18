@@ -30,53 +30,55 @@ import lombok.ToString;
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
-@Table(name="DATA_STORAGE")
-@EqualsAndHashCode(exclude={"meta"})
-@ToString(exclude={"meta"})
+@Table(name = "DATA_STORAGE")
+@EqualsAndHashCode(exclude = {"meta"})
+@ToString(exclude = {"meta"})
 public class DataStorageModel implements Serializable {
-	
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = 1L;
-	public static final String DEFAULT_DELIMITER = ",;\t|";
-	public static final boolean DEFAULT_HASHEADER = true;
 
-	@Id
-	@GeneratedValue(strategy=GenerationType.IDENTITY)
-	@Setter(AccessLevel.NONE)
-	private Long id;
-	
-	@Enumerated(EnumType.STRING)
-	@NotNull
-	private DataSrcDstType storageType;
-	
-	@OneToOne(mappedBy="storage", cascade = CascadeType.ALL, optional = false)
-	@NotNull
-	private MetaData meta;
-	
+    /**
+     *
+     */
+    private static final long serialVersionUID = 1L;
+    public static final String DEFAULT_DELIMITER = ",;\t|";
+    public static final boolean DEFAULT_HASHEADER = true;
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Setter(AccessLevel.NONE)
+    private Long id;
+
+    @Enumerated(EnumType.STRING)
+    @NotNull
+    private DataSrcDstType storageType;
+
+    @OneToOne(mappedBy = "storage", cascade = CascadeType.ALL, optional = false)
+    @NotNull
+    private MetaData meta;
+
 //	@NotNull
 //	private String URIstring;
-	
+
 //	@NotNull
 //	private String uri;
-	
-	@NotNull
-	private String relativePath;
-	
-	@Builder.Default private String delimiter = DEFAULT_DELIMITER;
-	
-	@Builder.Default private boolean hasHeader = DEFAULT_HASHEADER;
-	
-	public URI getUri(String basePath) {
-		return Paths.get(basePath, relativePath).toUri();
-	}
-	
-	public void setUri(URI uri, String basePath) {
+
+    @NotNull
+    private String relativePath;
+
+    @Builder.Default
+    private String delimiter = DEFAULT_DELIMITER;
+
+    @Builder.Default
+    private boolean hasHeader = DEFAULT_HASHEADER;
+
+    public URI getUri(String basePath) {
+        return Paths.get(basePath, relativePath).toUri();
+    }
+
+    public void setUri(URI uri, String basePath) {
 //		this.uri = uri.toString();
-		String path = uri.toString();
+        String path = uri.toString();
 //		log.debug("==URI: {}", path);
 //		log.debug("==Base path: {}", basePath);
-		relativePath = path.replaceAll(basePath, "");
-	}
+        relativePath = path.replaceAll(basePath, "");
+    }
 }

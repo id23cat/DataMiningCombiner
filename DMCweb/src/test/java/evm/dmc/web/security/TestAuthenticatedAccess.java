@@ -21,39 +21,39 @@ import evm.dmc.web.service.RequestPath;
 @SpringBootTest(webEnvironment = WebEnvironment.RANDOM_PORT, properties = {"management.port=-1", "security.headers.frame=true"})
 @AutoConfigureMockMvc
 public class TestAuthenticatedAccess {
-	@Autowired
-	MockMvc mockMvc;
-	
-	@Value("${views.userHome}")
-	String userHomeView;
-	
-	@Value("${views.adminHome}")
-	String adminHomeView;
-	
-	@Test
-	@WithMockUser
-	@Ignore
-	public final void getUserHomeAuthenticatedTest() throws Exception {
-		this.mockMvc.perform(get(RequestPath.userHome))
-		.andExpect(status().isOk())		
-		.andExpect(view().name(userHomeView))
-		;
-	}
-	
-	@Test
-	@WithMockUser
-	public final void getAdminHomeAuthenticated_NotAuthorizedTest() throws Exception {
-		this.mockMvc.perform(get(RequestPath.adminHome))
-		.andExpect(status().isFound())	
-		;
-	}
-	
-	@Test
-	@WithMockUser(username = "admin", roles = "ADMIN")
-	public final void getAdminHomeAuthenticated_AndAuthorizedTest() throws Exception {
-		this.mockMvc.perform(get(RequestPath.adminHome))
-		.andExpect(status().isOk())	
-		;
-	}
-	
+    @Autowired
+    MockMvc mockMvc;
+
+    @Value("${views.userHome}")
+    String userHomeView;
+
+    @Value("${views.adminHome}")
+    String adminHomeView;
+
+    @Test
+    @WithMockUser
+    @Ignore
+    public final void getUserHomeAuthenticatedTest() throws Exception {
+        this.mockMvc.perform(get(RequestPath.userHome))
+                .andExpect(status().isOk())
+                .andExpect(view().name(userHomeView))
+        ;
+    }
+
+    @Test
+    @WithMockUser
+    public final void getAdminHomeAuthenticated_NotAuthorizedTest() throws Exception {
+        this.mockMvc.perform(get(RequestPath.adminHome))
+                .andExpect(status().isFound())
+        ;
+    }
+
+    @Test
+    @WithMockUser(username = "admin", roles = "ADMIN")
+    public final void getAdminHomeAuthenticated_AndAuthorizedTest() throws Exception {
+        this.mockMvc.perform(get(RequestPath.adminHome))
+                .andExpect(status().isOk())
+        ;
+    }
+
 }

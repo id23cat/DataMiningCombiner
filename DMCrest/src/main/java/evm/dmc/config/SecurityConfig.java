@@ -24,77 +24,76 @@ import evm.dmc.model.service.AccountService;
 @EnableWebSecurity
 //@EnableGlobalMethodSecurity(securedEnabled = false)
 @EnableGlobalMethodSecurity(prePostEnabled = true)
-@EnableScheduling	// We use scheduler for evicting EhCache tokens
+@EnableScheduling    // We use scheduler for evicting EhCache tokens
 @Profile({"devH2", "devMySQL", "test"})
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
-	private static final String[] PUBLIC_MATCHERS = {
-			// Only for development period
-			
-	};
-	
-	private static final String[] H2_MATCHER = {
-			"/h2-console/**"
-	};
-	
-	private static final String[] PUBLIC_ACTUATOR = {
-			"/management/**"
-	};
-	
-	private static final String[] SWAGGER_MATCHERS = {
-			"/webjars/**",
-			"/*",
-			"/v2/api-docs",
-			"/rest/**",
-			"/**"
-	};
-	
-	@Autowired
-	AccountService accountService;
-	
-	@Autowired
+    private static final String[] PUBLIC_MATCHERS = {
+            // Only for development period
+
+    };
+
+    private static final String[] H2_MATCHER = {
+            "/h2-console/**"
+    };
+
+    private static final String[] PUBLIC_ACTUATOR = {
+            "/management/**"
+    };
+
+    private static final String[] SWAGGER_MATCHERS = {
+            "/webjars/**",
+            "/*",
+            "/v2/api-docs",
+            "/rest/**",
+            "/**"
+    };
+
+    @Autowired
+    AccountService accountService;
+
+    @Autowired
     Environment environment;
-	
-	@Bean
-	public PasswordEncoder passwordEncoder() {
+
+    @Bean
+    public PasswordEncoder passwordEncoder() {
 //		return new BCryptPasswordEncoder();
-		return NoOpPasswordEncoder.getInstance();
-	}
-	
-	
-	@Override
-	protected void configure(AuthenticationManagerBuilder auth) throws Exception {
-		auth
-			.eraseCredentials(true)
-			.userDetailsService(accountService)
-			.passwordEncoder(passwordEncoder())
-		;
-	}
-	
-	@Override
-	protected void configure(HttpSecurity http) throws Exception{
-		http//.csrf().disable()
-			.authorizeRequests()
-				.antMatchers(PUBLIC_MATCHERS).permitAll()
-				.antMatchers(H2_MATCHER).permitAll()
-				.antMatchers(PUBLIC_ACTUATOR).permitAll()
-				.antMatchers(SWAGGER_MATCHERS).permitAll()
+        return NoOpPasswordEncoder.getInstance();
+    }
+
+
+    @Override
+    protected void configure(AuthenticationManagerBuilder auth) throws Exception {
+        auth
+                .eraseCredentials(true)
+                .userDetailsService(accountService)
+                .passwordEncoder(passwordEncoder())
+        ;
+    }
+
+    @Override
+    protected void configure(HttpSecurity http) throws Exception {
+        http//.csrf().disable()
+                .authorizeRequests()
+                .antMatchers(PUBLIC_MATCHERS).permitAll()
+                .antMatchers(H2_MATCHER).permitAll()
+                .antMatchers(PUBLIC_ACTUATOR).permitAll()
+                .antMatchers(SWAGGER_MATCHERS).permitAll()
 //				.antMatchers(ADMIN_MATCHERS).hasAuthority(Role.ADMIN.getName())
 //				.antMatchers(USER_MATCHERS).hasAuthority(Role.USER.getName())
-				.anyRequest().authenticated()
-			.and()
-			.httpBasic()
-			;
-		// # for H2 console frame
+                .anyRequest().authenticated()
+                .and()
+                .httpBasic()
+        ;
+        // # for H2 console frame
         http.csrf().disable();
         http.headers().frameOptions().disable();
-	}
-	
-	
-	
-	@Bean(name = "authenticationManager")
+    }
+
+
+    @Bean(name = "authenticationManager")
     @Override
     public AuthenticationManager authenticationManagerBean() throws Exception {
         return super.authenticationManagerBean();
     }
-	
+
 }
