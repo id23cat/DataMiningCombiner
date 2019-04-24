@@ -1,0 +1,10 @@
+version: '3'
+services:
+  dmc-web:
+    build:
+      context: .
+      dockerfile: './tools/deploy/dmc-web.dockerfile'
+  dmc-rest:
+    build: 
+      context: .
+      dockerfile: './tools/deploy/dmc-rest.dockerfile'

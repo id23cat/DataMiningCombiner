@@ -1,0 +1,8 @@
+Docs/
+Python/
+tools/
+Controller Class Diagram_0_0.png
+.gitignore
+docker-compose.yml
+**/target/
+**/logs/
