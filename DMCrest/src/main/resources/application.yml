@@ -16,6 +16,12 @@ spring:
     multipart:
       max-file-size: 1024Mb
       max-request-size: 1024Mb
+      enabled: true
+      file-size-threshold: 2KB
+
+file:
+  upload-dir: /rest-upload-files
+
 #  data:
 #    rest:
 #      basePath: /rest
