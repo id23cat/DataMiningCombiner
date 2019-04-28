@@ -13,7 +13,17 @@ spring:
         web-allow-others: true
   allowed:
     resources: /h2-console/**
-    
+
+  servlet:
+    multipart:
+      max-file-size: 1024Mb
+      max-request-size: 1024Mb
+      enabled: true
+      file-size-threshold: 2KB
+
+file:
+  upload-dir: /rest-upload-files
+
 logging:
   level:
     org.springframework: ERROR

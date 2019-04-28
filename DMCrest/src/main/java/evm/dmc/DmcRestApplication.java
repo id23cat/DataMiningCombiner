@@ -3,12 +3,13 @@ package evm.dmc;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
+import evm.dmc.config.FileStorageProperties;
 import org.modelmapper.ModelMapper;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.autoconfigure.domain.EntityScan;
+import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.ComponentScan;
 import org.springframework.data.jpa.convert.threeten.Jsr310JpaConverters;
 
 //for jsr310 java 8 java.time.*
@@ -19,6 +20,9 @@ import org.springframework.data.jpa.convert.threeten.Jsr310JpaConverters;
 @SpringBootApplication
 //@ComponentScan(basePackages = {"evm.dmc"},
 //		includeFilters = @FilterItype)
+@EnableConfigurationProperties({
+		FileStorageProperties.class
+})
 public class DmcRestApplication {
 
 	public static void main(String[] args) {
