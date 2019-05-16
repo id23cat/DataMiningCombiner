@@ -5,4 +5,4 @@ RUN mvn install -Dmaven.test.skip=true
 FROM openjdk:8-jdk-alpine
 COPY --from=build /DMCrest/target ./
 
-CMD java -jar ./dmc-rest-0.0.1-SNAPSHOT.war
+CMD java -jar DMCrest-0.0.1-SNAPSHOT.war --spring.profiles.active=${PROFILE}
