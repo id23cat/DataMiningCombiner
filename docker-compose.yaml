@@ -1,0 +1,11 @@
+version: '3'
+services:
+  dmc-rest:
+    build:
+      context: .
+      dockerfile: './tools/docker/dmc-rest.dockerfile'
+    ports: 
+      - "8081:8081"
+    env_file:
+      - './tools/docker/development.env'
+    
