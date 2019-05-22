@@ -1,12 +1,16 @@
 package evm.dmc;
 
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.autoconfigure.domain.EntityScan;
 import org.springframework.boot.builder.SpringApplicationBuilder;
 import org.springframework.boot.web.support.SpringBootServletInitializer;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
+import org.springframework.context.annotation.Primary;
 import org.springframework.data.jpa.convert.threeten.Jsr310JpaConverters;
 
 import evm.dmc.config.ApplicationConfiguration;
@@ -18,6 +22,7 @@ import evm.dmc.config.ApplicationConfiguration;
 
 @SpringBootApplication
 @Import(ApplicationConfiguration.class)
+@Configuration
 public class DmcWebApplication extends SpringBootServletInitializer {
 
 //	@Autowired
@@ -34,6 +39,12 @@ public class DmcWebApplication extends SpringBootServletInitializer {
     @Override
     protected SpringApplicationBuilder configure(SpringApplicationBuilder application) {
         return application.sources(DmcWebApplication.class);
+    }
+
+    @Bean
+    @Primary
+    public ObjectMapper mapper() {
+        return new ObjectMapper();
     }
 
 //	@Bean

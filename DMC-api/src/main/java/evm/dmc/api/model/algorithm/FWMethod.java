@@ -21,7 +21,7 @@ import lombok.ToString;
 @EqualsAndHashCode(callSuper = true)
 @ToString(callSuper = true)
 @Entity
-//@NoArgsConstructor
+@NoArgsConstructor
 @DiscriminatorValue("fwMethod")
 public class FWMethod extends PatternMethod {
 

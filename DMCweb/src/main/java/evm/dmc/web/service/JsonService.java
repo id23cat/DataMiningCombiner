@@ -4,8 +4,9 @@ import java.util.List;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 
-import evm.dmc.api.model.FrameworkModel;
+import org.springframework.stereotype.Service;
 
+@Service
 public interface JsonService {
     String frameworksListToTreeView(List<?> list) throws JsonProcessingException;
 

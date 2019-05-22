@@ -14,7 +14,7 @@ import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 
 @Data
-//@NoArgsConstructor
+@NoArgsConstructor
 @Builder(builderMethodName = "dstBuilder")
 @AllArgsConstructor
 @EqualsAndHashCode(callSuper = true)

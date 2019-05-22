@@ -43,10 +43,10 @@ public class ApplicationConfiguration {
         // new ThreadPoolExecutor
     }
 	
-	/*@Bean
-	public ObjectMapper jsonObjectMapper() {
-		return new ObjectMapper();
-	}*/
+//	@Bean
+//	public ObjectMapper jsonObjectMapper() {
+//		return new ObjectMapper();
+//	}
 
     @Bean
     public ModelMapper modelMapper() {

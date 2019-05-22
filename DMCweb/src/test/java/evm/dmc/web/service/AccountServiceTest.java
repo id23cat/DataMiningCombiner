@@ -171,12 +171,6 @@ public class AccountServiceTest {
 
 
         assertFalse(accountService.findProjectByName(account, delProject.getName()).isPresent());
-
-//		assertThat(projectService.getByAccount(account).collect(Collectors.toList()), not(hasItem(delProject)));
-
-        ProjectModel deletedProject = entityManager.find(ProjectModel.class, delProject.getId());
-        assertNull(deletedProject);
-
     }
 
     @Test

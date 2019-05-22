@@ -83,7 +83,7 @@ public class Account implements Serializable {
 
     @JsonIgnore
     @NotBlank(message = Account.NOT_BLANK_MESSAGE)
-    @Size(min = 5, max = 16)
+    @Size(min = 5, max = 100)
     private String password;
 
     @Column(unique = true, nullable = false)

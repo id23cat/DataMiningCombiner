@@ -6,6 +6,7 @@ import java.util.stream.Collectors;
 import org.modelmapper.ModelMapper;
 import org.modelmapper.TypeMap;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -16,6 +17,7 @@ import evm.dmc.web.service.JsonService;
 import evm.dmc.web.service.dto.TreeNodeDTO;
 
 @Service
+@Component
 public class JsonServiceImpl implements JsonService {
 
     @Autowired

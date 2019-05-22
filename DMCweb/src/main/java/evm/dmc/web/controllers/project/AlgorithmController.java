@@ -1,11 +1,19 @@
 package evm.dmc.web.controllers.project;
 
-import java.util.List;
-import java.util.Optional;
-
-import javax.servlet.http.HttpServletRequest;
-import javax.validation.Valid;
-
+import com.fasterxml.jackson.core.JsonProcessingException;
+import evm.dmc.api.model.ProjectModel;
+import evm.dmc.api.model.algorithm.Algorithm;
+import evm.dmc.api.model.algorithm.PatternMethod;
+import evm.dmc.api.model.data.MetaData;
+import evm.dmc.web.controllers.CheckboxNamesBean;
+import evm.dmc.web.exceptions.AlgorithmNotFoundException;
+import evm.dmc.web.exceptions.FunctionNotFoundException;
+import evm.dmc.web.service.AlgorithmService;
+import evm.dmc.web.service.JsonService;
+import evm.dmc.web.service.RequestPath;
+import evm.dmc.web.service.Views;
+import evm.dmc.web.service.dto.TreeNodeDTO;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
@@ -26,21 +34,9 @@ import org.springframework.web.servlet.view.RedirectView;
 import org.springframework.web.util.UriComponents;
 import org.springframework.web.util.UriComponentsBuilder;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-
-import evm.dmc.api.model.ProjectModel;
-import evm.dmc.api.model.algorithm.Algorithm;
-import evm.dmc.api.model.algorithm.PatternMethod;
-import evm.dmc.api.model.data.MetaData;
-import evm.dmc.web.controllers.CheckboxNamesBean;
-import evm.dmc.web.exceptions.AlgorithmNotFoundException;
-import evm.dmc.web.exceptions.FunctionNotFoundException;
-import evm.dmc.web.service.AlgorithmService;
-import evm.dmc.web.service.JsonService;
-import evm.dmc.web.service.RequestPath;
-import evm.dmc.web.service.Views;
-import evm.dmc.web.service.dto.TreeNodeDTO;
-import lombok.extern.slf4j.Slf4j;
+import javax.servlet.http.HttpServletRequest;
+import javax.validation.Valid;
+import java.util.Optional;
 
 @Controller
 @RequestMapping(AlgorithmController.BASE_URL)    // /project/{projectName}/algorithm
