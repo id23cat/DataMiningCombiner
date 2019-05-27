@@ -72,7 +72,6 @@ public class RestProjectController {
     @GetMapping
     @Transactional(readOnly = true)
     public List<ProjectDto> getProjectsList(@PathVariable final Long accountId) {
-//		validateAccount(accountId);
         return projectModelRepository.findAllByAccountId(accountId)
                 .map(this::convertToDto)
                 .peek((projDto) -> addLinks(projDto, accountId))
@@ -98,14 +97,12 @@ public class RestProjectController {
             @RequestBody ProjectDto projectDto) {
         ProjectModel project = convertToEntity(projectDto);
 
-//		project = projectService.save(project);
         project = projectService.addProject(accountId, project);
         projectDto = convertToDto(project);
 
         return ResponseEntity.created(
                 URI.create(
                         selfLink(projectDto, accountId).getLink("self").getHref()))
-//				.build();
                 .body(projectDto);
     }
 
@@ -125,10 +122,4 @@ public class RestProjectController {
     private ProjectModel convertToEntity(ProjectDto dto) {
         return modelMapper.map(dto, ProjectModel.class);
     }
-
-//	private void validateAccount(Long accountId) {
-//		this.accountRepository
-//			.findById(accountId)
-//			.orElseThrow(AccountNotFoundException.supplier(accountId));
-//	}
 }

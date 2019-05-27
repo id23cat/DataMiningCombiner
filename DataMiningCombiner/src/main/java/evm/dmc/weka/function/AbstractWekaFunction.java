@@ -1,15 +1,13 @@
 package evm.dmc.weka.function;
 
-import java.util.Optional;
-
-import org.springframework.stereotype.Service;
-
-import evm.dmc.core.annotations.Function;
 import evm.dmc.core.api.Data;
 import evm.dmc.core.function.AbstractDMCFunction;
 import evm.dmc.weka.WekaFunction;
 import evm.dmc.weka.data.WekaData;
+import org.springframework.stereotype.Service;
 import weka.core.Instances;
+
+import java.util.Optional;
 
 @Service
 public abstract class AbstractWekaFunction extends AbstractDMCFunction<Instances> implements WekaFunction {

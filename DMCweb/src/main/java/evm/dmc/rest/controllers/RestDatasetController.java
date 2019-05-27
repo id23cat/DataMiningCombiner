@@ -3,6 +3,7 @@ package evm.dmc.rest.controllers;
 import static org.springframework.hateoas.mvc.ControllerLinkBuilder.*;
 
 import java.util.List;
+import java.util.Objects;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
@@ -80,7 +81,6 @@ public class RestDatasetController {
             @PathVariable Long projectId,
             @PathVariable Long datasetId) {
         MetaData metaData = metadataRepository.findByIdAndProjectId(datasetId, projectId)
-//				.filter(matchBelonging(accountId))
                 .orElseThrow(() -> new MetaDataNotFoundException("MetaData with id=" + datasetId
                         + " belongs to project=" + projectId
                         + " and account=" + accountId
@@ -100,11 +100,9 @@ public class RestDatasetController {
 
     @Transactional
     private Predicate<? super MetaData> matchBelonging(final Long accountId) {
-//		return (meta) -> meta.getProject().getAccount().getId() == accountId;
-
         return (meta) -> {
             log.debug("-== Account: {}", meta.getProject().getAccount());
-            return meta.getProject().getAccount().getId() == accountId;
+            return Objects.equals(meta.getProject().getAccount().getId(), accountId);
         };
     }
 

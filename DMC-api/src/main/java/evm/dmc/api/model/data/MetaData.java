@@ -40,13 +40,8 @@ import lombok.Singular;
 @Table(name = "METADATA"
         , uniqueConstraints = {@UniqueConstraint(columnNames = {"project_id", "name"})}
 )
-//@EqualsAndHashCode(exclude={"storage"})
-//@ToString(exclude={"storage"})
 public class MetaData implements Serializable {
 
-    /**
-     *
-     */
     private static final long serialVersionUID = -6801760958025220213L;
 
     //	@Deprecated
@@ -71,47 +66,17 @@ public class MetaData implements Serializable {
 
     @Column(length = 100000)
     @Convert(converter = MapAttributesToJson.class)
-//	@Setter(AccessLevel.PROTECTED)
-//	@Getter
-//	@Singular
     @Builder.Default
     private Map<String, DataAttribute> attributes = Collections.synchronizedMap(new HashMap<>());
 
-//	@Column
-////	@Column(columnDefinition = "TEXT")
-//	@Lob
-////	@Convert(converter = StringListConverter.class)
-//	@ElementCollection
-//	@CollectionTable(name = "PREVIEW_DATA", joinColumns=@JoinColumn(name="METADATA_ID"))
-//	private List<String> preview = new ArrayList<>();
-
     private Long previewId;
-
-
-    // delimiter for preview
-    // also can be used for parsing data files instead of storage.delimiter
-//	private String previewDelimiter = DEFAULT_DELIMITER;
-
-//	
 
     @OneToOne(cascade = CascadeType.ALL, optional = false)
     @JoinColumn(name = "storage_id")
     private DataStorageModel storage;
 
-//	@Version
-//    private Long version;
-
     public void setStorage(DataStorageModel storage) {
         storage.setMeta(this);
         this.storage = storage;
     }
-
-//	/**
-//	 * @return unmodifiable List
-//	 */
-//	public List<String> getPreview() {
-//		return Collections.unmodifiableList(preview);
-//	}
-
-
 }

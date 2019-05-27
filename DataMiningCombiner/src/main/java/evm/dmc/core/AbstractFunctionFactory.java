@@ -17,8 +17,6 @@ public abstract class AbstractFunctionFactory implements DMCFunctionFactory {
     public AbstractFunctionFactory() {
     }
 
-    ;
-
     public void setFrameworks(Set<Framework> fwSet) {
         this.frameworks = fwSet;
     }

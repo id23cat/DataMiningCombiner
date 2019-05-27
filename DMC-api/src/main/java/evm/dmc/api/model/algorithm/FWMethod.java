@@ -45,7 +45,6 @@ public class FWMethod extends PatternMethod {
                      FunctionModel frameworkFunction
     ) {
         super(id, name, description, properties, steps, dependentAlgorithms, shared);
-//		super(id, name, description, dependentAlgorithms, shared);
         this.frameworkFunction = frameworkFunction;
     }
 }

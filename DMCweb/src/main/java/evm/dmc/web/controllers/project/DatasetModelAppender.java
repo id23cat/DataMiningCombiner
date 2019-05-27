@@ -41,7 +41,7 @@ public class DatasetModelAppender {
     }
 
     public Model addAttributesToModel(Model model, ProjectModel project, Optional<MetaData> metaData) {
-        model = setURLs(model, project);
+        setURLs(model, project);
         if (metaData.isPresent()) {
             log.debug("-== MetaData is found: {}", metaData.get());
             log.debug("-== Attributes: {}", metaData.get().getAttributes());

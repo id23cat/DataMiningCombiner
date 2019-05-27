@@ -14,6 +14,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.Set;
 import java.util.concurrent.ArrayBlockingQueue;
@@ -87,8 +88,6 @@ public class FileStorageServiceImpl implements DataStorageService {
         init();
     }
 
-    //    @Override
-//    @PostConstruct
     private void init() {
         this.rootLocation = Paths.get(properties.getLocation());
         this.previewLinesCount = properties.getPreviewLinesCount();
@@ -104,7 +103,7 @@ public class FileStorageServiceImpl implements DataStorageService {
     @Transactional
     public MetaData saveData(Account account, ProjectModel project,
                              MultipartFile file, DataSetProperties datasetProperties)
-            throws UnsupportedFileTypeException, StorageException {
+            throws StorageException {
         // 1. Check file path, extension and non-empty data
         checkFileType(file);    // throws UnsupportedFileTypeException, StorageException
         int requiredLinesCount = datasetProperties.isHasHeader() ? previewLinesCount + 1 : previewLinesCount;
@@ -164,12 +163,11 @@ public class FileStorageServiceImpl implements DataStorageService {
 
     //    @Override
     public List<String> getPreview(MetaData meta, int lineCount) {
-        List<String> preview = getPreview(
+
+        return getPreview(
                 Paths.get(meta.getStorage().getUri(rootLocation.toString())),
                 lineCount,
                 meta.getStorage().isHasHeader());
-
-        return preview;
     }
 
     @Override
@@ -356,9 +354,13 @@ public class FileStorageServiceImpl implements DataStorageService {
         }.init(file, dataQueue, previewQueue, linesCount);
     }
 
-    private void checkFileType(MultipartFile file) throws UnsupportedFileTypeException, StorageException {
+    private void checkFileType(MultipartFile file) throws StorageException {
         String filename = StringUtils.cleanPath(file.getOriginalFilename());
-        Arrays.stream(EXTENSIONS).filter(ext -> StringUtils.getFilenameExtension(filename).toLowerCase().equals(ext))
+        Arrays.stream(EXTENSIONS).filter(ext -> {
+            assert StringUtils.getFilenameExtension(filename) != null;
+            assert StringUtils.getFilenameExtension(filename) != null;
+            return StringUtils.getFilenameExtension(filename).toLowerCase().equals(ext);
+        })
                 .findFirst().orElseThrow(
                 () -> new UnsupportedFileTypeException(String.format("Unknown file extension %s", filename)));
 
@@ -373,7 +375,7 @@ public class FileStorageServiceImpl implements DataStorageService {
 
     protected List<String> getPreview(Path path, int linesCount, boolean hasHeader) {
         log.debug("==Getting new preview from: {}", path);
-        String extension = StringUtils.getFilenameExtension(path.getFileName().toString()).toLowerCase();
+        String extension = Objects.requireNonNull(StringUtils.getFilenameExtension(path.getFileName().toString())).toLowerCase();
 
         switch (extension) {
             case "csv":

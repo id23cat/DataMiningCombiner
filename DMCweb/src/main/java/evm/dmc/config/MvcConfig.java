@@ -17,14 +17,11 @@ import evm.dmc.web.service.Views;
 public class MvcConfig extends WebMvcConfigurerAdapter {
 
     @Autowired
-    Views views;
+    private Views views;
 
     @Override
     public void addViewControllers(ViewControllerRegistry registry) {
-        // registry.addViewController(RequestPath.home).setViewName(views.getIndex());
-        // registry.addViewController(RequestPath.root).setViewName(views.getIndex());
         registry.addViewController(RequestPath.about).setViewName(views.getAbout());
-        // registry.addViewController("/login").setViewName("login");
         registry.addViewController(RequestPath.userHome).setViewName(views.getUserHome());
         registry.addViewController(RequestPath.adminHome).setViewName(views.getAdminHome());
 

@@ -3,6 +3,7 @@ package evm.dmc.core.api.back.data;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
@@ -70,7 +71,7 @@ public class DataModel {
         }
         DataModel castOther = (DataModel) other;
         return Objects.equals(titleTypeMap, castOther.titleTypeMap) && Objects.equals(rowsCount, castOther.rowsCount)
-                && Objects.equals(preview, castOther.preview);
+                && Arrays.deepEquals(preview, castOther.preview);
     }
 
     @Override
@@ -83,11 +84,4 @@ public class DataModel {
         return new ToStringBuilder(this, ToStringStyle.JSON_STYLE).append("titleTypeMap", titleTypeMap)
                 .append("rowsCount", rowsCount).append("preview", preview).toString();
     }
-
-//	@Override
-//	public String toString() {
-//		return Objects.toString(titleTypeMap)
-//	}
-
-
 }

@@ -16,7 +16,7 @@ import evm.dmc.model.service.DataPreviewService;
 @Service
 public class DataPreviewServiceImpl implements DataPreviewService {
     @Autowired
-    DataPreviewRepository repo;
+    private DataPreviewRepository repo;
 
     @Override
     @Transactional(readOnly = true)
@@ -48,7 +48,6 @@ public class DataPreviewServiceImpl implements DataPreviewService {
 
     @Override
     @Transactional
-//	public void deleteAllByMetaDataIds(Stream<Long> ids) {
     public void deleteAllByMetaDataIds(Set<Long> ids) {
         repo.deleteByMetaDataIdIn(ids);
     }

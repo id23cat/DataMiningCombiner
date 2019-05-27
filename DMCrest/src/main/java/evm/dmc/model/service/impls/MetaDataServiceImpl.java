@@ -52,7 +52,6 @@ public class MetaDataServiceImpl implements MetaDataService {
     public MetaDataServiceImpl(MetaDataRepository metaDataRepository, DataPreviewService previewService) {
         super();
         this.metaDataRepository = metaDataRepository;
-//		this.projectService = projectService;
         this.previewService = previewService;
     }
 
@@ -66,15 +65,13 @@ public class MetaDataServiceImpl implements MetaDataService {
     @Override
     @Transactional
     public void delete(ProjectModel project, Set<String> names) {
-//		metaDataRepository.deleteByProjectAndNameIn(project, names);
         Set<MetaData> metaSet = metaDataRepository
                 .findByProjectAndNameIn(project, names)
                 .collect(Collectors.toSet());
         Set<Long> idsSet = metaSet.parallelStream()
-                .map((meta) -> meta.getId())
+                .map(MetaData::getId)
                 .collect(Collectors.toSet());
         previewService.deleteAllByMetaDataIds(idsSet);
-//		metaDataRepository.deleteInBatch(metaSet);
         metaDataRepository.deleteAll(metaSet);
     }
 

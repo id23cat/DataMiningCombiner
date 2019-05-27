@@ -28,16 +28,12 @@ import lombok.Setter;
 import lombok.ToString;
 
 @Data
-//@Builder
 @Entity
 @Table(name = "Framework")
 @EqualsAndHashCode(exclude = {"functions"})
 @ToString(exclude = "functions")
 public class FrameworkModel implements Serializable {
 
-    /**
-     *
-     */
     private static final long serialVersionUID = -6061011758502384732L;
 
     @Id

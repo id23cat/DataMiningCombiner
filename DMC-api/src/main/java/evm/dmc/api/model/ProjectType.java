@@ -5,7 +5,7 @@ public enum ProjectType {
 
     private final String name;
 
-    private ProjectType(final String name) {
+    ProjectType(final String name) {
         this.name = name;
     }
 

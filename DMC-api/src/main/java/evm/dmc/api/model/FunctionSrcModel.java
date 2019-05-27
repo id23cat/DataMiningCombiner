@@ -19,9 +19,7 @@ import javax.validation.constraints.NotNull;
 @EqualsAndHashCode(callSuper = true)
 @Entity
 public class FunctionSrcModel extends FunctionModel {
-    /**
-     *
-     */
+
     private static final long serialVersionUID = -2433829450685223249L;
 
     public final static String SRC_PROPERTY_NAME = "source";
@@ -35,10 +33,6 @@ public class FunctionSrcModel extends FunctionModel {
     @Builder.Default
     private DataSrcDstType typeSrcDst = DataSrcDstType.LOCAL_FS;
 
-//	public FunctionSrcModel(){
-//		super();
-//	}
-
     public FunctionSrcModel(FunctionModel funmodel) {
         super(funmodel.getId(),
                 funmodel.getName(),
@@ -51,22 +45,4 @@ public class FunctionSrcModel extends FunctionModel {
             this.typeSrcDst = ((FunctionSrcModel) funmodel).typeSrcDst;
         }
     }
-
-//	/**
-//	 * @return the sourceDest
-//	 */
-//	public String getSource() {
-//		
-//		return source==null ? super.getProperty(SRC_PROPERTY_NAME) : source;
-//	}
-
-//	/**
-//	 * @param source the source to set
-//	 */
-//	public void setSource(String source) {
-//		this.source = source;
-//		super.setProperty(SRC_PROPERTY_NAME, source);
-//		
-//	}
-
 }

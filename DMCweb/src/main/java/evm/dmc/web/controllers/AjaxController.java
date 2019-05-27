@@ -37,9 +37,7 @@ public class AjaxController {
     }
 
     private URI cookUri(String uri, String... strings) {
-        return UriComponentsBuilder.fromPath(uri).buildAndExpand(strings).toUri();
+        return UriComponentsBuilder.fromPath(uri).buildAndExpand((Object[]) strings).toUri();
     }
-
-//	private URI cookUri()
 
 }

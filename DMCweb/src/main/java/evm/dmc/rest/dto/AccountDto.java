@@ -15,7 +15,6 @@ import lombok.Setter;
 @EqualsAndHashCode(callSuper = false)
 public class AccountDto extends ResourceSupport {
 
-    //	@Setter
     private Long accountId;
 
     private String userName;

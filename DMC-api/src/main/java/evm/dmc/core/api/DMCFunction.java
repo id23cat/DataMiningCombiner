@@ -18,13 +18,6 @@ public interface DMCFunction<T> extends HasNameAndDescription {
 
     Integer getArgsCount();
 
-    // void setName(String name);
-
-    // void setArgsCount(Integer count);
-
-    // @Deprecated
-    // void addArgument(Data<T> arg);
-
     @SuppressWarnings("unchecked")
     void setArgs(Data<T>... datas);
 

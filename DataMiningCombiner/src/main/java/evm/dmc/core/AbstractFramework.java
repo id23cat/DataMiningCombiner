@@ -105,10 +105,8 @@ public abstract class AbstractFramework implements Framework, DataFactory {
 
     @Override
     public Set<String> getFunctionDescriptors() {
-        Set<String> funcIDs = new HashSet<>();
         String[] ids = applicationContext.getBeanNamesForType(abstractFunctionClass);
-        funcIDs.addAll(Arrays.asList(ids));
-        return funcIDs;
+        return new HashSet<>(Arrays.asList(ids));
     }
 
     @Override
@@ -140,9 +138,7 @@ public abstract class AbstractFramework implements Framework, DataFactory {
         try {
             function = (DMCFunction<?>) applicationContext.getBean(descriptor);
         } catch (BeansException exc) {
-            StringBuilder strBld = new StringBuilder();
-            strBld.append("Probably <\"").append(descriptor).append("\"> bean does not exists");
-            throw new NoSuchFunctionException(strBld.toString(), exc);
+            throw new NoSuchFunctionException("Probably <\"" + descriptor + "\"> bean does not exists", exc);
         }
         function.getFunctionModel().setFramework(frameworkModel);
         return function;
@@ -154,9 +150,7 @@ public abstract class AbstractFramework implements Framework, DataFactory {
         try {
             function = applicationContext.getBean(descriptor, type);
         } catch (BeansException exc) {
-            StringBuilder strBld = new StringBuilder();
-            strBld.append("Probably <\"").append(descriptor).append("\"> With type <\"").append(type.getName()).append("\"> bean does not exists");
-            throw new NoSuchFunctionException(strBld.toString(), exc);
+            throw new NoSuchFunctionException("Probably <\"" + descriptor + "\"> With type <\"" + type.getName() + "\"> bean does not exists", exc);
         }
         ((DMCFunction<?>) function).getFunctionModel().setFramework(frameworkModel);
         return function;

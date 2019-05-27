@@ -35,9 +35,6 @@ import lombok.ToString;
 @ToString(exclude = {"meta"})
 public class DataStorageModel implements Serializable {
 
-    /**
-     *
-     */
     private static final long serialVersionUID = 1L;
     public static final String DEFAULT_DELIMITER = ",;\t|";
     public static final boolean DEFAULT_HASHEADER = true;
@@ -55,12 +52,6 @@ public class DataStorageModel implements Serializable {
     @NotNull
     private MetaData meta;
 
-//	@NotNull
-//	private String URIstring;
-
-//	@NotNull
-//	private String uri;
-
     @NotNull
     private String relativePath;
 
@@ -75,10 +66,7 @@ public class DataStorageModel implements Serializable {
     }
 
     public void setUri(URI uri, String basePath) {
-//		this.uri = uri.toString();
         String path = uri.toString();
-//		log.debug("==URI: {}", path);
-//		log.debug("==Base path: {}", basePath);
         relativePath = path.replaceAll(basePath, "");
     }
 }

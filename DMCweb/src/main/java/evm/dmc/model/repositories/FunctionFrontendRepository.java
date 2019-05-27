@@ -15,9 +15,9 @@ import evm.dmc.api.model.FunctionType;
 
 
 public interface FunctionFrontendRepository extends JpaRepository<FunctionModel, Long> {
-    public static final String FIND_DIFF_TYPES = "SELECT DISTINCT f.type FROM FunctionModel f";
-    public static final String FIND_ALL_FUNCTIONS = "SELECT f FROM FunctionModel f";
-    public static final String FIND_BY_WORD = "SELECT f FROM FunctionModel f WHERE LOWER(f.name) LIKE LOWER('%:name%')";
+    String FIND_DIFF_TYPES = "SELECT DISTINCT f.type FROM FunctionModel f";
+    String FIND_ALL_FUNCTIONS = "SELECT f FROM FunctionModel f";
+    String FIND_BY_WORD = "SELECT f FROM FunctionModel f WHERE LOWER(f.name) LIKE LOWER('%:name%')";
 
     <T extends FunctionModel> Stream<T> findByType(FunctionType type);
 
@@ -28,13 +28,11 @@ public interface FunctionFrontendRepository extends JpaRepository<FunctionModel,
     Optional<String> getDescriptionByName(String name);
 
     //	@Query(FIND_BY_WORD)
-//	Optional<FunctionModel> findByWord(@Param("name") String word);
     Stream<FunctionModel> findByNameIgnoreCaseContaining(String name);
 
     /**
      * See: {@link import org.springframework.data.jpa.repository.QueryHints;}
      */
-//	@QueryHints(value = @QueryHint(name = HINT_FETCH_SIZE, value = "" + Integer.MIN_VALUE))
     @Query(FIND_ALL_FUNCTIONS)
     Stream<FunctionModel> StreamAllFunctions();
 

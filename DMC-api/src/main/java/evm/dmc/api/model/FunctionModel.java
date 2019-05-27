@@ -46,9 +46,6 @@ import lombok.ToString;
 @Inheritance(strategy = InheritanceType.SINGLE_TABLE)
 public class FunctionModel implements Serializable {
 
-    /**
-     *
-     */
     private static final long serialVersionUID = -2557529452898863152L;
 
     @Id
@@ -74,14 +71,6 @@ public class FunctionModel implements Serializable {
     private Map<String, String> properties;
 
     private String description;
-
-//	public FunctionModel(FunctionModel funmodel){
-//		name = funmodel.getName();
-//		framework = funmodel.getFramework();
-//		type = funmodel.getType();
-//		properties = funmodel.getProperties();
-//		description = funmodel.getDescription();
-//	}
 
     public String getProperty(String property) {
         return properties.get(property);

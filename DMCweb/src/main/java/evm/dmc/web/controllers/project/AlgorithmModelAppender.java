@@ -21,7 +21,6 @@ import evm.dmc.web.service.JsonService;
 import evm.dmc.web.service.dto.TreeNodeDTO;
 
 @Component
-//@Slf4j
 public class AlgorithmModelAppender {
     @Autowired
     private AlgorithmService algorithmService;
@@ -30,7 +29,7 @@ public class AlgorithmModelAppender {
     private JsonService jsonService;
 
     @Autowired
-    DataStorageService dataStorageService;
+    private DataStorageService dataStorageService;
 
     public Model addAttributesToModel(Model model, ProjectModel project) {
         List<Algorithm> algList = algorithmService.getForProjectSortedBy(project, "name");
@@ -43,7 +42,7 @@ public class AlgorithmModelAppender {
 
     public Model addAttributesToModel(Model model, ProjectModel project, Optional<Algorithm> optAlg)
             throws AlgorithmNotFoundException, JsonProcessingException {
-        model = setURLs(model, project);
+        setURLs(model, project);
         if (optAlg.isPresent()) {
             Optional<MetaData> optSource = algorithmService.getDataSource(optAlg);
             if (optSource.isPresent()) {
@@ -52,13 +51,9 @@ public class AlgorithmModelAppender {
                         dataStorageService.getPreview(optSource.get()));
             }
 
-//			model.addAttribute(AlgorithmController.MODEL_Algorithm, optAlg.get());
-//			model.addAttribute(AlgorithmController.SESSION_CurrentAlgorithm, optAlg.get());
-
             List<TreeNodeDTO> functionsListDTO = algorithmService.getFrameworksAsTreeNodes();
             model.addAttribute(AlgorithmController.MODEL_FunctionsList, jsonService.frameworksListToTreeView(functionsListDTO));
         } else {
-//			return views.getErrors().getNotFound();
             throw new AlgorithmNotFoundException("No such algorithm");
         }
         return model;

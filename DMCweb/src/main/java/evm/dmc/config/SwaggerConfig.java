@@ -25,7 +25,6 @@ public class SwaggerConfig {
         return new ApiInfoBuilder()
                 .title("DataMiningCombiner API")
                 .description("A implementation of an API Gateway")
-                //.contact(new Contact("Keyhole Software", "keyholesoftware.com", "asktheteam@keyholesoftware.com"))
                 .version("2.0")
                 .build();
     }

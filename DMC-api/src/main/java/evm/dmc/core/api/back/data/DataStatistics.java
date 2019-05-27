@@ -47,11 +47,8 @@ public class DataStatistics extends DataInfo {
             return false;
         DataStatistics other = (DataStatistics) obj;
         if (statValues == null) {
-            if (other.statValues != null)
-                return false;
-        } else if (!statValues.equals(other.statValues))
-            return false;
-        return true;
+            return other.statValues == null;
+        } else return statValues.equals(other.statValues);
     }
 
 

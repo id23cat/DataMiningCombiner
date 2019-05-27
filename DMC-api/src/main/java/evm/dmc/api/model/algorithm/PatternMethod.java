@@ -48,18 +48,12 @@ import lombok.ToString;
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
-//@EntityListeners(AlgorithmEntityListener.class)
-@Table(name = "Method"
-//	,uniqueConstraints={@UniqueConstraint(columnNames = {"parentProject_id", "name"})}
-)
+@Table(name = "Method")
 @Inheritance(strategy = InheritanceType.SINGLE_TABLE)
 @DiscriminatorColumn(name = "entity_type", discriminatorType = DiscriminatorType.STRING)
 @DiscriminatorValue("pattern")
 public class PatternMethod implements Serializable {
 
-    /**
-     *
-     */
     private static final long serialVersionUID = 386821974686652567L;
 
     @Id
@@ -79,13 +73,6 @@ public class PatternMethod implements Serializable {
     @Singular
     private Map<String, String> overridenProperties;
 
-//	@ManyToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE})
-//	@JoinTable(name = "alg_subalg", joinColumns = @JoinColumn(name="alg_id", referencedColumnName = "id"),
-//			inverseJoinColumns = @JoinColumn(name="subalg_id", referencedColumnName="id"))
-//	@OrderColumn(name="INDEX")
-//	@Singular
-//	private List<PatternMethod> steps; //=new LinkedList<>();
-
     @ManyToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE},
             fetch = FetchType.EAGER)
     @JoinTable(name = "METHOD_STEPS", joinColumns = @JoinColumn(name = "METHOD_ID", referencedColumnName = "ID"),
@@ -97,7 +84,6 @@ public class PatternMethod implements Serializable {
     @OneToMany(mappedBy = "method", fetch = FetchType.LAZY,
             cascade = {CascadeType.DETACH, CascadeType.MERGE, CascadeType.PERSIST},
             orphanRemoval = true)
-//	@Singular
     private Set<Algorithm> dependentAlgorithms;// = new HashSet<>();
 
     @Column(columnDefinition = "boolean default false")

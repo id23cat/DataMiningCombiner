@@ -12,13 +12,13 @@ public class DateToNominal extends SimpleBatchFilter {
     }
 
     @Override
-    protected Instances determineOutputFormat(Instances inputFormat) throws Exception {
+    protected Instances determineOutputFormat(Instances inputFormat) {
         // TODO Auto-generated method stub
         return null;
     }
 
     @Override
-    protected Instances process(Instances instances) throws Exception {
+    protected Instances process(Instances instances) {
         // TODO Auto-generated method stub
         return null;
     }

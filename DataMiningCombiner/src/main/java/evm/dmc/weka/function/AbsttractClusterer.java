@@ -34,7 +34,7 @@ public abstract class AbsttractClusterer extends AbstractWekaFunction implements
             throw new ClusteringException(e);
         }
 
-        WekaData res = (WekaData) ((WekaData) super.arguments.get(0)).clone();
+        WekaData res = ((WekaData) super.arguments.get(0)).clone();
         Instances instRes = res.getData();
 
         // Add new attribute with cluster number at the end

@@ -18,7 +18,6 @@ public interface AlgorithmRepository extends JpaRepository<Algorithm, Long> {
     Optional<Algorithm> findByProjectAndName(ProjectModel project, String name);
 
     Stream<Algorithm> findByProjectAndNameIn(ProjectModel project, Set<String> names);
-//	Set<Algorithm> findByProjectAndNameIn(ProjectModel project, Set<String> names);
 
     void deleteByProjectAndNameIn(ProjectModel project, Set<String> names);
 

@@ -44,7 +44,7 @@ public class ProjectServiceImpl implements ProjectService {
     @Override
     @Transactional
     public ProjectService save(Optional<ProjectModel> proModel) {
-        proModel.ifPresent((model) -> save(model));
+        proModel.ifPresent(this::save);
         if (!proModel.isPresent())
             log.warn("Trying to save empty ProjectModel");
         return this;
@@ -70,9 +70,7 @@ public class ProjectServiceImpl implements ProjectService {
     @Override
     @Transactional
     public ProjectService delete(Optional<ProjectModel> proModel) {
-        proModel.ifPresent((model) -> {
-            delete(model);
-        });
+        proModel.ifPresent(this::delete);
         if (!proModel.isPresent())
             log.error("Trying to delete empty Optional<ProjectModel>");
         return this;
@@ -82,7 +80,6 @@ public class ProjectServiceImpl implements ProjectService {
     @Transactional
     public ProjectService delete(ProjectModel proModel) {
         projectRepo.delete(proModel);
-//		projectRepo.flush();
         return this;
     }
 
@@ -160,9 +157,7 @@ public class ProjectServiceImpl implements ProjectService {
     @Override
     @Transactional
     public ProjectModel getOrSave(final ProjectModel project) {
-        return getById(project.getId()).orElseGet(() -> {
-            return save(project);
-        });
+        return getById(project.getId()).orElseGet(() -> save(project));
     }
 
     @Override
@@ -193,9 +188,7 @@ public class ProjectServiceImpl implements ProjectService {
     @Override
     @Transactional(readOnly = true)
     public Set<String> getNamesByAccount(Account account) {
-        return getByAccount(account).map((proj) -> {
-            return proj.getName();
-        }).collect(Collectors.toSet());
+        return getByAccount(account).map(ProjectModel::getName).collect(Collectors.toSet());
     }
 
     @Override

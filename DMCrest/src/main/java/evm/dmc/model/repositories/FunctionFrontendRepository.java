@@ -15,9 +15,9 @@ import evm.dmc.api.model.FunctionType;
 
 
 public interface FunctionFrontendRepository extends JpaRepository<FunctionModel, Long> {
-    public static final String FIND_DIFF_TYPES = "SELECT DISTINCT f.type FROM FunctionModel f";
-    public static final String FIND_ALL_FUNCTIONS = "SELECT f FROM FunctionModel f";
-    public static final String FIND_BY_WORD = "SELECT f FROM FunctionModel f WHERE LOWER(f.name) LIKE LOWER('%:name%')";
+    String FIND_DIFF_TYPES = "SELECT DISTINCT f.type FROM FunctionModel f";
+    String FIND_ALL_FUNCTIONS = "SELECT f FROM FunctionModel f";
+    String FIND_BY_WORD = "SELECT f FROM FunctionModel f WHERE LOWER(f.name) LIKE LOWER('%:name%')";
 
     <T extends FunctionModel> Stream<T> findByType(FunctionType type);
 
