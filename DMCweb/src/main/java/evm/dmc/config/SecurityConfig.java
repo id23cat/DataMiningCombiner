@@ -64,14 +64,13 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     };
 
     @Autowired
-    AccountService accountService;
+    private AccountService accountService;
 
     @Autowired
-    Environment environment;
+    private Environment environment;
 
     @Bean
     public PasswordEncoder passwordEncoder() {
-//		return new BCryptPasswordEncoder();
         return NoOpPasswordEncoder.getInstance();
     }
 
@@ -82,13 +81,6 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Override
     protected void configure(AuthenticationManagerBuilder auth) throws Exception {
-//		auth
-//			.eraseCredentials(true)
-//			.inMemoryAuthentication()
-//				.withUser("user").password("password").roles("USER")
-//				.and()
-//				.withUser("admin").password("password").roles("USER", "ADMIN");
-
         auth
                 .eraseCredentials(true)
                 .userDetailsService(accountService)
@@ -98,11 +90,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
-//		logger.debug("Active profile: {}", (Object[])environment.getActiveProfiles());
         // http://www.baeldung.com/spring-security-session
-//		http
-//			.sessionManagement()
-//				.sessionCreationPolicy(SessionCreationPolicy.NEVER);
         http.csrf().disable()
                 .authorizeRequests()
                 .antMatchers(PUBLIC_MATCHERS).permitAll()

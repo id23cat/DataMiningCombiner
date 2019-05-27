@@ -29,8 +29,9 @@ import evm.dmc.web.service.dto.TreeNodeDTO;
 @EnableAutoConfiguration
 @ComponentScan
 public class ApplicationConfiguration {
+
     @Autowired
-    BeanFactory beanFactory;
+    private BeanFactory beanFactory;
 
     @Bean
     public Service service(ServiceProperties properties) {
@@ -40,13 +41,7 @@ public class ApplicationConfiguration {
     @Bean
     public ExecutorService executorService() {
         return Executors.newCachedThreadPool();
-        // new ThreadPoolExecutor
     }
-	
-//	@Bean
-//	public ObjectMapper jsonObjectMapper() {
-//		return new ObjectMapper();
-//	}
 
     @Bean
     public ModelMapper modelMapper() {

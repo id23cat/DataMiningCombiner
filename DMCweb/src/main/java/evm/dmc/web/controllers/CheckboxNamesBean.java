@@ -11,10 +11,9 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class CheckboxNamesBean {
     private String[] names = null;
-//	private Set<String> names = null;
 
     public Set<String> getNamesSet() {
-        return new HashSet<String>(Arrays.asList(names));
+        return new HashSet<>(Arrays.asList(names));
     }
 
 }

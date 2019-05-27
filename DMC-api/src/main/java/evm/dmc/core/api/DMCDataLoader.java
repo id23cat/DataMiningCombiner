@@ -3,7 +3,7 @@ package evm.dmc.core.api;
 import evm.dmc.api.model.FunctionSrcModel;
 import evm.dmc.core.api.exceptions.LoadDataException;
 
-public interface DMCDataLoader /*extends Supplier<Data>*/ /* extends DMCFunction<T> */ {
+public interface DMCDataLoader {
     /**
      * Get data from source as single object
      *

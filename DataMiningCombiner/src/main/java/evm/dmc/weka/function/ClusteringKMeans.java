@@ -127,12 +127,6 @@ public class ClusteringKMeans extends AbsttractClusterer {
             // TODO Auto-generated catch block
             e.printStackTrace();
         }
-
-//		PrintStream out = System.out;
-//		out.println(">>>>>eval.clusterResultsToString()");
-//		out.println(eval.clusterResultsToString());
-//		out.println(">>>>>eval");
-//		out.println(eval.toString());
     }
 
     @Override

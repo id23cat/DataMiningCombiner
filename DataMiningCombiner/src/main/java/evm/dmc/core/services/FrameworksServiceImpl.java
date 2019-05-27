@@ -35,7 +35,7 @@ public class FrameworksServiceImpl implements FrameworksService {
 
     private FrameworkModelCoreRepository frameRepo;
 
-    private Set<String> frmwkIDs = new HashSet<String>();
+    private Set<String> frmwkIDs = new HashSet<>();
 
     public FrameworksServiceImpl(@Autowired FrameworkModelCoreRepository frameRepo) {
         this.frameRepo = frameRepo;
@@ -44,8 +44,7 @@ public class FrameworksServiceImpl implements FrameworksService {
     @PostConstruct
     protected void postInit() {
         frmwkIDs.addAll(Arrays.asList(applicationContext.getBeanNamesForType(frameworkClass)));
-//		frameRepo.save(getFramework(frmwkIDs))
-        frmwkIDs.stream().forEach(
+        frmwkIDs.forEach(
                 (String id) -> {
                     FrameworkModel model = getFramework(id).getFrameworkModel();
                     model.setActive(true);        // setting current framework as active

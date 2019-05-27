@@ -66,18 +66,13 @@ public class ProjectController {
     @Autowired
     private DatasetModelAppender datasetModelAppender;
 
-    //	@Autowired
-//	private AlgorithmController algorithmController;
     @Autowired
     private AlgorithmModelAppender algoritmModelAppender;
 
-    //	@Autowired
     private AccountService accountService;
 
-    //	@Autowired
     private ProjectService projectService;
 
-    //	@Autowired
     private Views views;
 
     public ProjectController(@Autowired AccountService accService,
@@ -102,10 +97,6 @@ public class ProjectController {
     @GetMapping
     public String getAllProjects(@ModelAttribute(SESSION_Account) Account account,
                                  Model model, HttpSession session, SessionStatus status) {
-////		status.setComplete();
-//        session.removeAttribute(SESSION_CurrentProject);
-//        model.addAttribute(SESSION_CurrentProject, null);
-
         List<ProjectModel> projectsSet = projectService.getByAccountAsList(account);
         projectsSet.sort(Comparator.comparing(ProjectModel::getName, String.CASE_INSENSITIVE_ORDER));
 
@@ -120,7 +111,6 @@ public class ProjectController {
      * @return
      * @throws ProjectNotFoundException Open selected or newly created project
      */
-//	@GetMapping(ProjectController.PATH_ProjectName)
     @GetMapping(value = PATH_ProjectName)
     public String getProject(@PathVariable(PATH_VAR_ProjectName) String projectName,
                              @ModelAttribute(SESSION_Account) Account account,
@@ -137,9 +127,6 @@ public class ProjectController {
         ProjectModel project = optProject.get();
 
         log.debug("Current project: {}", project.getId() + project.getName());
-
-//		Set<Algorithm> algSet = project.getAlgorithms();
-
 
         model.addAttribute(SESSION_CurrentProject, project);
 
@@ -173,14 +160,11 @@ public class ProjectController {
             @ModelAttribute(MODEL_BackBean) CheckboxNamesBean bean,
             BindingResult bindingResult, RedirectAttributes ra
     ) {
-//		log.debug("BackBean: {}", Arrays.stream(bean.getNames()).collect(Collectors.toList()));
         log.debug("BackBean: {}", bean.getNamesSet());
 
-//		projectService.deleteByAccountAndNames(account, new HashSet<String>(Arrays.asList(bean.getNames())));
         projectService.deleteByAccountAndNames(account, bean.getNamesSet());
 
         log.debug("==============redirect===================");
         return new RedirectView(ProjectController.BASE_URL);
     }
-
 }

@@ -39,10 +39,6 @@ public class PropertiesMapToJson implements AttributeConverter<Map<String, Strin
         try {
             return jacksonObjectMapper.readValue(dbData, new TypeReference<Map<String, String>>() {
             });
-        } catch (JsonParseException e) {
-            throw new AttributeToColumnConversionException(e);
-        } catch (JsonMappingException e) {
-            throw new AttributeToColumnConversionException(e);
         } catch (IOException e) {
             throw new AttributeToColumnConversionException(e);
         }

@@ -8,8 +8,6 @@ public interface DataFactory {
         throw new UnsupportedOperationException("Loading from a file not supported");
     }
 
-    ;
-
     default Data getData(Object rawData) {
         throw new UnsupportedOperationException("Convertion from unknown type not supported");
     }

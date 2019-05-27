@@ -12,7 +12,7 @@ import evm.dmc.api.model.ProjectModel;
 import evm.dmc.api.model.account.Account;
 
 public interface ProjectModelRepository extends JpaRepository<ProjectModel, Long> {
-    public final static String FIND_ALL = "SELECT p FROM ProjectModel p";
+    String FIND_ALL = "SELECT p FROM ProjectModel p";
 
     Long deleteByName(String name);
 
@@ -23,8 +23,6 @@ public interface ProjectModelRepository extends JpaRepository<ProjectModel, Long
     Stream<ProjectModel> findByName(String name);
 
     Optional<ProjectModel> findByNameAndAccount(String name, Account account);
-
-//	Optional<ProjectModel> findById(Long id);
 
     Stream<ProjectModel> findAllByAccount(Account account);
 

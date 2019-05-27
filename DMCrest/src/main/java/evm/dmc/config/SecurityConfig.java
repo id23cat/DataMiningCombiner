@@ -22,7 +22,6 @@ import evm.dmc.model.service.AccountService;
 
 @Configuration
 @EnableWebSecurity
-//@EnableGlobalMethodSecurity(securedEnabled = false)
 @EnableGlobalMethodSecurity(prePostEnabled = true)
 @EnableScheduling    // We use scheduler for evicting EhCache tokens
 @Profile({"devH2", "devMySQL", "test"})
@@ -72,14 +71,12 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
-        http//.csrf().disable()
+        http
                 .authorizeRequests()
                 .antMatchers(PUBLIC_MATCHERS).permitAll()
                 .antMatchers(H2_MATCHER).permitAll()
                 .antMatchers(PUBLIC_ACTUATOR).permitAll()
                 .antMatchers(SWAGGER_MATCHERS).permitAll()
-//				.antMatchers(ADMIN_MATCHERS).hasAuthority(Role.ADMIN.getName())
-//				.antMatchers(USER_MATCHERS).hasAuthority(Role.USER.getName())
                 .anyRequest().authenticated()
                 .and()
                 .httpBasic()

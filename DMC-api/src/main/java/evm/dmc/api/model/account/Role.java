@@ -21,7 +21,7 @@ public enum Role implements Serializable {
         throw new IllegalArgumentException("Name \"" + name + "\" does not correspond to any Role");
     }
 
-    private Role(final String role) {
+    Role(final String role) {
         this.name = role;
     }
 
@@ -36,10 +36,5 @@ public enum Role implements Serializable {
     public final String getAutority() {
         return getName();
     }
-
-	/*@Override
-	public String toString() {
-		return getName();
-	}*/
 
 }

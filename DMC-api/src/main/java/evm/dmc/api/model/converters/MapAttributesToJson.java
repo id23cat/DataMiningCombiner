@@ -42,10 +42,6 @@ public class MapAttributesToJson implements AttributeConverter<Map<String, DataA
         try {
             return jacksonObjectMapper.readValue(dbData, new TypeReference<Map<String, DataAttribute>>() {
             });
-        } catch (JsonParseException e) {
-            throw new AttributeToColumnConversionException(e);
-        } catch (JsonMappingException e) {
-            throw new AttributeToColumnConversionException(e);
         } catch (IOException e) {
             throw new AttributeToColumnConversionException(e);
         }

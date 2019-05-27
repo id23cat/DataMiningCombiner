@@ -31,7 +31,7 @@ public class RestAccountsController {
     private AccountService accountService;
 
     @Autowired
-    AccountRepository accountRepository;
+    private AccountRepository accountRepository;
 
     @Autowired
     private ModelMapper modelMapper;
@@ -57,7 +57,7 @@ public class RestAccountsController {
     public List<AccountDto> getAccountsList() {
         return accountService.getAll()
                 .map(this::convertToDto)
-                .map((accDto) -> addLinks(accDto))
+                .map(this::addLinks)
                 .collect(Collectors.toList());
     }
 
@@ -77,9 +77,4 @@ public class RestAccountsController {
     private AccountDto convertToDto(Account acc) {
         return modelMapper.map(acc, AccountDto.class);
     }
-
-//	private Account convertToEntity(AccountDto dto) {
-//		return modelMapper.map(dto, Account.class);
-//	}
-
 }

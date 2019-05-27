@@ -11,9 +11,6 @@ import lombok.extern.slf4j.Slf4j;
 @Aspect
 @Slf4j
 public class StringArgsTrimAspect {
-//	@Pointcut("execution(* evm.dmc.web.service.impls.*(..)) && args(.., String)")
-//	@Pointcut("execution(* evm.dmc.web.service.impls.AlgorithmServiceImpl.*(..))")
-//	public void trimString() {}
 
     //	@Around("execution(* evm.dmc.web.service.impls.AlgorithmServiceImpl.*(..))")
     @Around("within(evm.dmc.web.service.impls.*)")
@@ -22,7 +19,7 @@ public class StringArgsTrimAspect {
         for (int i = 0; i < arguments.length; i++) {
             Object object = arguments[i];
             if (object instanceof String) {
-                log.debug("-== Aspect trim: {}", (String) object);
+                log.debug("-== Aspect trim: {}", object);
                 arguments[i] = ((String) object).trim();
             }
         }

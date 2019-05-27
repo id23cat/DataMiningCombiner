@@ -1,12 +1,11 @@
 package evm.dmc.weka.function;
 
-import evm.dmc.core.annotations.Function;
 import evm.dmc.weka.exceptions.FilterError;
 import weka.core.Instances;
 import weka.filters.Filter;
 
 public abstract class AbstaractWekaFilter extends AbstractWekaFunction {
-    static final Integer argCount = 1;
+    private static final Integer argCount = 1;
     protected Filter filter;
 
     AbstaractWekaFilter() {

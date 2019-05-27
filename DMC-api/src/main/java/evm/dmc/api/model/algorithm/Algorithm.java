@@ -45,13 +45,8 @@ import lombok.Singular;
 @Table(name = "ALGORITHM"
         , uniqueConstraints = {@UniqueConstraint(columnNames = {"project_id", "name"})}
 )
-//@Inheritance(strategy=InheritanceType.SINGLE_TABLE)
-//@DiscriminatorColumn(name = "entity_type", discriminatorType = DiscriminatorType.STRING)
 public class Algorithm implements Serializable {
 
-    /**
-     *
-     */
     private static final long serialVersionUID = 386821974686652567L;
 
     @Id
@@ -69,11 +64,8 @@ public class Algorithm implements Serializable {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "project_id")
     @NotNull
-//	@Column(nullable = false)
     private ProjectModel project;
 
-    // null -- means getting source form previous function in hierarchy
-//	@Column(nullable = true)
     @OneToOne(cascade = {CascadeType.DETACH, CascadeType.MERGE, CascadeType.PERSIST}, optional = true)
     private MetaData dataSource;
 
@@ -82,11 +74,9 @@ public class Algorithm implements Serializable {
     @Singular
     private Map<String, DataAttribute> srcAttributes;
 
-    // null -- means redirect result to next function in hierarchy
     @Column(nullable = true)
     private MetaData dataDestination;
 
-    //	@OneToOne(cascade = CascadeType.ALL, optional = false)
     @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "method_id")
     private PatternMethod method;
@@ -94,9 +84,6 @@ public class Algorithm implements Serializable {
     public Map<String, DataAttribute> getSrcAttributes() {
         if (dataSource == null)
             return null;
-//		if(srcAttributes != null && srcAttributes.isEmpty())
-//			srcAttributes = null;
-//		return Optional.ofNullable(srcAttributes).orElseGet(() -> dataSource.getAttributes());
         return srcAttributes.isEmpty() ? dataSource.getAttributes() : srcAttributes;
     }
 
@@ -109,9 +96,4 @@ public class Algorithm implements Serializable {
         }
         return meta;
     }
-
-//	public void setDataSource(MetaData meta) {
-//		log.debug("-== Setting MetaData to Algorith: {}", meta);
-//		dataSource = meta;
-//	}
 }

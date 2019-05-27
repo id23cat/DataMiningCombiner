@@ -34,10 +34,6 @@ public class FunctionDstModel extends FunctionModel {
     @Builder.Default
     private DataSrcDstType typeSrcDst = DataSrcDstType.LOCAL_FS;
 
-    //	public FunctionDstModel(){
-//		super();
-//	}
-//	
     public FunctionDstModel(FunctionModel funmodel) {
         super(funmodel.getId(),
                 funmodel.getName(),
@@ -50,20 +46,4 @@ public class FunctionDstModel extends FunctionModel {
             this.typeSrcDst = ((FunctionDstModel) funmodel).typeSrcDst;
         }
     }
-
-//	/**
-//	 * @return the sourceDest
-//	 */
-//	public String getDestination() {
-//		return destination==null ? super.getProperty(DST_PROPERTY_NAME) : destination;
-//	}
-
-//	/**
-//	 * @param sourceDest the sourceDest to set
-//	 */
-//	public void setDestination(String dest) {
-//		this.destination = dest;
-//		super.setProperty(DST_PROPERTY_NAME, dest);
-//	}
-
 }

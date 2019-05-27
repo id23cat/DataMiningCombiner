@@ -52,7 +52,6 @@ public class AlgorithmController {
     private final static String URL_PART_ADD_ALGORITHM = "/add";
     private final static String URL_PART_SELECT_FUNCTION = "/selectFunction";
     private final static String URL_PART_GET_FUNCTION_DETAILS = "/getfunction";
-//	private final static String URL_PART_GET_FUNCTIONS_LIST = "/getfunlist";
 
     public final static String BASE_URL = ProjectController.URL_GetPorject + URL_PART_ALGORITHM;
     public final static String URL_Add_Algorithm = BASE_URL + URL_PART_ADD_ALGORITHM;
@@ -61,7 +60,6 @@ public class AlgorithmController {
     public final static String URL_Select_DataSet = BASE_URL + URL_PART_SELECT_DATASET;
     public final static String URL_Select_Function = BASE_URL + URL_PART_SELECT_FUNCTION;
     public final static String URL_GetFunctionDetails = BASE_URL + URL_PART_GET_FUNCTION_DETAILS;
-//	public final static String URL_Get_Functions_List = BASE_URL + URL_PART_GET_FUNCTIONS_LIST;
 
     public static final String PATH_VAR_AlgorithmName = "algName";
     public static final String PATH_VAR_DataName = DatasetController.PATH_VAR_DataName;
@@ -77,7 +75,6 @@ public class AlgorithmController {
 
     public final static String REQPARAM_Method_Id = "mid";
 
-    //	public final static String MODEL_Algorithm = "algorithm";
     public final static String MODEL_PagesMap = "pagesMap";
     public static final String MODEL_AlgBaseURL = "algBaseURL";
     public static final String MODEL_SelDataURL = "selDataURL";
@@ -87,13 +84,9 @@ public class AlgorithmController {
     public static final String MODEL_NewAlgorithm = "newAlgorithm";
     public static final String MODEL_FunctionsList = "functionsList";
     public static final String MODEL_MethodDetails = "methodDetails";
-//	public static final String MODEL_CurrentAlgorithm = "currentAlgorithm";
 
     @Autowired
     private AlgorithmService algorithmService;
-
-//	@Autowired
-//	private DatasetController datasetController;
 
     @Autowired
     private Views views;
@@ -238,11 +231,8 @@ public class AlgorithmController {
             @RequestParam(value = REQPARAM_Method_Id, required = false) Long id,
             Model model
     ) {
-        model.addAttribute(MODEL_MethodDetails, optMethod.orElseGet(() -> {
-            return algorithmService.getMethod(algorithm, id).orElseThrow(() -> {
-                return new FunctionNotFoundException("There is no method with id = " + id);
-            });
-        }));
+        model.addAttribute(MODEL_MethodDetails, optMethod.orElseGet(() -> algorithmService.getMethod(algorithm, id)
+                .orElseThrow(() -> new FunctionNotFoundException("There is no method with id = " + id))));
 
         return views.getProject().algorithm.methodDetails;
     }
@@ -283,8 +273,4 @@ public class AlgorithmController {
                 .buildAndExpand(projectName)
                 .toUriString();
     }
-
-//	@GetMapping(value="/getfunctree", produces = MediaType.APPLICATION_JSON_VALUE)
-//	public @RespnceBody 
-
 }

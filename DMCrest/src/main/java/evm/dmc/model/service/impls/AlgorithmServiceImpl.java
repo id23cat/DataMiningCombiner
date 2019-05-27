@@ -1,6 +1,7 @@
 package evm.dmc.model.service.impls;
 
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.Set;
 import java.util.function.Supplier;
@@ -36,20 +37,19 @@ import lombok.extern.slf4j.Slf4j;
 public class AlgorithmServiceImpl implements AlgorithmService {
 
     @Autowired
-    ProjectService projectService;
+    private ProjectService projectService;
 
     @Autowired
-//	@Delegate(types = {AlgorithmRepository.class})
-            AlgorithmRepository algorithmRepository;
+    private AlgorithmRepository algorithmRepository;
 
     @Autowired
-    MetaDataService metaDataService;
+    private MetaDataService metaDataService;
 
     @Autowired
-    FrameworkFrontendService frameworkService;
+    private FrameworkFrontendService frameworkService;
 
     @Autowired
-    EntityManager em;
+    private EntityManager em;
 
     @Override
     @Transactional(readOnly = true)
@@ -114,7 +114,7 @@ public class AlgorithmServiceImpl implements AlgorithmService {
         if (!optAlgorithm.isPresent()) {
             return Optional.ofNullable(null);
         }
-        return optAlgorithm.map(alg -> alg.getDataSource());
+        return optAlgorithm.map(Algorithm::getDataSource);
     }
 
     @Override
@@ -122,7 +122,7 @@ public class AlgorithmServiceImpl implements AlgorithmService {
     public Algorithm setAttributes(Algorithm algorithm, MetaData metaData) {
         algorithm = merge(algorithm);
         if (algorithm.getDataSource() == null ||
-                algorithm.getDataSource().getName() != metaData.getName()) {
+                !Objects.equals(algorithm.getDataSource().getName(), metaData.getName())) {
             setDataSource(algorithm, metaData.getName());
         }
         if (algorithm.getDataSource().getAttributes().equals(metaData.getAttributes()))
@@ -150,7 +150,6 @@ public class AlgorithmServiceImpl implements AlgorithmService {
     }
 
     @Override
-//	@Transactional(propagation =  Propagation.REQUIRES_NEW)
     @Transactional
     public Algorithm addMethod(Algorithm algorithm, TreeNodeDTO dtoFunction)
             throws FunctionNotFoundException {
@@ -230,7 +229,7 @@ public class AlgorithmServiceImpl implements AlgorithmService {
     @Transactional(readOnly = true)
     public Optional<PatternMethod> getMethod(Algorithm algorithm, Long id) {
         if (id == null || algorithm.getMethod() == null)
-            return Optional.ofNullable(null);
+            return Optional.empty();
         PatternMethod method = algorithm.getMethod();
         return method.getSteps().stream().filter(pm -> pm.getId().equals(id)).findFirst();
     }

@@ -36,7 +36,6 @@ import java.util.stream.Stream;
 
 
 @Service
-//@Scope(proxyMode = ScopedProxyMode.TARGET_CLASS)
 @Scope(value = ConfigurableBeanFactory.SCOPE_SINGLETON)
 @Slf4j
 public class AccountServiceImpl implements AccountService {
@@ -129,7 +128,6 @@ public class AccountServiceImpl implements AccountService {
     public Account delProject(Account account, ProjectModel project) {
         account = merge(account);
         account.getProjects().remove(project);
-//		save(account);
         return account;
     }
 
@@ -137,14 +135,11 @@ public class AccountServiceImpl implements AccountService {
     @Transactional
     public Account delProjectsByNames(Account account, Set<String> names) {
         account = merge(account);
-//		account.removeProjectsByNames(names);
         Set<ProjectModel> remProjects = account.getProjects().parallelStream()
                 .filter((proj) -> names.contains(proj.getName()))
                 .collect(Collectors.toSet());
 
         account.getProjects().removeAll(remProjects);
-//		accountRepository.flush();
-//		return save(account);
         return account;
     }
 
@@ -153,13 +148,8 @@ public class AccountServiceImpl implements AccountService {
         return account.getProjects().stream().filter(proj -> proj.getName().equals(name)).findFirst();
     }
 
-//	private  void refresh(Account account) {
-//		em.refresh(account);
-//	}
-
     @Transactional
     public Account merge(Account account) {
-//		return em.merge(account);
         return accountRepository.getOne(account.getId());
     }
 

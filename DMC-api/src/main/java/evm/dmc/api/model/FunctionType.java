@@ -7,6 +7,5 @@ public enum FunctionType {
     STANDARDIZATION,
     CSV_DATASOURCE,
     CSV_DATADESTINATION,
-    OTHER;
-
+    OTHER
 }

@@ -19,6 +19,5 @@ public interface DataPreviewRepository extends JpaRepository<DataPreview, Long> 
     @Transactional(propagation = Propagation.REQUIRES_NEW)
     void deleteByMetaDataId(Long metaDataId);
 
-    //	void deleteByMetaDataIdIn(Stream<Long> metaDataIds);
     void deleteByMetaDataIdIn(Set<Long> metaDataIds);
 }

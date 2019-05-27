@@ -183,7 +183,7 @@ public class WekaData extends InMemoryData<Instances> implements Cloneable, HasM
         } else {
             stat.setCount(wekaStat.intCount);
             ArrayList<?> list = Collections.list(data.attribute(column).enumerateValues());
-            stat.setElements(new HashSet<String>((Collection<? extends String>) list));
+            stat.setElements(new HashSet<>((Collection<? extends String>) list));
         }
 
         Map map = countElements(column, stat);
@@ -267,8 +267,7 @@ public class WekaData extends InMemoryData<Instances> implements Cloneable, HasM
         train.setData(this.data.trainCV(FOLDS, numFold));
         test.setData(this.data.testCV(FOLDS, numFold));
 
-        WekaData[] traintest = new WekaData[]{train, test};
-        return traintest;
+        return new WekaData[]{train, test};
     }
 
     @Override
@@ -461,15 +460,11 @@ public class WekaData extends InMemoryData<Instances> implements Cloneable, HasM
     }
 
     private boolean checkColIndex(int index) throws IndexOutOfRange {
-        if (index < 0 || index >= getAttributesCount())
-            return false;
-        return true;
+        return index >= 0 && index < getAttributesCount();
     }
 
     private boolean checkRowIndex(int index) throws IndexOutOfRange {
-        if (index < 0 || index >= getInstancesCount())
-            return false;
-        return true;
+        return index >= 0 && index < getInstancesCount();
     }
 
     private Map<Object, Integer> countElements(int index, Statistics stat) {
@@ -481,14 +476,14 @@ public class WekaData extends InMemoryData<Instances> implements Cloneable, HasM
                 Map<String, Integer> mapS = new HashMap<>();
                 countAsStrings(index, mapS);
 
-                mapRet = new HashMap<Object, Integer>(mapS);
+                mapRet = new HashMap<>(mapS);
                 countAsStrings(index, mapS);
                 break;
             case NUMERIC:
                 Map<Double, Integer> mapD = new HashMap<>();
                 countAsDoubles(index, mapD, stat);
 
-                mapRet = new HashMap<Object, Integer>(mapD);
+                mapRet = new HashMap<>(mapD);
                 countAsDoubles(index, mapD, stat);
                 break;
             default:
@@ -560,10 +555,7 @@ public class WekaData extends InMemoryData<Instances> implements Cloneable, HasM
     }
 
     private String exceptionMessage(String msg, String name) {
-        StringBuilder strb = new StringBuilder(msg);
-        strb.append(name);
-
-        return strb.toString();
+        return msg + name;
     }
 
     @Override

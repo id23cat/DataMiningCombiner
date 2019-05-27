@@ -24,7 +24,6 @@ import lombok.ToString;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-//@NoArgsConstructor(force = true)
 @EqualsAndHashCode(exclude = {"lines"})
 @ToString(exclude = {"lines"})
 public class DataAttribute implements Serializable {
@@ -49,15 +48,6 @@ public class DataAttribute implements Serializable {
     @JsonIgnore
     @Builder.Default
     private List<String> lines = new ArrayList<>();
-
-//	public DataAttribute(String name) {
-//		this.name = name;
-//	}
-//	
-//	public DataAttribute(String name, String value) {
-//		this.name = name;
-//		lines.add(value);
-//	}
 
     /**
      * @return unmodifiable List

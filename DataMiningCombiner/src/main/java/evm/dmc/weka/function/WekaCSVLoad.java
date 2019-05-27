@@ -106,19 +106,6 @@ public class WekaCSVLoad extends AbstractDMCFunction<Instances>
         return this;
     }
 
-    // public String getSourceDescription() throws LoadDataException {
-    // try {
-    // weka.core.converters.CSVLoader loader = new
-    // weka.core.converters.CSVLoader();
-    // loader.setNoHeaderRowPresent(!hasHeader);
-    // loader.setSource(new File(this.source));
-    // // loader.getNextInstance(structure)
-    // return loader.getFileDescription();
-    // } catch (Throwable e) {
-    // throw checkException(e);
-    // }
-    // }
-
     /**
      * Returns header (if present in file otherwise generated) and first line of
      * data
