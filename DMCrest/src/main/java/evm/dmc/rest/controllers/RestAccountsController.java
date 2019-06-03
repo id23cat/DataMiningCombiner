@@ -9,6 +9,7 @@ import evm.dmc.webApi.exceptions.AccountNotFoundException;
 import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -23,6 +24,7 @@ import java.util.List;
 @RestController
 @RequestMapping(RestAccountsController.BASE_URL)
 @HateoasRelationChildren({RestProjectController.class})
+@CrossOrigin(origins = "*")
 @Slf4j
 public class RestAccountsController extends AbstractRestCrudController<AccountDto> {
 
