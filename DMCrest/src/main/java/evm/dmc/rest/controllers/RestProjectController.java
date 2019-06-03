@@ -25,6 +25,7 @@ import java.util.List;
 @RestController
 @RequestMapping(RestProjectController.BASE_URL)
 @HateoasRelationChildren({RestDatasetController.class})
+@CrossOrigin(origins = "*")
 @Slf4j
 public class RestProjectController extends AbstractRestCrudController<ProjectDto> {
 
